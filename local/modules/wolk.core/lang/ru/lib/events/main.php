@@ -1,0 +1,4 @@
+<?php
+
+$MESS['WOLK_CORE_GLOBAL_MENU_TEXT']  = 'WolkCore';
+$MESS['WOLK_CORE_GLOBAL_MENU_TITLE'] = 'WolkCore';

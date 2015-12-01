@@ -1,0 +1,10 @@
+.profilecontainer__itemname input,
+.profilecontainer__itemname textarea,
+.password_confirm
+{
+    display: none;
+}
+
+#password_confirm_input {
+    margin-bottom: 150px;
+}
