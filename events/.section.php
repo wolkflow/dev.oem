@@ -1,0 +1,6 @@
+<?
+$sSectionName = "events";
+$arDirProperties = Array(
+
+);
+?>

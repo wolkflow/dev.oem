@@ -1,0 +1,1 @@
+To place the order you must read the participation rules and enter the system.

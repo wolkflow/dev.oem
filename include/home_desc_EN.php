@@ -1,0 +1,1 @@
+The system lets you order services and equipment which you need within the show that you are participating. To continue, please check the rules section below and type in information about your stand.

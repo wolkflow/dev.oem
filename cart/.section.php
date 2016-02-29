@@ -1,0 +1,6 @@
+<?
+$sSectionName = "cart";
+$arDirProperties = Array(
+
+);
+?>
