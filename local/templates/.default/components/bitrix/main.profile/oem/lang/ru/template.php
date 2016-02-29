@@ -86,5 +86,6 @@ $MESS["AUTH_SECURE_NOTE"]="Перед отправкой формы пароль
 $MESS["AUTH_NONSECURE_NOTE"]="Пароль будет отправлен в открытом виде. Включите JavaScript в браузере, чтобы зашифровать пароль перед отправкой.";
 $MESS["main_profile_title"] = "Обращение:";
 $MESS["VAT_ID"] = "vat id";
-$MESS["WORK_STREET"] = "company address";
+$MESS["WORK_STREET"] = "Адрес компании";
+$MESS['change'] = 'изменить';
 ?>

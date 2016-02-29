@@ -13,22 +13,24 @@ $em = EventManager::getInstance();
 
 Loader::includeModule('wolk.core');
 
-if(Loader::includeModule('wolk.oem')) {
-	$em->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['\Wolk\OEM\Events\Iblock', 'colorPickerPropertyType']);
-	$em->addEventHandler('iblock', 'OnIBlockPropertyBuildList', [
-		'\Wolk\OEM\Events\Iblock',
-		'UsingEquipmentPropertyType'
-	]);
-	$em->addEventHandler('main', 'OnBeforeUserUpdate', ['\Wolk\OEM\Events\Main', 'onBeforeUserUpdateHandler']);
-	$em->addEventHandler('main', 'OnBeforeUserRegister', ['\Wolk\OEM\Events\Main', 'onBeforeUserRegisterHandler']);
-	$em->addEventHandler('catalog', 'OnGetOptimalPrice', ['\Wolk\OEM\Events\Catalog', 'onGetOptimalPriceHandler']);
+if (Loader::includeModule('wolk.oem')) {
+    $em->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['\Wolk\OEM\Events\Iblock', 'colorPickerPropertyType']);
+    $em->addEventHandler('iblock', 'OnIBlockPropertyBuildList', [
+        '\Wolk\OEM\Events\Iblock',
+        'UsingEquipmentPropertyType'
+    ]);
+    $em->addEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Wolk\OEM\Events\Iblock', 'saveProductsSet']);
+    $em->addEventHandler('iblock', 'OnAfterIBlockElementUpdate', ['\Wolk\OEM\Events\Iblock', 'saveProductsSet']);
+    $em->addEventHandler('main', 'OnBeforeUserUpdate', ['\Wolk\OEM\Events\Main', 'onBeforeUserUpdateHandler']);
+    $em->addEventHandler('main', 'OnBeforeUserRegister', ['\Wolk\OEM\Events\Main', 'onBeforeUserRegisterHandler']);
+    $em->addEventHandler('catalog', 'OnGetOptimalPrice', ['\Wolk\OEM\Events\Catalog', 'onGetOptimalPriceHandler']);
 }
 
 Loader::registerAutoLoadClasses(
-	null,
-	[
-		'Helper' => '/local/php_interface/libs/helper.php'
-	]
+    null,
+    [
+        'Helper' => '/local/php_interface/libs/helper.php'
+    ]
 );
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';

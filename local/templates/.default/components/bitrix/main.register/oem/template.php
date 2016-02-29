@@ -57,7 +57,17 @@ endif;
                 <div class="profilecontainer__itemscontainer">
                     <div class="profilecontainer__item">
                         <div class="profilecontainer__itemname">
-                            <input type="text" name="REGISTER[LOGIN]" value="<?=$arResult["VALUES"]['LOGIN']?>"/>
+                            <input type="text" id="comMail" name="REGISTER[LOGIN]" value="<?=$arResult["VALUES"]['LOGIN']?>"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagesubsubtitle">
+                    <?=GetMessage("REGISTER_FIELD_EMAIL_CONFIRM")?>
+                </div>
+                <div class="profilecontainer__itemscontainer">
+                    <div class="profilecontainer__item">
+                        <div class="profilecontainer__itemname">
+                            <input type="text" id="email_confirm" name="REGISTER[EMAIL_CONFIRM]" value="<?=$arResult["VALUES"]['EMAIL_CONFIRM']?>"/>
                         </div>
                     </div>
                 </div>
@@ -88,7 +98,7 @@ endif;
                 <div class="profilecontainer__itemscontainer">
                     <div class="profilecontainer__item">
                         <div class="profilecontainer__itemname">
-                            <input type="password"
+                            <input type="password" id="password_confirm"
                                    name="REGISTER[CONFIRM_PASSWORD]"
                                    value="<?=$arResult["VALUES"]['CONFIRM_PASSWORD']?>" autocomplete="off" />
                         </div>
@@ -116,7 +126,7 @@ endif;
                 <div class="profilecontainer__itemscontainer">
                     <div class="profilecontainer__item">
                         <div class="profilecontainer__itemname">
-                            <input type="text" name="REGISTER[WORK_STREET]" value="<?=$arResult["VALUES"]['REGISTER_FIELD_WORK_STREET']?>"/>
+                            <input type="text" name="REGISTER[WORK_STREET]" value="<?=$arResult["VALUES"]['WORK_STREET']?>"/>
                         </div>
                     </div>
                 </div>

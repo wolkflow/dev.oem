@@ -34,8 +34,7 @@ if ($arResult['SHOW_ERRORS'] == 'Y' && $arResult['ERROR'])
         <div class="headersection__loginformtitle">
             <?=GetMessage("AUTH_HEAD_TEXT")?>
         </div>
-        <div class="errortext">
-        </div>
+        <div class="errortext" style="display:none;"></div>
     <?if($arResult["BACKURL"] <> ''):?>
         <input type="hidden" name="backurl" value="<?=$arResult["BACKURL"]?>" />
     <?endif?>
@@ -44,10 +43,11 @@ if ($arResult['SHOW_ERRORS'] == 'Y' && $arResult['ERROR'])
     <?endforeach?>
         <input type="hidden" name="AUTH_FORM" value="Y" />
         <input type="hidden" name="TYPE" value="AUTH" />
-        <div class="headersection__loginforminputtitle">
+        <div class="headersection__loginforminputtitle first">
             <?=GetMessage("AUTH_EMAIL")?>
         </div>
-        <input type="text" name="USER_LOGIN" class="headersection__loginforminput" value="<?=$arResult["USER_LOGIN"]?>"/>
+        <input type="text" name="USER_LOGIN" class="headersection__loginforminput" placeholder="yourmail@domain.com"
+			   value="<?=$arResult["USER_LOGIN"]?>"/>
         <div class="headersection__loginforminputtitle">
             <?=GetMessage("AUTH_PASSWORD")?>
         </div>
@@ -83,7 +83,7 @@ if ($arResult['SHOW_ERRORS'] == 'Y' && $arResult['ERROR'])
         <noindex>
             <p></p>
                 <a class="headersection__languagedropdownbutton"
-                    href="<?=$arResult["AUTH_REGISTER_URL"]?>" rel="nofollow"><?=GetMessage("AUTH_REGISTER")?></a>
+                    href="<?=$arResult["AUTH_REGISTER_URL"]?>?backurl=<?=$APPLICATION->GetCurPage(false)?>" rel="nofollow"><?=GetMessage("AUTH_REGISTER")?></a>
         </noindex>
     <?endif?>
         <!--<noindex><a href="<?/*=$arResult["AUTH_FORGOT_PASSWORD_URL"]*/?>" rel="nofollow"><?/*=GetMessage("AUTH_FORGOT_PASSWORD_2")*/?></a></noindex>-->
@@ -159,15 +159,14 @@ elseif($arResult["FORM_TYPE"] == "otp"):
 <?
 else:
 ?>
-    <?=($arResult["USER_NAME"])?: $arResult["USER_LOGIN"]?>
-    <form action="<?=$arResult["AUTH_URL"]?>" class="headersection__languagedropdown">
-        <a class="headersection__languagedropdownbutton" href="<?=$arResult["PROFILE_URL"]?>" title="<?=GetMessage("AUTH_PROFILE")?>"><?=GetMessage("AUTH_PROFILE")?></a>
+    <?#=($arResult["USER_NAME"])?: $arResult["USER_LOGIN"]?>
+    <form action="<?=$arResult["AUTH_URL"]?>">
         <?foreach ($arResult["GET"] as $key => $value):?>
             <input type="hidden" name="<?=$key?>" value="<?=$value?>" />
         <?endforeach?>
         <input type="hidden" name="logout" value="yes" />
-        <div class="headersection__loginformbutton"><?=GetMessage("AUTH_LOGOUT_BUTTON")?>
-            <input class="headersection__languagedropdownbutton" type="submit" name="logout_butt" value="<?=GetMessage("AUTH_LOGOUT_BUTTON")?>" />
-        </div>
+        <button class="customizable" type="submit" name="logout_butt">
+            <?=GetMessage("AUTH_LOGOUT_BUTTON")?>
+        </button>
     </form>
 <?endif?>

@@ -14,7 +14,7 @@ class ColorpickerPropertyType
 	public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
 		global $APPLICATION;
 		\CJSCore::init('jquery');
-		$replacedName = str_replace(array('[', ']'), '_', $strHTMLControlName['VALUE']);
+		$replacedName = str_replace(array('[', ']', ':'), '_', $strHTMLControlName['VALUE']);
 		ob_start();
 		?>
 		<input id="<?=$replacedName?>" type="text" name="<?=$strHTMLControlName['VALUE']?>" value="<?=$value['VALUE']?>">

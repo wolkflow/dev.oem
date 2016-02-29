@@ -4,6 +4,8 @@
  * @param array $arParams
  * @param array $arResult
  */
+use Bitrix\Main\Localization\Loc;
+
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
 ?>
@@ -48,9 +50,9 @@ else
                         <span>
                             <? echo $arResult["arUser"]["EMAIL"] ?>&nbsp;
                         </span>
-                        <input type="text" name="EMAIL" value="<? echo $arResult["arUser"]["EMAIL"] ?>"/>
+                        <input style="display:none;" type="text" name="EMAIL" value="<? echo $arResult["arUser"]["EMAIL"] ?>"/>
                     </div>
-                    <div class="profilecontainer__changebutton">change</div>
+                    <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                 </div>
             </div>
             <div class="pagesubsubtitle"><?= GetMessage('VAT_ID') ?></div>
@@ -60,9 +62,9 @@ else
                         <span>
                             <? echo $arResult["arUser"]["UF_VAT"] ?>&nbsp;
                         </span>
-                        <input type="text" name="UF_VAT" value="<? echo $arResult["arUser"]["UF_VAT"] ?>"/>
+                        <input style="display:none;" type="text" name="UF_VAT" value="<? echo $arResult["arUser"]["UF_VAT"] ?>"/>
                     </div>
-                    <div class="profilecontainer__changebutton">change</div>
+                    <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                 </div>
             </div>
             <? if ($arResult["arUser"]["EXTERNAL_AUTH_ID"] == ''): ?>
@@ -73,9 +75,9 @@ else
                             <span>
                                 ******
                             </span>
-                            <input type="password" name="NEW_PASSWORD" value="" autocomplete="off"/>
+                            <input style="display:none;" type="password" name="NEW_PASSWORD" value="" autocomplete="off"/>
                         </div>
-                        <div class="profilecontainer__changebutton">change</div>
+                        <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                     </div>
                 </div>
                 <div class="pagesubsubtitle password_confirm"><?= GetMessage('NEW_PASSWORD_CONFIRM') ?></div>
@@ -116,9 +118,9 @@ else
                         <span>
                             <? echo $arResult["arUser"]["WORK_COMPANY"] ?>&nbsp;
                         </span>
-                        <input type="text" name="WORK_COMPANY" value="<?= $arResult["arUser"]["WORK_COMPANY"] ?>"/>
+                        <input style="display:none;" type="text" name="WORK_COMPANY" value="<?= $arResult["arUser"]["WORK_COMPANY"] ?>"/>
                     </div>
-                    <div class="profilecontainer__changebutton">change</div>
+                    <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                 </div>
             </div>
             <div class="pagesubsubtitle"><?= GetMessage("WORK_STREET") ?></div>
@@ -128,10 +130,10 @@ else
                         <span>
                             <? echo $arResult["arUser"]["WORK_STREET"] ?>&nbsp;
                         </span>
-                        <textarea cols="30" rows="5"
+                        <textarea style="display:none;" cols="30" rows="5"
                               name="WORK_STREET"><?= $arResult["arUser"]["WORK_STREET"] ?></textarea>
                     </div>
-                    <div class="profilecontainer__changebutton">change</div>
+                    <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                 </div>
             </div>
             <div class="pagesubsubtitle"><?= GetMessage('NAME') ?></div>
@@ -141,9 +143,9 @@ else
                         <span>
                             <? echo $arResult["arUser"]["NAME"] ?>&nbsp;
                         </span>
-                        <input type="text" name="NAME" value="<?= $arResult["arUser"]["NAME"] ?>"/>
+                        <input style="display:none;" type="text" name="NAME" value="<?= $arResult["arUser"]["NAME"] ?>"/>
                     </div>
-                    <div class="profilecontainer__changebutton">change</div>
+                    <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                 </div>
             </div>
             <div class="pagesubsubtitle"><?= GetMessage('LAST_NAME') ?></div>
@@ -153,9 +155,9 @@ else
                         <span>
                             <? echo $arResult["arUser"]["LAST_NAME"] ?>&nbsp;
                         </span>
-                        <input type="text" name="LAST_NAME" value="<?= $arResult["arUser"]["LAST_NAME"] ?>"/>
+                        <input style="display:none;" type="text" name="LAST_NAME" value="<?= $arResult["arUser"]["LAST_NAME"] ?>"/>
                     </div>
-                    <div class="profilecontainer__changebutton">change</div>
+                    <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                 </div>
             </div>
             <div class="pagesubsubtitle"><?= GetMessage('USER_PHONE') ?></div>
@@ -165,9 +167,9 @@ else
                         <span>
                             <? echo $arResult["arUser"]["PERSONAL_PHONE"] ?>&nbsp;
                         </span>
-                        <input type="text" name="PERSONAL_PHONE" value="<?= $arResult["arUser"]["PERSONAL_PHONE"] ?>"/>
+                        <input style="display:none;" type="text" name="PERSONAL_PHONE" value="<?= $arResult["arUser"]["PERSONAL_PHONE"] ?>"/>
                     </div>
-                    <div class="profilecontainer__changebutton">change</div>
+                    <div class="profilecontainer__changebutton"><?= Loc::getMessage('change')?></div>
                 </div>
             </div>
         </div>

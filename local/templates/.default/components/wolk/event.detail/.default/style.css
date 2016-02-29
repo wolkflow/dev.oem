@@ -1,0 +1,15 @@
+.ui-datepicker {
+    z-index: 101;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    display: none;
+}
+
+.setDate.hasDatepicker {
+    position: relative;
+}
+
+.breadcrumbs__button.hidden {
+    display: none;
+}

@@ -2,8 +2,6 @@
 
 namespace Wolk\Core\System;
 
-use Bitrix\Main\Diag\Debug;
-
 class IBlockEntity extends Model
 {
 	

@@ -87,4 +87,5 @@ $MESS["AUTH_NONSECURE_NOTE"] = "The password will be sent in open form. Enable J
 $MESS["main_profile_title"] = "Salutation:";
 $MESS["VAT_ID"] = "vat id";
 $MESS["WORK_STREET"] = "company address";
+$MESS['change'] = 'change';
 ?>

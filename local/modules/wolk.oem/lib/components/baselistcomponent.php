@@ -1,4 +1,7 @@
-<?php namespace Wolk\OEM\Components;
+<?php 
+
+namespace Wolk\OEM\Components;
+
 
 abstract class BaseListComponent extends \CBitrixComponent
 {
@@ -6,34 +9,45 @@ abstract class BaseListComponent extends \CBitrixComponent
 	protected $cacheAddon = [];
 	protected $navParams = [];
 
-	protected function readDataFromCache() {
-		if($this->arParams['CACHE_TYPE'] == 'N') return false;
-
+	
+	protected function readDataFromCache()
+	{
+		if ($this->arParams['CACHE_TYPE'] == 'N') {
+			return false;
+		}
 		return !($this->StartResultCache(false, $this->cacheAddon));
 	}
+	
 
-	protected function putDataToCache() {
-		if(is_array($this->cacheKeys) && sizeof($this->cacheKeys) > 0) {
+	protected function putDataToCache()
+	{
+		if (is_array($this->cacheKeys) && sizeof($this->cacheKeys) > 0) {
 			$this->SetResultCacheKeys($this->cacheKeys);
 		}
 	}
 
-	protected function abortDataCache() {
+	
+	protected function abortDataCache()
+	{
 		$this->AbortResultCache();
 	}
+	
 
-	protected function isAjaxRequest() {
+	protected function isAjaxRequest()
+	{
 		return \Bitrix\Main\Context::getCurrent()->getRequest()->isPost()
-		&& $this->arParams['AJAX_MODE'] == 'Y'
-		&& $this->arParams['AJAX_ID'] == \Bitrix\Main\Context::getCurrent()->getRequest()->getPost('bxajaxid');
+			&& $this->arParams['AJAX_MODE'] == 'Y'
+			&& $this->arParams['AJAX_ID'] == \Bitrix\Main\Context::getCurrent()->getRequest()->getPost('bxajaxid');
 	}
 
-	protected function executeProlog() {
-		if($this->isAjaxRequest()) {
+	
+	protected function executeProlog()
+	{
+		if ($this->isAjaxRequest()) {
 			$GLOBALS['APPLICATION']->RestartBuffer();
 		}
-		if($this->arParams['COUNT'] > 0) {
-			if($this->arParams['SHOW_NAV'] == 'Y') {
+		if ($this->arParams['COUNT'] > 0) {
+			if ($this->arParams['SHOW_NAV'] == 'Y') {
 				\CPageOption::SetOptionString('main', 'nav_page_in_session', 'N');
 				$this->navParams = ['nPageSize' => $this->arParams['COUNT']];
 				$arNavigation = \CDBResult::GetNavParams($this->navParams);
@@ -44,13 +58,16 @@ abstract class BaseListComponent extends \CBitrixComponent
 		}
 	}
 
-	protected function executeEpilog() {
-		if($this->isAjaxRequest()) {
+	protected function executeEpilog()
+	{
+		if ($this->isAjaxRequest()) {
 			die();
 		}
 	}
+	
 
-	public function onPrepareComponentParams($params) {
+	public function onPrepareComponentParams($params)
+	{
 		$result = [
 			'SHOW_NAV'   => in_array($params['SHOW_NAV'], ['Y', 'N']) ? $params['SHOW_NAV'] : 'Y',
 			'COUNT'      => intval($params['COUNT']) > 0 ? intval($params['COUNT']) : 30,
@@ -61,7 +78,9 @@ abstract class BaseListComponent extends \CBitrixComponent
 		return array_merge($result, $params);
 	}
 
-	public function executeComponent() {
+	
+	public function executeComponent()
+	{
 		try {
 			$this->executeProlog();
 			if(!$this->readDataFromCache()) {

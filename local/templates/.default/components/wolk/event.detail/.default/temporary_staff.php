@@ -1,0 +1,219 @@
+<?use Bitrix\Main\Localization\Loc;?>
+<script type="x/template" id="temporary-staff">
+    <div class="servicescontainer serviceContainer">
+        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle"
+             :class="{'open': visible == true}">{{ section.NAME }}
+        </div>
+        <div class="pagesubtitleopencontainer">
+            <stand-security></stand-security>
+
+            <interpreter></interpreter>
+
+            <stand-cleaning></stand-cleaning>
+
+            <stand-assistant></stand-assistant>
+
+            <input @click.prevent="save" type="button" class="styler saveButton" value="<?=Loc::getMessage('save')?>">
+        </div>
+    </div>
+</script>
+
+<script type="x/template" id="stand-security">
+    <div class="serviceItem" v-if="items">
+        <div class="serviceItem__title">{{ section.NAME }}</div>
+        <div class="serviceItem__block" v-for="selectedItem in selectedItems">
+
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__beforeDate">
+                        <div class="serviceItem__subtitle">&nbsp;</div>
+                        <select v-styler="selectedItem.ID" class="styler">
+                            <option value=""><?=Loc::getMessage('not selected')?></option>
+                            <option value="{{ item.ID }}" v-for="item in items">
+                                {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="setDateBlock">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
+                        <div class="setDate" v-datepicker="selectedItem.dates"></div>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('time')?></div>
+                        <div class="setTime">
+                            <select v-timepicker="selectedItem.timeStart" class="styler"></select>
+
+                            <span class="setTime__divider"></span>
+
+                            <select v-timepicker="selectedItem.timeEnd" class="styler"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                        <div class="serviceItem__cost-value">
+                            {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
+                        </div>
+                    </div>
+                    <div class="serviceItem__desc">* <?=Loc::getMessage('min_order_hours')?></b></div>
+                    <a href="#" @click.prevent="addItem" class="itemAdd_field itemAdd__filed-left clear-left">
+                        <i></i>
+                        <span><?=Loc::getMessage('add_field')?></span>
+                    </a>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
+                        <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                        <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="x/template" id="interpreter">
+    <div class="serviceItem" v-if="items">
+        <div class="serviceItem__title">{{ section.NAME }}</div>
+
+        <div class="serviceItem__block" v-for="selectedItem in selectedItems">
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__beforeDate">
+                        <div class="serviceItem__subtitle">{{ section.UF_SUBTITLE || '&nbsp;' }}</div>
+                        <select v-styler="selectedItem.ID" class="styler">
+                            <option value=""><?=Loc::getMessage('not selected')?></option>
+                            <option value="{{ item.ID }}" v-for="item in items">
+                                {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="setDateBlock">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
+                        <div class="setDate" v-datepicker="selectedItem.dates"></div>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="itemCount">
+                            <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
+                            <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                            <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                        <div class="serviceItem__cost-value">
+                            {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
+                        </div>
+                    </div>
+                    <div class="serviceItem__desc">* <?=Loc::getMessage('min_order_hours')?></b></div>
+                </div>
+                <a href="#" @click.prevent="addItem" class="itemAdd_field">
+                    <i></i>
+                    <span><?=Loc::getMessage('add_field')?></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="x/template" id="stand-cleaning">
+    <div class="serviceItem" v-if="items">
+        <div class="serviceItem__title">{{ section.NAME }}</div>
+
+        <div class="serviceItem__block" v-for="selectedItem in selectedItems">
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__beforeDate">
+                        <div class="serviceItem__subtitle">{{ section.UF_SUBTITLE || '&nbsp;' }}</div>
+                        <select v-styler="selectedItem.ID" class="styler">
+                            <option value=""><?=Loc::getMessage('not selected')?></option>
+                            <option value="{{ item.ID }}" v-for="item in items">
+                                {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="itemCount">
+                            <div class="serviceItem__subtitle"><?=Loc::getMessage('space')?> <span>(m<sup>2</sup>)</span></div>
+                            <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                            <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
+                    <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                    <div class="serviceItem__cost-value">
+                        {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
+                    </div>
+                </div>
+                <div class="serviceItem__desc">* <?=Loc::getMessage('cleaning_desc')?>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="x/template" id="stand-assistant">
+    <div class="serviceItem">
+        <div class="serviceItem__title">{{ section.NAME }}</div>
+
+        <div class="serviceItem__block" v-for="selectedItem in selectedItems">
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__beforeDate">
+                        <div class="serviceItem__subtitle">{{ section.UF_SUBTITLE || '&nbsp;' }}</div>
+                        <select id="ass_sel" v-styler="selectedItem.ID" class="styler">
+                            <option value=""><?=Loc::getMessage('not selected')?></option>
+                            <option :value="item.ID" v-for="item in items">
+                                {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="setDateBlock">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
+                        <div class="setDate" v-datepicker="selectedItem.dates"></div>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
+                        <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                        <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                        <div class="serviceItem__cost-value">
+                            {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
+                        </div>
+                    </div>
+                    <div class="serviceItem__desc">* <?=Loc::getMessage('price_one_p_one_d')?></div>
+                </div>
+                <a href="#" @click.prevent="addItem" class="itemAdd_field"><i></i><span><?=Loc::getMessage('add_field')?></span></a>
+            </div>
+        </div>
+    </div>
+</script>

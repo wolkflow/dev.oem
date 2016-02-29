@@ -14,7 +14,10 @@ $(document).on('ready', function(){
         $.post($form.action, $form.post, function(data){
             $('input', $this).removeAttr('disabled');
             if (data.type == 'error') {
-                $($this).find('.errortext').html(data.message);
+                $($this).find('.errortext').show().html(data.message);
+                setTimeout(function() {
+                    $($this).find('.errortext').hide()
+                }, 3500)
             } else {
                 window.location = window.location;
             }

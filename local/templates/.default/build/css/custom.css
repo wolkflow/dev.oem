@@ -1,0 +1,45 @@
+
+/*
+	Для более светлых цветов необходимо затемнять текст.
+	Класс .text-darker
+*/
+
+/*
+	* faf86d Как тестовый цвет
+*/
+
+
+.text-darker .catalogdeadline__timetablebutton,
+.text-darker .headersection__button,
+.text-darker .headersection__button a,
+.text-darker .headersection__button button,
+.text-darker .logout_butt,
+.text-darker .pagetitle__button,
+.text-darker .pagetitle__button a,
+.text-darker .equipmentcontainer__opencategoriesbutton					{color: #333}
+.text-darker .pagesubtitle__addbutton:before,
+.text-darker .pagesubtitle__addbutton:after								{background: #333}
+
+.custom .catalogdeadline__timetablebutton,
+.custom .headersection__button,
+.custom .headersection__button a,
+.custom .headersection__button button,
+.custom .pagesubtitle__addbutton a,
+.custom .standspagetop__continuebutton,
+.custom .standstypescontainer__choosebutton,
+.custom .logout_butt,
+.custom .pagetitle__button,
+.custom .profilecontainer__savebutton,
+.custom .equipmentcontainer__opencategoriesbutton						{background: #faf86d}
+
+.custom .basketcontainer__title,
+.custom .pagesubtitle,
+.custom .basketcontainer__itemscontainer,
+.custom .standspagetop__currentstandcontainer,
+.custom .basketcontainer__itemcontainer,
+.custom .reviewconfigurationcontainer,
+.custom .footersection													{border-color: #faf86d}
+
+.custom .pagesubtitle[data-module="pagesubtitle-dropdown"]:after		{border-top-color: #faf86d}
+.custom .pagesubtitle.open[data-module="pagesubtitle-dropdown"]:after	{border-bottom-color: #faf86d;border-top: 0}
+
