@@ -1,0 +1,116 @@
+/**
+ * @package		PickMeUp - jQuery datepicker plugin
+ * @author		Nazar Mokrynskyi <nazar@mokrynskyi.com>
+ * @author		Stefan Petre <www.eyecon.ro>
+ * @copyright	Copyright (c) 2013-2015, Nazar Mokrynskyi
+ * @copyright	Copyright (c) 2008-2009, Stefan Petre
+ * @license		MIT License, see license.txt
+ */
+
+.dateResultBlock					{position: relative}
+.dateResult-clear					{display: block;width: 60px;height: 60px;position: absolute;right: 0;top: 0;background: #0f0}
+.setDate.hasDatepicker				{position: relative}
+.loolee								{z-index: -5;opacity: 0;-webkit-transition: all 500ms;-moz-transition: all 500ms;-ms-transition: all 500ms;-o-transition: all 500ms;transition: all 500ms;position: absolute;top: 150%;background: #7f7f7f;border-radius: 5px;margin-top: 15px}
+
+.loolee.active						{z-index: 50;opacity: 1;top: 100%}
+.loolee.active:before				{display: block;content: '';position: absolute;border-bottom: 7px solid #7f7f7f;border-right: 7px solid transparent;border-left: 7px solid transparent;top: -7px;left: 25px}
+
+.looleeHead		{padding: 7px}
+.cButton		{display: block;text-decoration: none;padding: 5px 7px;box-shadow: 0 1px 0 #444;float: right;background: #f0f0f0;border: 0;border-radius: 3px;margin: 0 0 2px 5px;color: #fff}
+.buttonOk		{background: #8cc14c}
+.buttonClear	{background: #da314b}
+label.styler											{height: 28px;line-height: 28px;color: #fff}
+label.styler input[type=checkbox] 						{display: none}
+label.styler span										{display: inline-block;width: 14px;height: 14px;background: #fff;border: 1px solid #4dd7e8;margin-right: 5px;position: relative;top: 2px}
+label.styler input[type=checkbox]:checked + span:before	{content: '';display: block;height: 10px;width: 10px;position: relative;background: #4dd7e8;margin: 2px}
+#dateResult												{margin: 5px 0;font-size: 13px;color: #999}
+
+
+.pickmeup {
+  background: #7f7f7f;
+  border-radius: 0 0 5px 5px;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  display: none;
+  position: absolute; }
+
+  .pickmeup * {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; }
+
+  .pickmeup .pmu-instance {
+    display: block;
+    padding: 7px;
+    text-align: center;}
+
+    .pickmeup .pmu-instance .pmu-button {
+      color: #fff;
+      cursor: pointer;
+      outline: none;
+      text-decoration: none;
+		padding: 7px;
+		border-radius: 3px;
+		margin: 3px;
+	}
+    .pickmeup .pmu-instance .pmu-today {
+       }
+
+    .pickmeup .pmu-instance .pmu-button:hover {
+
+      color: #88c5eb; }
+
+    .pickmeup .pmu-instance .pmu-not-in-month {
+      color: #aeaeae; }
+    .pickmeup .pmu-instance .pmu-disabled,
+    .pickmeup .pmu-instance .pmu-disabled:hover {
+      color: #333;
+      cursor: default; }
+    .pickmeup .pmu-instance .pmu-selected {
+      background: #F8F8F9;
+      color: #333;
+		box-shadow: 0 1px 0 #444;
+		}
+    .pickmeup .pmu-instance .pmu-not-in-month.pmu-selected {
+      background: #ccc; }
+    .pickmeup .pmu-instance nav {
+      color: #eee;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      line-height: 2em; }
+      .pickmeup .pmu-instance nav *:first-child :hover {
+        color: #88c5eb; }
+      .pickmeup .pmu-instance nav .pmu-prev,
+      .pickmeup .pmu-instance nav .pmu-next {
+        display: none;
+        height: 2em;
+        width: 2em; }
+      .pickmeup .pmu-instance nav .pmu-month {
+        width: 14em; }
+    .pickmeup .pmu-instance .pmu-years *,
+    .pickmeup .pmu-instance .pmu-months * {
+      display: inline-block;
+      line-height: 3.6em;
+      width: 3.5em; }
+    .pickmeup .pmu-instance .pmu-day-of-week {
+      color: #999;
+      cursor: default; }
+    .pickmeup .pmu-instance .pmu-day-of-week *,
+    .pickmeup .pmu-instance .pmu-days * {
+      display: inline-block;
+      width: 3em;
+	padding: 7px;
+	margin: 3px}
+    .pickmeup .pmu-instance .pmu-day-of-week * {
+      line-height: 1.8em; }
+  .pickmeup .pmu-instance:first-child .pmu-prev,
+  .pickmeup .pmu-instance:last-child .pmu-next {
+    display: block; }
+  .pickmeup .pmu-instance:first-child .pmu-month,
+  .pickmeup .pmu-instance:last-child .pmu-month {
+    width: 13em; }
+  .pickmeup .pmu-instance:first-child:last-child .pmu-month {
+    width: 100%;
+  min-width:  13em;}
+  .pickmeup:not(.pmu-view-days) .pmu-days, .pickmeup:not(.pmu-view-days) .pmu-day-of-week, .pickmeup:not(.pmu-view-months) .pmu-months, .pickmeup:not(.pmu-view-years) .pmu-years {
+    display: none; }

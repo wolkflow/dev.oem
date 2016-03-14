@@ -3,6 +3,7 @@
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Application;
 use Bitrix\Sale\Internals\BasketPropertyTable;
 use Bitrix\Sale\Internals\BasketTable;
 use Bitrix\Sale\Internals\OrderPropsValueTable;
@@ -28,6 +29,8 @@ class EventDetailComponent extends BaseListComponent
 
     /** @var array */
     protected $equipmentPrices = null;
+
+    protected $equipmentColors = [];
 
     /**
      * EventDetailComponent constructor.
@@ -61,6 +64,7 @@ class EventDetailComponent extends BaseListComponent
         }
     }
 
+
     public function onPrepareComponentParams($params)
     {
         if (!$params['EVENT_ID'] && !$params['ORDER_ID']) {
@@ -72,6 +76,7 @@ class EventDetailComponent extends BaseListComponent
 
         return parent::onPrepareComponentParams($params);
     }
+
 
     /**
      * @throws \Bitrix\Main\ArgumentException
@@ -94,7 +99,16 @@ class EventDetailComponent extends BaseListComponent
 
         $this->arResult['EVENT'] = ArrayHelper::except($this->event, 'STANDS');
         $this->arResult['EVENT']['SURCHARGE'] = $this->getSurcharge();
-        $this->arResult['EVENT']['COLORS_PALETTE'] = $this->getColors();
+        $this->arResult['EVENT']['COLORS_PALETTE'] = array_map(function ($val) {
+            $val['NAME'] = $val['UF_LANG_NAME_' . $this->curLang] ?: $val['UF_XML_ID'];
+
+            return $val;
+        }, $this->getColors());
+        $this->arResult['EVENT']['EXTENTS'] = array_map(function ($val) {
+            $val['NAME'] = $val['UF_NAME_' . $this->curLang] ?: $val['UF_NAME'];
+
+            return $val;
+        }, $this->getLogoExtents());
         $this->arResult['EVENT']['ALL_PRICES'] = $this->equipmentPrices;
         $this->arResult['ITEMS'] = $this->event['STANDS'];
         $this->arResult['SERVICES'] = $this->getServices($this->event['ID']);
@@ -150,12 +164,14 @@ class EventDetailComponent extends BaseListComponent
                 'CODE',
                 'DEPTH_LEVEL',
                 'IBLOCK_SECTION_ID',
-                'UF_SUBTITLE',
-				'UF_NAME_'.$this->curLang
+                'UF_SUBTITLE_' . $this->curLang,
+                'UF_NAME_' . $this->curLang
             ]);
 
             while ($arSection = $obSections->Fetch()) {
-				$arSection['NAME'] = $arSection['UF_NAME_'.$this->curLang] ?: $arSection['NAME'];
+                $arSection['NAME'] = $arSection['UF_NAME_' . $this->curLang] ?: $arSection['NAME'];
+                $arSection['SUBTITLE'] = $arSection['UF_SUBTITLE_' . $this->curLang] ?: $arSection['UF_SUBTITLE'];
+
                 if ($arSection['IBLOCK_SECTION_ID']) {
                     if (array_key_exists($arSection['ID'], $arServices)) {
                         $arSection['ITEMS'] = $arServices[$arSection['ID']];
@@ -180,6 +196,9 @@ class EventDetailComponent extends BaseListComponent
     {
         $arServices = [];
         $servicesIds = $event->GetProperty('OPTIONS')['VALUE'];
+        $colors = array_map(function($val) {
+            return $val['UF_NAME_'.$this->curLang];
+        }, $this->getEquipmentColors());
         #dump($servicesIds);die;
         $obServices = CIBlockElement::GetList([], [
             'IBLOCK_ID' => OPTIONS_IBLOCK_ID,
@@ -208,6 +227,8 @@ class EventDetailComponent extends BaseListComponent
                     ])['src']
                 ];
             }
+
+            $arService['EQ_COLORS'] = ArrayHelper::only($colors, $arService['PROPERTY_38']);
 
             list(
                 $arService['WIDTH'],
@@ -290,7 +311,7 @@ class EventDetailComponent extends BaseListComponent
             }
         }
 
-        $basket = new CSaleBasket;
+        $basket = new CSaleBasket();
         if (
             !(array_key_exists('event', $_POST) && is_numeric($_POST['event'])) ||
             !($event = $this->getEventById($_POST['event']))
@@ -299,6 +320,8 @@ class EventDetailComponent extends BaseListComponent
         }
 
         $this->getEvent();
+
+        $strOrderList = '';
 
         if (
             array_key_exists('stand', $_POST)
@@ -353,6 +376,7 @@ class EventDetailComponent extends BaseListComponent
                 die(join("\n", $r->getErrorMessages()));
             } else {
                 $basketStandId = $r->getId();
+                $strOrderList .= "стенд: {$arStand['NAME']}\n";
             }
 
             if (
@@ -383,9 +407,11 @@ class EventDetailComponent extends BaseListComponent
                             'CODE'      => 'INCLUDING',
                             'VALUE'     => 'Да'
                         ]);
+                        $strOrderList .= "{$eq['NAME']} - {$eq['COUNT']}\n";
                     }
 
                     if ($eq['QUANTITY'] > $eq['COUNT']) {
+                        $diff = $eq['QUANTITY'] - $eq['COUNT'];
                         #add over including equipment
                         $r = BasketTable::add([
                             'PRODUCT_ID' => $eq['ID'],
@@ -400,6 +426,8 @@ class EventDetailComponent extends BaseListComponent
                         if (!$r->isSuccess()) {
                             $addToCartErrors[] = $r->getErrorMessages();
                         }
+
+                        $strOrderList .= "{$eq['NAME']} - {$diff}\n";
                     }
                 }
             }
@@ -411,7 +439,7 @@ class EventDetailComponent extends BaseListComponent
                 foreach ($arServices as $groupId => $services) {
                     foreach ($services as $serviceId => $service) {
                         $service['PRICE'] = $this->equipmentPrices[$service['ID']];
-                        if($service['MULTIPLIER']) {
+                        if ($service['MULTIPLIER']) {
                             $service['PRICE'] *= $service['MULTIPLIER'];
                         }
                         $r = BasketTable::add([
@@ -427,6 +455,8 @@ class EventDetailComponent extends BaseListComponent
                         if (!$r->isSuccess()) {
                             $addToCartErrors[] = $r->getErrorMessages();
                         }
+
+                        $strOrderList .= "{$service['NAME']} - {$service['QUANTITY']}\n";
 
                         if ($r->isSuccess() && isset($service['PROPS']) && is_array($service['PROPS'])) {
                             foreach ($service['PROPS'] as $prop) {
@@ -462,6 +492,8 @@ class EventDetailComponent extends BaseListComponent
                             $addToCartErrors[] = $r->getErrorMessages();
                         }
 
+                        $strOrderList .= "{$option['NAME']} - {$option['QUANTITY']}\n";
+
                         if ($r->isSuccess() && isset($option['PROPS']) && is_array($option['PROPS'])) {
                             foreach ($option['PROPS'] as $prop) {
                                 if (!$prop['VALUE']) {
@@ -480,7 +512,7 @@ class EventDetailComponent extends BaseListComponent
             }
 
             if (empty($addToCartErrors)) {
-                return $this->placeOrder($fuserId, $order);
+                return $this->placeOrder($fuserId, $strOrderList, $order);
             } else {
                 throw new Exception(join("<br>", $addToCartErrors));
             }
@@ -489,9 +521,13 @@ class EventDetailComponent extends BaseListComponent
         throw new Exception('Error');
     }
 
-    protected function placeOrder($fuserId, $order = null)
+
+    /**
+     * Создание заказа.
+     */
+    protected function placeOrder($fuserId, $strOrderList, $order = null)
     {
-        global $USER;
+        global $USER, $DB;
 
         $totalPrice = BasketTable::getRow([
             'select'  =>
@@ -512,9 +548,12 @@ class EventDetailComponent extends BaseListComponent
 
         $surcharge = $this->getSurcharge();
         if ($surcharge) {
-            $moneySurcharge = $totalPrice * $surcharge / 100;
+            $moneySurcharge = round($totalPrice * $surcharge / 100, 2);
             $totalPrice += $moneySurcharge;
         }
+
+        $totalPrice = $totalPrice ?: 1;
+        $vat = ($totalPrice / 100 * VAT_DEFAULT);
 
         $orderData = [
             "LID"            => SITE_ID,
@@ -523,13 +562,18 @@ class EventDetailComponent extends BaseListComponent
             "CANCELED"       => "N",
             "STATUS_ID"      => "N",
             "DISCOUNT_VALUE" => "",
-            "PRICE"          => $totalPrice ?: 1,
+            "PRICE"          => $totalPrice + $vat,
             "CURRENCY"       => $this->event['CURRENCY']['NAME'],
             "USER_ID"        => $USER->GetID(),
-            "DELIVERY_ID"    => 1
+            "DELIVERY_ID"    => 1,
+            "TAX_VALUE"      => $vat,
         ];
 
-        $orderId = $order ? CSaleOrder::Update($order['ID'], $orderData) : CSaleOrder::Add($orderData);
+        if ($order) {
+            $orderId = CSaleOrder::Update($order['ID'], $orderData);
+        } else {
+            $orderId = CSaleOrder::Add($orderData);
+        }
 
         if (!$totalPrice) {
             OrderTable::update($orderId, ['PRICE' => 0]);
@@ -546,9 +590,9 @@ class EventDetailComponent extends BaseListComponent
 
                 if ($order) {
                     $obOrderPropsValues = CSaleOrderPropsValue::GetList([],
-                            [
-                                "ORDER_ID" => $orderId
-                            ]
+                        [
+                            "ORDER_ID" => $orderId
+                        ]
                     );
                     while ($arValue = $obOrderPropsValues->Fetch()) {
                         CSaleOrderPropsValue::Delete($arValue['ID']);
@@ -564,6 +608,55 @@ class EventDetailComponent extends BaseListComponent
                         "VALUE"          => $value
                     ]);
                 }
+            }
+
+            $managerEmail = '';
+            $arEvent = [];
+            if ($eventId = $_POST['orderParams']['eventId']) {
+                $obElement = CIBlockElement::GetByID($eventId);
+                $obEvent = $obElement->GetNextElement();
+                $arEvent = $obEvent->GetFields();
+                $arEvent['PROPS'] = $obEvent->GetProperties();
+                $manager = CUser::GetByID($arEvent['PROPS']['MANAGER']['VALUE'] ?: 1)->Fetch();
+                $managerEmail = $manager['EMAIL'];
+            }
+
+
+            $arFields = [
+                "ORDER_ID"      => $orderId,
+                "ORDER_DATE"    => Date($DB->DateFormatToPHP(CLang::GetDateFormat("SHORT", SITE_ID))),
+                "ORDER_USER"    => $USER->GetFormattedName(false),
+                "PRICE"         => SaleFormatCurrency($totalPrice, $this->event['CURRENCY']['NAME']),
+                "BCC"           => COption::GetOptionString("sale", "order_email", "order@"),
+                "EMAIL"         => $USER->GetEmail(),
+                "STAND_TYPE"    => $_POST['orderParams']['standType'],
+                "WIDTH"         => $_POST['orderParams']['width'],
+                "DEPTH"         => $_POST['orderParams']['depth'],
+                "EVENT_NAME"    => $_POST['orderParams']['eventName'],
+                "STAND_NUM"     => $_POST['orderParams']['standNum'],
+                "PAVILLION"     => $_POST['orderParams']['pavillion'],
+                "ORDER_LIST"    => $strOrderList,
+                "MANAGER_EMAIL" => $managerEmail,
+            ];
+
+            if (is_null($order)) {
+                global $DB;
+                $eventName = "SALE_NEW_ORDER";
+
+                $bSend = true;
+                foreach (GetModuleEvents("sale", "OnOrderNewSendEmail", true) as $arEvent) {
+                    if (ExecuteModuleEventEx($arEvent, [$orderId, &$eventName, &$arFields]) === false) {
+                        $bSend = false;
+                    }
+                }
+
+                if ($bSend) {
+                    $event = new CEvent;
+                    $event->Send($eventName, SITE_ID, $arFields, "N");
+                }
+            } else {
+                $event = new CEvent;
+                $event->Send('SALE_UPDATE_ORDER', SITE_ID, $arFields, "N");
             }
 
             return $this->orderBasket($orderId, $fuserId);
@@ -732,6 +825,7 @@ class EventDetailComponent extends BaseListComponent
                         $equipmentItem['WIDTH'],
                         $equipmentItem['HEIGHT'],
                         $equipmentItem['SKETCH_IMAGE'],
+                        $equipmentItem['SKETCH_TYPE'],
                         ) = [
                         $equipmentItem['PROPS']['WIDTH']['VALUE'] / 1000,
                         $equipmentItem['PROPS']['HEIGHT']['VALUE'] / 1000,
@@ -740,14 +834,15 @@ class EventDetailComponent extends BaseListComponent
                                 'width'  => $equipmentItem['PROPS']['WIDTH']['VALUE'] / 10 < 30 ? 30 : $equipmentItem['PROPS']['WIDTH']['VALUE'] / 10,
                                 'height' => $equipmentItem['PROPS']['HEIGHT']['VALUE'] / 10 < 30 ? 30 : $equipmentItem['PROPS']['HEIGHT']['VALUE'] / 10
                             ],
-                            BX_RESIZE_IMAGE_PROPORTIONAL)['src']
+                            BX_RESIZE_IMAGE_PROPORTIONAL)['src'],
+                        $equipmentItem['PROPS']['SKETCH_TYPE']['VALUE'] ?: 'droppable'
                     ];
 
                     $equipmentItem['PRICE'] = isset($this->equipmentPrices[$equipmentItem['ID']])
                         ? $this->equipmentPrices[$equipmentItem['ID']]
                         : 0;
 
-                    $equipmentItem['NAME'] = $equipmentItem['PROPS']['LANG_TITLE_'.$this->curLang]['VALUE'] ?: $equipmentItem['NAME'];
+                    $equipmentItem['NAME'] = $equipmentItem['PROPS']['LANG_TITLE_' . $this->curLang]['VALUE'] ?: $equipmentItem['NAME'];
 
                     $arEvent['ALL_SERVICES'][$equipmentItem['ID']] = $equipmentItem;
 
@@ -895,7 +990,7 @@ class EventDetailComponent extends BaseListComponent
 
             foreach ($items as &$item) {
                 $item['PRICE_FORMATTED'] = CurrencyFormat($item['PRICE'], $order['CURRENCY']);
-                if($item['TYPE'] == 1 && $item['SET_PARENT_ID']) {
+                if ($item['TYPE'] == 1 && $item['SET_PARENT_ID']) {
                     $item['COST'] = $item['PRICE'] * $item['QUANTITY'] - $item['COUNT'];
                 } else {
                     $item['COST'] = $item['PRICE'] * $item['QUANTITY'];
@@ -1006,5 +1101,24 @@ class EventDetailComponent extends BaseListComponent
         $colorsClass = $entity->getDataClass();
 
         return $colorsClass::getList(['order' => ['UF_NUM' => 'ASC']])->fetchAll();
+    }
+
+    protected function getLogoExtents()
+    {
+        Loader::includeModule('highloadblock');
+        $hlblock = HighloadBlockTable::getById(EXTENTS_ENTITY_ID)->fetch();
+        $entity = HighloadBlockTable::compileEntity($hlblock);
+        $colorsClass = $entity->getDataClass();
+
+        return $colorsClass::getList(['order' => ['UF_SORT' => 'ASC']])->fetchAll();
+    }
+
+    protected function getEquipmentColors() {
+        Loader::includeModule('highloadblock');
+        $hlblock = HighloadBlockTable::getById(EQUIPMENT_COLORS_ENTITY_ID)->fetch();
+        $entity = HighloadBlockTable::compileEntity($hlblock);
+        $colorsClass = $entity->getDataClass();
+
+        return ArrayHelper::index($colorsClass::getList()->fetchAll(), 'UF_XML_ID');
     }
 }

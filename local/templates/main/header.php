@@ -54,20 +54,20 @@ Loc::loadLanguageFile(__FILE__);
     <div class="layout">
         <div class="headersection__button customizable"><?= Loc::getMessage('language') ?>
             <div class="headersection__languagedropdown">
-                <?foreach($APPLICATION->availableLang as $key => $name):?>
-                <a href="<?=$APPLICATION->GetCurPageParam('set_lang='.$key, ['set_lang'], false)?>" class="<?if($key == \Bitrix\Main\Context::getCurrent()->getLanguage()):?>active <?endif;?>headersection__languagedropdownbutton">
-                    <?=$name?>
-                </a>
-                <?endforeach;?>
+                <? foreach ($APPLICATION->availableLang as $key => $name) { ?>
+					<a href="<?=$APPLICATION->GetCurPageParam('set_lang='.$key, ['set_lang'], false)?>" class="<?if($key == \Bitrix\Main\Context::getCurrent()->getLanguage()):?>active <?endif;?>headersection__languagedropdownbutton">
+						<?= $name ?>
+					</a>
+                <? } ?>
             </div>
         </div>
-        <?if($USER->IsAuthorized()):?>
-        <div class="headersection__button customizable">
-            <a class="customizable" href="/personal/profile/">
-                <?=Loc::getMessage("AUTH_PROFILE")?>
-            </a>
-        </div>
-        <?endif;?>
+        <? if ($USER->IsAuthorized()) { ?>
+			<div class="headersection__button customizable">
+				<a class="customizable" href="/personal/profile/">
+					<?=Loc::getMessage("AUTH_PROFILE")?>
+				</a>
+			</div>
+        <? } ?>
         <div class="headersection__button customizable">
             <? $APPLICATION->IncludeComponent("bitrix:system.auth.form", "login", [
                 "REGISTER_URL" => "/registration/",    // Страница регистрации
@@ -84,9 +84,10 @@ Loc::loadLanguageFile(__FILE__);
 </div>
 <div class="pagecontainer">
     <div class="layout" id="vue-container" data-sticky_parent>
-        <?if(\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
-            $APPLICATION->RestartBuffer();?>
+        <? if (\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') { ?>
+            <? $APPLICATION->RestartBuffer() ?>
             <div class="modal placeOrder placeOrder__login" id="placeLogin">
             <div class="modalClose arcticmodal-close"></div>
-            <div class="modalTitle"><?$APPLICATION->ShowTitle(false)?></div>
-        <?}?>
+            <div class="modalTitle"><? $APPLICATION->ShowTitle(false) ?></div>
+        <? } ?>
+		

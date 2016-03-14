@@ -1,4 +1,5 @@
 <?
+
 $arUrlRewrite = array(
 	array(
 		"CONDITION" => "#^/bitrix/services/ymarket/#",
@@ -17,6 +18,12 @@ $arUrlRewrite = array(
 		"RULE" => "ID=$1&TPL=$2",
 		"ID" => "",
 		"PATH" => "/invoice/print.php",
+	),
+	array(
+		"CONDITION" => "#^/printorder/([\d]+)/#",
+		"RULE" => "ID=$1",
+		"ID" => "",
+		"PATH" => "/printorder/print.php",
 	),
 );
 

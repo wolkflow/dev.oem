@@ -308,7 +308,7 @@ input[type="password"] {
   background: rgba(255, 255, 255, 0.85);
   width: 1060px;
   margin: 0 auto 120px;
-  padding: 38px 0 112px 0;
+  padding: 38px 0 183px 0;
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -795,13 +795,13 @@ input[type="password"] {
   float: right;
 }
 .basketcontainer__totalpricecontainer {
-  padding: 50px 0;
+  padding: /*0px 0 50px 0*/ 50px 0;
   position: relative;
 }
 .basketcontainer__totalpricecontainertitle {
   position: absolute;
   left: 0;
-  top: 50px;
+  top: /*-4px*/ 50px;
   font-size: 21px;
   line-height: 24px;
   font-weight: bold;
@@ -814,6 +814,28 @@ input[type="password"] {
 	position: relative;
 	top: -5px
 }
+
+.basketcontainer__taxpricecontainer {
+  padding: 10px 0;
+  position: relative;
+}
+.basketcontainer__taxpricecontainertitle {
+  position: absolute;
+  left: 0;
+  top: 15px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.basketcontainer__taxpricecontainercount {
+  text-align: right;
+  font-size: 28px;
+  line-height: 48px;
+	position: relative;
+	top: -5px
+}
+
 .navButtons {height: 60px}
 .navButtons .prev {  display: block;
 	text-decoration: none;
@@ -1150,17 +1172,31 @@ float: left}
   position: relative;
   padding-top: 87px;
 }
+.ordertaxcontainer__total {
+  font-size: 21px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
 .ordertotalcontainer__total {
   font-size: 21px;
   font-weight: bold;
   text-transform: uppercase;
 }
+
+.ordertotalcontainer__total,
+.ordertaxcontainer__total,
+.ordertotalcontainer__surcharge {width: 460px;}
+.ordertotalcontainer__total span,
+.ordertaxcontainer__total span,
+.ordertotalcontainer__surcharge span{float: right;}
+
+
 .ordertotalcontainer__surcharge {
   font-size: 21px;
   font-weight: bold;
   color: #ff3f25;
   text-transform: uppercase;
-  margin-top: 20px;
+  margin-top: 40px;
 }
 .ordertotalcontainer__surchargetotal {
   position: absolute;
@@ -1172,6 +1208,8 @@ float: left}
   padding-left: 160px;
   font-size: 54px;
   line-height: 48px;
+  width: 300px;
+  text-align: right;
 }
 .ordertotalcontainer__surchargetotaltitle {
   position: absolute;
@@ -1183,7 +1221,7 @@ float: left}
   text-transform: uppercase;
 }
 .ordertotalcontainer__standandpavillion {
-  margin-top: -30px;
+  margin-top: 0px /*-30px*/;
   overflow: hidden;
   *zoom: 1;
   width: 300px;
@@ -1235,8 +1273,12 @@ float: left}
 	margin-top: 60px;
 }
 .catalogdeadline__deadlinecontainer {
+  /*
   width: 408px;
   padding: 60px 60px;
+  */
+  width: 465px;
+  padding: 40px 40px;
   border: 6px solid #ff3f25;
 }
 .catalogdeadline__deadlinetitle {
@@ -1450,5 +1492,5 @@ float: left}
 }
 .footerLogo {
 	position: absolute;
-	top: 66px;
+	top: 101px;
 }

@@ -22,7 +22,6 @@
     <div class="serviceItem" v-if="items">
         <div class="serviceItem__title">{{ section.NAME }}</div>
         <div class="serviceItem__block" v-for="selectedItem in selectedItems">
-
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
                     <div class="serviceItem__beforeDate">
@@ -36,7 +35,17 @@
                     </div>
                     <div class="setDateBlock">
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
-                        <div class="setDate" v-datepicker="selectedItem.dates"></div>
+                        <div class="setDate hasDatepicker" v-pickmeup="selectedItem.calendar">
+                            <div class="loolee">
+                                <div class="looleeHead">
+                                    <label class="styler"><input type="checkbox" class="changeMode">
+                                        <span></span><?=Loc::getMessage('daterange')?></label>
+                                    <a href="#" class="cButton buttonClear dateClear"><?=Loc::getMessage('clear')?></a>
+                                    <a href="#" class="cButton buttonOk looleeClose">ОК</a>
+                                </div>
+                                <div class="dpBlock" data-mode="multiple"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="serviceItem__right">
@@ -61,6 +70,9 @@
                         </div>
                     </div>
                     <div class="serviceItem__desc">* <?=Loc::getMessage('min_order_hours')?></b></div>
+                    <div v-show="selectedItem.calendar.dates">
+                        <div id="dateResult">{{ selectedItem.calendar.datesType == 'multiple' ? selectedItem.calendar.dates.join(", ") : selectedItem.calendar.dates.join(" - ") }}</div>
+                    </div>
                     <a href="#" @click.prevent="addItem" class="itemAdd_field itemAdd__filed-left clear-left">
                         <i></i>
                         <span><?=Loc::getMessage('add_field')?></span>
@@ -87,7 +99,7 @@
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
                     <div class="serviceItem__beforeDate">
-                        <div class="serviceItem__subtitle">{{ section.UF_SUBTITLE || '&nbsp;' }}</div>
+                        <div class="serviceItem__subtitle">{{ section.SUBTITLE || '&nbsp;' }}</div>
                         <select v-styler="selectedItem.ID" class="styler">
                             <option value=""><?=Loc::getMessage('not selected')?></option>
                             <option value="{{ item.ID }}" v-for="item in items">
@@ -96,8 +108,18 @@
                         </select>
                     </div>
                     <div class="setDateBlock">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
-                        <div class="setDate" v-datepicker="selectedItem.dates"></div>
+                        <div class="serviceItem__subtitle">Даты</div>
+                        <div class="setDate hasDatepicker" v-pickmeup="selectedItem.calendar">
+                            <div class="loolee" data-loolee="1">
+                                <div class="looleeHead">
+                                    <label class="styler"><input type="checkbox" class="changeMode">
+                                        <span></span><?=Loc::getMessage('daterange')?></label>
+                                    <a href="#" class="cButton buttonClear dateClear"><?=Loc::getMessage('clear')?></a>
+                                    <a href="#" class="cButton buttonOk looleeClose">ОК</a>
+                                </div>
+                                <div class="dpBlock" data-mode="multiple"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="serviceItem__right">
@@ -120,6 +142,9 @@
                         </div>
                     </div>
                     <div class="serviceItem__desc">* <?=Loc::getMessage('min_order_hours')?></b></div>
+                    <div v-show="selectedItem.calendar.dates">
+                        <div id="dateResult">{{ selectedItem.calendar.datesType == 'multiple' ? selectedItem.calendar.dates.join(", ") : selectedItem.calendar.dates.join(" - ") }}</div>
+                    </div>
                 </div>
                 <a href="#" @click.prevent="addItem" class="itemAdd_field">
                     <i></i>
@@ -138,7 +163,7 @@
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
                     <div class="serviceItem__beforeDate">
-                        <div class="serviceItem__subtitle">{{ section.UF_SUBTITLE || '&nbsp;' }}</div>
+                        <div class="serviceItem__subtitle">{{ section.SUBTITLE || '&nbsp;' }}</div>
                         <select v-styler="selectedItem.ID" class="styler">
                             <option value=""><?=Loc::getMessage('not selected')?></option>
                             <option value="{{ item.ID }}" v-for="item in items">
@@ -165,8 +190,7 @@
                         {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
                     </div>
                 </div>
-                <div class="serviceItem__desc">* <?=Loc::getMessage('cleaning_desc')?>
-                </div>
+                <div class="serviceItem__desc">* <?=Loc::getMessage('cleaning_desc')?></div>
             </div>
         </div>
     </div>
@@ -180,7 +204,7 @@
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
                     <div class="serviceItem__beforeDate">
-                        <div class="serviceItem__subtitle">{{ section.UF_SUBTITLE || '&nbsp;' }}</div>
+                        <div class="serviceItem__subtitle">{{ section.SUBTITLE || '&nbsp;' }}</div>
                         <select id="ass_sel" v-styler="selectedItem.ID" class="styler">
                             <option value=""><?=Loc::getMessage('not selected')?></option>
                             <option :value="item.ID" v-for="item in items">
@@ -189,8 +213,18 @@
                         </select>
                     </div>
                     <div class="setDateBlock">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
-                        <div class="setDate" v-datepicker="selectedItem.dates"></div>
+                        <div class="serviceItem__subtitle">Даты</div>
+                        <div class="setDate hasDatepicker" v-pickmeup="selectedItem.calendar">
+                            <div class="loolee">
+                                <div class="looleeHead">
+                                    <label class="styler"><input type="checkbox" class="changeMode">
+                                        <span></span><?=Loc::getMessage('daterange')?></label>
+                                    <a href="#" class="cButton buttonClear dateClear"><?=Loc::getMessage('clear')?></a>
+                                    <a href="#" class="cButton buttonOk looleeClose">ОК</a>
+                                </div>
+                                <div class="dpBlock" data-mode="multiple"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="serviceItem__right">
@@ -211,6 +245,9 @@
                         </div>
                     </div>
                     <div class="serviceItem__desc">* <?=Loc::getMessage('price_one_p_one_d')?></div>
+                    <div v-show="selectedItem.calendar.dates">
+                        <div id="dateResult">{{ selectedItem.calendar.datesType == 'multiple' ? selectedItem.calendar.dates.join(", ") : selectedItem.calendar.dates.join(" - ") }}</div>
+                    </div>
                 </div>
                 <a href="#" @click.prevent="addItem" class="itemAdd_field"><i></i><span><?=Loc::getMessage('add_field')?></span></a>
             </div>

@@ -1,36 +1,36 @@
 <?php
 
-$MESS['MONTHS_JAN'] = 'января';
-$MESS['MONTHS_FEB'] = 'февраля';
-$MESS['MONTHS_MAR'] = 'марта';
-$MESS['MONTHS_APR'] = 'апреля';
-$MESS['MONTHS_MAY'] = 'мая';
-$MESS['MONTHS_JUN'] = 'июня';
-$MESS['MONTHS_JUL'] = 'июля';
-$MESS['MONTHS_AUG'] = 'августа';
-$MESS['MONTHS_SEP'] = 'сентября';
-$MESS['MONTHS_OCT'] = 'октября';
-$MESS['MONTHS_NOV'] = 'ноября';
-$MESS['MONTHS_DEC'] = 'декабря';
+$MESS['MONTHS_JAN'] = 'january';
+$MESS['MONTHS_FEB'] = 'february';
+$MESS['MONTHS_MAR'] = 'march';
+$MESS['MONTHS_APR'] = 'april';
+$MESS['MONTHS_MAY'] = 'may';
+$MESS['MONTHS_JUN'] = 'june';
+$MESS['MONTHS_JUL'] = 'july';
+$MESS['MONTHS_AUG'] = 'august';
+$MESS['MONTHS_SEP'] = 'september';
+$MESS['MONTHS_OCT'] = 'october';
+$MESS['MONTHS_NOV'] = 'november';
+$MESS['MONTHS_DEC'] = 'december';
 
-$MESS['MONTH_JAN'] = 'январь';
-$MESS['MONTH_FEB'] = 'февраль';
-$MESS['MONTH_MAR'] = 'март';
-$MESS['MONTH_APR'] = 'апрель';
-$MESS['MONTH_MAY'] = 'май';
-$MESS['MONTH_JUN'] = 'июнь';
-$MESS['MONTH_JUL'] = 'июль';
-$MESS['MONTH_AUG'] = 'август';
-$MESS['MONTH_SEP'] = 'сентябрь';
-$MESS['MONTH_OCT'] = 'октябрь';
-$MESS['MONTH_NOV'] = 'ноябрь';
-$MESS['MONTH_DEC'] = 'декабрь';
+$MESS['MONTH_JAN'] = 'january';
+$MESS['MONTH_FEB'] = 'february';
+$MESS['MONTH_MAR'] = 'march';
+$MESS['MONTH_APR'] = 'april';
+$MESS['MONTH_MAY'] = 'may';
+$MESS['MONTH_JUN'] = 'june';
+$MESS['MONTH_JUL'] = 'july';
+$MESS['MONTH_AUG'] = 'august';
+$MESS['MONTH_SEP'] = 'september';
+$MESS['MONTH_OCT'] = 'october';
+$MESS['MONTH_NOV'] = 'november';
+$MESS['MONTH_DEC'] = 'december';
 
 
-$MESS['DAY_MON'] = 'понедельник';
-$MESS['DAY_TUE'] = 'вторник';
-$MESS['DAY_WEN'] = 'среда';
-$MESS['DAY_THU'] = 'четверг';
-$MESS['DAY_FRI'] = 'пятница';
-$MESS['DAY_SAT'] = 'суббота';
-$MESS['DAY_SUN'] = 'воскресенье';
+$MESS['DAY_MON'] = 'monday';
+$MESS['DAY_TUE'] = 'tuesday';
+$MESS['DAY_WEN'] = 'wednesday';
+$MESS['DAY_THU'] = 'thursday';
+$MESS['DAY_FRI'] = 'friday';
+$MESS['DAY_SAT'] = 'saturday';
+$MESS['DAY_SUN'] = 'sunday';

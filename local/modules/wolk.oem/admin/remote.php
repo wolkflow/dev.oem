@@ -46,8 +46,39 @@ switch ($action) {
 			jsonresponse(false, 'Ошибка создания счета');
 		}
 		
-		jsonresponse(true, '', ['link' => $invoice->getInvoice()]);
+		$invoices = \Wolk\Core\Helpers\SaleOrder::getProperty($order_id, 'INVOICES');
+		$invoices = $invoices['VALUE_ORIG'];
+		$invoices []= CFile::MakeFileArray($invoice->getInvoice());
 		
+		\Wolk\Core\Helpers\SaleOrder::saveProperty($order_id, 'INVOICES', $invoices);
+		
+		jsonresponse(true, '', ['link' => $invoice->getInvoice(), 'name' => $invoice->getFileName()]);
 		break;
 	
+	
+	/*
+	 * Печать заказа.
+	 */
+	case ('order-print'):
+		$order_id = (int) $_REQUEST['oid'];
+		
+		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+			jsonresponse(false, 'Ошибка выполнения: модуль не установлен');
+		}
+		
+		$orderprint = new Wolk\OEM\OrderPrint($order_id);
+		
+		// Печать заказа.
+		$result = $orderprint->make();
+		
+		if ($result !== 0) {
+			jsonresponse(false, 'Ошибка создания документа заказа');
+		}
+				
+		jsonresponse(true, '', ['link' => $orderprint->getOrderPrint()]);
+		break;	
 }
+
+
+
+

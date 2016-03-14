@@ -8,7 +8,7 @@
                 {{ selectedStand.PRICE.PRICE | format_currency ' ' currency_format}}
             </div>
             <div class="basketcontainer__itemprice">
-                {{ selectedParams.WIDTH }}m x {{ selectedParams.DEPTH }}m
+                {{ selectedParams.WIDTH }}m &times; {{ selectedParams.DEPTH }}m
             </div>
         </div>
         <div class="basketcontainer__itemcontainer" v-for="eq in selectedStand.EQUIPMENT | overIncluded">
@@ -17,7 +17,7 @@
                 {{ allServices[eq.ID].PRICE * (eq.QUANTITY - eq.COUNT) | format_currency ' ' currency_format}}
             </div>
             <div class="basketcontainer__itemprice">
-                {{ allServices[eq.ID].PRICE | format_currency ' ' currency_format}} x {{ eq.QUANTITY - eq.COUNT }}
+                {{ allServices[eq.ID].PRICE | format_currency ' ' currency_format}} &times; {{ eq.QUANTITY - eq.COUNT }}
             </div>
         </div>
         <div v-for="(groupId, services) in selectedStand.SERVICES">
@@ -27,7 +27,9 @@
                     {{ service.MULTIPLIER ? allServices[service.ID].PRICE * service.QUANTITY * service.MULTIPLIER : allServices[service.ID].PRICE * service.QUANTITY | format_currency ' ' currency_format}}
                 </div>
                 <div class="basketcontainer__itemprice">
-                    {{ service.MULTIPLIER ? allServices[service.ID].PRICE * service.MULTIPLIER : allServices[service.ID].PRICE | format_currency ' ' currency_format}} x {{ service.QUANTITY }}
+                    {{ service.MULTIPLIER ? allServices[service.ID].PRICE * service.MULTIPLIER : allServices[service.ID].PRICE | format_currency ' ' currency_format}} 
+                    &times;
+                    {{ service.QUANTITY * (service.MULTIPLIER ? service.MULTIPLIER : 1) }}
                 </div>
             </div>
         </div>
@@ -38,13 +40,18 @@
                     {{ allServices[option.ID].PRICE * option.QUANTITY | format_currency ' ' currency_format}}
                 </div>
                 <div class="basketcontainer__itemprice">
-                    {{ allServices[option.ID].PRICE | format_currency ' ' currency_format}} x {{ option.QUANTITY }}
+                    {{ allServices[option.ID].PRICE | format_currency ' ' currency_format}} &times; {{ option.QUANTITY }}
                 </div>
             </div>
         </div>
+		<!--<div class="basketcontainer__taxpricecontainer" v-show="taxPrice">
+            <div class="basketcontainer__taxpricecontainertitle"><?=Loc::getMessage('tax_price')?>:</div>
+            <div class="basketcontainer__taxpricecontainercount">{{ taxPrice | format_currency ' ' currency_format}}</div>
+        </div>-->
         <div class="basketcontainer__totalpricecontainer" v-show="totalPrice">
-            <div class="basketcontainer__totalpricecontainertitle"><?=Loc::getMessage('total_price')?>:</div>
+            <div class="basketcontainer__totalpricecontainertitle"><?=Loc::getMessage('total_price')?>*:</div>
             <div class="basketcontainer__totalpricecontainercount">{{ totalPrice | format_currency ' ' currency_format}}</div>
+            <small><?=Loc::getMessage('tax_not_included')?></small>
         </div>
         <div class="navButtons">
             <a href="#" class="button styler prev" @click.prevent="prevStep"><?= Loc::getMessage('back') ?></a>

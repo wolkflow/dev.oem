@@ -64,6 +64,7 @@ $stands = array_map(function ($val) use ($curLang) {
     $item['BASE_PRICE'] = ArrayHelper::only($val['BASE_PRICE'], ['PRICE', 'CURRENCY']);
 
     $item['EQUIPMENT'] = array_map(function ($eq) use ($val, $curLang) {
+        #dump($eq);die;
         return ArrayHelper::only($eq,
             [
                 'ID',
@@ -74,6 +75,7 @@ $stands = array_map(function ($val) use ($curLang) {
                 'PREVIEW_TEXT',
                 'PRICE',
                 'SKETCH_IMAGE',
+                'SKETCH_TYPE',
                 'WIDTH',
                 'HEIGHT',
                 'PROPS'
@@ -87,6 +89,14 @@ $stands = array_map(function ($val) use ($curLang) {
     return $item;
 }, $arResult['ITEMS']);
 
+/*
+foreach ($stands as &$stand) {
+	foreach ($stand['EQUIPMENT'] as $eq => $equipment) {
+		$stand['EQUIPMENT'][$eq]['PROPS']['LANG_DESCRIPTION_'.$curLang]['~VALUE']['TEXT'] = nl2br($equipment['PROPS']['LANG_DESCRIPTION_'.$curLang]['VALUE']['TEXT']);
+	}
+}
+*/
+
 if ($arResult['ORDER']) {
     foreach ($arResult['ORDER']['EQUIPMENT'] as $orderedEq) {
         foreach ($stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['EQUIPMENT'] as &$eq) {
@@ -99,6 +109,7 @@ if ($arResult['ORDER']) {
     $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['OPTIONS'] = $arResult['ORDER']['selectedStand']['OPTIONS'];
     unset($eq);
 }
+
 $stands = Json::encode($stands);
 
 #dump($arResult['ORDER']);
@@ -137,14 +148,25 @@ foreach ($colors as &$color) {
     }
 }
 unset($color);
-//uasort($colors, function($a, $b) { return $a['UF_NUM'] > $b['UF_NUM']; });
-//file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r($colors, true), FILE_APPEND);
-$colors = Json::encode($colors);
 
-$services = Json::encode($arResult['SERVICES'][11]);
-$options = Json::encode($arResult['SERVICES'][10]);
+$extents = ArrayHelper::index($arResult['EVENT']['EXTENTS'], 'UF_XML_ID');
 
+
+// TODO: Передалть на символьныне коды.
+foreach ($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID]['SECTIONS'] as &$section) {
+	foreach ($section['ITEMS'] as $i => $item) {
+		$section['ITEMS'][$i]['PROPERTY_60']['TEXT'] = nl2br($item['PROPERTY_60']['TEXT']);
+		$section['ITEMS'][$i]['PROPERTY_61']['TEXT'] = nl2br($item['PROPERTY_61']['TEXT']); 
+	}
+}
+
+$colors      = Json::encode($colors);
+$extents     = Json::encode($extents);
+$options     = Json::encode($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID]);
+$services    = Json::encode($arResult['SERVICES'][ADDITIONAL_SERVICES_SECTION_ID]);
 $allServices = Json::encode($arResult['EVENT']['ALL_SERVICES']);
+$vat         = VAT_DEFAULT;
+
 
 $am = Asset::getInstance();
 
@@ -160,19 +182,23 @@ $am->addString(<<<JS
 	    colors = $colors,
 	    services = $services,
 	    options = $options,
-	    allServices = $allServices
+	    allServices = $allServices,
+	    extents = $extents
+		vat = $vat
 	</script>
 JS
     , true, AssetLocation::AFTER_JS_KERNEL);
 
 $am->addString('<script src="/local/templates/.default/javascripts/vue.js"></script>');
 $am->addJs('/local/templates/.default/javascripts/jquery-ui.min.js');
-$am->addJs('/local/templates/.default/javascripts/jquery-ui.multidatespicker.js');
 $am->addJs('/local/templates/.default/build/js/jquery.fileupload.js');
 $am->addJs('/local/templates/.default/build/js/jquery.iframe-transport.js');
 $am->addJs('/local/templates/.default/build/js/jquery.tooltipster.min.js');
 $am->addJs('/local/templates/.default/build/js/jquery.airStickyBlock.min.js');
 $am->addJs('/local/templates/.default/build/js/jquery.inputmask.bundle.js');
+$am->addJs('/local/templates/.default/build/js/jquery.pickmeup.min.js');
 $am->addCss('/local/templates/.default/build/css/mdp.css');
 $am->addCss('/local/templates/.default/build/css/jquery-ui.css');
 $am->addCss('/local/templates/.default/build/css/pepper-ginder-custom.css');
+$am->addCss('/assets/css/sketch.css');
+$am->addCss('/local/templates/.default/build/css/pickmeup.css');

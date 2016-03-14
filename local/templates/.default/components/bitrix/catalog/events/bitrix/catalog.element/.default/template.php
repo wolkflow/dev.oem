@@ -16,24 +16,40 @@ $this->setFrameMode(true);
 ?>
 <div class="indexpage">
     <div class="pagetitle">
-        <?= Loc::getMessage('welcome')?><br>
+        <?= Loc::getMessage('welcome') ?><br>
         Online Exhibitors Manual!
     </div>
     <div class="pagedescription">
-        <?Helper::includeFile('home_desc_'.strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage()))?>
+        <? Helper::includeFile('home_desc_'.strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage())) ?>
     </div>
     <div class="indexpage__generalinfocontainer">
         <div class="pagesubtitle">
             <?=Loc::getMessage('General information')?>
         </div>
-        <div class="indexpage__generalinfocolumns">
-            <div class="indexpage__generalinfocolumn">
-                <a href="">1. <?=Loc::getMessage('Order and Delivery Conditions')?></a>
-            </div>
-            <div class="indexpage__generalinfocolumn">
-                <a href="">8. <?=Loc::getMessage('General information Data protection')?></a>
-            </div>
-        </div>
+		<? if (!empty($arResult['DOCUMENTS'])) { ?>
+			<div class="indexpage__generalinfocolumns">
+				<? $i = 1 ?>
+				<? foreach ($arResult['DOCUMENTS'] as $document) { ?>
+					<div class="indexpage__generalinfocolumn">
+						<a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
+							<?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
+						</a>
+					</div>
+					
+					<div class="hide">
+						<div class="modal modalContact" id="document-<?= $document['ID'] ?>">
+							<div class="modalClose arcticmodal-close"></div>
+							<div class="modalTitle"><?= $document['TITLE'] ?></div>
+							<div class="modalContent">
+								<div class="generalInfoContent">
+									<?= $document['HTML'] ?>
+								</div>
+							</div>
+						</div>
+					</div>
+				<? } ?>
+			</div>
+		<? } ?>
     </div>
     <div class="indexpage__choosestandcontainer">
         <!-- Выбор стенда -->

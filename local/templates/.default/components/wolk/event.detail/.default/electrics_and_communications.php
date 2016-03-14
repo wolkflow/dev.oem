@@ -19,7 +19,7 @@
         <div class="serviceItem__block" v-for="selectedItem in selectedItems">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
-                    <div class="serviceItem__subtitle">{{ section.UF_SUBTITLE }}</div>
+                    <div class="serviceItem__subtitle">{{ section.SUBTITLE }}</div>
                     <select v-styler="selectedItem.ID" class="styler">
                         <option value="">
                             <?=Loc::getMessage('not selected')?>

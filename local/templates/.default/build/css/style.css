@@ -66,8 +66,12 @@ button.itemColor__custom		{width: 200px}
 .serviceItem__left-child 		{margin-left: 20px}
 [class^=serviceItem__col]		{float: left;margin-left: 20px}
 [class^=serviceItem__col]:first-child	{margin-left: 0}
-.serviceItem__col-3				{width: 166px}
 .serviceItem__col-2				{width: 260px}
+.serviceItem__col-3				{width: 166px}
+.serviceItem__col-4				{width: 240px}
+.serviceItem__col-7				{width: 180px}
+.serviceItem__col-8				{width: 120px}
+.serviceItem__col-9				{width: 60px}
 
 .serviceItem__beforeDate		{float: left;width: 240px}
 .setDateBlock					{margin-left: 260px}
@@ -421,7 +425,9 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 
 
 
-
+div.lamColor								{width: 200px}
+.lamCount									{width: 160px}
+.lamCount input.styler						{margin: 0;width: 100%}
 
 
 

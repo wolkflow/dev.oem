@@ -30,7 +30,9 @@ $(function () {
             agreement: false,
             guest_agreement: false,
             colors: colors,
-            allServices: allServices
+            allServices: allServices,
+            extents: extents,
+			vat: vat
         },
 
         methods: {
@@ -44,8 +46,8 @@ $(function () {
                 $(".standsTypes__window").eq(index).show();
             },
             setType: function (type, index) {
-            	this.selectedParams.TYPE = type.form.standtype.value;
-            	$(".standsTypes__window").eq(index).hide();
+                this.selectedParams.TYPE = type.form.standtype.value;
+                $(".standsTypes__window").eq(index).hide();
             },
             nextStep: function () {
                 if (this.curStep == 1 && this.selectedStand.ID == 0) {
@@ -55,6 +57,8 @@ $(function () {
                 } else {
                     this.setStep(parseInt(this.curStep) + 1);
                 }
+                    destination = $('.main').offset().top -100;
+                    $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 700);
             },
             prevStep: function () {
                 if (this.curStep > 1) {
@@ -121,17 +125,21 @@ $(function () {
                 return valid;
             },
             setStep: function (step) {
+                //console.log(new Error().stack);
                 if (this.curStep > step || this.validateStep(step - 1)) {
                     if (!(this.selectedStand.ID == 0 && (step == 2 || step == 3 || step == 5))) {
                         top.BX.ajax.history.put({}, window.location.search.replace(/&*step=[\d]/, "") + '&step=' + step);
                         this.curStep = step;
+
+                        $('.js-step-watcher').val(step);
+
                         $(".headersection__languagedropdownbutton").each(function () {
                             if (this.href.match(/step=[\d]/)) {
                                 this.href = this.href.replace(/step=[\d]/, 'step=' + step);
                             } else {
                                 this.href = this.href + '&step=' + step;
                             }
-                        })
+                        });
                     }
                 }
             },
@@ -237,15 +245,18 @@ $(function () {
                     var result = [];
 
                     this.selectedStand.EQUIPMENT.forEach(function (eq) {
-                        result.push({
-                            title: eq.NAME,
-                            quantity: parseInt(eq.QUANTITY),
-                            type: eq.SKETCH_TYPE || 'droppable',
-                            w: eq.WIDTH,
-                            h: eq.HEIGHT,
-                            id: eq.ID,
-                            imagePath: eq.SKETCH_IMAGE || '/local/templates/.default/build/images/noimage.jpg'
-                        });
+                        console.log(eq);
+                        if(eq.WIDTH && eq.HEIGHT) {
+                            result.push({
+                                title: eq.NAME,
+                                quantity: parseInt(eq.QUANTITY),
+                                type: eq.SKETCH_TYPE || 'droppable',
+                                w: eq.WIDTH,
+                                h: eq.HEIGHT,
+                                id: eq.ID,
+                                imagePath: eq.SKETCH_IMAGE || '/i.php?src=/local/templates/.default/build/images/noimage.jpg&w=50&h=50'
+                            });
+                        }
                     });
 
                     var exists = false;
@@ -258,7 +269,7 @@ $(function () {
                             w: eq.WIDTH,
                             h: eq.HEIGHT,
                             id: eq.ID,
-                            imagePath: eq.SKETCH_IMAGE || '/local/templates/.default/build/images/noimage.jpg'
+                            imagePath: eq.SKETCH_IMAGE || '/i.php?src=/local/templates/.default/build/images/noimage.jpg&w=50&h=50'
                         };
 
                         result.forEach(function (existingEq, key) {
@@ -268,8 +279,8 @@ $(function () {
                             }
                         });
 
-                        if (!exists) {
-                            result.push(newItem)
+                        if (!exists && newItem.w && newItem.h) {
+                            result.push(newItem);
                         }
                     });
 
@@ -286,7 +297,19 @@ $(function () {
                     this.stands[this.selected] = val;
                 }
             },
-            totalPrice: function () {
+			taxPrice: function () {
+				if (this.selectedStand) {
+					return parseFloat((this.summaryPrice / 100 * this.vat).toFixed(2));
+				}
+				return null;
+			},
+			totalPrice: function () {
+				if (this.selectedStand) {
+					return parseFloat((this.summaryPrice + this.taxPrice).toFixed(2));
+				}
+				return null;
+			},
+            summaryPrice: function () {
                 if (this.selectedStand) {
                     var price = this.selectedStand.PRICE.PRICE,
                         self = this;
@@ -332,7 +355,6 @@ $(function () {
                             });
                         });
                     }
-
                     return res;
                 }
             },
@@ -385,7 +407,10 @@ $(function () {
                 return (this.curEvent.MARGIN_DATES !== null);
             },
             moneySurcharge: function () {
-                return parseInt((this.curEvent.SURCHARGE * this.totalPrice / 100));
+                return parseFloat((this.curEvent.SURCHARGE * this.totalPrice / 100).toFixed(2));
+            },
+            totalSurchargePrice: function () {
+                return parseFloat((this.totalPrice + this.moneySurcharge).toFixed(2));
             },
             regValidation: {
                 cache: false,
@@ -466,10 +491,6 @@ $(function () {
                 }
                 if (val == 2) {
 
-                } else if (val == 3) {
-                    Vue.nextTick(function () {
-                        $('.equipmentcontainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
-                    })
                 } else if (val == 4) {
                     this.$root.$children.forEach(function (val, key) {
                         if (val.hasOwnProperty('toggleVisible')) {
@@ -477,7 +498,11 @@ $(function () {
                         }
                     });
                     Vue.nextTick(function () {
-                        $('div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
+                        $('.serviceContainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
+                    })
+                } else if (val == 3) {
+                    Vue.nextTick(function () {
+                        $('.equipmentcontainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
                     })
                 } else if (val == 5) {
                     var self = this;
@@ -488,6 +513,26 @@ $(function () {
                     if (self.selectedParams.hasOwnProperty('SKETCH')) {
                         curItems = self.selectedParams.SKETCH.objects;
                     }
+                    window.resizeEditor = function (items) {
+                        var editorH = Math.max(120 + (items.length * 135), $(window).height());
+                        $("#designer").height(editorH);
+                        var firstRun = !itemsForSketch;
+                        window.editorScrollTop = $("#designer").offset().top - 30;
+                        window.editorScrollBottom = window.editorScrollTop - 30 + editorH - $(window).height();
+                        if (window.editorScrollBottom < window.editorScrollTop) window.editorScrollTop = window.editorScrollBottom;
+                        if (!firstRun) {
+                            ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
+                            // trigger resize event to update layout with new height
+                            if (Event.prototype.initEvent) {
+                                // for IE
+                                var evt = window.document.createEvent('UIEvents');
+                                evt.initUIEvent('resize', true, false, window, 0);
+                                window.dispatchEvent(evt);
+                            } else {
+                                window.dispatchEvent(new Event('resize'));
+                            }
+                        }
+                    };
                     if (typeof itemsForSketch === 'undefined') {
                         $("head").append('<script src="/local/templates/.default/javascripts/designer.js"></script>');
                         itemsForSketch = self.itemsForSketch;
@@ -499,29 +544,8 @@ $(function () {
                             meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
                         }
                         Vue.nextTick(function () {
-                            (window.resizeEditor = function (items) {
-                                var editorH = Math.max(120 + (items.length * 135), $(window).height());
-                                $("#designer").height(editorH);
-                                var firstRun = !window.editorScrollTop;
-                                window.editorScrollTop = $("#designer").offset().top - 30;
-                                window.editorScrollBottom = window.editorScrollTop - 30 + editorH - $(window).height();
-                                if (window.editorScrollBottom < window.editorScrollTop) window.editorScrollTop = window.editorScrollBottom;
-                                if (!firstRun) {
-                                    ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
-                                    // trigger resize event to update layout with new height
-                                    if (Event.prototype.initEvent) {
-                                        // for IE
-                                        var evt = window.document.createEvent('UIEvents');
-                                        evt.initUIEvent('resize', true, false, window, 0);
-                                        window.dispatchEvent(evt);
-                                    } else {
-                                        window.dispatchEvent(new Event('resize'));
-                                    }
-                                }
-
-                            })(itemsForSketch);
                             window.onEditorReady = function () {
-                                $(window).bind("scroll", function (e) {
+                                $(window).on("scroll", function (e) {
                                     ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
                                 });
                                 ru.octasoft.oem.designer.Main.init({
@@ -532,10 +556,12 @@ $(function () {
                                     items: itemsForSketch,
                                     placedItems: curItems || {}
                                 });
+                                setTimeout(function() { window.resizeEditor(itemsForSketch); }, 100);
                             };
                             lime.embed("designer", 0, 0);
                         });
                     } else {
+                        //window.resizeEditor(itemsForSketch);
                         if (JSON.stringify(itemsForSketch) != JSON.stringify(self.itemsForSketch)) {
                             itemsForSketch = self.itemsForSketch;
                             Vue.nextTick(function () {
@@ -547,8 +573,8 @@ $(function () {
                                     items: itemsForSketch,
                                     placedItems: curItems || {}
                                 });
-                                window.resizeEditor(itemsForSketch);
                             });
+                            setTimeout(function() { window.resizeEditor(itemsForSketch); }, 100);
                         }
                     }
                 }
@@ -572,8 +598,10 @@ $(function () {
         }
     });
 
-    $(window).on('popstate', function () {
-        vm.prevStep();
+    $(window).on('popstate', function (event) {
+        if (event.state) {
+            vm.prevStep();
+        }
     });
 
     $("#email_confirm, #comMail").inputmask({
@@ -598,6 +626,7 @@ $(function () {
     }
 });
 
+// Изменение количества товарных позиций.
 var quantityMixin = {
     methods: {
         incQty: function (item) {
@@ -611,6 +640,7 @@ var quantityMixin = {
     }
 };
 
+// Добавление в корзину.
 var addToCartMixin = {
     methods: {
         addToCart: function () {
@@ -622,7 +652,7 @@ var addToCartMixin = {
                         NAME: self.section.NAME + ', ' + self.items[item.ID].NAME,
                         CART_SECTION: {ID: self.section.ID, NAME: self.section.NAME},
                         QUANTITY: item.QUANTITY,
-                        PRICE: self.items[item.ID].PRICE
+                        PRICE: parseFloat(self.items[item.ID].PRICE).toFixed(2)
                     });
                 } else {
                     if (
@@ -638,6 +668,7 @@ var addToCartMixin = {
     }
 };
 
+// Переключение видимости.
 var toggleableMixin = {
     methods: {
         toggleVisible: function () {
@@ -645,7 +676,6 @@ var toggleableMixin = {
             if (this.visible) {
                 Vue.nextTick(function () {
                     $('.styler').trigger('refresh');
-
                 });
             }
         },
@@ -653,12 +683,12 @@ var toggleableMixin = {
             this.visible = false;
             Vue.nextTick(function () {
                 $('.styler').trigger('refresh');
-
             });
         }
     }
 };
 
+// Формат валюты.
 var currencyMixin = {
     computed: {
         currency_format: function () {
@@ -804,10 +834,10 @@ Vue.component('graphics', {
                     return this.$parent.sections[this.sectionId];
                 },
                 item: function () {
-                    return this.section.ITEMS[this.itemId]
+                    return this.section.ITEMS[this.itemId];
                 },
                 price: function () {
-                    return this.item.PRICE
+                    return this.item.PRICE.toFixed(2);
                 },
                 colors: function () {
                     var result = [],
@@ -823,7 +853,7 @@ Vue.component('graphics', {
                     return result;
                 },
                 allColors: function () {
-                    return this.$root.colors
+                    return this.$root.colors;
                 }
             },
             methods: {
@@ -843,7 +873,7 @@ Vue.component('graphics', {
                             CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
                             QUANTITY: 1,
                             FASCIA_TEXT: self.text,
-                            PRICE: self.price,
+                            PRICE: self.price.toFixed(2),
                             PROPS: [
                                 {
                                     NAME: 'Текст',
@@ -1056,8 +1086,8 @@ Vue.component('graphics', {
                                 ID: self.item.ID,
                                 NAME: self.item.NAME + ' (' + item.COLOR + ')',
                                 CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
-                                QUANTITY: item.QUANTITY,
-                                PRICE: self.price,
+                                QUANTITY: parseFloat(item.QUANTITY).toFixed(2),
+                                PRICE: parseFloat(self.price).toFixed(2),
                                 PROPS: [
                                     {
                                         NAME: 'COLOR',
@@ -1260,7 +1290,10 @@ Vue.component('additional-equipment', {
             return this.item.PRICE
         },
         colors: function () {
-            var colors = array_combine(this.item.PROPERTY_VALUE_ID_38, this.item.PROPERTY_38);
+            var colors = !$.isEmptyObject(this.item.EQ_COLORS) ? this.item.EQ_COLORS : false;
+
+            console.log(colors);
+
             if (typeof colors == 'object') {
                 if (Object.keys(colors).length == 1) {
                     return {ID: Object.keys(colors)[0], VALUE: colors[Object.keys(colors)[0]]}
@@ -1899,9 +1932,9 @@ Vue.component('stand-security', {
                 {
                     ID: '',
                     QUANTITY: 0,
-                    dates: {
-                        dateStart: '',
-                        dateEnd: ''
+                    calendar: {
+                        dates: [],
+                        datesType: 'multiple'
                     },
                     timeStart: '09:00',
                     timeEnd: '23:00'
@@ -1935,9 +1968,9 @@ Vue.component('stand-security', {
             this.selectedItems.push({
                 ID: '',
                 QUANTITY: 0,
-                dates: {
-                    dateStart: '',
-                    dateEnd: ''
+                calendar: {
+                    dates: [],
+                    datesType: 'multiple'
                 },
                 timeStart: '09:00',
                 timeEnd: '23:00'
@@ -1946,51 +1979,62 @@ Vue.component('stand-security', {
         addToCart: function () {
             var self = this;
             this.selectedItems.forEach(function (item, index) {
-                if (item.id && item.QUANTITY > 0) {
-                    try {
-                        if (item.dates.dateStart && !item.dates.dateEnd) {
-                            item.dates.dateEnd = item.dates.dateStart;
+                if (item.ID && item.QUANTITY > 0) {
+                    var hoursCount, daysCount;
+                    if (item.calendar.datesType == 'range') {
+                        try {
+                            //var dateStart = new Date(item.calendar.dates[0] + ' ' + item.timeStart);
+                            //var dateEnd = new Date(item.calendar.dates[1] + ' ' + item.timeEnd);
+                            
+                            var date1 = item.calendar.dates[0].split('-');
+                            var date2 = item.calendar.dates[1].split('-');
+                            
+                            date1 = date1[2] + '/' + date1[1] + '/' + date1[0];
+                            date2 = date2[2] + '/' + date2[1] + '/' + date2[0];
+                            
+                            daysCount  = Date.getDaysBetween(new Date(date1), new Date(date2));
+                            hoursCount = Date.getHoursBetween(new Date(date1), new Date(date2));
+                        } catch (e) {
+                            daysCount  = 0;
+                            hoursCount = 0;
                         }
-                        var dateStart = new Date(item.dates.dateStart + ' ' + item.timeStart);
-                        var dateEnd = new Date(item.dates.dateEnd + ' ' + item.timeEnd);
-                        hoursCount = Date.getHoursBetween(dateStart, dateEnd);
-                    } catch (e) {
-                        hoursCount = 0;
+                        if (daysCount < 1) {
+                            daysCount = 1;
+                        }
+                        if (hoursCount < 8) {
+                            hoursCount = 8;
+                        }
+                    } else {
+                        daysCount  = item.calendar.dates.length;
+                        hoursCount = item.calendar.dates.length * 8;
                     }
+                    
+                    self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
+                        ID: item.ID,
+                        NAME: self.items[item.ID].NAME,
+                        CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
+                        QUANTITY: item.QUANTITY,
+                        PRICE: self.items[item.ID].PRICE,
+                        MULTIPLIER: daysCount,
+                        PROPS: [
+                            {
+                                NAME: 'timeStart',
+                                CODE: 'timeStart',
+                                VALUE: item.timeStart
+                            },
+                            {
+                                NAME: 'timeEnd',
+                                CODE: 'timeEnd',
+                                VALUE: item.timeEnd
+                            },
+                            {
+                                NAME: 'calendar',
+                                CODE: 'calendar',
+                                VALUE: item.calendar
+                            }
+                        ]
+                    });
 
-                    if (hoursCount > 0) {
-                        if (hoursCount < 8) hoursCount = 8;
-                        self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
-                            ID: item.ID,
-                            NAME: self.items[item.ID].NAME,
-                            CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
-                            QUANTITY: item.QUANTITY,
-                            PRICE: self.items[item.ID].PRICE,
-                            MULTIPLIER: hoursCount,
-                            PROPS: [
-                                {
-                                    NAME: 'timeStart',
-                                    CODE: 'timeStart',
-                                    VALUE: item.timeStart
-                                },
-                                {
-                                    NAME: 'timeEnd',
-                                    CODE: 'timeEnd',
-                                    VALUE: item.timeEnd
-                                },
-                                {
-                                    NAME: 'dateStart',
-                                    CODE: 'dateStart',
-                                    VALUE: item.dates.dateStart
-                                },
-                                {
-                                    NAME: 'dateEnd',
-                                    CODE: 'dateEnd',
-                                    VALUE: item.dates.dateEnd
-                                }
-                            ]
-                        });
-                    }
                 } else {
                     if (
                         self.$root.selectedStand.SERVICES.hasOwnProperty(self.section.ID)
@@ -2008,6 +2052,8 @@ Vue.component('stand-security', {
     ]
 });
 
+
+// Переводчик.
 Vue.component('interpreter', {
     template: '#interpreter',
     data: function () {
@@ -2017,9 +2063,9 @@ Vue.component('interpreter', {
                 {
                     ID: '',
                     QUANTITY: 0,
-                    dates: {
-                        dateStart: '',
-                        dateEnd: ''
+                    calendar: {
+                        dates: [],
+                        datesType: 'multiple'
                     }
                 }
             ]
@@ -2048,9 +2094,10 @@ Vue.component('interpreter', {
             this.selectedItems.push({
                 ID: '',
                 QUANTITY: 0,
-                dates: {
-                    dateStart: '',
-                    dateEnd: ''
+                calendar: {
+                    dates: [],
+                    datesType: 'multiple',
+					dateFormat: 'yyyy/mm/dd'
                 }
             });
         },
@@ -2059,11 +2106,23 @@ Vue.component('interpreter', {
             this.selectedItems.forEach(function (item, index) {
                 if (item.ID && item.QUANTITY > 0) {
                     var daysCount;
-                    try {
-                        daysCount = Date.getDaysBetween(new Date(item.dates.dateStart), new Date(item.dates.dateEnd), true);
-                    } catch (e) {
-                        daysCount = 1;
+					
+                    if (item.calendar.datesType == 'multiple') {
+                        daysCount = item.calendar.dates.length
+                    } else {
+						var date1 = item.calendar.dates[0].split('-');
+						var date2 = item.calendar.dates[1].split('-');
+						
+						date1 = date1[2] + '/' + date1[1] + '/' + date1[0];
+						date2 = date2[2] + '/' + date2[1] + '/' + date2[0];
+						
+                        try {
+                            daysCount = Date.getDaysBetween(new Date(date1), new Date(date2), true);
+                        } catch (e) {
+                            daysCount = 1;
+                        }
                     }
+
                     self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
                         ID: item.ID,
                         NAME: self.items[item.ID].NAME,
@@ -2073,14 +2132,9 @@ Vue.component('interpreter', {
                         MULTIPLIER: daysCount,
                         PROPS: [
                             {
-                                NAME: 'dateStart',
-                                CODE: 'dateStart',
-                                VALUE: item.dates.dateStart
-                            },
-                            {
-                                NAME: 'dateEnd',
-                                CODE: 'dateEnd',
-                                VALUE: item.dates.dateEnd
+                                NAME: 'calendar',
+                                CODE: 'calendar',
+                                VALUE: item.calendar
                             }
                         ]
                     });
@@ -2185,9 +2239,9 @@ Vue.component('stand-assistant', {
                 {
                     ID: 0,
                     QUANTITY: 0,
-                    dates: {
-                        dateStart: '',
-                        dateEnd: ''
+                    calendar: {
+                        dates: [],
+                        datesType: 'multiple'
                     }
                 }
             ]
@@ -2222,9 +2276,9 @@ Vue.component('stand-assistant', {
             this.selectedItems.push({
                 ID: '',
                 QUANTITY: 0,
-                dates: {
-                    dateStart: '',
-                    dateEnd: ''
+                calendar: {
+                    dates: [],
+                    datesType: 'multiple'
                 }
             });
         },
@@ -2233,10 +2287,21 @@ Vue.component('stand-assistant', {
             this.selectedItems.forEach(function (item, index) {
                 if (item.ID && item.QUANTITY > 0) {
                     var daysCount;
-                    try {
-                        daysCount = Date.getDaysBetween(new Date(item.dates.dateStart), new Date(item.dates.dateEnd), true);
-                    } catch (e) {
-                        daysCount = 1;
+					
+                    if (item.calendar.datesType == 'multiple') {
+                        daysCount = item.calendar.dates.length
+                    } else {
+                        var date1 = item.calendar.dates[0].split('-');
+						var date2 = item.calendar.dates[1].split('-');
+						
+						date1 = date1[2] + '/' + date1[1] + '/' + date1[0];
+						date2 = date2[2] + '/' + date2[1] + '/' + date2[0];
+						
+						try {
+							daysCount = Date.getDaysBetween(new Date(date1), new Date(date2), true);
+						} catch (e) {
+							daysCount = 1;
+						}
                     }
 
                     self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
@@ -2248,14 +2313,9 @@ Vue.component('stand-assistant', {
                         MULTIPLIER: daysCount,
                         PROPS: [
                             {
-                                NAME: 'dateStart',
-                                CODE: 'dateStart',
-                                VALUE: item.dates.dateStart
-                            },
-                            {
-                                NAME: 'dateEnd',
-                                CODE: 'dateEnd',
-                                VALUE: item.dates.dateEnd
+                                NAME: 'calendar',
+                                CODE: 'calendar',
+                                VALUE: item.calendar
                             }
                         ]
                     });
@@ -2373,8 +2433,11 @@ Vue.component('additional-buildup-time', {
 Vue.component('basket', {
     template: '#basket',
     computed: {
+		taxPrice: function () {
+            return this.$parent.taxPrice || 0;
+        },
         totalPrice: function () {
-            return this.$parent.totalPrice || 0;
+            return this.$parent.summaryPrice || 0;
         },
         selectedStand: function () {
             return this.$parent.selectedStand;
@@ -2403,14 +2466,22 @@ Vue.component('basket', {
     mixins: [currencyMixin]
 });
 
+
+// Фильтр формата валюты
 Vue.filter('format_number', function (val, separator) {
     if (val !== undefined && val) {
         return '€' + val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + separator);
     }
 });
 
+// Фильтр формата цены
 Vue.filter('format_currency', function (val, separator, pattern) {
     var result = '';
+    
+    if ((val ^ 0) !== val) {
+        val = parseFloat(val).toFixed(2);
+    }
+    
     if (val !== undefined && val) {
         result = val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + separator);
         if (pattern) {
@@ -2465,6 +2536,94 @@ Vue.directive('datepicker', {
     },
     update: function (value) {
         $(this.el).multiDatesPicker('value', value);
+    }
+});
+
+Vue.directive('pickmeup', {
+    twoWay: true,
+    bind: function () {
+        var self = this,
+            updateDt;
+
+        (updateDt = function (el) {
+            // Вызываем плагин
+            Vue.nextTick(function () {
+                $(el).find('.dpBlock').first().pickmeup({
+                    flat: true,
+                    mode: $(el).find('.dpBlock').first().attr('data-mode'),
+                    change: function (formatted_date) {
+                        self.set({
+                            dates: formatted_date,
+                            datesType: $(self.el).find('.dpBlock').first().attr('data-mode')
+                        });
+                    }
+                });
+
+                // Убиваем текущую дату из выбранных
+                $(el).find('.dpBlock').first().pickmeup('clear');
+
+                // Убиваем предыдущий результат
+                self.set({
+                    dates: [],
+                    datesType: $(self.el).find('.dpBlock').first().attr('data-mode')
+                });
+            })
+
+        })(self.el);
+
+        // Переключаем режимы
+        $(self.el).on('change', '.changeMode', function () {
+            if ($(this).prop('checked')) {
+                $(self.el).find('.dpBlock').first().attr('data-mode', 'range');
+                self.set({
+                    dates: [],
+                    datesType: $(self.el).find('.dpBlock').first().attr('data-mode')
+                });
+            } else {
+                $(self.el).find('.dpBlock').first().attr('data-mode', 'multiple');
+                self.set({
+                    dates: [],
+                    datesType: $(self.el).find('.dpBlock').first().attr('data-mode')
+                });
+            }
+            // Убиваем календарь
+            $(self.el).find('.dpBlock').first().pickmeup('destroy');
+
+            // Вызываем календарь с новыми параметрами
+            updateDt(self.el);
+        });
+
+
+        $(self.el).on('click', function () {
+            // Показываем окно
+            $(this).find('.loolee').addClass('active');
+        });
+
+        // Очищаем результат в календаре и инпуте
+        $(self.el).on('click', '.dateClear', function (e) {
+            e.preventDefault();
+            $(self.el).find('.dpBlock').first().pickmeup('clear');
+            self.set({
+                dates: [],
+                datesType: $(self.el).find('.dpBlock').first().attr('data-mode')
+            });
+        });
+
+        // Закрываем окно при клике на "ОК"
+        $(document).on('click', '.looleeClose', function (e) {
+            e.preventDefault();
+            $(self.el).find('.loolee.active').removeClass('active');
+        });
+
+        $(document).mouseup(function (e) {
+            var container = $('.loolee.active');
+            if (container.has(e.target).length === 0) {
+                container.removeClass('active');
+            }
+        });
+    },
+    update: function (value) {
+        //console.log(value);
     }
 });
 
@@ -2599,7 +2758,7 @@ Date.getHoursBetween = function (date1, date2) {
 
 Date.getDaysBetween = function (date1, date2, including) {
     var one_day = 1000 * 60 * 60 * 24;
-
+	
     var date1_ms = date1.getTime();
     var date2_ms = date2.getTime();
 
@@ -2611,3 +2770,9 @@ Date.getDaysBetween = function (date1, date2, including) {
         return Math.round(difference_ms / one_day);
     }
 };
+
+Vue.transition('fade', {
+    afterEnter: function (el) {
+        setTimeout(function() {window.resizeEditor(itemsForSketch);}, 600);
+    }
+});

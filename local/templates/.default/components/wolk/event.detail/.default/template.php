@@ -1,5 +1,6 @@
 <?
 use Bitrix\Main\Localization\Loc;
+use Wolk\Core\Helpers\Text as TextHelper;
 
 #dump($arResult);die;
 $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
@@ -15,10 +16,19 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 <!--<pre>{{ options | json }}</pre>-->
 
 <div class="catalogdeadline" v-show="hasMargins">
-<div class="catalogdeadline__deadlinecontainer">
+	<div class="catalogdeadline__deadlinecontainer">
+		<div class="catalogdeadline__deadlinetitle">
+			<?= Loc::getMessage('deadline') ?>
+			<span class="catalogdeadline__deadlinedate">
+				<? $date = strtotime(reset($arResult['EVENT']['PROPS']['MARGIN_DATES']['VALUE'])) ?>
+				<?= TextHelper::i18nmonth(date('n', $date)) ?>
+				<?= date('j', $date) ?><sup><?= Loc::getMessage('weekday') ?></sup>,
+				<?= date('Y', $date) ?>
+			</span>
+		</div>
         <div class="catalogdeadline__deadlinedescription">
             <span v-for="(margindate, marginpercent) in curEvent.MARGIN_DATES">
-                <?=Loc::getMessage('surcharge_message')?><br>
+                <?= Loc::getMessage('surcharge_message') ?><br>
             </span>
         </div>
     </div>
@@ -32,9 +42,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <div class="standspagetop" id="preselect" v-if="selected">
         <div class="pagedescription">
             <? if ($arResult['INDIVIDUAL_STAND']) { ?>
-                <?=Loc::getMessage('selected_individual_stand')?>
+                <?= Loc::getMessage('selected_individual_stand') ?>
             <? } else { ?>
-                <?=Loc::getMessage('prepaid_stand')?>
+                <?= Loc::getMessage('prepaid_stand') ?>
             <? } ?>
         </div>
         <div v-show="selectedStand.ID > 0">
@@ -62,40 +72,40 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <div class="pagetitle"><?= Loc::getMessage('Another system stand types') ?></div>
         <div class="standstypescontainer__standscontainer standsTypesRow">
             <? $s_id = 0;
-            foreach ($arResult['ITEMS'] as $stand): ?>
+            foreach ($arResult['ITEMS'] as $stand) { ?>
                 <div
                     class="standstypescontainer__standcontainer <? if ($s_id % 2 == 0): ?>standsTypesLeft<? else: ?>standsTypesRight<? endif; ?>">
-                <?if($s_id < 2):?>
-                    <div class="standsTypes__window">
-                        <?Helper::includeFile('choose_wall_conf_'.$curLang)?>
-                        <form method="get" name="standsTypes__window_<?=$s_id?>" action="">
-                            <div class="chooseType__row">
-                            
-                                <label for="row_<?=$s_id?>" class="chooseType__label">
-                                    <input id="row_<?=$s_id?>" type="radio" value="row" name="standtype"><span><?=Loc::getMessage('row')?></span>
-                                    <span class="chooseType__icon"></span>
-                                </label>
-                                <label for="head_<?=$s_id?>" class="chooseType__label">
-                                    <input id="head_<?=$s_id?>" type="radio" value="head" name="standtype"><span><?=Loc::getMessage('head')?></span>
-                                    <span class="chooseType__icon"></span>
-                                </label>
-                            </div>
-                            <div class="chooseType__row">
-                                <label for="corner_<?=$s_id?>" class="chooseType__label">
-                                    <input id="corner_<?=$s_id?>" type="radio" value="corner" name="standtype"><span><?=Loc::getMessage('corner')?></span>
-                                    <span class="chooseType__icon"></span>
-                                </label>
-                                <label for="insel_<?=$s_id?>" class="chooseType__label">
-                                    <input id="insel_<?=$s_id?>" type="radio" value="insel" name="standtype"><span><?=Loc::getMessage('insel')?></span>
-                                    <span class="chooseType__icon"></span>
-                                </label>
-                            </div>
-                            <div class="standsTypes__save">
-                                <input @click.prevent="setType($event.target, <?=$s_id?>)" type="button" value="<?=Loc::getMessage('save')?>" class="styler">
-                            </div>
-                        </form>
-                    </div>
-                <?endif;?>
+					<? if ($s_id < 2) { ?>
+						<div class="standsTypes__window">
+							<?Helper::includeFile('choose_wall_conf_'.$curLang)?>
+							<form method="get" name="standsTypes__window_<?=$s_id?>" action="">
+								<div class="chooseType__row">
+								
+									<label for="row_<?=$s_id?>" class="chooseType__label">
+										<input id="row_<?=$s_id?>" type="radio" value="row" name="standtype"><span><?=Loc::getMessage('row')?></span>
+										<span class="chooseType__icon"></span>
+									</label>
+									<label for="head_<?=$s_id?>" class="chooseType__label">
+										<input id="head_<?=$s_id?>" type="radio" value="head" name="standtype"><span><?=Loc::getMessage('head')?></span>
+										<span class="chooseType__icon"></span>
+									</label>
+								</div>
+								<div class="chooseType__row">
+									<label for="corner_<?=$s_id?>" class="chooseType__label">
+										<input id="corner_<?=$s_id?>" type="radio" value="corner" name="standtype"><span><?=Loc::getMessage('corner')?></span>
+										<span class="chooseType__icon"></span>
+									</label>
+									<label for="insel_<?=$s_id?>" class="chooseType__label">
+										<input id="insel_<?=$s_id?>" type="radio" value="insel" name="standtype"><span><?=Loc::getMessage('insel')?></span>
+										<span class="chooseType__icon"></span>
+									</label>
+								</div>
+								<div class="standsTypes__save">
+									<input @click.prevent="setType($event.target, <?=$s_id?>)" type="button" value="<?=Loc::getMessage('save')?>" class="styler">
+								</div>
+							</form>
+						</div>
+					<? } ?>
 
                     <div class="pagesubtitle"><?= $stand['NAME'] ?></div>
                     <div class="standstypescontainer__pricecontiner"><?= FormatCurrency(
@@ -115,8 +125,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             '<?= Loc::getMessage('choose') ?>'}}
                         </div>
                     </div>
-                    <img height="138" src="<?= $stand['PREVIEW_PICTURE'] ?>" class="standstypescontainer__photo"
-                         alt="">
+                    <img height="138" src="<?= $stand['PREVIEW_PICTURE'] ?>" class="standstypescontainer__photo" />
 
                     <div class="standstypescontainer__description">
                         <p><?= $stand['PROPS']["LANG_DESCRIPTION_{$curLang}"]['~VALUE']['TEXT'] ?></p>
@@ -127,7 +136,8 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                         </ul>
                     </div>
                 </div>
-                <? $s_id++; endforeach; ?>
+                <? $s_id++; ?>
+			<? } ?>
         </div>
     </div>
 </div>
@@ -217,15 +227,15 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 <div style="clear:both;" v-show="[2,3,4].indexOf(parseInt(curStep)) != -1"></div>
 
 <!--STEP 5-->
-<div class="sketchpage" id="step5" v-show="curStep == 5">
+<div class="sketchpage" id="step5" v-show="curStep == 5" transition="fade">
     <? include 'sketch.php' ?>
 </div>
 
 <!--STEP 6-->
 <div class="orderpage" id="order" v-show="curStep == 6">
-    <div class="pagetitle"><?=Loc::getMessage('order')?></div>
+    <div class="pagetitle"><?= Loc::getMessage('order') ?></div>
     <div class="pagedescription">
-        <?Helper::includeFile('orderpage_textdesc_'.$curLang)?>
+        <? Helper::includeFile('orderpage_textdesc_'.$curLang) ?>
     </div>
     <div class="ordercontainer">
         <div class="ordercontainer__columnscontainer">
@@ -309,13 +319,13 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <div class="ordertotalcontainer">
         <div class="ordertotalcontainer__standandpavillion">
             <div class="ordertotalcontainer__standcontainer">
-                <div class="ordertotalcontainer__title"><?=Loc::getMessage('stand')?> №</div>
+                <div class="ordertotalcontainer__title"><?= Loc::getMessage('stand') ?> №</div>
                 <div class="ordertotalcontainer__number">
                     <input type="text" v-model="standNum">
                 </div>
             </div>
             <div class="ordertotalcontainer__pavillioncontainer">
-                <div class="ordertotalcontainer__title"><?=Loc::getMessage('pavillion')?></div>
+                <div class="ordertotalcontainer__title"><?= Loc::getMessage('pavillion') ?></div>
                 <div class="ordertotalcontainer__number">
                     <input type="text" v-model="pavillion">
                 </div>
@@ -325,14 +335,22 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <?=Loc::getMessage('place_order')?>
             </div>
         </div>
-        <div class="ordertotalcontainer__total" v-show="totalPrice"><?=Loc::getMessage('total')?>: {{totalPrice | format_currency ' ' currency_format }}</div>
-        <div class="ordertotalcontainer__surcharge" v-show="curEvent.SURCHARGE > 0 && totalPrice"><?=Loc::getMessage('surcharge')?>: {{
-            curEvent.SURCHARGE }}%
-            ({{ moneySurcharge }})
+        <div class="ordertotalcontainer__total" v-show="summaryPrice">
+            <?= Loc::getMessage('total') ?>: <span>{{summaryPrice | format_currency ' ' currency_format }}</span>
+        </div>
+		<div class="ordertaxcontainer__total" v-show="taxPrice">
+			<?= Loc::getMessage('tax') ?>: <span>{{taxPrice | format_currency ' ' currency_format }}</span>
+		</div>
+        <div class="ordertotalcontainer__total" v-show="totalPrice">
+			<?= Loc::getMessage('total_with_vat') ?>: <span>{{totalPrice | format_currency ' ' currency_format }}</span>
+		</div>
+        <div class="ordertotalcontainer__surcharge" v-show="curEvent.SURCHARGE > 0 && totalPrice">
+            <?= Loc::getMessage('surcharge') ?>: <span>{{ curEvent.SURCHARGE }} % ({{ moneySurcharge }})</span>
         </div>
         <div class="ordertotalcontainer__surchargetotal" v-show="curEvent.SURCHARGE > 0 && totalPrice">
-            <div class="ordertotalcontainer__surchargetotaltitle"><?=Loc::getMessage('total_with_sur')?>:</div>
-            <div class="ordertotalcontainer__surchargetotalcount">{{ totalPrice + moneySurcharge | format_currency ' ' currency_format }}
+            <div class="ordertotalcontainer__surchargetotaltitle"><?= Loc::getMessage('total_with_sur') ?>:</div>
+            <div class="ordertotalcontainer__surchargetotalcount">
+                {{ totalSurchargePrice | format_currency ' ' currency_format }}
             </div>
         </div>
     </div>

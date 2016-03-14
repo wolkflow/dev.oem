@@ -28,13 +28,30 @@ class Invoice
 		$this->template = (string) $template;
 	}
 	
+	/**
+	 * Получение пути к файлу.
+	 */
+	public function getFileName()
+	{
+		return ('invoice_'.$this->getOrderID().'_'.$this->getTemplate().'.pdf');
+	}
+	
 	
 	/**
 	 * Получение пути к файлу.
 	 */
 	public function getPath()
 	{
-		return (self::PATH.'invoice_'.$this->getOrderID().'.pdf');
+		return (self::PATH . $this->getFileName());
+	}
+	
+	
+	/**
+	 * Получение пути к директории.
+	 */
+	public static function getFolder()
+	{
+		return ($_SERVER['DOCUMENT_ROOT'] . self::PATH);
 	}
 	
 	

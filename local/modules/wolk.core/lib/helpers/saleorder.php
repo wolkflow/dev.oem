@@ -4,7 +4,7 @@ namespace Wolk\Core\Helpers;
 
 class SaleOrder
 {
-	public static function getProperties($id, $code = 'CODE')
+	public static function getProperties($id, $key = 'CODE')
 	{
 		if (!\Bitrix\Main\Loader::includeModule('sale')) {
 			return;
@@ -13,11 +13,25 @@ class SaleOrder
 		$result = \CSaleOrderPropsValue::GetList(['SORT' => 'ASC'], ['ORDER_ID' => $id]);
 		$items  = [];
 		while ($item = $result->Fetch()) {
-			$items[$item[$code]] = $item;
+			$items[$item[$key]] = $item;
 		}
 		return $items;
 	}
 	
+	
+	public static function getProperty($id, $code, $key = 'CODE')
+	{
+		if (!\Bitrix\Main\Loader::includeModule('sale')) {
+			return;
+		}
+		
+		$result = \CSaleOrderPropsValue::GetList(['SORT' => 'ASC'], ['ORDER_ID' => $id, 'CODE' => $code]);
+		$items  = [];
+		if ($item = $result->Fetch()) {
+			return $item;
+		}
+		return;
+	}
 	
 	
 	public static function saveProperty($id, $code, $value)

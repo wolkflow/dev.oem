@@ -160,13 +160,16 @@ elseif($arResult["FORM_TYPE"] == "otp"):
 else:
 ?>
     <?#=($arResult["USER_NAME"])?: $arResult["USER_LOGIN"]?>
-    <form action="<?=$arResult["AUTH_URL"]?>">
-        <?foreach ($arResult["GET"] as $key => $value):?>
-            <input type="hidden" name="<?=$key?>" value="<?=$value?>" />
-        <?endforeach?>
+	
+    <form action="<?= $arResult['AUTH_URL'] ?>">
+        <? foreach ($arResult['GET'] as $key => $value) { ?>
+            <input type="hidden" name="<?= $key ?>" value="<?= $value ?>" />
+        <? } ?>
+		<input type="hidden" name="step" value="<?= strval($_REQUEST['step']) ?>" class="js-step-watcher" />
         <input type="hidden" name="logout" value="yes" />
         <button class="customizable" type="submit" name="logout_butt">
-            <?=GetMessage("AUTH_LOGOUT_BUTTON")?>
+            <?= GetMessage("AUTH_LOGOUT_BUTTON") ?>
         </button>
     </form>
 <?endif?>
+

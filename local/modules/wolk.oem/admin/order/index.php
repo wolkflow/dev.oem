@@ -71,6 +71,20 @@ if (!empty($_POST)) {
             }
             break;
 		
+		// Отправка письма.
+		case 'mail':
+			$invoice = (string) $_POST['INVOICE'];
+			$email   = (string) $_POST['EMAIL'];
+			
+			if (!empty($email) && file_exists(Wolk\OEM\Invoice::getFolder().$invoice)) {
+				// Файл для отправки.
+				$fid = CFile::SaveFile(CFile::MakeFileArray(Wolk\OEM\Invoice::getFolder().$invoice));
+				
+				// Отправка письма.
+				CEvent::Send('SEND_INVOICE', SITE_DEFAULT, array('EMAIL' => $email),  'Y',  '', array($fid));
+			}			
+			break;
+		
 		// Сохранение данных покупателя.
 		case 'user':
 			$number     = (string) $_POST['CLIENT_NUMBER'];
@@ -109,7 +123,12 @@ $bxorder = Bitrix\Sale\Order::load($ID);
 $customer = CUser::GetByID($order['USER_ID'])->Fetch();
 
 // Мероприятие.
-$event = CIBlockElement::getByID($order['PROPS']['eventId']['VALUE'])->Fetch();
+$element = CIBlockElement::getByID($order['PROPS']['eventId']['VALUE'])->GetNextElement();
+
+$event = $element->GetFields();
+$event['PROPS'] = $element->GetProperties();
+
+unset($element);
 
 // Состав заказа.
 $baskets = Wolk\Core\Helpers\SaleOrder::getBaskets($ID);
@@ -158,13 +177,16 @@ foreach ($baskets as $basket) {
                 'quantity'  => $basket['QUANTITY'],
                 'title'     => $basket['ITEM']['NAME'],
                 'type'      => $basket['ITEM']['PROPS']['SKETCH_TYPE']['VALUE'] ?: 'droppable',
-                'w'         => (float)$basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 1000,
-                'h'         => (float)$basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 1000
+                'w'         => (float) $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 1000,
+                'h'         => (float) $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 1000
             ];
         }
 
     }
 }
+
+// Печать заказа.
+$orderprint = new \Wolk\OEM\OrderPrint($ID);
 
 /*
  * Описываем табы административной панели битрикса.
@@ -204,10 +226,10 @@ w: 1
 
     $(document).ready(function () {
 
-        var itemsForSketch = <?= json_encode(array_values($sketch['items'])) ?>;
+        var sketchitems = <?= json_encode(array_values($sketch['items'])) ?>;
 		
 		// Генерация счета.
-        $('#js-invoice-button-id').on('click', function () {
+        $('#js-invoice-button-id').on('click', function(e) {
             $('#js-invoice-response-id').html('');
             $.ajax({
                 url: '/bitrix/admin/wolk_oem_remote.php',
@@ -216,6 +238,16 @@ w: 1
                 success: function (response) {
                     if (response.status) {
                         $('#js-invoice-response-id').html('<a href="' + response.data['link'] + '?' + (new Date()).getTime() + '" target="_blank">Скачать счет</a>');
+						
+						var exist = false;
+						$('#js-order-invoice-select-id option').each(function() {
+							if ($(this).val() == response.data['name']) {
+								exist = true;
+							}
+						});
+						if (!exist) {
+							$('#js-order-invoice-select-id').append('<option value="' + response.data['name'] + '">' + response.data['name'] + '</option>');
+						}
                     } else {
                         alert(response.message);
                     }
@@ -223,27 +255,64 @@ w: 1
             });
         });
 		
+		
+		// Генерация заказа.
+		$('#js-print-order-button-id').on('click', function (event) {
+			$.ajax({
+                url: '/bitrix/admin/wolk_oem_remote.php',
+                data: {'action': 'order-print', 'oid': <?= $ID ?>},
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status) {
+						window.open(response.data['link'], '_blank');
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+		});
+		
+		
 		// Сохранение скетча.
-		$('#js-sketch-button-id').on('click', function() {
+		$('#js-sketch-button-id').on('click', function (event) {
 			$('#js-sketch-input-id').val(JSON.stringify(ru.octasoft.oem.designer.Main.getScene()));
 			$(this).closest('form').trigger('submit');
 		});
-
-
+		
+		
         /*
          * Обработчики скетча.
          */
-        $('head').append('<script src="/local/templates/.default/javascripts/designer.js"><\/script>');
-
-        window.addEventListener("touchmove", function (event) {
+        window.addEventListener('touchmove', function (event) {
             event.preventDefault();
         }, false);
 
         if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
-            var meta = document.getElementById("viewport");
+            var meta = document.getElementById('viewport');
             meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
         }
+		
+		var gridX = <?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>;
+		var gridY = <?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>;
+	
+		// compute initial editor's height
+		(window.resizeEditor = function(items) {
+			$('#designer').height(400 + (items.length * 135)); // gridY * 100 + 12);
+		})(sketchitems);
 
+		window.onEditorReady = function() {
+			ru.octasoft.oem.designer.Main.init({
+				w: gridX,
+                h: gridY,
+				hideControls: false,
+				type: '<?= $order['PROPS']['standType']['VALUE'] ?>',
+				items: sketchitems,
+				placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('null') ?>
+			});
+		};
+		lime.embed('designer', 0, 0);
+
+		/*
         (window.resizeEditor = function (items) {
             var editorH = 400 + (items.length * 135);
             $("#designer").height(editorH);
@@ -265,7 +334,7 @@ w: 1
                     window.dispatchEvent(new Event('resize'));
                 }
             }
-        })(itemsForSketch);
+        })(sketchitems);
 
         window.onEditorReady = function () {
             $(window).bind("scroll", function (e) {
@@ -276,11 +345,12 @@ w: 1
                 h: <?= ($order['PROPS']['depth']['VALUE']) ?: 5 ?>,
                 // row corner head island
                 type: '<?= $order['PROPS']['standType']['VALUE'] ?>',
-                items: itemsForSketch,
+                items: sketchitems,
                 placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('null') ?>
             });
         };
         lime.embed("designer", 0, 0);
+		*/
     });
 
 </script>
@@ -293,12 +363,12 @@ w: 1
 <div class="adm-detail-toolbar"><span style="position:absolute;"></span>
     <a href="/bitrix/admin/sale_order.php?lang=ru&amp;filter=Y&amp;set_filter=Y" class="adm-detail-toolbar-btn"
        title="Перейти к списку заказов" id="btn_list">
-        <span class="adm-detail-toolbar-btn-l"></span><span
-            class="adm-detail-toolbar-btn-text">Список заказов</span><span class="adm-detail-toolbar-btn-r"></span>
+        <span class="adm-detail-toolbar-btn-l"></span><span class="adm-detail-toolbar-btn-text">Список заказов</span><span class="adm-detail-toolbar-btn-r"></span>
     </a>
     <div class="adm-detail-toolbar-right" style="top: 0px;">
-        <a href="/bitrix/admin/sale_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit"
-           title="Редактировать заказа в Битркисе">Редактировать состав</a>
+        <a href="/bitrix/admin/sale_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit" title="Редактировать заказа в Битркисе">Редактировать состав</a>
+		
+		<a href="<?= $orderprint->getURL() ?>" target="_blank" class="adm-btn adm-btn-edit">Распечатать заказ</a>
     </div>
 </div>
 
@@ -350,6 +420,12 @@ w: 1
 							<?= CurrencyFormat($goodprice, $order['CURRENCY']) ?>
 						</span>
                     </li>
+					<li>
+                        <span class="adm-bus-orderinfoblock-content-order-info-param">НДС</span>
+						<span class="adm-bus-orderinfoblock-content-order-info-value">
+							<?= CurrencyFormat($order['TAX_VALUE'], $order['CURRENCY']) ?>
+						</span>
+                    </li>
                     <li class="adm-bus-orderinfoblock-content-redtext">
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Стоимость с учётом скидок и наценок</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
@@ -374,8 +450,7 @@ w: 1
 <? $oTabControl->BeginNextTab() ?>
 <tr class="lm_carsale_details lm_admin_table">
     <td width="50%" valign="top" class="lm_inspector_left_block">
-
-
+		
         <div style="position: relative; vertical-align: top;">
             <div style="height:5px;width:100%"></div>
             <a id="edit-order"></a>
@@ -423,18 +498,12 @@ w: 1
                             <div class="adm-bus-table-container">
                                 <table cellpadding="10">
                                     <tr>
-                                        <td class="adm-detail-content-cell-l">Шаблон счета:</td>
-                                        <td>
-                                            <? // Счета.
-                                            $invoices = [
-                                                'uaz'      => 'Uaz',
-                                                'malcorp'  => 'MALCORP',
-                                                'distance' => 'ДИСТАНЦИЯ',
-                                            ];
-                                            ?>
+                                        <td class="adm-detail-content-cell-l" width="100">Шаблон счета:</td>
+                                        <td width="200">
+                                            <? // Счета // ?>
                                             <select name="invoice" id="js-invoice-select-id" style="width: 200px;">
-                                                <? foreach ($invoices as $tpl => $invoice) { ?>
-                                                    <option value="<?= $tpl ?>">
+                                                <? foreach ($event['PROPS']['INVOICES']['VALUE'] as $index => $invoice) { ?>
+                                                    <option value="<?= $event['PROPS']['INVOICES']['VALUE_XML_ID'][$index] ?>">
                                                         <?= $invoice ?>
                                                     </option>
                                                 <? } ?>
@@ -447,7 +516,32 @@ w: 1
                                             <div id="js-invoice-response-id"></div>
                                         </td>
                                     </tr>
-                                </table>
+								</table>
+								
+								<form method="post">
+									<input type="hidden" name="action" value="mail" />
+									<table cellpadding="10">
+										<tr>
+											<td class="adm-detail-content-cell-l" width="100">Счет:</td>
+											<td width="200">
+												<? // Счета // ?>
+												<select name="INVOICE" id="js-order-invoice-select-id" style="width: 200px;">
+													<? foreach ($order['PROPS']['INVOICES']['VALUE_ORIG'] as $invoice) { ?>
+														<option value="<?= $invoice['name'] ?>">
+															<?= $invoice['name'] ?>
+														</option>
+													<? } ?>
+												</select>
+											</td>
+											<td>
+												<input type="text" name="EMAIL" value="<?= $customer['EMAIL'] ?>" size="30" />
+											</td>
+											<td>
+												<input type="submit" id="js-send-button-id" class="amd-btn-save" value="Отправить счет" />
+											</td>
+										</tr>
+									</table>
+								</form>
                             </div>
                         </div>
                     </div>
@@ -592,6 +686,29 @@ w: 1
 
 
         <div style="position: relative; vertical-align: top;">
+            <style scoped>
+                @font-face {
+                    font-family: 'Gotham Pro Bold';
+                    src: url('/assets/fonts/gothaprobol-webfont.eot');
+                    src: url('/assets/fonts/gothaprobol-webfont.eot?#iefix') format('embedded-opentype'),
+                    url('/assets/fonts/gothaprobol-webfont.svg#my-font-family') format('svg'),
+                    url('/assets/fonts/gothaprobol-webfont.woff') format('woff'),
+                    url('/assets/fonts/gothaprobol-webfont.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+                @font-face {
+                    font-family: 'Gotham Pro Regular';
+                    src: url('/assets/fonts/gothaproreg-webfont.eot');
+                    src: url('/assets/fonts/gothaproreg-webfont.eot?#iefix') format('embedded-opentype'),
+                    url('/assets/fonts/gothaproreg-webfont.svg#my-font-family') format('svg'),
+                    url('/assets/fonts/gothaproreg-webfont.woff') format('woff'),
+                    url('/assets/fonts/gothaproreg-webfont.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+
+            </style>
             <div style="height: 5px; width: 100%"></div>
             <a id="sketch-order"></a>
             <div class="adm-container-draggable">
@@ -602,12 +719,12 @@ w: 1
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
-                                <div id="designer" style="margin-top:40px; width: 940px; height:680px" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()" ></div>
+								<? // Контейнер для скетча. // ?>
+                                <div id="designer" style="margin-top: 40px; width: 940px; height: 680px;" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()"></div>
                                 <form method="post">
                                     <input type="hidden" name="action" value="sketch" />
 									<input type="hidden" name="OBJECTS" value="" id="js-sketch-input-id" />
                                     <input type="button" id="js-sketch-button-id" class="amd-btn-save adm-btn-green" value="Сохранить" />
-									<? // ru.octasoft.oem.designer.Main.getScene() // ?>
                                 </form>
                             </div>
                         </div>
@@ -615,6 +732,10 @@ w: 1
                 </div>
             </div>
         </div>
+		
+		<? /*
+		<input type="button" id="js-print-order-button-id" class="amd-btn-save" value="Распечатать заказ"/>
+		*/ ?>
     </td>
 </tr>
 

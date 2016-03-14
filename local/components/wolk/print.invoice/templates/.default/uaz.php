@@ -94,6 +94,7 @@
 	</table>
 
 	<div class="invoiceSignature">
+		<div class="invoiceStamp3"></div>
 		<p>Руководитель <span></span></p>
 		<p>Бухгалтер <span></span></p>
 	</div>

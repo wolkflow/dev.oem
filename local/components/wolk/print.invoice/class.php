@@ -8,9 +8,9 @@ use Bitrix\Main\Localization\Loc;
 // https://habrahabr.ru/sandbox/23506/
 
 /**
- * Class EventDetailComponent
+ * Class PrintInvoiceComponent
  */
-class InvoiceComponent extends \CBitrixComponent
+class PrintInvoiceComponent extends \CBitrixComponent
 {
 	
 	/** 

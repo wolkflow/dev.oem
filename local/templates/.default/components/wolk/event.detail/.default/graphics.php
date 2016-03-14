@@ -49,7 +49,7 @@
                     <ul>
                         <li v-for="color in colors | orderBy 'UF_SORT'" @click="selectColor(color.UF_XML_ID)" :class="{'active': color.UF_XML_ID == selectedColor}">
                             <span :style="{ background: color.UF_BACKGROUND ? 'url('+color.UF_BACKGROUND+')' : 'rgb('+ color.UF_CODE +')' }"></span>
-							<div class="colorTip">{{ color.UF_NUM }} {{ color.UF_XML_ID }}<br><b>sRGB:</b> {{ color.UF_CODE }}</div>
+							<div class="colorTip">{{ color.UF_NUM }} {{ color.NAME }}<br><b>sRGB:</b> {{ color.UF_CODE }}</div>
                             <div class="colorTitle">{{ color.UF_NUM }}</div>
                         </li>
                     </ul>
@@ -69,8 +69,9 @@
                     <div class="serviceItem__subtitle"><?=Loc::getMessage('extent')?></div>
                     <div class="itemText_custom">
                         <select v-styler="logo.EXTENT" class="styler" class="styler">
-                            <option value=""><?=Loc::getMessage('not selected')?></option>
-                            <option value="{{ extentValueId }}" v-for="(extentValueId, extent) in extents">{{ extent }}
+                            <option value=""><?= Loc::getMessage('not selected') ?></option>
+                            <option value="{{ extentCode }}" v-for="(extentCode, extent) in extents">
+								{{ extent.NAME }}
                             </option>
                         </select>
                     </div>
@@ -117,7 +118,27 @@
 
         <div class="serviceItem__block" v-for="item in items">
             <div class="serviceItem__row">
-                <div class="serviceItem__left">
+				<div class="serviceItem__right-large">
+					<div class="serviceItem__col-8 lamCount">
+						<div class="itemCount">
+							<div class="serviceItem__subtitle"><?=Loc::getMessage('space')?> (<?=Loc::getMessage('m2')?>)</div>
+							<!--<div class="itemCount__button itemCount__down" @click="decQty(item)"></div>-->
+							<!--<div class="itemCount__button itemCount__up" @click="incQty(item)"></div>-->
+							<input v-model="item.QUANTITY" type="text" class="itemCount__input styler">
+						</div>
+					</div>
+					<div class="serviceItem__col-7 lamColor">
+						<div class="serviceItem__subtitle"><?=Loc::getMessage('color')?></div>
+						<input type="hidden" v-model="item.COLOR">
+						<button :style="{ background: item.COLOR ? 'rgb(' + allColors[item.COLOR].UF_CODE + ')' : '#7f7f7f' }" class="styler itemColor__custom"
+								data-modal="#color_lam{{$index}}"
+								id="colorTriger2">
+							{{ item.COLOR ? '<?=Loc::getMessage('change color')?>' : '<?=Loc::getMessage('choose color')?>' }}
+						</button>
+						<div v-show="item.COLOR" class="itemColor__custom-name">{{ item.COLOR ? allColors[item.COLOR].UF_NUM : '' }} {{ item.COLOR }}</div>
+					</div>
+				</div>
+<!--                <div class="serviceItem__left">-->
 
 <!--                    <div class="serviceItem__subtitle">--><?//=Loc::getMessage('panel_type')?><!--</div>-->
 <!--                    <div class="itemText_custom">-->
@@ -128,26 +149,11 @@
 <!--                            </option>-->
 <!--                        </select>-->
 <!--                    </div>-->
-                </div>
-                <div class="serviceItem__right">
-                    <div class="itemCount">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('space')?> (<?=Loc::getMessage('m2')?>)</div>
-                        <div class="itemCount__button itemCount__down" @click="decQty(item)"></div>
-                        <div class="itemCount__button itemCount__up" @click="incQty(item)"></div>
-                        <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number>
-                    </div>
-                </div>
+<!--                </div>-->
             </div>
 
             <div class="serviceItem__row">
-                <div class="serviceItem__subtitle"><?=Loc::getMessage('color')?></div>
-                <input type="hidden" v-model="item.COLOR">
-                <button :style="{ background: item.COLOR ? 'rgb(' + allColors[item.COLOR].UF_CODE + ')' : '#7f7f7f' }" class="styler itemColor__custom"
-                        data-modal="#color_lam{{$index}}"
-                        id="colorTriger2">
-                    {{ item.COLOR ? '<?=Loc::getMessage('change color')?>' : '<?=Loc::getMessage('choose color')?>' }}
-                </button>
-                <div v-show="item.COLOR" class="itemColor__custom-name">{{ item.COLOR ? allColors[item.COLOR].UF_NUM : '' }} {{ item.COLOR }}</div>
+
             </div>
             <div class="serviceItem__row">
                 <div class="serviceItem__subtitle"><?=Loc::getMessage('comments')?></div>
@@ -162,7 +168,7 @@
                         <ul>
                             <li v-for="color in colors | orderBy 'UF_SORT'" @click="selectColor(item, color.UF_XML_ID)" :class="{'active': color.UF_XML_ID == item.COLOR}">
 								<span :style="{ background: color.UF_BACKGROUND ? 'url('+color.UF_BACKGROUND+')' : 'rgb('+ color.UF_CODE +')' }"></span>
-								<div class="colorTip">{{ color.UF_NUM }} {{ color.UF_XML_ID }}<br><b>sRGB:</b> {{ color.UF_CODE }}</div>
+								<div class="colorTip">{{ color.UF_NUM }} {{ color.NAME }}<br><b>sRGB:</b> {{ color.UF_CODE }}</div>
                                 <div class="colorTitle">{{ color.UF_NUM }}</div>
                             </li>
                         </ul>
@@ -228,7 +234,7 @@
             <div class="serviceItem__row">
                 <div class="serviceItem__subtitle"><?=Loc::getMessage('show_manager_contacts')?></div>
                 <p>
-                    {{{ event.MANAGER_CONTACTS }}}
+                    {{{ event.MANAGER_CONTACTS.TEXT }}}
                 </p>
             </div>
         </div>
