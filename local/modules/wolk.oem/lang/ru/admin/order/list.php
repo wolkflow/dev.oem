@@ -13,6 +13,6 @@ $MESS['HEADER_COMPANY'] = 'Компания';
 $MESS['HEADER_PRICE']   = 'Стоимость';
 $MESS['HEADER_BILL']  	= 'Номер счета';
 $MESS['HEADER_STATUS']  = 'Статус';
-
+$MESS['HEADER_DATE']  = 'Дата заказа';
 
 $MESS['SELECT_ANY'] = '- любой -';

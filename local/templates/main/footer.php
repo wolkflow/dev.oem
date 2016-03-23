@@ -1,4 +1,4 @@
-<?if(\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
+﻿<?if(\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
     ?></div><?
     die;
 }
@@ -6,7 +6,7 @@ use Bitrix\Main\Localization\Loc;
 Loc::loadLanguageFile(__FILE__);
 ?>
 	<div class="footersection">
-		<a href="" data-modal="#contactUs" class="footersection__contact">
+		<a href="" data-modal="#contactUs" class="footersection__contact" id="js-contacts-link-id">
 			<?= Loc::getMessage('Contact Us') ?>
 		</a>
 		<a href="" data-modal="#termsConditions" class="footersection__terms">
@@ -71,127 +71,104 @@ Loc::loadLanguageFile(__FILE__);
 	<div class="modal modalContact" id="contactUs">
 		<div class="modalClose arcticmodal-close"></div>
 		<div class="modalTitle"><?=Loc::getMessage('Contact Us')?></div>
-		<form>
-			<div class="contactUs__left">
-				<div class="formRow">
-					<div class="formCol">
-						<label for="uName">Name</label>
-						<input type="text" class="styler" id="uName">
-					</div>
-					<div class="formCol">
-						<label for="uPhone">Phone</label>
-						<input type="text" class="styler" id="uPhone">
-					</div>
-				</div>
-				<div class="formRow">
-					<div class="formCol">
-						<label for="ucName">company name</label>
-						<input type="text" class="styler" id="ucName">
-					</div>
-					<div class="formCol">
-						<label for="standNum">stand №</label>
-						<input type="text" class="styler" id="standNum">
-					</div>
-				</div>
-				<div class="formRow">
-					<label for="uMail">email address</label>
-					<input type="text" id="uMail" class="styler">
-				</div>
-				<div class="formRow">
-					<label for="uMessage">message</label>
-					<textarea id="uMessage"></textarea>
-				</div>
-				<div class="formRow">
-					<p class="formNote">* All fields must be filled out</p>
-				</div>
-				<div class="formRow">
-					<input type="button" class="styler modalSend" value="Send">
-				</div>
+		
+		<?	// Контакты.
+			$APPLICATION->IncludeComponent(
+				"wolk:form.mail",
+				"contacts",
+				array(
+					"FORM" => "CONTACTS",
+					"CAPTCHA" => "N",
+					"FIELDS" => array("NAME", "PHONE", "COMPANY", "STAND", "EMAIL", "MESSAGE"),
+					"REQUIRED" => array("NAME", "PHONE", "COMPANY", "STAND", "EMAIL", "MESSAGE"),
+				)		
+			);
+		?>
+		
+		<div class="contactUs__right">
+			<div class="modalMessage">
+				<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+					'AREA_FILE_SHOW' => 'file',
+					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/message.php',
+					'EDIT_TEMPLATE' => 'html'
+				]); ?>
 			</div>
-			<div class="contactUs__right">
-				<div class="modalMessage">
-					<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-						'AREA_FILE_SHOW' => 'file',
-						'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/message.php',
-						'EDIT_TEMPLATE' => 'html'
-					]); ?>
-				</div>
-				<div class="modalContacts">
-					<ul class="modalContactsBlock">
-						<li class="contactTitle">Technical Director</li>
-						<li>
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_name.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-						<li>P:
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_phone.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-						<li>E: 
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_email.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-					</ul>
-					<ul class="modalContactsBlock">
-						<li class="contactTitle">Show Manager</li>
-						<li>
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_name.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-						<li>P:
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_phone.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-						<li>E: 
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_email.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-					</ul>
-					<ul class="modalContactsBlock">
-						<li class="contactTitle">IT Manager</li>
-						<li>
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_name.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-						<li>P: 
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_phone.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-						<li>E: 
-							<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-								'AREA_FILE_SHOW' => 'file',
-								'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_email.php',
-								'EDIT_TEMPLATE' => 'html'
-							]); ?>
-						</li>
-					</ul>
-				</div>
+			<div class="modalContacts">
+				<ul class="modalContactsBlock">
+					<li class="contactTitle">Technical Director</li>
+					<li>
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_name.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+					<li>P:
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_phone.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+					<li>E: 
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_email.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+				</ul>
+				<ul class="modalContactsBlock">
+					<li class="contactTitle">Show Manager</li>
+					<li>
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_name.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+					<li>P:
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_phone.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+					<li>E: 
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_email.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+				</ul>
+				<ul class="modalContactsBlock">
+					<li class="contactTitle">IT Manager</li>
+					<li>
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_name.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+					<li>P: 
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_phone.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+					<li>E: 
+						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+							'AREA_FILE_SHOW' => 'file',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_email.php',
+							'EDIT_TEMPLATE' => 'html'
+						]); ?>
+					</li>
+				</ul>
 			</div>
-		</form>
+		</div>
+		
 	</div>
 	<!--// .Окно: контакты -->
 </div>

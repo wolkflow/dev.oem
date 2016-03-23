@@ -109,7 +109,7 @@ if ($arResult['ORDER']) {
     $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['OPTIONS'] = $arResult['ORDER']['selectedStand']['OPTIONS'];
     unset($eq);
 }
-
+ 
 $stands = Json::encode($stands);
 
 #dump($arResult['ORDER']);
@@ -117,12 +117,30 @@ $stands = Json::encode($stands);
 $order = $arResult['ORDER'] ? Json::encode($arResult['ORDER']) : "null";
 
 $steps = [
-    1 => Loc::getMessage('stand type'),
-    2 => Loc::getMessage('standard equipment'),
-    3 => Loc::getMessage('equipment'),
-    4 => Loc::getMessage('services'),
-    5 => Loc::getMessage('sketch'),
-    6 => Loc::getMessage('order')
+    [
+        'NUM' => 1,
+        'NAME' => Loc::getMessage('stand type')
+    ],
+    [
+        'NUM' => 2,
+        'NAME' => Loc::getMessage('standard equipment')
+    ],
+    [
+        'NUM' => 3,
+        'NAME' => Loc::getMessage('equipment')
+    ],
+    [
+        'NUM' => 4,
+        'NAME' => Loc::getMessage('services')
+    ],
+    [
+        'NUM' => 5,
+        'NAME' => Loc::getMessage('sketch')
+    ],
+    [
+        'NUM' => 6,
+        'NAME' => Loc::getMessage('order')
+    ]
 ];
 
 $steps = Json::encode($steps);
@@ -153,12 +171,14 @@ $extents = ArrayHelper::index($arResult['EVENT']['EXTENTS'], 'UF_XML_ID');
 
 
 // TODO: Передалть на символьныне коды.
+/*
 foreach ($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID]['SECTIONS'] as &$section) {
 	foreach ($section['ITEMS'] as $i => $item) {
 		$section['ITEMS'][$i]['PROPERTY_60']['TEXT'] = nl2br($item['PROPERTY_60']['TEXT']);
 		$section['ITEMS'][$i]['PROPERTY_61']['TEXT'] = nl2br($item['PROPERTY_61']['TEXT']); 
 	}
 }
+*/
 
 $colors      = Json::encode($colors);
 $extents     = Json::encode($extents);

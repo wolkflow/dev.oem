@@ -1,3 +1,5 @@
+﻿<!DOCTYPE html>
+<html>
 <?
 /**
  * @var CMain $APPLICATION
@@ -5,28 +7,28 @@
 use Bitrix\Main\Localization\Loc;
 Loc::loadLanguageFile(__FILE__);
 ?>
-<!DOCTYPE html>
-<html>
 <head>
     <meta charset="utf-8">
     <? $am = \Bitrix\Main\Page\Asset::getInstance(); ?>
-    <? $am->addJs('/local/templates/.default/build/js/vendor.js');
-    $am->addJs('/local/templates/.default/javascripts/application.js');
-    $am->addCss('/local/templates/.default/build/css/vendor.css');
-    $am->addCss('/local/templates/.default/fontsquirrel/stylesheet.css');
-    $am->addCss('/local/templates/.default/build/css/main.css');
-    $am->addCss('/local/templates/.default/build/css/jquery.formstyler.css');
-    $am->addCss('/local/templates/.default/build/css/style.css');
-    $am->addJs('/local/templates/.default/build/js/jquery.formstyler.js');
-    $am->addJs("/local/templates/.default/build/js/jquery.arcticmodal-0.3.min.js");
-    $am->addJs("/local/templates/.default/build/js/slick.js");
-    $am->addJs('/local/templates/.default/build/js/jquery.inputmask.bundle.js');
-    $am->addJs('/local/templates/.default/build/js/jquery.tooltipster.min.js');
-    $am->addJs('/local/templates/.default/build/js/sticky-kit.min.js');
-    $am->addJs("/local/templates/.default/build/js/script.js");
-    $APPLICATION->ShowHead(); ?>
+    <?  // Подключение скриптов и стилей.
+        $am->addJs('/local/templates/.default/build/js/vendor.js');
+        $am->addJs('/local/templates/.default/javascripts/application.js');
+        $am->addCss('/local/templates/.default/build/css/vendor.css');
+        $am->addCss('/local/templates/.default/fontsquirrel/stylesheet.css');
+        $am->addCss('/local/templates/.default/build/css/main.css');
+        $am->addCss('/local/templates/.default/build/css/jquery.formstyler.css');
+        $am->addCss('/local/templates/.default/build/css/style.css');
+        $am->addJs('/local/templates/.default/build/js/jquery.formstyler.js');
+        $am->addJs("/local/templates/.default/build/js/jquery.arcticmodal-0.3.min.js");
+        $am->addJs("/local/templates/.default/build/js/slick.js");
+        $am->addJs('/local/templates/.default/build/js/jquery.inputmask.bundle.js');
+        $am->addJs('/local/templates/.default/build/js/jquery.tooltipster.min.js');
+        $am->addJs('/local/templates/.default/build/js/sticky-kit.min.js');
+        $am->addJs("/local/templates/.default/build/js/script.js");
+        $APPLICATION->ShowHead(); 
+    ?>
     <style>
-        <?$APPLICATION->ShowViewContent('custom_color_styles')?>
+        <? $APPLICATION->ShowViewContent('custom_color_styles') ?>
     </style>
     <script>
         window.addEventListener("touchmove", function (event) {
@@ -54,17 +56,51 @@ Loc::loadLanguageFile(__FILE__);
     <div class="layout">
         <div class="headersection__button customizable"><?= Loc::getMessage('language') ?>
             <div class="headersection__languagedropdown">
-                <? foreach ($APPLICATION->availableLang as $key => $name) { ?>
-					<a href="<?=$APPLICATION->GetCurPageParam('set_lang='.$key, ['set_lang'], false)?>" class="<?if($key == \Bitrix\Main\Context::getCurrent()->getLanguage()):?>active <?endif;?>headersection__languagedropdownbutton">
-						<?= $name ?>
-					</a>
+                <? $langs = $APPLICATION->availableLang; ?>
+                
+                <? if (strpos($APPLICATION->GetCurPage(false), '/events/') !== false) { ?>
+                    <?  // Получение кода элемента.
+                        $engine = new CComponentEngine();
+                    
+                        $arVariables = array();
+                        $arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates(array(), array('element' => '#ELEMENT_CODE#/'));
+
+                        $componentPage = $engine->guessComponentPath(
+                            '/events/',
+                            $arUrlTemplates,
+                            $arVariables
+                        );
+                        
+                        $langs = [];
+                        
+                        CModule::IncludeModule('iblock');
+                        $event = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'CODE' => strval($arVariables['ELEMENT_CODE'])])->GetNextElement();
+                        $props = $event->getProperties();
+                        foreach ($props as $code => $prop) { 
+                            if (strpos($code, 'LANG_ACTIVE_') !== false) {
+                                if ($prop['VALUE'] == 'Y') {
+                                    $key = strtolower(str_replace('LANG_ACTIVE_', '', $code));
+                                    $langs[$key] = $APPLICATION->availableLang[$key];
+                                }
+                            }
+                        }
+                    ?>
+                <? } ?>
+                
+                <? foreach ($langs as $key => $name) { ?>
+                    <a
+                        href="<?= $APPLICATION->GetCurPageParam('set_lang='.$key, ['set_lang'], false) ?>"
+                        class="<? if ($key == \Bitrix\Main\Context::getCurrent()->getLanguage()) { ?>active <? } ?>headersection__languagedropdownbutton"
+                    >
+                        <?= $name ?>
+                    </a>
                 <? } ?>
             </div>
         </div>
         <? if ($USER->IsAuthorized()) { ?>
 			<div class="headersection__button customizable">
 				<a class="customizable" href="/personal/profile/">
-					<?=Loc::getMessage("AUTH_PROFILE")?>
+					<?= Loc::getMessage("AUTH_PROFILE") ?>
 				</a>
 			</div>
         <? } ?>

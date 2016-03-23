@@ -27,35 +27,45 @@
                     <div class="serviceItem__beforeDate">
                         <div class="serviceItem__subtitle">&nbsp;</div>
                         <select v-styler="selectedItem.ID" class="styler">
-                            <option value=""><?=Loc::getMessage('not selected')?></option>
+                            <option value=""><?= Loc::getMessage('not selected') ?></option>
                             <option value="{{ item.ID }}" v-for="item in items">
                                 {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format}}
                             </option>
                         </select>
                     </div>
+					<? // Установка дат // ?>
                     <div class="setDateBlock">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('dates') ?>
+						</div>
                         <div class="setDate hasDatepicker" v-pickmeup="selectedItem.calendar">
                             <div class="loolee">
                                 <div class="looleeHead">
-                                    <label class="styler"><input type="checkbox" class="changeMode">
-                                        <span></span><?=Loc::getMessage('daterange')?></label>
-                                    <a href="#" class="cButton buttonClear dateClear"><?=Loc::getMessage('clear')?></a>
-                                    <a href="#" class="cButton buttonOk looleeClose">ОК</a>
+                                    <label class="styler">
+										<input type="checkbox" class="changeMode" />
+                                        <span></span><?= Loc::getMessage('daterange') ?>
+									</label>
+                                    <a href="#" class="cButton buttonClear dateClear">
+										<?= Loc::getMessage('clear') ?>
+									</a>
+                                    <a href="#" class="cButton buttonOk looleeClose">
+										ОК
+									</a>
                                 </div>
                                 <div class="dpBlock" data-mode="multiple"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+				<? // Установка времени // ?>
                 <div class="serviceItem__right">
                     <div class="itemCount">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('time')?></div>
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('time') ?>
+						</div>
                         <div class="setTime">
                             <select v-timepicker="selectedItem.timeStart" class="styler"></select>
-
                             <span class="setTime__divider"></span>
-
                             <select v-timepicker="selectedItem.timeEnd" class="styler"></select>
                         </div>
                     </div>

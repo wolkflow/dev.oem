@@ -5,9 +5,13 @@ $(function () {
             orderId: null,
             selectedStand: null,
             orderProps: null,
+			taxPrice: null,
             totalPrice: null,
+			totalTaxPrice: null,
             curEvent: null,
-            TOTAL_PRICE_FORMATTED: null
+            status: null,
+            TOTAL_PRICE_FORMATTED: null,
+			TOTAL_PRICE_TAX_FORMATTED: null
         },
         methods: {
             loadOrder: function(id) {
@@ -20,9 +24,37 @@ $(function () {
                     self.selectedStand = data.selectedStand;
                     self.orderId = data.ID;
                     self.orderProps = data.PROPS;
+					self.taxPrice = data.taxPrice;
                     self.totalPrice = data.totalPrice;
+					self.totalTaxPrice = data.totalTaxPrice;
                     self.curEvent = data.curEvent;
-                    self.TOTAL_PRICE_FORMATTED = data.TOTAL_PRICE_FORMATTED;
+                    self.status = data.status;
+					self.TOTAL_PRICE_FORMATTED = data.TOTAL_PRICE_FORMATTED;
+					self.TOTAL_PRICE_TAX_FORMATTED = data.TOTAL_PRICE_TAX_FORMATTED;
+					
+					// Сокрытие позиций с нулевой стоимостью.
+					
+					for (var i in self.selectedStand.EQUIPMENT) {
+						var item = self.selectedStand.EQUIPMENT[i];
+						if (parseFloat(item.COST) <= 0) {
+							delete self.selectedStand.EQUIPMENT[i];
+						}
+					}
+					
+					for (var i in self.selectedStand.OPTIONS) {
+						var item = self.selectedStand.OPTIONS[i];
+						if (parseFloat(item.COST) <= 0) {
+							delete self.selectedStand.OPTIONS[i];
+						}
+					}
+					
+					for (var i in self.selectedStand.SERVICES) {
+						var item = self.selectedStand.SERVICES[i];
+						if (parseFloat(item[0].COST) <= 0) {
+							delete self.selectedStand.SERVICES[i];
+						}
+					}
+					
                     Vue.nextTick(function() {
                        self.showOrder();
                     });

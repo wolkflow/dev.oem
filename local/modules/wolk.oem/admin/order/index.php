@@ -48,6 +48,7 @@ if (!empty($_POST)) {
     $action = (string)$_POST['action'];
 
     switch ($action) {
+		
         // Сохранение данных заказа.
         case 'data':
             $status = (string)$_POST['STATUS'];
@@ -73,15 +74,24 @@ if (!empty($_POST)) {
 		
 		// Отправка письма.
 		case 'mail':
-			$invoice = (string) $_POST['INVOICE'];
+			$invoicetpl = (string) $_POST['INVOICE'];
 			$email   = (string) $_POST['EMAIL'];
 			
-			if (!empty($email) && file_exists(Wolk\OEM\Invoice::getFolder().$invoice)) {
-				// Файл для отправки.
-				$fid = CFile::SaveFile(CFile::MakeFileArray(Wolk\OEM\Invoice::getFolder().$invoice));
+			if (!empty($email) && file_exists(Wolk\OEM\Invoice::getFolder().$invoicetpl)) {
+				// Данные.
+				$order    = CSaleOrder::getByID($ID);
+				$customer = CUser::getByID($order['USER_ID'])->Fetch();
 				
-				// Отправка письма.
-				CEvent::Send('SEND_INVOICE', SITE_DEFAULT, array('EMAIL' => $email),  'Y',  '', array($fid));
+				// Файл для отправки.
+				$file = CFile::MakeFileArray(Wolk\OEM\Invoice::getFolder().$invoicetpl);
+				$file['name'] = Wolk\OEM\Invoice::getClientFileName($customer['WORK_COMPANY'], $customer['UF_CLIENT_NUMBER']);
+				
+				$fid = CFile::SaveFile($file);
+				
+				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
+					// Отправка письма.
+					CEvent::Send('SEND_INVOICE', SITE_DEFAULT, array('EMAIL' => $email),  'Y',  '', array($fid));
+				}
 			}			
 			break;
 		
@@ -128,6 +138,8 @@ $element = CIBlockElement::getByID($order['PROPS']['eventId']['VALUE'])->GetNext
 $event = $element->GetFields();
 $event['PROPS'] = $element->GetProperties();
 
+$stand = array();
+
 unset($element);
 
 // Состав заказа.
@@ -141,9 +153,15 @@ foreach ($baskets as &$basket) {
     $item['IMAGE'] = CFile::getPath($item['PREVIEW_PICTURE']);
 
     $basket['ITEM'] = $item;
+    
+    if ($basket['SET_PARENT_ID'] == 0 && $basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
+        $stand['BASKET'] = $basket;
+    }
 }
 // break reference to the last element
 unset($basket);
+
+
 
 // Статусы заказа.
 $statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
@@ -160,15 +178,15 @@ foreach ($baskets as $basket) {
 }
 
 // Данные для скетча.
-$sketch = json_decode($order['PROPS']['sketch']['VALUE'], true);
+$sketch = json_decode($order['PROPS']['sketch']['VALUE_ORIG'], true);
 
 $sketch['items'] = [];
 foreach ($baskets as $basket) {
     if ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] && $basket['ITEM']['PROPS']['HEIGHT']['VALUE']) {
         if(array_key_exists($basket['ITEM']['ID'], $sketch['items'])) {
-            $sketch['items'] [$basket['ITEM']['ID']]['quantity'] += $basket['QUANTITY'];
+            $sketch['items'][$basket['ITEM']['ID']]['quantity'] += $basket['QUANTITY'];
         } else {
-            $sketch['items'] [$basket['ITEM']['ID']] = [
+            $sketch['items'][$basket['ITEM']['ID']] = [
                 'id'        => $basket['ITEM']['ID'],
                 'imagePath' => CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], [
                     'width' => ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10 < 30) ? 30 : $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10,
@@ -181,7 +199,6 @@ foreach ($baskets as $basket) {
                 'h'         => (float) $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 1000
             ];
         }
-
     }
 }
 
@@ -199,6 +216,8 @@ $aTabs = [
         'TITLE' => 'Заказ №' . $ID
     ]
 ];
+
+// print_r($sketch);
 
 /*
  * Инициализируем табы
@@ -219,12 +238,15 @@ title: "Шкаф архивный Н=110"
 type: "droppable"
 w: 1
 */
+
+// echo '<pre>'; print_r($baskets); echo '</pre>';
+
 ?>
 
 <? // Скетч // ?>
 <script type="text/javascript">
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         var sketchitems = <?= json_encode(array_values($sketch['items'])) ?>;
 		
@@ -292,65 +314,45 @@ w: 1
             meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
         }
 		
-		var gridX = <?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>;
-		var gridY = <?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>;
-	
-		// compute initial editor's height
-		(window.resizeEditor = function(items) {
-			$('#designer').height(400 + (items.length * 135)); // gridY * 100 + 12);
-		})(sketchitems);
-
+		var gridX   = <?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>;
+		var gridY   = <?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>;
+        
+		// compute initial editor's height		
+		window.resizeEditor = function(items) {
+			var editorH = Math.max(120 + (items.length * 135), 675);
+			
+			$('#designer').height(editorH);
+			
+			window.editorScrollTop = $('#designer').offset().top - 30;
+			window.editorScrollBottom = window.editorScrollTop - 30 + editorH - $(window).height();
+			
+			if (window.editorScrollBottom < window.editorScrollTop) {
+				window.editorScrollTop = window.editorScrollBottom;
+			}
+			if (items) {
+				ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
+				if (Event.prototype.initEvent) {
+					var evt = window.document.createEvent('UIEvents');
+					evt.initUIEvent('resize', true, false, window, 0);
+					window.dispatchEvent(evt);
+				} else {
+					window.dispatchEvent(new Event('resize'));
+				}
+			}
+		};
+        
 		window.onEditorReady = function() {
 			ru.octasoft.oem.designer.Main.init({
 				w: gridX,
                 h: gridY,
-				hideControls: false,
-				type: '<?= $order['PROPS']['standType']['VALUE'] ?>',
+				type: '<?= (!empty($order['PROPS']['standType']['VALUE'])) ? ($order['PROPS']['standType']['VALUE']) : ('row') ?>',
 				items: sketchitems,
-				placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('null') ?>
+				placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('{}') ?>
 			});
 		};
-		lime.embed('designer', 0, 0);
-
-		/*
-        (window.resizeEditor = function (items) {
-            var editorH = 400 + (items.length * 135);
-            $("#designer").height(editorH);
-
-            var firstRun = !window.editorScrollTop;
-            window.editorScrollTop = $("#designer").offset().top - 30;
-            window.editorScrollBottom = window.editorScrollTop - 30 + editorH - $(window).height();
-
-            if (window.editorScrollBottom < window.editorScrollTop) window.editorScrollTop = window.editorScrollBottom;
-            if (!firstRun) {
-                ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
-                // trigger resize event to update layout with new height
-                if (Event.prototype.initEvent) {
-                    // for IE
-                    var evt = window.document.createEvent('UIEvents');
-                    evt.initUIEvent('resize', true, false, window, 0);
-                    window.dispatchEvent(evt);
-                } else {
-                    window.dispatchEvent(new Event('resize'));
-                }
-            }
-        })(sketchitems);
-
-        window.onEditorReady = function () {
-            $(window).bind("scroll", function (e) {
-                ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
-            });
-            ru.octasoft.oem.designer.Main.init({
-                w: <?= ($order['PROPS']['width']['VALUE']) ?: 5 ?>,
-                h: <?= ($order['PROPS']['depth']['VALUE']) ?: 5 ?>,
-                // row corner head island
-                type: '<?= $order['PROPS']['standType']['VALUE'] ?>',
-                items: sketchitems,
-                placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('null') ?>
-            });
-        };
-        lime.embed("designer", 0, 0);
-		*/
+		lime.embed('designer', 0, 0, '', '/');
+        
+		setTimeout(function() { window.resizeEditor(sketchitems); }, 100);
     });
 
 </script>
@@ -361,8 +363,7 @@ w: 1
 <? } ?>
 
 <div class="adm-detail-toolbar"><span style="position:absolute;"></span>
-    <a href="/bitrix/admin/sale_order.php?lang=ru&amp;filter=Y&amp;set_filter=Y" class="adm-detail-toolbar-btn"
-       title="Перейти к списку заказов" id="btn_list">
+    <a href="/bitrix/admin/wolk_oem_order_list.php" class="adm-detail-toolbar-btn" title="Перейти к списку заказов" id="btn_list">
         <span class="adm-detail-toolbar-btn-l"></span><span class="adm-detail-toolbar-btn-text">Список заказов</span><span class="adm-detail-toolbar-btn-r"></span>
     </a>
     <div class="adm-detail-toolbar-right" style="top: 0px;">
@@ -414,6 +415,12 @@ w: 1
             </div>
             <div class="adm-bus-orderinfoblock-content-block-order">
                 <ul class="adm-bus-orderinfoblock-content-order-info">
+                    <li>
+                        <span class="adm-bus-orderinfoblock-content-order-info-param">Стоимость стенда</span>
+						<span class="adm-bus-orderinfoblock-content-order-info-value">
+							<?= CurrencyFormat($stand['BASKET']['PRICE'], $order['CURRENCY']) ?>
+						</span>
+                    </li>
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Общая стоимость товаров</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
@@ -539,6 +546,11 @@ w: 1
 											<td>
 												<input type="submit" id="js-send-button-id" class="amd-btn-save" value="Отправить счет" />
 											</td>
+											<td>
+												<? if (!empty($order['PROPS']['SENDTIME']['VALUE'])) { ?>
+													Отправлено <?= date('H:i d.m.Y', strtotime($order['PROPS']['SENDTIME']['VALUE'])) ?>
+												<? } ?>
+											</td>
 										</tr>
 									</table>
 								</form>
@@ -638,43 +650,53 @@ w: 1
                                 </p>
                                 <table class="adm-s-order-table-ddi-table" style="width: 100%">
                                     <thead>
-                                    <tr>
-                                        <td align="left">Изображение</td>
-                                        <td align="left">Название</td>
-                                        <td align="left">Количество</td>
-										<td align="left">Цена</td>
-                                        <td align="left">Стоимость</td>
-                                    </tr>
-                                    </thead>
-                                    <tbody
-                                        style="text-align: left; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(221, 221, 221);">
-                                    <? foreach ($baskets as $basket) { ?>
                                         <tr>
-                                            <td class="adm-s-order-table-ddi-table-img">
-                                                <? if (!empty($basket['ITEM']['PREVIEW_PICTURE'])) { ?>
-                                                    <img src="<?= $basket['ITEM']['IMAGE'] ?>" width="78" height="78"/>
-                                                <? } else { ?>
-                                                    <div class="no_foto">Нет картинки</div>
-                                                <? } ?>
-                                            </td>
-                                            <td align="left"><?= $basket['NAME'] ?></td>
-                                            <td align="center"><?= $basket['QUANTITY'] ?></td>
-                                            <td align="left">
-												<?= CurrencyFormat($basket['PRICE'], $basket['CURRENCY']) ?>
-											</td>
-											<td align="left">
-												<?= CurrencyFormat($basket['SUMMARY_PRICE'], $basket['CURRENCY']) ?>
-											</td>
+                                            <td align="left">Изображение</td>
+                                            <td align="left">Название</td>
+                                            <td align="left">Количество</td>
+                                            <td align="left">Цена</td>
+                                            <td align="left">Стоимость</td>
                                         </tr>
-                                    <? } ?>
+                                    </thead>
+                                    <tbody style="text-align: left; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(221, 221, 221);">
+                                        <? $cnt = 0; ?>
+                                        <? foreach ($baskets as $basket) { ?>
+                                            <? if ($basket['TYPE'] == 1) { continue; } ?>
+                                            <tr>
+                                                <td class="adm-s-order-table-ddi-table-img">
+                                                    <? if (!empty($basket['ITEM']['PREVIEW_PICTURE'])) { ?>
+                                                        <img src="<?= $basket['ITEM']['IMAGE'] ?>" width="78" height="78" />
+                                                    <? } else { ?>
+                                                        <div class="no_foto">Нет картинки</div>
+                                                    <? } ?>
+                                                </td>
+                                                <td align="left"><?= $basket['NAME'] ?></td>
+                                                <td align="center"><?= $basket['QUANTITY'] ?></td>
+                                                <td align="left">
+                                                    <?= CurrencyFormat($basket['PRICE'], $basket['CURRENCY']) ?>
+                                                </td>
+                                                <td align="left">
+                                                    <?= CurrencyFormat($basket['SUMMARY_PRICE'], $basket['CURRENCY']) ?>
+                                                </td>
+                                            </tr>
+                                            <? $cnt++ ?>
+                                        <? } ?>
                                     </tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td colspan="4" align="left"
-                                            style="height: 50px; border-top: 2px solid #; margin-left: 15px;">
-                                            <b>Всего товаров <?= count($baskets) ?></b>.
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="3" align="left" style="height: 50px; margin-left: 15px;">
+                                                <b>Всего товаров <?= $cnt ?></b>.
+                                            </td>
+                                            <td colspan="2" align="right">
+                                                <h2 style="3px 20px 0 0">Итого: <?= CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'], $order['CURRENCY']) ?></h2>
+                                            </td>
+                                        <tr>
+                                        </tr>
+                                            <td colspan="3"></td>
+                                            <td colspan="2" align="right">
+                                                <h2 style="3px 20px 0 0">Итого с НДС: <?= CurrencyFormat($order['PRICE'], $order['CURRENCY']) ?></h2>
+                                            </td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -720,7 +742,7 @@ w: 1
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
 								<? // Контейнер для скетча. // ?>
-                                <div id="designer" style="margin-top: 40px; width: 940px; height: 680px;" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()"></div>
+                                <div id="designer" style="margin-top:40px; width: 940px; height:680px" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()"></div>
                                 <form method="post">
                                     <input type="hidden" name="action" value="sketch" />
 									<input type="hidden" name="OBJECTS" value="" id="js-sketch-input-id" />

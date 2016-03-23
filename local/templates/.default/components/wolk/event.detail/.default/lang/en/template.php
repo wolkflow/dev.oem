@@ -124,3 +124,4 @@ $MESS['deadline'] = 'deadline for submitting<br>the order is';
 $MESS['weekday'] = 'th';
 $MESS['tax_not_included'] = 'Prices are exclusive of VAT';
 $MESS['total_with_vat'] = 'Total with VAT';
+$MESS['review_order'] = 'Review order';

@@ -24,33 +24,98 @@ $this->setFrameMode(true);
     </div>
     <div class="indexpage__generalinfocontainer">
         <div class="pagesubtitle">
-            <?=Loc::getMessage('General information')?>
+            <?= Loc::getMessage('General information') ?>
         </div>
+	    <!-- Блоки в которые надо вывести список -->
+		<!--
+		    Список (который на 41 строке) нужно автоматически делить на 2 и выводить в 2 разных блока.
+		 -->
+         
+        <?  // Разбиение документов.
+            $arResult['DOCUMENTS'] = array_chunk($arResult['DOCUMENTS'], count($arResult['DOCUMENTS']) / 2 + 1, true);
+        ?>
+         
+        <? if (!empty($arResult['DOCUMENTS'])) { ?>
+            <div class="indexInfo">
+                <? $i = 1 ?>
+                <div class="indexInfo__left">
+                    <ul>
+                    <? foreach ($arResult['DOCUMENTS'][0] as $document) { ?>
+                        <li>
+                            <a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
+                                <?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
+                            </a>
+                        </li>
+                    <? } ?>
+                    </ul>
+                </div>
+                <div class="indexInfo__right">
+                    <ul>
+                    <? foreach ($arResult['DOCUMENTS'][1] as $document) { ?>
+                        <li>
+                            <a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
+                                <?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
+                            </a>
+                        </li>
+                    <? } ?>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+            </div>
+            
+            
+            <? foreach ($arResult['DOCUMENTS'] as $docchunk) { ?>
+                <? foreach ($docchunk as $document) { ?>
+                    <div class="hide">
+                        <div class="modal modalContact" id="document-<?= $document['ID'] ?>">
+                            <div class="modalClose arcticmodal-close"></div>
+                            <div class="modalTitle"><?= $document['TITLE'] ?></div>
+                            <div class="modalContent">
+                                <div class="generalInfoContent">
+                                    <?= $document['HTML'] ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <? } ?>
+            <? } ?>
+        <? } ?>
+	    <!--// .Блоки в которые надо вывести список -->
+        
+        
+        <? /*
 		<? if (!empty($arResult['DOCUMENTS'])) { ?>
 			<div class="indexpage__generalinfocolumns">
 				<? $i = 1 ?>
-				<? foreach ($arResult['DOCUMENTS'] as $document) { ?>
-					<div class="indexpage__generalinfocolumn">
-						<a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
-							<?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
-						</a>
-					</div>
-					
-					<div class="hide">
-						<div class="modal modalContact" id="document-<?= $document['ID'] ?>">
-							<div class="modalClose arcticmodal-close"></div>
-							<div class="modalTitle"><?= $document['TITLE'] ?></div>
-							<div class="modalContent">
-								<div class="generalInfoContent">
-									<?= $document['HTML'] ?>
-								</div>
-							</div>
-						</div>
-					</div>
-				<? } ?>
+                <? // Вывод двух частей документов. // ?>
+				<? foreach ($arResult['DOCUMENTS'] as $docschunk) { ?>
+                    
+                    <? // Вывод спсика документов из одной части. // ?>
+                    <? foreach ($docschunk as $document) { ?>
+                        <div class="indexpage__generalinfocolumn q11">
+                            <a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
+                                <?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
+                            </a>
+                        </div>
+                        
+                        <div class="hide">
+                            <div class="modal modalContact" id="document-<?= $document['ID'] ?>">
+                                <div class="modalClose arcticmodal-close"></div>
+                                <div class="modalTitle"><?= $document['TITLE'] ?></div>
+                                <div class="modalContent">
+                                    <div class="generalInfoContent">
+                                        <?= $document['HTML'] ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <? } ?>
+                <? } ?>
 			</div>
 		<? } ?>
+        */ ?>
     </div>
+    
     <div class="indexpage__choosestandcontainer">
         <!-- Выбор стенда -->
         <div class="indexpage__choosestand system">
@@ -111,7 +176,7 @@ $this->setFrameMode(true);
                 </form>
 
             </div>
-            <img src="/local/templates/.default/build/images/index/stand-individual.jpg"></div>
+            <img src="<?= DEFAULT_TEMPLATE_PATH ?>/build/images/index/stand-individual.jpg"></div>
     </div>
     <!--// .Выбор стенда -->
 </div>

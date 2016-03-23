@@ -105,7 +105,7 @@
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
                     <div class="serviceItem__subtitle"><?=Loc::getMessage('file_and_formats')?></div>
-                    <input v-fileupload="selectedItem.fileId" type="file" class="styler">
+                    <input v-fileupload="selectedItem.FILE_ID" type="file" class="styler">
                 </div>
                 <div class="serviceItem__right">
                     <div class="itemCount">
@@ -118,7 +118,7 @@
             </div>
             <div class="serviceItem__row">
                 <div class="serviceItem__subtitle"><?=Loc::getMessage('comments')?></div>
-                <textarea class="styler" v-model="selectedItem.comments" placeholder=""></textarea>
+                <textarea class="styler" v-model="selectedItem.COMMENTS" placeholder=""></textarea>
             </div>
         </div>
 

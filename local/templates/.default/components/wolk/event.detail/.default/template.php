@@ -6,13 +6,19 @@ use Wolk\Core\Helpers\Text as TextHelper;
 $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 ?>
 <div class="breadcrumbs">
-    <div class="breadcrumbs__container">
-        <a @click="setStep(step)" v-for="(step, name) in steps" href="javascript:void(0)" class="breadcrumbs__button"
-           :class="{ 'active': step == curStep, 'hidden': ([2,3,5].indexOf(parseInt(step)) != -1) && selectedStand.ID == 0 }"> <span
-                class="breadcrumbs__buttoncontainer">{{ step }}. {{ name }}</span></a>
+    <div class="breadcrumbs__container" :class="{ 'indStand': selectedStand.ID == 0 }">
+        <a
+            @click="setStep(step.NUM)"
+            v-for="step in steps | visibleSteps selectedStand.ID"
+            href="javascript:void(0)" 
+            class="breadcrumbs__button"
+           :class="{ 'active': step.NUM == curStep, 'hidden': ([2,3,5].indexOf(parseInt(step.NUM)) != -1) && selectedStand.ID == 0 }"
+        > 
+           <span class="breadcrumbs__buttoncontainer">{{ $index + 1 }}. {{ step.NAME }}</span>
+        </a>
     </div>
 </div>
-<!--<pre>{{ selectedStand | json }}</pre>-->
+<pre style="display:none;">{{ selectedStand.SERVICES | json }}</pre>
 <!--<pre>{{ options | json }}</pre>-->
 
 <div class="catalogdeadline" v-show="hasMargins">
@@ -20,10 +26,17 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 		<div class="catalogdeadline__deadlinetitle">
 			<?= Loc::getMessage('deadline') ?>
 			<span class="catalogdeadline__deadlinedate">
-				<? $date = strtotime(reset($arResult['EVENT']['PROPS']['MARGIN_DATES']['VALUE'])) ?>
-				<?= TextHelper::i18nmonth(date('n', $date)) ?>
-				<?= date('j', $date) ?><sup><?= Loc::getMessage('weekday') ?></sup>,
-				<?= date('Y', $date) ?>
+                <? if (\Bitrix\Main\Context::getCurrent()->getLanguage() == 'ru') { ?>
+                    <? $date = strtotime(reset($arResult['EVENT']['PROPS']['MARGIN_DATES']['VALUE'])) ?>
+                    <?= date('j', $date) ?>
+                    <?= TextHelper::i18nmonth(date('n', $date), false) ?>,
+                    <?= date('Y', $date) ?>
+                <? } else { ?>
+                    <? $date = strtotime(reset($arResult['EVENT']['PROPS']['MARGIN_DATES']['VALUE'])) ?>
+                    <?= TextHelper::i18nmonth(date('n', $date)) ?>
+                    <?= date('j', $date) ?><sup><?= Loc::getMessage('weekday') ?></sup>,
+                    <?= date('Y', $date) ?>
+                <? } ?>
 			</span>
 		</div>
         <div class="catalogdeadline__deadlinedescription">
@@ -53,7 +66,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <div class="standspagetop__currentstanddescription">
                     <p>{{{ selectedStand.PROPS['LANG_DESCRIPTION_' + curLang]['~VALUE'].TEXT }}}</p>
                     <ul v-show="selectedStand.EQUIPMENT"><?= Loc::getMessage('Including') ?>:
-                        <li v-for="eq in selectedStand.EQUIPMENT">{{ eq.COUNT }} x {{ eq.NAME }}</li>
+                        <li v-for="eq in selectedStand.EQUIPMENT">{{ eq.COUNT }} &times; {{ eq.NAME }}</li>
                     </ul>
                 </div>
                 <img :src="selectedStand.PREVIEW_PICTURE" class="standspagetop__photo" alt="">
@@ -62,10 +75,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 </a>
             </div>
         </div>
-        <a v-show="selectedStand.ID == 0" href="javascript:void(0)" @click="nextStep"
-           class="standspagetop__continuebutton">
-            <?= Loc::getMessage('continue') ?>
-        </a>
+		<? if (TRUE || $arResult['INDIVIDUAL_STAND']) { ?>
+			<a v-show="selectedStand.ID == 0" href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton">
+				<?= Loc::getMessage('continue') ?>
+			</a>
+		<? } ?>
+        
     </div>
 
     <div class="standstypescontainer">
@@ -129,9 +144,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 
                     <div class="standstypescontainer__description">
                         <p><?= $stand['PROPS']["LANG_DESCRIPTION_{$curLang}"]['~VALUE']['TEXT'] ?></p>
-                        <ul><?= Loc::getMessage('Including') ?>:
+                        <ul>
+							<?= Loc::getMessage('Including') ?>:
                             <? foreach ($stand['OFFER']['EQUIPMENT'] as $eq) { ?>
-                                <li><?= $eq['COUNT'] ?> x <?=$eq['NAME'] ?></li>
+                                <li>
+									<?= $eq['COUNT'] ?> &times; <?= $eq['NAME'] ?>
+								</li>
                             <? } ?>
                         </ul>
                     </div>
@@ -240,7 +258,8 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <div class="ordercontainer">
         <div class="ordercontainer__columnscontainer">
             <div class="ordercontainer__column right">
-                <div class="pagesubtitle"><?=Loc::getMessage('standart_equipment')?>
+                <div class="pagesubtitle">
+					<?= Loc::getMessage('standart_equipment') ?>
                     <div class="pagesubtitle__addbutton customizable" @click="setStep(2)"></div>
                 </div>
                 <div class="ordercontainer__itemscontainer">
@@ -249,10 +268,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ allServices[eq.ID].PRICE * (eq.QUANTITY - eq.COUNT) | format_currency ' ' currency_format }}
                         </div>
                         <div class="ordercontainer__itemname">
-                            {{ allServices[eq.ID].NAME }} | {{ allServices[eq.ID].PRICE | format_currency ' ' currency_format }} x {{ eq.QUANTITY }}
+                            {{ allServices[eq.ID].NAME }} | {{ allServices[eq.ID].PRICE | format_currency ' ' currency_format }} &times; {{ eq.QUANTITY }}
                         </div>
                         <div class="ordercontainer__changebutton">
-                            <a @click.prevent="setStep(2)" href="#"><?=Loc::getMessage('change')?></a>
+                            <a @click.prevent="setStep(2)" href="#">
+								<?= Loc::getMessage('change') ?>
+							</a>
                         </div>
                     </div>
                 </div>
@@ -268,7 +289,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ allServices[item.ID].PRICE * item.QUANTITY | format_currency ' ' currency_format }}
                         </div>
                         <div class="ordercontainer__itemname">
-                            {{ allServices[item.ID].NAME }} | {{ allServices[item.ID].PRICE | format_currency ' ' currency_format }} x {{ item.QUANTITY }}
+                            {{ allServices[item.ID].NAME }} | {{ allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
                         </div>
                         <div class="ordercontainer__changebutton">
                             <a href="#"><?=Loc::getMessage('change')?></a> |
@@ -375,8 +396,8 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <?Helper::includeFile('rules_text_with_link_'.$curLang)?>
             </label>
             <div class="placeOrder__buttons" v-if="guest_agreement">
-                <button class="styler arcticmodal-close" data-modal="#modalLogin"><?=Loc::getMessage('login')?></button>
-                <button class="styler arcticmodal-close" data-modal="#modalRegister"><?=Loc::getMessage('register')?></button>
+                <button class="styler arcticmodal-close" data-modal="#modalLogin"><?= Loc::getMessage('login') ?></button>
+                <button class="styler arcticmodal-close" data-modal="#modalRegister"><?= Loc::getMessage('register') ?></button>
             </div>
         </form>
     </div>
@@ -395,7 +416,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <?Helper::includeFile('rules_text_with_link_'.$curLang)?>
             </label>
             <div class="placeOrder__buttons" v-if="agreement">
-                <button class="styler" @click.prevent="placeOrder('')"><?=Loc::getMessage('place_order')?></button>
+                <button id="js-place-order-id" class="styler" @click.prevent="placeOrder('')">
+					<?= Loc::getMessage('place_order') ?>
+				</button>
             </div>
         </form>
     </div>
@@ -489,7 +512,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <div class="modalTitle"><?=Loc::getMessage('success')?>!</div>
         <p><?=Loc::getMessage('order_placed')?></p>
         <a href="/events/{{curEvent.CODE}}/" class="styler modalSend">
-            <?=Loc::getMessage('home')?>
+            <?= Loc::getMessage('home') ?>
+        </a>
+		<br/>
+		<a href="/personal/orders-history.php#{{curEvent.CODE}}/" class="styler modalSend">
+            <?= Loc::getMessage('review_order') ?>
         </a>
         <div class="clear"></div>
     </div>

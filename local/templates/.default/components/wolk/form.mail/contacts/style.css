@@ -1,0 +1,14 @@
+.formRow  input[type="submit"] {
+	position: relative;
+	opacity: 1;
+}
+
+.form-error {
+	margin: 5px 0 30px 0;
+    color: #ff9090;
+}
+
+.form-success {
+	margin: 5px 0 30px 0;
+    color: #90bb90;
+}

@@ -19,7 +19,7 @@
 
 	<div class="invoiceText">
 		<p>MALCORP</p>
-		<p>Jalan Ampang  11th floor, Bangunan Getah Asli(Menara),148  Kuala Lumpur  50450   Malaysia</p>
+		<p><?= $arResult['USER']['UF_REQUISITES'] ?></p>
 	</div>
 	<? if (!empty($arResult['USER']['UF_VAT'])) { ?>
 		<div class="invoiceText">
@@ -69,6 +69,7 @@
 		</thead>
 		<tbody>
 			<? foreach ($arResult['BASKETS'] as $basket) { ?>
+				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
 					<td></td>

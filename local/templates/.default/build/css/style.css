@@ -196,11 +196,15 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 .siteAside				{padding-bottom: 60px;position: relative}
 .basketcontainer		{-webkit-transition: all 300ms;-moz-transition: all 300ms;-ms-transition: all 300ms;-o-transition: all 300ms;transition: all 300ms;padding-bottom: 60px}
 
+.sketchAfterLeft 		{float: left;width: 465px;}
+.sketchAfterRight 		{margin-left: 475px;}
 .commentsForm			{margin-top: 55px}
 .commentsForm__title	{text-transform: uppercase;font-weight: bold;font-size: 21px;line-height: 30px;padding-bottom: 28px;}
-.commentsForm textarea	{border: 1px solid #acacac;width: 540px;height: 229px;resize: vertical;overflow: auto;padding: 11px 14px;font-family: "GothamPro", Arial, Helvetica, sans-serif;font-size: 13px;background: transparent;box-sizing: border-box;-moz-box-sizing: border-box}
+.commentsForm textarea	{border: 1px solid #acacac;width: 465px;height: 229px;resize: vertical;overflow: auto;padding: 11px 14px;font-family: "GothamPro", Arial, Helvetica, sans-serif;font-size: 13px;background: transparent;box-sizing: border-box;-moz-box-sizing: border-box}
 
-
+.sketchAfterRight		{padding-top: 55px}
+.pagetitle				{font-size: 21px;line-height: 30px;margin-bottom: 28px;text-transform: uppercase}
+.sketchAfterRight .reviewconfigurationcontainer {border: 3px solid #7f7f7f;padding: 13px 20px 0;text-transform: uppercase;line-height: 41px;margin: 1px 0 0;}
 
 .headersection__loginform .errortext	{font-size: 13px;color: #ff3f25;background: #fff;box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.30);position: absolute;left: -210px;width: 185px;padding: 20px;top: 50%;margin-top: -41px}
 .headersection__loginform .errortext:after {display: block;width: 12px;height: 24px;content: '';position: absolute;top: 50%;margin: -12px 0 0;;right: -12px;background: url(/local/templates/.default/build/images/globals/sprite.png) -66px -32px}
@@ -239,7 +243,7 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 .standsTypes__save input.styler {width: 190px}
 
 .modal.modalOrder			{width: 1060px;max-width: 1060px}
-
+.modal .bx-context-toolbar-empty-area {background: transparent !important}
 
 
 

@@ -9,6 +9,11 @@ define('TIME_YEAR', 31536000);
 
 
 /*
+ * Шаблон по умолчанию.
+ */
+define('DEFAULT_TEMPLATE_PATH', '/local/templates/.default');
+
+/*
  * Сайт по умолчанию.
  */
 define('SITE_DEFAULT', 's1');

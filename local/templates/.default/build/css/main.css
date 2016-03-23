@@ -222,6 +222,9 @@ input[type="password"] {
   width: 114.5px;
   font-weight: bold;
 }
+.indStand .breadcrumbs__button {
+  width: 271px;
+}
 .breadcrumbs__button:hover {
   background: #aeaeae;
 }
@@ -444,18 +447,25 @@ input[type="password"] {
 .indexpage__generalinfocontainer {
   margin-top: 100px;
 }
-.indexpage__generalinfocolumns {
+.indexpage__generalinfocontainer .pagesubtitle {margin-bottom: 30px;}
+
+.indexInfo {
   overflow: hidden;
   *zoom: 1;
   width: 960px;
   margin-left: -20px;
+  line-height: 30px;
 }
-.indexpage__generalinfocolumn {
+.indexInfo ul,
+.indexInfo li {margin: 0;padding: 0;list-style:none;}
+.indexInfo__left {
   float: left;
   width: 460px;
   margin-left: 20px;
   font-size: 17px;
-  line-height: 30px;
+}
+.indexInfo__right {
+  margin-left: 500px;
 }
 .indexpage__generalinfocolumn a {
   display: block;
@@ -777,6 +787,7 @@ input[type="password"] {
   font-weight: bold;
   text-align: center;
   text-transform: uppercase;
+  margin-bottom: 15px;
 }
 .basketcontainer__itemscontainer {
   /*border-bottom: 2px solid #7f7f7f;*/
@@ -795,13 +806,13 @@ input[type="password"] {
   float: right;
 }
 .basketcontainer__totalpricecontainer {
-  padding: /*0px 0 50px 0*/ 50px 0;
+  padding: /*0px 0 50px 0*/ 35px 0;
   position: relative;
 }
 .basketcontainer__totalpricecontainertitle {
   position: absolute;
   left: 0;
-  top: /*-4px*/ 50px;
+  top: /*-4px*/ 35px;
   font-size: 21px;
   line-height: 24px;
   font-weight: bold;
@@ -836,7 +847,7 @@ input[type="password"] {
 	top: -5px
 }
 
-.navButtons {height: 60px}
+.navButtons {height: 60px;padding-top: 15px}
 .navButtons .prev {  display: block;
 	text-decoration: none;
 	line-height: 60px;
@@ -1046,6 +1057,7 @@ float: left}
 .ordercontainer {
   position: relative;
   border-bottom: 3px solid #7f7f7f;
+  padding-bottom: 15px;
 }
 .ordercontainer:after {
   position: relative;
@@ -1185,7 +1197,7 @@ float: left}
 
 .ordertotalcontainer__total,
 .ordertaxcontainer__total,
-.ordertotalcontainer__surcharge {width: 460px;}
+.ordertotalcontainer__surcharge {width: 540px;height: 26px;}
 .ordertotalcontainer__total span,
 .ordertaxcontainer__total span,
 .ordertotalcontainer__surcharge span{float: right;}
@@ -1196,7 +1208,7 @@ float: left}
   font-weight: bold;
   color: #ff3f25;
   text-transform: uppercase;
-  margin-top: 40px;
+  margin-top: 17px;
 }
 .ordertotalcontainer__surchargetotal {
   position: absolute;
@@ -1208,7 +1220,7 @@ float: left}
   padding-left: 160px;
   font-size: 54px;
   line-height: 48px;
-  width: 300px;
+  width: 380px;
   text-align: right;
 }
 .ordertotalcontainer__surchargetotaltitle {
@@ -1494,3 +1506,4 @@ float: left}
 	position: absolute;
 	top: 101px;
 }
+.ordercontainer__changebutton.changeallorder {text-align: right}

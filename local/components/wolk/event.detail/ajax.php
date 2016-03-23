@@ -31,10 +31,12 @@ try {
     }
 
     switch ($_POST['action']) {
+		
         case 'getServices':
             $eventId = intval($_POST['event']);
             $result = $component->getServices($eventId);
             break;
+			
         case 'placeOrder':
             Loader::includeModule('sale');
             $params = [];
@@ -45,6 +47,7 @@ try {
             $component->arParams = $params;
             $component->addToCart();
             break;
+			
         case 'upload':
             $arFields = $_FILES;
             $result = [
@@ -67,8 +70,9 @@ try {
                 die($error);
             }
             break;
+			
         case 'getOrder':
-            if($order = $component->getOrder($_POST['orderId'])) {
+            if ($order = $component->getOrder($_POST['orderId'])) {
                 $result = $order;
             } else {
                 $result = 'Order not found';

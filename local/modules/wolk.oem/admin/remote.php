@@ -33,11 +33,18 @@ switch ($action) {
 		$order_id = (int) $_REQUEST['oid'];
 		$template = (string) $_REQUEST['tpl'];
 		
+		if (!\Bitrix\Main\Loader::includeModule('sale')) {
+			jsonresponse(false, 'Ошибка выполнения: модуль не установлен');
+		}
+		
 		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
 			jsonresponse(false, 'Ошибка выполнения: модуль не установлен');
 		}
 		
-		$invoice = new Wolk\OEM\Invoice($order_id, $template);
+		$order    = CSaleOrder::getByID($order_id);
+		$customer = CUser::getByID($order['USER_ID'])->Fetch();
+		
+		$invoice = new Wolk\OEM\Invoice($order_id, $template, $customer['WORK_COMPANY'], $customer['UF_CLIENT_NUMBER']);
 		
 		// Печать счета.
 		$result = $invoice->make();

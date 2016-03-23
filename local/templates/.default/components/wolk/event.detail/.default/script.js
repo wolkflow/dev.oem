@@ -1,4 +1,5 @@
 $(function () {
+	
     //Vue.config.debug = true;
     var vm = new Vue({
         el: 'body',
@@ -125,7 +126,6 @@ $(function () {
                 return valid;
             },
             setStep: function (step) {
-                //console.log(new Error().stack);
                 if (this.curStep > step || this.validateStep(step - 1)) {
                     if (!(this.selectedStand.ID == 0 && (step == 2 || step == 3 || step == 5))) {
                         top.BX.ajax.history.put({}, window.location.search.replace(/&*step=[\d]/, "") + '&step=' + step);
@@ -167,7 +167,8 @@ $(function () {
                 });
             },
             placeOrder: function (type) {
-                $("input:button").attr("disabled", true);
+                $('#js-place-order-id').attr("disabled", true);
+				
                 $.post('/local/components/wolk/event.detail/ajax.php', {
                     sessid: BX.bitrix_sessid(),
                     action: 'placeOrder',
@@ -176,7 +177,12 @@ $(function () {
                         ID: this.selectedStand.ID,
                         NAME: this.selectedStand.NAME
                     }),
-                    equipment: JSON.stringify(this.selectedStand.EQUIPMENT),
+                    equipment: JSON.stringify(this.selectedStand.EQUIPMENT.map(function(val) {
+                        return {
+                            'ID': val.ID,
+                            'COUNT': val.COUNT
+                        };
+                    })),
                     options: JSON.stringify(this.selectedStand.OPTIONS),
                     services: JSON.stringify(this.selectedStand.SERVICES),
                     selectedParams: JSON.stringify(this.selectedParams),
@@ -197,11 +203,11 @@ $(function () {
                     $('#modalSuccessOrder').arcticmodal({
                         closeOnOverlayClick: false
                     });
-                    $("input:button").attr("disabled", false);
+                    $('#js-place-order-id').attr("disabled", false);
                     sessionStorage.clear();
                 }).fail(function (data) {
                     $('.errortext:visible').html(data.responseText);
-                    $("input:button").attr("disabled", false)
+                    $('#js-place-order-id').attr("disabled", false)
                 });
             },
             deleteServiceItem: function (cartSectionName, index) {
@@ -245,8 +251,8 @@ $(function () {
                     var result = [];
 
                     this.selectedStand.EQUIPMENT.forEach(function (eq) {
-                        console.log(eq);
-                        if(eq.WIDTH && eq.HEIGHT) {
+                        // console.log(eq);
+                        if (eq.WIDTH && eq.HEIGHT) {
                             result.push({
                                 title: eq.NAME,
                                 quantity: parseInt(eq.QUANTITY),
@@ -514,7 +520,7 @@ $(function () {
                         curItems = self.selectedParams.SKETCH.objects;
                     }
                     window.resizeEditor = function (items) {
-                        var editorH = Math.max(120 + (items.length * 135), $(window).height());
+                        var editorH = Math.max(120 + (items.length * 135), 675);
                         $("#designer").height(editorH);
                         var firstRun = !itemsForSketch;
                         window.editorScrollTop = $("#designer").offset().top - 30;
@@ -558,7 +564,7 @@ $(function () {
                                 });
                                 setTimeout(function() { window.resizeEditor(itemsForSketch); }, 100);
                             };
-                            lime.embed("designer", 0, 0);
+                            lime.embed("designer", 0, 0, '', '/');
                         });
                     } else {
                         //window.resizeEditor(itemsForSketch);
@@ -837,7 +843,7 @@ Vue.component('graphics', {
                     return this.section.ITEMS[this.itemId];
                 },
                 price: function () {
-                    return this.item.PRICE.toFixed(2);
+                    return parseFloat(this.item.PRICE).toFixed(2);
                 },
                 colors: function () {
                     var result = [],
@@ -873,7 +879,8 @@ Vue.component('graphics', {
                             CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
                             QUANTITY: 1,
                             FASCIA_TEXT: self.text,
-                            PRICE: self.price.toFixed(2),
+                            FASCIA_COLOR: self.selectedColor,
+                            PRICE: self.price,
                             PROPS: [
                                 {
                                     NAME: 'Текст',
@@ -1552,6 +1559,7 @@ Vue.component('hanging-structure-mock-up', {
         addToCart: function () {
             var self = this;
             this.selectedItems.forEach(function (item, index) {
+                console.log(item);
                 if (item.FILE_ID && item.QUANTITY > 0) {
                     self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
                         ID: self.item.ID,
@@ -2468,6 +2476,11 @@ Vue.component('basket', {
 
 
 // Фильтр формата валюты
+Vue.filter('exists_steps', function (val, separator) {
+    return '';
+});
+
+// Фильтр формата валюты
 Vue.filter('format_number', function (val, separator) {
     if (val !== undefined && val) {
         return '€' + val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + separator);
@@ -2501,12 +2514,23 @@ Vue.filter('visibleInCart', function (arr) {
     var res = [];
     if (!$.isEmptyObject(arr)) {
         $.each(arr, function (key, val) {
-            if (val && val.PRICE && parseInt(val.PRICE) > 0) {
-                res.push(val)
+            if (val && (val.PRICE && parseInt(val.PRICE) > 0) || val.ID == 5) {
+                res.push(val);
             }
         });
     }
 
+    return res;
+});
+
+Vue.filter('visibleSteps', function (arr, standId) {
+    var res = {};
+    $.each(arr, function (key, val) {
+        if ( !([2,3,5].indexOf(parseInt(val.NUM)) != -1 && standId == 0) ) {
+            res[key] = val;
+        }
+    });
+    
     return res;
 });
 

@@ -19,7 +19,7 @@
 
 	<div class="invoiceText">
 		<p>ДИСТАНЦИЯ</p>
-		<p>Россия, 105275, Москва, 5-ая улица Соколиной горы, д. 16, корп. 2</p>
+		<p><?= $arResult['USER']['UF_REQUISITES'] ?></p>
 	</div>
 	<div class="invoiceTextRight">
 		<p class="invoiceTb"><b>В платежном документе обязательна ссылка на № и дату счета, № клиента</b></p>
@@ -56,6 +56,7 @@
 		</thead>
 		<tbody>
 			<? foreach ($arResult['BASKETS'] as $basket) { ?>
+				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
 					<td></td>

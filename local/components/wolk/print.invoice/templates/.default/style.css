@@ -126,7 +126,7 @@ body						{font: 400 13px/normal Arial, helvetika, sans-serif}
 .invoiceItems__table-total td + td	+ td{text-align: right}
 
 .invoiceMessage					{text-align: center;font-weight: 700;line-height: 1.5}
-.invoiceAfter					{margin: 15px 0 25px}
+.invoiceAfter					{margin: 15px 0 25px;page-break-inside: avoid;position: relative;}
 .invoiceAfterLeft				{float: left;width: 310px;line-height: 1.5;position: relative}
 .invoiceAfterRight				{margin-left: 315px}
 .invoiceAfterSignature			{border-bottom: 1px solid #000;padding-top: 104px;margin-bottom: 11px;position: relative;}
@@ -135,7 +135,7 @@ body						{font: 400 13px/normal Arial, helvetika, sans-serif}
 .text-left td					{text-align: left !important}
 
 
-.invoiceAfter2					{padding: 5px 0 0}
+.invoiceAfter2					{padding: 5px 0 0;page-break-inside: avoid;position: relative;}
 .attention						{color: #f00;font-weight: 700;margin-bottom: 10px}
 .regNum							{margin: 22px 0 3px;padding-bottom: 45px;border-bottom: 1px solid #000}
 .invoiceAfter2 .invoiceAfterRight {padding: 25px 0 0}

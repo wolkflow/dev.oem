@@ -230,6 +230,10 @@ class EventDetailComponent extends BaseListComponent
 
             $arService['EQ_COLORS'] = ArrayHelper::only($colors, $arService['PROPERTY_38']);
 
+            $width = ($arService['PROPERTY_41'] / 10) <= 5 ? 5 : $arService['PROPERTY_41'] / 10;
+            $height = ($arService['PROPERTY_40'] / 10) <= 5 ? 5 : $arService['PROPERTY_40'] / 10;
+            $src = CFile::GetFileArray($arService['PROPERTY_42'])['SRC'];
+
             list(
                 $arService['WIDTH'],
                 $arService['HEIGHT'],
@@ -238,12 +242,7 @@ class EventDetailComponent extends BaseListComponent
                 ) = [
                 $arService['PROPERTY_41'] / 1000,
                 $arService['PROPERTY_40'] / 1000,
-                CFile::ResizeImageGet($arService['PROPERTY_42'],
-                    [
-                        'width'  => $arService['PROPERTY_41'] / 10 < 30 ? 30 : $arService['PROPERTY_41'] / 10,
-                        'height' => $arService['PROPERTY_40'] / 10 < 30 ? 30 : $arService['PROPERTY_40'] / 10
-                    ],
-                    BX_RESIZE_IMAGE_PROPORTIONAL)['src'],
+                $src ? "/i.php?w={$width}&h={$height}&src={$src}&zc=0" : false,
                 $arService['PROPERTY_48'] ?: 'droppable'
             ];
 
@@ -267,6 +266,7 @@ class EventDetailComponent extends BaseListComponent
     protected function processAuth($data)
     {
         global $USER, $APPLICATION;
+		
         if (isset($_POST['placeType']) && $_POST['placeType'] == 'register') {
             #register
             if (!$data['companyName'] || !$data['companyAddress'] || !$data['name'] || !$data['lastName']) {
@@ -598,9 +598,17 @@ class EventDetailComponent extends BaseListComponent
                         CSaleOrderPropsValue::Delete($arValue['ID']);
                     }
                 }
+				
+				//Параметры заказа.
+				$params = $_POST['orderParams'];
+				
+				// file_put_contents($_SERVER['DOCUMENT_ROOT'].'/ord.txt', print_r($params, true));
+				
+				// Язык, на котором сделан заказ.
+				$params['LANGUAGE'] = \Bitrix\Main\Context::getCurrent()->getLanguage();
 
                 foreach ($_POST['orderParams'] as $code => $value) {
-                    CSaleOrderPropsValue::Add([
+                    $res = CSaleOrderPropsValue::Add([
                         "ORDER_ID"       => $orderId,
                         "ORDER_PROPS_ID" => $arOrderProperties[$code]["ID"],
                         "NAME"           => $arOrderProperties[$code]["NAME"],
@@ -821,6 +829,11 @@ class EventDetailComponent extends BaseListComponent
                         $equipmentItem['PREVIEW_PICTURE'], ['width' => 320, 'height' => 210],
                         BX_RESIZE_IMAGE_PROPORTIONAL
                     )['src'];
+
+                    $width = ($equipmentItem['PROPS']['WIDTH']['VALUE'] / 10) <= 5 ? 5 : $equipmentItem['PROPS']['WIDTH']['VALUE'] / 10;
+                    $height = ($equipmentItem['PROPS']['HEIGHT']['VALUE'] / 10) <= 5 ? 5 : $equipmentItem['PROPS']['HEIGHT']['VALUE'] / 10;
+                    $src = CFile::GetPath($equipmentItem['PROPS']['SKETCH_IMAGE']['VALUE']);
+
                     list(
                         $equipmentItem['WIDTH'],
                         $equipmentItem['HEIGHT'],
@@ -829,12 +842,7 @@ class EventDetailComponent extends BaseListComponent
                         ) = [
                         $equipmentItem['PROPS']['WIDTH']['VALUE'] / 1000,
                         $equipmentItem['PROPS']['HEIGHT']['VALUE'] / 1000,
-                        CFile::ResizeImageGet($equipmentItem['PROPS']['SKETCH_IMAGE']['VALUE'],
-                            [
-                                'width'  => $equipmentItem['PROPS']['WIDTH']['VALUE'] / 10 < 30 ? 30 : $equipmentItem['PROPS']['WIDTH']['VALUE'] / 10,
-                                'height' => $equipmentItem['PROPS']['HEIGHT']['VALUE'] / 10 < 30 ? 30 : $equipmentItem['PROPS']['HEIGHT']['VALUE'] / 10
-                            ],
-                            BX_RESIZE_IMAGE_PROPORTIONAL)['src'],
+                        $src ? "/i.php?w={$width}&h={$height}&src={$src}&zc=0" : false,
                         $equipmentItem['PROPS']['SKETCH_TYPE']['VALUE'] ?: 'droppable'
                     ];
 
@@ -958,7 +966,7 @@ class EventDetailComponent extends BaseListComponent
         $filter = [
             'CREATED_BY' => $USER->GetID(),
             'ID'         => $id,
-            'STATUS_ID'  => 'N'
+            // 'STATUS_ID'  => 'N'
         ];
         if ($USER->IsAdmin()) {
             unset($filter['CREATED_BY']);
@@ -1063,12 +1071,15 @@ class EventDetailComponent extends BaseListComponent
             $result['PROPS'] = $orderProps;
             $result['ID'] = $id;
             $result['CURRENCY'] = $order['CURRENCY'];
-            $result['totalPrice'] = $order['PRICE'];
-            $result['TOTAL_PRICE_FORMATTED'] = CurrencyFormat($order['PRICE'], $order['CURRENCY']);
+			$result['taxPrice'] = $order['TAX_VALUE'];
+            $result['totalPrice'] = $order['PRICE'] - $order['TAX_VALUE'];
+			$result['totalTaxPrice'] = $order['PRICE'];
+            $result['status'] = $order['STATUS_ID'];
+			$result['TOTAL_PRICE_FORMATTED'] = CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'], $order['CURRENCY']);
+            $result['TOTAL_PRICE_TAX_FORMATTED'] = CurrencyFormat($order['PRICE'], $order['CURRENCY']);
             if (isset($event)) {
                 $result['curEvent'] = $event;
             }
-
             return $result;
         }
 

@@ -15,7 +15,35 @@
     </div>
 </div>
 
-<div class="commentsForm">
-    <div class="commentsForm__title">Comments</div>
-    <textarea placeholder="Additioan information about your order"></textarea>
+<div class="sketchAfter">
+    <div class="sketchAfterLeft">
+        <div class="commentsForm">
+            <div class="commentsForm__title">Comments</div>
+            <textarea placeholder="Additioan information about your order"></textarea>
+        </div>
+    </div>
+    <div class="sketchAfterRight">
+        <div class="pagetitle"><?= Loc::getMessage('Review your configuration') ?></div>
+        <div class="reviewconfigurationcontainer">
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('system_booth')?>: </span>
+                {{ selectedStand['LANG_NAME_' + curLang] || selectedStand.NAME}}
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('width')?> &amp; <?=Loc::getMessage('depth')?>: </span>
+                {{ selectedParams.WIDTH }} x {{ selectedParams.DEPTH }}
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('type')?>:
+                </span>{{ selectedParams.TYPE || '<?= Loc::getMessage('individual') ?>' }}
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('exhibition')?>: </span> {{ curEvent.NAME }}
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('location')?>: </span> {{curEvent.LOCATION}}
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
 </div>

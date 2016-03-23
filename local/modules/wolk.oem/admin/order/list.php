@@ -132,6 +132,12 @@ $ladmin->AddHeaders(array(
 		"sort"      => 'STATUS',
 		"default"   => true,
 	),
+	array( 
+		"id"    	=> 'DATE',
+		"content"   => Loc::getMessage('HEADER_DATE'),
+		"sort"      => 'DATE',
+		"default"   => true,
+	),
 ));
 
 
@@ -150,7 +156,8 @@ while ($item = $result->NavNext(true, "f_")) {
 	$row->AddViewField('COMPANY', $user['WORK_COMPANY']);
 	$row->AddViewField('PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
 	$row->AddViewField('BILL', ((!empty($props['BILL']['VALUE'])) ? ($props['BILL']['VALUE']) : ('&mdash;')));
-	$row->AddViewField('STATUS', $statuses[$item['STATUS_ID']]['NAME']); 
+	$row->AddViewField('STATUS', $statuses[$item['STATUS_ID']]['NAME']);
+	$row->AddViewField('DATE', $item['DATE_INSERT']);
   
 	// Сформируем контекстное меню.
 	$actions = array();
