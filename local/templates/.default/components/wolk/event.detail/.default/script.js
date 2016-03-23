@@ -2000,30 +2000,34 @@ Vue.component('stand-security', {
                             date1 = date1[2] + '/' + date1[1] + '/' + date1[0];
                             date2 = date2[2] + '/' + date2[1] + '/' + date2[0];
                             
-                            daysCount  = Date.getDaysBetween(new Date(date1), new Date(date2));
-                            hoursCount = Date.getHoursBetween(new Date(date1), new Date(date2));
+                            daysCount = Date.getDaysBetween(new Date(date1), new Date(date2)) + 1;
                         } catch (e) {
-                            daysCount  = 0;
-                            hoursCount = 0;
+                            daysCount = 0;
                         }
                         if (daysCount < 1) {
                             daysCount = 1;
                         }
-                        if (hoursCount < 8) {
-                            hoursCount = 8;
-                        }
                     } else {
-                        daysCount  = item.calendar.dates.length;
-                        hoursCount = item.calendar.dates.length * 8;
+                        daysCount = item.calendar.dates.length;
                     }
-                    
+					
+					// Часы работы охраны.
+					hoursCount = Date.getHoursBetween(new Date('01.01.1970 ' + item.timeStart), new Date('01.01.1970 ' + item.timeEnd));
+					
+					if (hoursCount < 1) {
+						hoursCount = 1;
+					}
+					var multiplier = daysCount * hoursCount;
+					
+					console.log(daysCount, hoursCount, item.QUANTITY);
+					
                     self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
                         ID: item.ID,
                         NAME: self.items[item.ID].NAME,
                         CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
                         QUANTITY: item.QUANTITY,
                         PRICE: self.items[item.ID].PRICE,
-                        MULTIPLIER: daysCount,
+                        MULTIPLIER: multiplier,
                         PROPS: [
                             {
                                 NAME: 'timeStart',

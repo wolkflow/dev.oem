@@ -74,7 +74,9 @@
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
                     <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('price') ?>
+						</div>
                         <div class="serviceItem__cost-value">
                             {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
                         </div>
@@ -122,8 +124,10 @@
                         <div class="setDate hasDatepicker" v-pickmeup="selectedItem.calendar">
                             <div class="loolee" data-loolee="1">
                                 <div class="looleeHead">
-                                    <label class="styler"><input type="checkbox" class="changeMode">
-                                        <span></span><?=Loc::getMessage('daterange')?></label>
+                                    <label class="styler">
+										<input type="checkbox" class="changeMode" />	
+                                        <span></span><?= Loc::getMessage('daterange') ?>
+									</label>
                                     <a href="#" class="cButton buttonClear dateClear"><?=Loc::getMessage('clear')?></a>
                                     <a href="#" class="cButton buttonOk looleeClose">ОК</a>
                                 </div>
@@ -175,7 +179,9 @@
                     <div class="serviceItem__beforeDate">
                         <div class="serviceItem__subtitle">{{ section.SUBTITLE || '&nbsp;' }}</div>
                         <select v-styler="selectedItem.ID" class="styler">
-                            <option value=""><?=Loc::getMessage('not selected')?></option>
+                            <option value="">
+								<?= Loc::getMessage('not selected') ?>
+							</option>
                             <option value="{{ item.ID }}" v-for="item in items">
                                 {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format}}
                             </option>
@@ -195,7 +201,9 @@
             </div>
             <div class="serviceItem__row">
                 <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
-                    <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('price') ?>
+					</div>
                     <div class="serviceItem__cost-value">
                         {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
                     </div>

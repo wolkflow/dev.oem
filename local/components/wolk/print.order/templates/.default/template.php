@@ -99,12 +99,14 @@
 				meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
 			}
 			
-			var gridX = <?= (int) ($arResult['PROPS']['width']['VALUE']) ?: 5 ?>;
-			var gridY = <?= (int) ($arResult['PROPS']['depth']['VALUE']) ?: 5 ?>;
-		
+			var gridX   = <?= (int) ($arResult['PROPS']['width']['VALUE']) ?: 5 ?>;
+			var gridY   = <?= (int) ($arResult['PROPS']['depth']['VALUE']) ?: 5 ?>;
+			
 			// compute initial editor's height
 			(window.resizeEditor = function(items) {
-				$('#designer').height(gridY * 100 + 12);
+				var editorH = Math.max(120 + (items.length * 135), 675);
+				
+				$('#designer').height(editorH); // gridY * 100 + 12);
 			})(sketchitems);
 
 			window.onEditorReady = function() {
@@ -120,9 +122,8 @@
 			lime.embed('designer', 0, 0);
 		}
 		
-		
 		$.when(loadsketch()).done(function() {
-			setTimeout(function() {window.print();}, 1000);
+			// setTimeout(function() {window.print();}, 1000);
 		});
     });
 </script>
