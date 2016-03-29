@@ -39,6 +39,11 @@ input.itemCount__input			{width: 60px;height: 60px;margin: 0 70px;text-align: ce
 .itemCount__button:before 		{content: "";position: absolute;width: 16px;height: 4px;background: #fff;left: 22px;top: 28px}
 .itemCount__up:after 			{content: "";position: absolute;height: 16px;width: 4px;background: #fff;top: 22px;left: 28px}
 
+.itemCount__button.justcnt			{width: 56px;height: 56px;background: #f9f9f9; border: 2px solid #7f7f7f;}
+.itemCount__button.justcnt:hover	{background: #fff}
+.itemCount__button.justcnt:before 	{background: #7f7f7f; left: 20px;top: 26px}
+.itemCount__up.justcnt:after 		{background: #7f7f7f; top: 20px;left: 26px}
+
 .serviceItem__cost				{float: left;width: 410px}
 .serviceItem__cost.serviceItem__cost-short {width: 160px;}
 .serviceItem__bottom-inputs		{margin-left: 160px}

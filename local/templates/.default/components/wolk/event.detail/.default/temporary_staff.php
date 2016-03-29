@@ -93,8 +93,8 @@
                 <div class="serviceItem__right">
                     <div class="itemCount">
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
-                        <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
-                        <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
                         <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                         </select>
                     </div>
                     <div class="setDateBlock">
-                        <div class="serviceItem__subtitle">Даты</div>
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
                         <div class="setDate hasDatepicker" v-pickmeup="selectedItem.calendar">
                             <div class="loolee" data-loolee="1">
                                 <div class="looleeHead">
@@ -140,8 +140,8 @@
                     <div class="itemCount">
                         <div class="itemCount">
                             <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
-                            <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
-                            <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
                             <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
                         </div>
                     </div>
@@ -192,8 +192,8 @@
                     <div class="itemCount">
                         <div class="itemCount">
                             <div class="serviceItem__subtitle"><?=Loc::getMessage('space')?> <span>(m<sup>2</sup>)</span></div>
-                            <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
-                            <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
                             <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
                         </div>
                     </div>
@@ -248,8 +248,8 @@
                 <div class="serviceItem__right">
                     <div class="itemCount">
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
-                        <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
-                        <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
                         <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
                     </div>
                 </div>

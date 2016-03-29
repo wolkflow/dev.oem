@@ -1,11 +1,16 @@
 <? use Bitrix\Main\Localization\Loc; ?>
+
 <script type="x/template" id="additional-equipment">
-    <div class="pagesubsubtitle">{{ item.NAME }}</div>
+    <div class="pagesubsubtitle">
+		{{ item.NAME }}
+	</div>
     <div class="equipmentcontainer__itemcontainer">
         <div class="equipmentcontainer__itemrightside">
             <div class="equipmentcontainer__itemprice">{{ price | format_currency ' ' currency_format }}</div>
             <div class="equipmentcontainer__itemcolorcontainer" v-if="colors">
-                <div class="equipmentcontainer__itemcolortitle"><?= Loc::getMessage('color') ?></div>
+                <div class="equipmentcontainer__itemcolortitle">
+					<?= Loc::getMessage('color') ?>
+				</div>
                 <div class="equipmentcontainer__itemcolordropdown" v-if="colorsLength > 1">
                     <select v-styler="selectedColor" class="styler">
                         <option :value=""><?= Loc::getMessage('not selected') ?></option>
@@ -14,8 +19,10 @@
                         </option>
                     </select>
                 </div>
-                <span v-else>{{ colors.VALUE }}</span>
-                <input type="hidden" v-model="selectedColor" :value="colors.ID">
+                <span v-else>
+					{{ colors.VALUE }}
+				</span>
+                <input type="hidden" v-model="selectedColor" :value="colors.ID" />
             </div>
             <div class="itemquantitycontainer">
                 <div class="itemCount">
@@ -26,7 +33,9 @@
                            :value="item.QUANTITY">
                 </div>
             </div>
+			<? /*
             <div @click="addToCart" class="equipmentcontainer__additembutton"><?= Loc::getMessage('save') ?></div>
+			*/ ?>
         </div>
         <div class="equipmentcontainer__itemleftside">
             <div class="equipmentcontainer__itemphotocontainer">

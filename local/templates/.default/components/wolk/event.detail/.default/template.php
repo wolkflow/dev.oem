@@ -161,6 +161,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 <div class="pagetitle" v-show="curStep == 4"><?= Loc::getMessage('Services') ?></div>
 <div class="pagetitle" v-show="curStep == 3"><?= Loc::getMessage('Additional equipment') ?></div>
 <div class="main" v-show="[2,3,4].indexOf(parseInt(curStep)) != -1">
+
     <!--STEP 2-->
     <div class="standartequipmentcontainer" v-show="curStep == 2">
         <div v-if="selectedStand.ID" class="standartequipmentcontainer__itemcontainer"
@@ -198,8 +199,10 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 {{ selectedParams.WIDTH }} &times; {{ selectedParams.DEPTH }}
             </div>
             <div class="reviewconfigurationcontainer__configuration">
-                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('type')?>:
-                </span>{{ selectedParams.TYPE || '<?= Loc::getMessage('individual') ?>' | t }}
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('type') ?>:
+                </span>
+				{{ selectedParams.TYPE || '<?= Loc::getMessage('individual') ?>' | t }}
             </div>
             <div class="reviewconfigurationcontainer__configuration">
                 <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('exhibition')?>: </span> {{ curEvent.NAME }}
@@ -214,9 +217,14 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <div id="step3" v-show="curStep == 3">
         <div class="equipmentcontainer">
             <div class="options_group" v-for="section in options.SECTIONS">
-                <div v-if="section.ITEMS" @click="toggleSectionVisible(section)" data-module="pagesubtitle-dropdown"
-                     class="pagesubtitle moduleinited"
-                     :class="{'open': section.visible == true || !section.hasOwnProperty('visible')}">{{ section.NAME }}
+                <div
+					v-if="section.ITEMS" 
+					@click="toggleSectionVisible(section)" 
+					data-module="pagesubtitle-dropdown"
+                    class="pagesubtitle moduleinited"
+                    :class="{'open': section.visible == true || !section.hasOwnProperty('visible')}"
+				>
+					{{ section.NAME }}
                 </div>
                 <div class="pagesubtitleopencontainer">
                     <additional-equipment v-for="item in section.ITEMS" :item="item" :section="section"></additional-equipment>

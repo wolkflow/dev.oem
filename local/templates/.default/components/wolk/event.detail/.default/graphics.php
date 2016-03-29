@@ -83,8 +83,8 @@
                 <div class="serviceItem__right">
                     <div class="itemCount">
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
-                        <div class="itemCount__button itemCount__down" @click="decQty(logo)"></div>
-                        <div class="itemCount__button itemCount__up" @click="incQty(logo)"></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(logo)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(logo)"></div>
                         <input v-model="logo.QUANTITY" type="text" class="itemCount__input styler" number>
                     </div>
                 </div>
@@ -125,8 +125,8 @@
 					<div class="serviceItem__col-8 lamCount">
 						<div class="itemCount">
 							<div class="serviceItem__subtitle"><?=Loc::getMessage('space')?> (<?=Loc::getMessage('m2')?>)</div>
-							<!--<div class="itemCount__button itemCount__down" @click="decQty(item)"></div>-->
-							<!--<div class="itemCount__button itemCount__up" @click="incQty(item)"></div>-->
+							<!--<div class="itemCount__button itemCount__down justcnt" @click="decQty(item)"></div>-->
+							<!--<div class="itemCount__button itemCount__up justcnt" @click="incQty(item)"></div>-->
 							<input v-model="item.QUANTITY" type="text" class="itemCount__input styler">
 						</div>
 					</div>
@@ -206,8 +206,8 @@
                 <div class="serviceItem__right">
                     <div class="itemCount">
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
-                        <div class="itemCount__button itemCount__down" @click="decQty(item)"></div>
-                        <div class="itemCount__button itemCount__up" @click="incQty(item)"></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(item)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(item)"></div>
                         <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number>
                     </div>
                 </div>

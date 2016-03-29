@@ -35,8 +35,8 @@
                     <div class="itemCount">
                         <div class="itemCount">
                             <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
-                            <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
-                            <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
+                            <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
                             <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
                         </div>
                     </div>
@@ -78,8 +78,8 @@
                 <div class="serviceItem__right">
                     <div class="itemCount">
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
-                        <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
-                        <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
                         <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
                     </div>
                 </div>

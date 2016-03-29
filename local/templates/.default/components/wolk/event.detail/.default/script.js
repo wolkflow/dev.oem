@@ -146,7 +146,9 @@ $(function () {
                 eq.QUANTITY++;
             },
             decEqQty: function (eq) {
-                if (eq.QUANTITY > 1) eq.QUANTITY--;
+                if (eq.QUANTITY > 1) {
+					eq.QUANTITY--;
+				}
             },
             getServices: function (successCallback) {
                 var self = this;
@@ -703,6 +705,8 @@ var currencyMixin = {
     }
 };
 
+
+// Компонент: "Электрика и коммуникации".
 Vue.component('electrics-and-communications', {
     template: '#electrics-and-communications',
     methods: {
@@ -776,6 +780,8 @@ Vue.component('electrics-and-communications', {
     mixins: [toggleableMixin]
 });
 
+
+// Компонент: "Графика".
 Vue.component('graphics', {
     template: '#graphics',
     data: function () {
@@ -1237,6 +1243,8 @@ Vue.component('graphics', {
     mixins: [toggleableMixin]
 });
 
+
+// Компонент: "Дополнительное оборудование".
 Vue.component('additional-equipment', {
     template: '#additional-equipment',
     data: function () {
@@ -1292,10 +1300,12 @@ Vue.component('additional-equipment', {
         },
         incQty: function () {
             this.item.QUANTITY++;
+			this.addToCart();
         },
         decQty: function () {
             if (this.item.QUANTITY > 0) {
                 this.item.QUANTITY--;
+				this.addToCart();			
             }
         }
     },
@@ -1332,6 +1342,8 @@ Vue.component('additional-equipment', {
     mixins: [currencyMixin]
 });
 
+
+// Компонент: "Подвесные конструкции".
 Vue.component('hanging-structure', {
     template: '#hanging-structure',
     data: function () {
@@ -1361,6 +1373,8 @@ Vue.component('hanging-structure', {
     mixins: [toggleableMixin]
 });
 
+
+// Компонент: "".
 Vue.component('suspension-points', {
     template: '#suspension-points',
     data: function () {
@@ -1430,6 +1444,8 @@ Vue.component('suspension-points', {
     ]
 });
 
+
+// Компонент: "".
 Vue.component('advertising-materials-file', {
     template: '#advertising-materials-file',
     data: function () {
@@ -1516,6 +1532,8 @@ Vue.component('advertising-materials-file', {
     ]
 });
 
+
+// Компонент: "".
 Vue.component('hanging-structure-mock-up', {
     template: '#hanging-structure-mock-up',
     data: function () {
@@ -1603,6 +1621,8 @@ Vue.component('hanging-structure-mock-up', {
     ]
 });
 
+
+// Компонент: "".
 Vue.component('hanging-structure-details', {
     template: '#hanging-structure-details',
     data: function () {
@@ -1742,6 +1762,9 @@ Vue.component('hanging-structure-details', {
     }
 });
 
+
+
+// Компонент: "Пропуска для машин".
 Vue.component('car-passes', {
     template: '#car-passes',
     data: function () {
@@ -1771,6 +1794,9 @@ Vue.component('car-passes', {
     mixins: [toggleableMixin]
 });
 
+
+
+// Компонент: "VIP пропуска".
 Vue.component('vip-passes', {
     template: '#vip-passes',
     data: function () {
@@ -1840,6 +1866,9 @@ Vue.component('vip-passes', {
     ]
 });
 
+
+
+// Компонент: "Пропуска для зоны загрузки / разгрузки".
 Vue.component('car-passes-to-loading-unloading-zone', {
     template: '#car-passes-to-loading-unloading-zone',
     data: function () {
@@ -1909,6 +1938,9 @@ Vue.component('car-passes-to-loading-unloading-zone', {
     ]
 });
 
+
+
+// Компонент: "Персонал".
 Vue.component('temporary-staff', {
     template: '#temporary-staff',
     data: function () {
@@ -1938,6 +1970,9 @@ Vue.component('temporary-staff', {
     mixins: [toggleableMixin]
 });
 
+
+
+// Компонент: "Охрана".
 Vue.component('stand-security', {
     template: '#stand-security',
     data: function () {
@@ -2072,7 +2107,9 @@ Vue.component('stand-security', {
 });
 
 
-// Переводчик.
+
+
+// Компонент: "Переводчик".
 Vue.component('interpreter', {
     template: '#interpreter',
     data: function () {
@@ -2174,6 +2211,9 @@ Vue.component('interpreter', {
     ]
 });
 
+
+
+// Компонент: "Уборка".
 Vue.component('stand-cleaning', {
     template: '#stand-cleaning',
     data: function () {
@@ -2249,6 +2289,10 @@ Vue.component('stand-cleaning', {
     ]
 });
 
+
+
+
+// Компонент: "Стендист".
 Vue.component('stand-assistant', {
     template: '#stand-assistant',
     data: function () {
@@ -2355,6 +2399,9 @@ Vue.component('stand-assistant', {
     ]
 });
 
+
+
+// Компонент: "".
 Vue.component('additional-buildup-time', {
     template: '#additional-buildup-time',
     data: function () {
@@ -2449,6 +2496,9 @@ Vue.component('additional-buildup-time', {
     }
 });
 
+
+
+// Компонент: "Корзина".
 Vue.component('basket', {
     template: '#basket',
     computed: {
@@ -2486,19 +2536,20 @@ Vue.component('basket', {
 });
 
 
-// Фильтр формата валюты
+
+// Фильтр формата валюты.
 Vue.filter('exists_steps', function (val, separator) {
     return '';
 });
 
-// Фильтр формата валюты
+// Фильтр формата валюты.
 Vue.filter('format_number', function (val, separator) {
     if (val !== undefined && val) {
         return '€' + val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + separator);
     }
 });
 
-// Фильтр формата цены
+// Фильтр формата цены.
 Vue.filter('format_currency', function (val, separator, pattern) {
     var result = '';
     
@@ -2515,12 +2566,14 @@ Vue.filter('format_currency', function (val, separator, pattern) {
     return result;
 });
 
+// Фильтр излишка.
 Vue.filter('overIncluded', function (arr) {
     return arr.filter(function (val) {
         return val.QUANTITY > val.COUNT;
     });
 });
 
+// Фильтр видимости в корзине.
 Vue.filter('visibleInCart', function (arr) {
     var res = [];
     if (!$.isEmptyObject(arr)) {
@@ -2534,6 +2587,7 @@ Vue.filter('visibleInCart', function (arr) {
     return res;
 });
 
+// Фильтр видимости шагов.
 Vue.filter('visibleSteps', function (arr, standId) {
     var res = {};
     $.each(arr, function (key, val) {
@@ -2545,6 +2599,7 @@ Vue.filter('visibleSteps', function (arr, standId) {
     return res;
 });
 
+// Фильтр перевода.
 Vue.filter('t', function(val) {
     if(typeof langMessages != 'undefined' && langMessages[0].hasOwnProperty(val)) {
         return langMessages[0][val];
@@ -2553,6 +2608,8 @@ Vue.filter('t', function(val) {
     return val;
 });
 
+
+// Директива "Календарь".
 Vue.directive('datepicker', {
     twoWay: true,
 
@@ -2582,6 +2639,8 @@ Vue.directive('datepicker', {
     }
 });
 
+
+// Директива "Календарь".
 Vue.directive('pickmeup', {
     twoWay: true,
     bind: function () {
