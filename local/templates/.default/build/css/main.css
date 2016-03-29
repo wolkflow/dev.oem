@@ -1184,6 +1184,9 @@ float: left}
   position: relative;
   padding-top: 87px;
 }
+.ordertotalcontainer .ordertotalcontainer {
+  padding-top: 0;
+}
 .ordertaxcontainer__total {
   font-size: 21px;
   font-weight: bold;
@@ -1197,7 +1200,7 @@ float: left}
 
 .ordertotalcontainer__total,
 .ordertaxcontainer__total,
-.ordertotalcontainer__surcharge {width: 540px;height: 26px;}
+.ordertotalcontainer__surcharge {width: 540px;min-height: 26px;}
 .ordertotalcontainer__total span,
 .ordertaxcontainer__total span,
 .ordertotalcontainer__surcharge span{float: right;}
@@ -1208,12 +1211,10 @@ float: left}
   font-weight: bold;
   color: #ff3f25;
   text-transform: uppercase;
-  margin-top: 17px;
+  margin: 17px 0;
 }
 .ordertotalcontainer__surchargetotal {
-  position: absolute;
-  left: 0;
-  bottom: 0;
+  position: relative;
 }
 .ordertotalcontainer__surchargetotalcount {
   position: relative;

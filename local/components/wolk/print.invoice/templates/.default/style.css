@@ -93,12 +93,12 @@ body						{font: 400 13px/normal Arial, helvetika, sans-serif}
 .invoiceHeaderDetail		{line-height: 15px}
 
 .invoiceText p				{margin-bottom: 10px}
-.invoiceTextRight			{margin-left: 335px}
+.invoiceTextRight			{float: right;}
 .invoiceTextRight .invoiceTb{margin-bottom: 15px;font-weight: 700}
 .invoiceTextRight span		{display: block;font-weight: 700;color: #f00;margin-top: 3px}
 .invoiceTextRight p			{margin-bottom: 5px}
 
-.invoiceParams				{margin-bottom: 15px}
+.invoiceParams				{margin-bottom: 15px;clear: both;}
 .invoiceParams p			{margin-bottom: 5px}
 .invoiceParams .toleft		{display: inline-block;width: 117px}
 .red						{color: #f00}

@@ -62,16 +62,20 @@
 
 <script type="x/template" id="logo">
     <div class="serviceItem" v-if="item">
-        <div class="serviceItem__title"><?=Loc::getMessage('logotype')?></div>
+        <div class="serviceItem__title">
+			<?= Loc::getMessage('logotype') ?>
+		</div>
         <div class="serviceItem__block" v-for="logo in logotypes">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
-                    <div class="serviceItem__subtitle"><?=Loc::getMessage('extent')?></div>
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('extent') ?>
+					</div>
                     <div class="itemText_custom">
                         <select v-styler="logo.EXTENT" class="styler" class="styler">
                             <option value=""><?= Loc::getMessage('not selected') ?></option>
                             <option value="{{ extentCode }}" v-for="(extentCode, extent) in extents">
-								{{ extent.NAME }}
+								{{ extent }}
                             </option>
                         </select>
                     </div>
@@ -101,8 +105,7 @@
             </div>
 
             <div class="serviceItem__subtitle"><?=Loc::getMessage('comments')?></div>
-        <textarea v-model="logo.COMMENTS" class="styler"
-                  placeholder="<?= Loc::getMessage('logoCommentPlaceholder') ?>"></textarea>
+			<textarea v-model="logo.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('logoCommentPlaceholder') ?>"></textarea>
         </div>
 
         <a href="javascript:void(0)" @click.prevent="addLogo" class="itemAdd_field itemAdd__filed-left">

@@ -18,7 +18,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         </a>
     </div>
 </div>
-<pre style="display:none;">{{ selectedStand.SERVICES | json }}</pre>
+<!--<pre>{{ selectedStand.SERVICES | json }}</pre>-->
 <!--<pre>{{ options | json }}</pre>-->
 
 <div class="catalogdeadline" v-show="hasMargins">
@@ -75,12 +75,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 </a>
             </div>
         </div>
-		<? if (TRUE || $arResult['INDIVIDUAL_STAND']) { ?>
-			<a v-show="selectedStand.ID == 0" href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton">
-				<?= Loc::getMessage('continue') ?>
-			</a>
-		<? } ?>
-        
+		<a v-show="selectedStand.ID == 0" href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton">
+			<?= Loc::getMessage('continue') ?>
+		</a>        
     </div>
 
     <div class="standstypescontainer">
@@ -189,16 +186,20 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <div class="pagetitle"><?= Loc::getMessage('Review your configuration') ?></div>
         <div class="reviewconfigurationcontainer">
             <div class="reviewconfigurationcontainer__configuration">
-                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('system_booth')?>: </span>
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('system_booth') ?>:
+				</span>
                 {{ selectedStand['LANG_NAME_' + curLang] || selectedStand.NAME}}
             </div>
             <div class="reviewconfigurationcontainer__configuration">
-                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('width')?> &amp; <?=Loc::getMessage('depth')?>: </span>
-                {{ selectedParams.WIDTH }} x {{ selectedParams.DEPTH }}
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('width') ?> &amp; <?= Loc::getMessage('depth') ?>:
+				</span>
+                {{ selectedParams.WIDTH }} &times; {{ selectedParams.DEPTH }}
             </div>
             <div class="reviewconfigurationcontainer__configuration">
                 <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('type')?>:
-                </span>{{ selectedParams.TYPE || '<?= Loc::getMessage('individual') ?>' }}
+                </span>{{ selectedParams.TYPE || '<?= Loc::getMessage('individual') ?>' | t }}
             </div>
             <div class="reviewconfigurationcontainer__configuration">
                 <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('exhibition')?>: </span> {{ curEvent.NAME }}
@@ -218,8 +219,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                      :class="{'open': section.visible == true || !section.hasOwnProperty('visible')}">{{ section.NAME }}
                 </div>
                 <div class="pagesubtitleopencontainer">
-                    <additional-equipment v-for="item in section.ITEMS" :item="item"
-                                          :section="section"></additional-equipment>
+                    <additional-equipment v-for="item in section.ITEMS" :item="item" :section="section"></additional-equipment>
                 </div>
             </div>
         </div>
@@ -233,7 +233,6 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <temporary-staff></temporary-staff>
         <car-passes></car-passes>
     </div>
-
 </div>
 
 <aside class="siteAside" data-sticky_column>
@@ -303,7 +302,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <div class="ordercontainer__itemscontainer">
                     <div class="pagesubsubtitle"><?=Loc::getMessage('system_stand')?></div>
                     <div class="last ordercontainer__item">
-                        <div class="ordercontainer__itemtotalprice">
+                        <div class="ordercontainer__itemtotalprice" v-if="selectedStand.PRICE.PRICE">
                             {{ selectedStand.PRICE.PRICE | format_currency ' ' currency_format  }}
                         </div>
                         <div class="ordercontainer__itemname">
@@ -324,7 +323,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.QUANTITY * item.MULTIPLIER : allServices[item.ID].PRICE * item.QUANTITY | format_currency ' ' currency_format }}
                         </div>
                         <div class="ordercontainer__itemname">
-                            {{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} x {{ item.QUANTITY }}
+                            {{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ' - ' + item.FASCIA_COLOR +')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
                         </div>
                         <div class="ordercontainer__changebutton">
                             <a @click.prevent="setStep(4)" href="#"><?=Loc::getMessage('change')?></a> |
@@ -342,13 +341,13 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             <div class="ordertotalcontainer__standcontainer">
                 <div class="ordertotalcontainer__title"><?= Loc::getMessage('stand') ?> №</div>
                 <div class="ordertotalcontainer__number">
-                    <input type="text" v-model="standNum">
+                    <input type="text" v-model="standNum" />
                 </div>
             </div>
             <div class="ordertotalcontainer__pavillioncontainer">
                 <div class="ordertotalcontainer__title"><?= Loc::getMessage('pavillion') ?></div>
                 <div class="ordertotalcontainer__number">
-                    <input type="text" v-model="pavillion">
+                    <input type="text" v-model="pavillion" />
                 </div>
             </div>
             <div class="ordertotalcontainer__placeorder"
@@ -359,19 +358,19 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <div class="ordertotalcontainer__total" v-show="summaryPrice">
             <?= Loc::getMessage('total') ?>: <span>{{summaryPrice | format_currency ' ' currency_format }}</span>
         </div>
+		<div class="ordertotalcontainer__surcharge" v-show="curEvent.SURCHARGE > 0 && totalSurchargePrice">
+            <?= Loc::getMessage('surcharge') ?>: <span>{{ curEvent.SURCHARGE }} % ({{ moneySurcharge }})</span>
+        </div>
+		<div class="ordertotalcontainer__total" v-show="totalSurchargePrice">
+			<?= Loc::getMessage('total_with_vat') ?>: <span>{{totalSurchargePrice | format_currency ' ' currency_format }}</span>
+		</div>
 		<div class="ordertaxcontainer__total" v-show="taxPrice">
 			<?= Loc::getMessage('tax') ?>: <span>{{taxPrice | format_currency ' ' currency_format }}</span>
 		</div>
-        <div class="ordertotalcontainer__total" v-show="totalPrice">
-			<?= Loc::getMessage('total_with_vat') ?>: <span>{{totalPrice | format_currency ' ' currency_format }}</span>
-		</div>
-        <div class="ordertotalcontainer__surcharge" v-show="curEvent.SURCHARGE > 0 && totalPrice">
-            <?= Loc::getMessage('surcharge') ?>: <span>{{ curEvent.SURCHARGE }} % ({{ moneySurcharge }})</span>
-        </div>
         <div class="ordertotalcontainer__surchargetotal" v-show="curEvent.SURCHARGE > 0 && totalPrice">
             <div class="ordertotalcontainer__surchargetotaltitle"><?= Loc::getMessage('total_with_sur') ?>:</div>
             <div class="ordertotalcontainer__surchargetotalcount">
-                {{ totalSurchargePrice | format_currency ' ' currency_format }}
+                {{ totalPrice | format_currency ' ' currency_format }}
             </div>
         </div>
     </div>
@@ -389,11 +388,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <div class="modalTitle"><?=Loc::getMessage('place_order')?></div>
         <form>
             <div class="placeOrder__text">
-                <?Helper::includeFile('placeOrder_not_logged_in_text_'.$curLang)?>
+                <? Helper::includeFile('placeOrder_not_logged_in_text_'.$curLang) ?>
             </div>
             <label>
                 <input id="g_ag" type="checkbox" class="styler" v-styler="guest_agreement">
-                <?Helper::includeFile('rules_text_with_link_'.$curLang)?>
+                <? Helper::includeFile('rules_text_with_link_'.$curLang) ?>
             </label>
             <div class="placeOrder__buttons" v-if="guest_agreement">
                 <button class="styler arcticmodal-close" data-modal="#modalLogin"><?= Loc::getMessage('login') ?></button>
@@ -409,11 +408,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <div class="modalTitle"><?=Loc::getMessage('place_order')?></div>
         <form>
             <div class="placeOrder__text">
-                <?Helper::includeFile('placeOrder_logged_in_text_'.$curLang)?>
+                <? Helper::includeFile('placeOrder_logged_in_text_'.$curLang) ?>
             </div>
             <label>
                 <input type="checkbox" class="styler" v-styler="agreement">
-                <?Helper::includeFile('rules_text_with_link_'.$curLang)?>
+                <? Helper::includeFile('rules_text_with_link_'.$curLang) ?>
             </label>
             <div class="placeOrder__buttons" v-if="agreement">
                 <button id="js-place-order-id" class="styler" @click.prevent="placeOrder('')">
@@ -512,11 +511,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <div class="modalTitle"><?=Loc::getMessage('success')?>!</div>
         <p><?=Loc::getMessage('order_placed')?></p>
         <a href="/events/{{curEvent.CODE}}/" class="styler modalSend">
-            <?= Loc::getMessage('home') ?>
+            <?=Loc::getMessage('home')?>
         </a>
-		<br/>
-		<a href="/personal/orders-history.php#{{curEvent.CODE}}/" class="styler modalSend">
-            <?= Loc::getMessage('review_order') ?>
+        <br>
+        <a href="/personal/orders-history.php">
+            <?=Loc::getMessage('review_order')?>
         </a>
         <div class="clear"></div>
     </div>

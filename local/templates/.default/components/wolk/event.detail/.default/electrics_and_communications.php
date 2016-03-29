@@ -1,13 +1,12 @@
-<?use Bitrix\Main\Localization\Loc;?>
+<? use Bitrix\Main\Localization\Loc; ?>
 <script type="x/template" id="electrics-and-communications">
     <div class="servicescontainer serviceContainer" v-if="sections">
         <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle"
              :class="{'open': visible == true}">{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">
-            <electrics-and-communications-item v-for="section in sections"
-                                               :section="section"></electrics-and-communications-item>
-            <input @click.prevent="save" type="button" class="styler saveButton" value="<?=Loc::getMessage('save')?>">
+            <electrics-and-communications-item v-for="section in sections" :section="section"></electrics-and-communications-item>
+            <input @click.prevent="save" type="button" class="styler saveButton" value="<?= Loc::getMessage('save') ?>" />
         </div>
     </div>
 </script>
@@ -22,10 +21,10 @@
                     <div class="serviceItem__subtitle">{{ section.SUBTITLE }}</div>
                     <select v-styler="selectedItem.ID" class="styler">
                         <option value="">
-                            <?=Loc::getMessage('not selected')?>
+                            <?= Loc::getMessage('not selected') ?>
                         </option>
                         <option value="{{ item.ID }}" v-for="item in items">
-                            {{ item.NAME }}     ({{ item.PRICE | format_currency ' ' currency_format }})
+                            {{ item.NAME }} ({{ item.PRICE | format_currency ' ' currency_format }})
                         </option>
                     </select>
                 </div>
@@ -34,7 +33,7 @@
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
                         <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
                         <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
-                        <input type="text" v-model="selectedItem.QUANTITY" class="itemCount__input styler" number>
+                        <input type="text" v-model="selectedItem.QUANTITY" class="itemCount__input styler" number />
                     </div>
                 </div>
                 <div style="margin-top: 10px;" v-if="selectedItem.ID">

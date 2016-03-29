@@ -68,8 +68,8 @@
 					<td><?= $basket['NAME'] ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
 					<td></td>
-					<td><?= number_format($basket['PRICE'], 2, ',', ' ') ?></td>
-					<td><?= number_format($basket['SUMMARY_PRICE'], 2, ',', ' ') ?></td>
+					<td><?= number_format($basket['SURCHARGE_PRICE'], 2, ',', ' ') ?></td>
+					<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
 			<tr class="invoiceTotal">

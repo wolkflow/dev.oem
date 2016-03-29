@@ -18,15 +18,17 @@
 <div class="sketchAfter">
     <div class="sketchAfterLeft">
         <div class="commentsForm">
-            <div class="commentsForm__title">Comments</div>
-            <textarea placeholder="Additioan information about your order"></textarea>
+            <div class="commentsForm__title">
+				<?= Loc::getMessage('comments') ?>
+			</div>
+            <textarea v-model="orderDesc" placeholder="Additioan information about your order"></textarea>
         </div>
     </div>
     <div class="sketchAfterRight">
         <div class="pagetitle"><?= Loc::getMessage('Review your configuration') ?></div>
         <div class="reviewconfigurationcontainer">
             <div class="reviewconfigurationcontainer__configuration">
-                <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('system_booth')?>: </span>
+                <span class="reviewconfigurationcontainer__configurationtitle"><?= Loc::getMessage('system_booth') ?>: </span>
                 {{ selectedStand['LANG_NAME_' + curLang] || selectedStand.NAME}}
             </div>
             <div class="reviewconfigurationcontainer__configuration">
@@ -35,7 +37,7 @@
             </div>
             <div class="reviewconfigurationcontainer__configuration">
                 <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('type')?>:
-                </span>{{ selectedParams.TYPE || '<?= Loc::getMessage('individual') ?>' }}
+                </span>{{ selectedParams.TYPE || '<?= Loc::getMessage('individual') ?>' | t }}
             </div>
             <div class="reviewconfigurationcontainer__configuration">
                 <span class="reviewconfigurationcontainer__configurationtitle"><?=Loc::getMessage('exhibition')?>: </span> {{ curEvent.NAME }}

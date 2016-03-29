@@ -14,8 +14,7 @@ $(function () {
             standNum: 0,
             pavillion: 0,
             sketch: {
-                objects: {},
-                comments: ''
+                objects: {}
             },
             order: order,
             selectedParams: selectedParams,
@@ -28,6 +27,7 @@ $(function () {
                 name: '',
                 lastName: ''
             },
+            orderDesc: '',
             agreement: false,
             guest_agreement: false,
             colors: colors,
@@ -72,7 +72,6 @@ $(function () {
             },
             validateStep: function (step) {
                 var valid = false;
-                console.log('validate step: ' + step);
                 switch (parseInt(step)) {
                     case 1:
                         if (this.selectedStand) {
@@ -192,12 +191,13 @@ $(function () {
                         sketch: JSON.stringify(this.sketch),
                         eventId: this.curEvent.ID,
                         eventName: this.curEvent.NAME,
-                        width: self.selectedParams.WIDTH,
-                        depth: self.selectedParams.DEPTH,
-                        standType: self.selectedParams.TYPE
+                        width: this.selectedParams.WIDTH,
+                        depth: this.selectedParams.DEPTH,
+                        standType: this.selectedParams.TYPE
                     },
+                    orderDesc: this.orderDesc,
                     userData: JSON.stringify(this.userData),
-                    orderId: self.order ? self.order.ID : '',
+                    orderId: this.order ? this.order.ID : '',
                     placeType: type
                 }).done(function (data) {
                     $('#modalSuccessOrder').arcticmodal({
@@ -303,18 +303,27 @@ $(function () {
                     this.stands[this.selected] = val;
                 }
             },
-			taxPrice: function () {
-				if (this.selectedStand) {
-					return parseFloat((this.summaryPrice / 100 * this.vat).toFixed(2));
-				}
-				return null;
-			},
 			totalPrice: function () {
 				if (this.selectedStand) {
-					return parseFloat((this.summaryPrice + this.taxPrice).toFixed(2));
+					return parseFloat((this.totalSurchargePrice + this.taxPrice).toFixed(2));
 				}
 				return null;
 			},
+			taxPrice: function () {
+				if (this.selectedStand) {
+					return parseFloat((this.totalSurchargePrice / 100 * this.vat).toFixed(2));
+				}
+				return null;
+			},
+			hasMargins: function () {
+                return (this.curEvent.MARGIN_DATES !== null);
+            },
+            moneySurcharge: function () {
+                return parseFloat((this.curEvent.SURCHARGE * this.summaryPrice / 100).toFixed(2));
+            },
+            totalSurchargePrice: function () {
+                return parseFloat((this.summaryPrice + this.moneySurcharge).toFixed(2));
+            },
             summaryPrice: function () {
                 if (this.selectedStand) {
                     var price = this.selectedStand.PRICE.PRICE,
@@ -408,15 +417,6 @@ $(function () {
 
                     return res;
                 }
-            },
-            hasMargins: function () {
-                return (this.curEvent.MARGIN_DATES !== null);
-            },
-            moneySurcharge: function () {
-                return parseFloat((this.curEvent.SURCHARGE * this.totalPrice / 100).toFixed(2));
-            },
-            totalSurchargePrice: function () {
-                return parseFloat((this.totalPrice + this.moneySurcharge).toFixed(2));
             },
             regValidation: {
                 cache: false,
@@ -580,7 +580,7 @@ $(function () {
                                     placedItems: curItems || {}
                                 });
                             });
-                            setTimeout(function() { window.resizeEditor(itemsForSketch); }, 100);
+                            setTimeout(function() { window.resizeEditor(itemsForSketch); }, 300);
                         }
                     }
                 }
@@ -875,7 +875,7 @@ Vue.component('graphics', {
                     if (self.text && self.selectedColor) {
                         self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][0]', {
                             ID: self.item.ID,
-                            NAME: self.item.NAME + ' (' + self.text + ')',
+                            NAME: self.item.NAME + ' (' + self.allColors[self.selectedColor].UF_NUM + ' ' + self.text + ')',
                             CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
                             QUANTITY: 1,
                             FASCIA_TEXT: self.text,
@@ -939,7 +939,14 @@ Vue.component('graphics', {
                     return this.item.PRICE;
                 },
                 extents: function () {
-                    return array_combine(this.item.PROPERTY_VALUE_ID_39, this.item.PROPERTY_39);
+                	var res = {};
+                	for(extentIndex in this.item.PROPERTY_39) {
+                		if(this.$root.extents.hasOwnProperty(this.item.PROPERTY_39[extentIndex])) {
+                			res[this.item.PROPERTY_39[extentIndex]] = this.$root.extents[this.item.PROPERTY_39[extentIndex]].NAME;
+                		}
+                	}
+                
+                    return res;
                 }
             },
             methods: {
@@ -1091,18 +1098,18 @@ Vue.component('graphics', {
                         if (item.QUANTITY > 0) {
                             self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
                                 ID: self.item.ID,
-                                NAME: self.item.NAME + ' (' + item.COLOR + ')',
+                                NAME: self.item.NAME + ' (' +self.allColors[item.COLOR].UF_NUM + ' ' + item.COLOR + ')',
                                 CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
                                 QUANTITY: parseFloat(item.QUANTITY).toFixed(2),
                                 PRICE: parseFloat(self.price).toFixed(2),
                                 PROPS: [
                                     {
-                                        NAME: 'COLOR',
+                                        NAME: 'Цвет',
                                         CODE: 'COLOR',
                                         VALUE: item.COLOR
                                     },
                                     {
-                                        NAME: 'COMMENTS',
+                                        NAME: 'Коммент',
                                         CODE: 'COMMENTS',
                                         VALUE: item.COMMENTS
                                     }//,
@@ -1299,7 +1306,7 @@ Vue.component('additional-equipment', {
         colors: function () {
             var colors = !$.isEmptyObject(this.item.EQ_COLORS) ? this.item.EQ_COLORS : false;
 
-            console.log(colors);
+//            console.log(colors);
 
             if (typeof colors == 'object') {
                 if (Object.keys(colors).length == 1) {
@@ -1481,12 +1488,12 @@ Vue.component('advertising-materials-file', {
                         QUANTITY: item.QUANTITY,
                         PROPS: [
                             {
-                                NAME: 'COMMENTS',
+                                NAME: 'Коммент',
                                 CODE: 'COMMENTS',
                                 VALUE: item.COMMENTS
                             },
                             {
-                                NAME: 'FILE_ID',
+                                NAME: 'Файл',
                                 CODE: 'FILE_ID',
                                 VALUE: item.FILE_ID
                             }
@@ -1568,12 +1575,12 @@ Vue.component('hanging-structure-mock-up', {
                         QUANTITY: item.QUANTITY,
                         PROPS: [
                             {
-                                NAME: 'COMMENTS',
+                                NAME: 'Коммент',
                                 CODE: 'COMMENTS',
                                 VALUE: item.COMMENTS
                             },
                             {
-                                NAME: 'FILE_ID',
+                                NAME: 'Файл',
                                 CODE: 'FILE_ID',
                                 VALUE: item.FILE_ID
                             }
@@ -2536,6 +2543,14 @@ Vue.filter('visibleSteps', function (arr, standId) {
     });
     
     return res;
+});
+
+Vue.filter('t', function(val) {
+    if(typeof langMessages != 'undefined' && langMessages[0].hasOwnProperty(val)) {
+        return langMessages[0][val];
+    }
+
+    return val;
 });
 
 Vue.directive('datepicker', {

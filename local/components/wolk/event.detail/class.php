@@ -196,8 +196,8 @@ class EventDetailComponent extends BaseListComponent
     {
         $arServices = [];
         $servicesIds = $event->GetProperty('OPTIONS')['VALUE'];
-        $colors = array_map(function($val) {
-            return $val['UF_NAME_'.$this->curLang];
+        $colors = array_map(function ($val) {
+            return $val['UF_NAME_' . $this->curLang];
         }, $this->getEquipmentColors());
         #dump($servicesIds);die;
         $obServices = CIBlockElement::GetList([], [
@@ -266,7 +266,7 @@ class EventDetailComponent extends BaseListComponent
     protected function processAuth($data)
     {
         global $USER, $APPLICATION;
-		
+
         if (isset($_POST['placeType']) && $_POST['placeType'] == 'register') {
             #register
             if (!$data['companyName'] || !$data['companyAddress'] || !$data['name'] || !$data['lastName']) {
@@ -546,6 +546,7 @@ class EventDetailComponent extends BaseListComponent
                 ]
         ])['TOTAL_PRICE'];
 
+        $moneySurcharge = 0;
         $surcharge = $this->getSurcharge();
         if ($surcharge) {
             $moneySurcharge = round($totalPrice * $surcharge / 100, 2);
@@ -556,17 +557,18 @@ class EventDetailComponent extends BaseListComponent
         $vat = ($totalPrice / 100 * VAT_DEFAULT);
 
         $orderData = [
-            "LID"            => SITE_ID,
-            "PERSON_TYPE_ID" => 1,
-            "PAYED"          => "N",
-            "CANCELED"       => "N",
-            "STATUS_ID"      => "N",
-            "DISCOUNT_VALUE" => "",
-            "PRICE"          => $totalPrice + $vat,
-            "CURRENCY"       => $this->event['CURRENCY']['NAME'],
-            "USER_ID"        => $USER->GetID(),
-            "DELIVERY_ID"    => 1,
-            "TAX_VALUE"      => $vat,
+            "LID"              => SITE_ID,
+            "PERSON_TYPE_ID"   => 1,
+            "PAYED"            => "N",
+            "CANCELED"         => "N",
+            "STATUS_ID"        => "N",
+            "DISCOUNT_VALUE"   => "", // $moneySurcharge,
+            "USER_DESCRIPTION" => $_POST['orderDesc'],
+            "PRICE"            => $totalPrice + $vat,
+            "CURRENCY"         => $this->event['CURRENCY']['NAME'],
+            "USER_ID"          => $USER->GetID(),
+            "DELIVERY_ID"      => 1,
+            "TAX_VALUE"        => $vat,
         ];
 
         if ($order) {
@@ -598,23 +600,30 @@ class EventDetailComponent extends BaseListComponent
                         CSaleOrderPropsValue::Delete($arValue['ID']);
                     }
                 }
-				
-				//Параметры заказа.
-				$params = $_POST['orderParams'];
-				
-				// file_put_contents($_SERVER['DOCUMENT_ROOT'].'/ord.txt', print_r($params, true));
-				
-				// Язык, на котором сделан заказ.
-				$params['LANGUAGE'] = \Bitrix\Main\Context::getCurrent()->getLanguage();
 
-                foreach ($_POST['orderParams'] as $code => $value) {
-                    $res = CSaleOrderPropsValue::Add([
+                //Параметры заказа.
+                $params = $_POST['orderParams'];
+
+                // file_put_contents($_SERVER['DOCUMENT_ROOT'].'/ord.txt', print_r($params, true));
+
+                // Язык, на котором сделан заказ.
+                $params['LANGUAGE'] = \Bitrix\Main\Context::getCurrent()->getLanguage();
+
+                // Наценка.
+                $params['SURCHARGE'] = (float)$surcharge;
+                $params['SURCHARGE_PRICE'] = (float)$moneySurcharge;
+
+                foreach ($params as $code => $value) {
+                    $res = OrderPropsValueTable::add([
                         "ORDER_ID"       => $orderId,
                         "ORDER_PROPS_ID" => $arOrderProperties[$code]["ID"],
-                        "NAME"           => $arOrderProperties[$code]["NAME"],
+                        "NAME"           => $arOrderProperties[$code]["NAME"] ?: $code,
                         "CODE"           => $code,
                         "VALUE"          => $value
                     ]);
+                    if (!$res->isSuccess()) {
+                        throw new Exception(join("<br>", $res->getErrorMessages()) . ' ' . $code);
+                    }
                 }
             }
 
@@ -876,6 +885,7 @@ class EventDetailComponent extends BaseListComponent
                 ]);
                 while ($obStand = $obStands->GetNextElement(false, false)) {
                     $arStand = $obStand->GetFields();
+                    $standProps = $obStand->GetProperties();
                     $arStand['PREVIEW_PICTURE'] = CFile::ResizeImageGet(
                         $arStand['PREVIEW_PICTURE'], ['width' => 420, 'height' => 270], BX_RESIZE_IMAGE_EXACT
                     )['src'];
@@ -888,6 +898,7 @@ class EventDetailComponent extends BaseListComponent
                     );
                     $arStand['PROPS'] = $obStand->GetProperties();
                     $arStand['OFFER'] = $arStandOffers[$arStand['ID']];
+                    $arStand['NAME'] = $standProps['LANG_NAME_'.$this->curLang]['VALUE'] ?: $arStand['NAME'];
                     $arStands[$arStand['ID']] = $arStand;
                 }
             }
@@ -911,16 +922,20 @@ class EventDetailComponent extends BaseListComponent
         return $arEvent;
     }
 
-    protected function getSurcharge()
+    protected function getSurcharge($time = null)
     {
-        if (!empty($this->event['PROPS']["MARGIN_DATES"]['VALUE'])
+        if (is_null($time)) {
+            $time = time();
+        }
+
+        if (!empty($this->event['PROPS']['MARGIN_DATES']['VALUE'])
             &&
-            is_array($this->event['PROPS']["MARGIN_DATES"]['VALUE'])
+            is_array($this->event['PROPS']['MARGIN_DATES']['VALUE'])
         ) {
             $activeIndex = null;
-            foreach ($this->event['PROPS']["MARGIN_DATES"]['VALUE'] as $n => $date) {
+            foreach ($this->event['PROPS']['MARGIN_DATES']['VALUE'] as $n => $date) {
                 if (
-                    strtotime($date) <= time()
+                    strtotime($date) <= $time
                     &&
                     (is_null($activeIndex) || strtotime($date) > $this->event['PROPS']["MARGIN_DATES"]['VALUE'][$activeIndex])
                 ) {
@@ -1071,15 +1086,43 @@ class EventDetailComponent extends BaseListComponent
             $result['PROPS'] = $orderProps;
             $result['ID'] = $id;
             $result['CURRENCY'] = $order['CURRENCY'];
-			$result['taxPrice'] = $order['TAX_VALUE'];
+            $result['taxPrice'] = $order['TAX_VALUE'];
             $result['totalPrice'] = $order['PRICE'] - $order['TAX_VALUE'];
-			$result['totalTaxPrice'] = $order['PRICE'];
+            $result['totalTaxPrice'] = $order['PRICE'];
             $result['status'] = $order['STATUS_ID'];
-			$result['TOTAL_PRICE_FORMATTED'] = CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'], $order['CURRENCY']);
+            $result['TOTAL_PRICE_FORMATTED'] = CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'],
+                $order['CURRENCY']);
             $result['TOTAL_PRICE_TAX_FORMATTED'] = CurrencyFormat($order['PRICE'], $order['CURRENCY']);
             if (isset($event)) {
                 $result['curEvent'] = $event;
             }
+
+            $data = [];
+            $data['ORDER'] = CSaleOrder::getByID($id);
+            $data['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($id);
+            $data['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($id);
+
+            $basket_price = 0;
+            foreach ($data['BASKETS'] as $basket) {
+                if ($basket['SUMMARY_PRICE'] > 0) {
+                    $basket_price += $basket['SUMMARY_PRICE'];
+                }
+            }
+
+            $surcharge = (float)$data['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
+
+            $result['PRICES'] = [
+                'BASKET'               => CurrencyFormat($basket_price, $order['CURRENCY']),
+                'VAT'                  => CurrencyFormat($order['TAX_VALUE'], $order['CURRENCY']),
+                'TOTAL_WITH_VAT'       => CurrencyFormat($order['PRICE'] - $surcharge, $order['CURRENCY']),
+                'TOTAL_WITH_SURCHARGE' => CurrencyFormat($order['PRICE'], $order['CURRENCY']),
+            ];
+
+            if ($surcharge > 0) {
+                $result['PRICES']['SURCHARGE'] = $data['PROPS']['SURCHARGE']['VALUE_ORIG'];
+                $result['PRICES']['SURCHARGE_PRICE'] = CurrencyFormat($surcharge, $order['CURRENCY']);
+            }
+
             return $result;
         }
 
@@ -1124,7 +1167,8 @@ class EventDetailComponent extends BaseListComponent
         return $colorsClass::getList(['order' => ['UF_SORT' => 'ASC']])->fetchAll();
     }
 
-    protected function getEquipmentColors() {
+    protected function getEquipmentColors()
+    {
         Loader::includeModule('highloadblock');
         $hlblock = HighloadBlockTable::getById(EQUIPMENT_COLORS_ENTITY_ID)->fetch();
         $entity = HighloadBlockTable::compileEntity($hlblock);

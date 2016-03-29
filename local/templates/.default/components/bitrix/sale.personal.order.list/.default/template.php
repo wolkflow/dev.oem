@@ -121,7 +121,7 @@
                 <div class="ordercontainer__changeorderbutton" v-show="status == 'N'">
 				*/ ?>
 				<div class="ordercontainer__changebutton changeallorder" v-show="status == 'N'">
-					<a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=1'"><?= Loc::getMessage('change_order') ?></a>
+					<a class="changebutton" :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'"><?= Loc::getMessage('change_order') ?></a>
 					<? /*
                     <form action="/events/{{ curEvent.CODE }}/">
                         <input type="hidden" name="ORDER_ID" :value="orderId">
@@ -152,12 +152,45 @@
                         </div>
                     </div>
                 </div>
+				
+				<div class="ordertotalcontainer">
+					<div class="ordertotalcontainer__total" v-show="PRICES.BASKET">
+						<?= Loc::getMessage('total') ?>: <span>{{ PRICES.BASKET }}</span>
+					</div>
+					<div class="ordertaxcontainer__total" v-show="PRICES.VAT">
+						<?= Loc::getMessage('tax') ?>: <span>{{ PRICES.VAT }}</span>
+					</div>
+					<div class="ordertotalcontainer__total" v-show="PRICES.VAT">
+						<?= Loc::getMessage('total_with_vat') ?>: <span>{{ PRICES.TOTAL_WITH_VAT }}</span>
+					</div>
+					<div class="ordertotalcontainer__surcharge" v-show="PRICES.SURCHARGE">
+						<?= Loc::getMessage('surcharge') ?>: <span>{{ PRICES.SURCHARGE }} % ({{ PRICES.SURCHARGE_PRICE }})</span>
+					</div>
+					<div class="ordertotalcontainer__surchargetotal" v-show="PRICES.SURCHARGE > 0">
+						<div class="ordertotalcontainer__surchargetotaltitle">
+							<?= Loc::getMessage('total_with_surcharge') ?>:
+						</div>
+						<div class="ordertotalcontainer__surchargetotalcount">
+							{{ TOTAL_PRICE_TAX_FORMATTED }}
+						</div>
+					</div>
+					<div class="ordertotalcontainer__surchargetotal" v-show="PRICES.SURCHARGE <= 0">
+						<div class="ordertotalcontainer__surchargetotaltitle">
+							<?= Loc::getMessage('total_with_surcharge') ?>:
+						</div>
+						<div class="ordertotalcontainer__surchargetotalcount">
+							{{ TOTAL_PRICE_TAX_FORMATTED }}
+						</div>
+					</div>
+				</div>
+				<? /*
 				<div class="ordertotalcontainer__total">
                     <?= Loc::getMessage('total') ?>: {{ TOTAL_PRICE_FORMATTED }}
                 </div>
                 <div class="ordertotalcontainer__total">
                     <?= Loc::getMessage('totaltax') ?>: {{ TOTAL_PRICE_TAX_FORMATTED }}
                 </div>
+				*/ ?>
             </div>
         </div>
     </div>

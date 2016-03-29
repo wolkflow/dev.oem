@@ -7,8 +7,8 @@
 			<div class="invoiceHeaderDetail">
 				<p>OOO Messe Frankfurt RUS,</p>
 				<p>Address for correspondence</p>
-				<p>Leningradsky pr?t 39 build 80, 125167 Mosсow</p>
-				<p>Tel. +7 495 649?8775, fax +7 495 649?8785</p>
+				<p>Leningradsky prt 39 build 80, 125167 Mosсow</p>
+				<p>Tel. +7 495 6498775, fax +7 495 6498785</p>
 			</div>
 		</div>
 		<div class="invoiceHeader__right">
@@ -18,8 +18,8 @@
 	</div>
 
 	<div class="invoiceText">
-		<p>MALCORP</p>
-		<p><?= $arResult['USER']['UF_REQUISITES'] ?></p>
+		<p><?= $arResult['USER']['WORK_COMPANY'] ?></p>
+		<p><?= $arResult['USER']['WORK_STREET'] ?></p>
 	</div>
 	<? if (!empty($arResult['USER']['UF_VAT'])) { ?>
 		<div class="invoiceText">
@@ -73,10 +73,10 @@
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
 					<td></td>
-					<td><?= number_format($basket['PRICE'], 2, ',', ' ') ?></td>
+					<td><?= number_format($basket['SURCHARGE_PRICE'], 2, ',', ' ') ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
 					<td></td>
-					<td><?= number_format($basket['SUMMARY_PRICE'], 2, ',', ' ') ?></td>
+					<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
 			<tr class="invoiceItems__table-amount">

@@ -145,7 +145,7 @@ $steps = [
 
 $steps = Json::encode($steps);
 
-$selectedParams = Json::encode($arParams['ORDER_ID'] ?
+$selectedParams = $arParams['ORDER_ID'] ?
     [
         'WIDTH'  => $arResult['ORDER']['PROPS']['width']['VALUE'],
         'DEPTH'  => $arResult['ORDER']['PROPS']['depth']['VALUE'],
@@ -154,8 +154,7 @@ $selectedParams = Json::encode($arParams['ORDER_ID'] ?
             ? Json::decode($arResult['ORDER']['PROPS']['sketch']['VALUE'])
             : ''
     ]
-    : ArrayHelper::only($arParams, ['WIDTH', 'DEPTH', 'TYPE'])
-);
+    : ArrayHelper::only($arParams, ['WIDTH', 'DEPTH', 'TYPE']);
 
 
 $colors = ArrayHelper::index($arResult['EVENT']['COLORS_PALETTE'], 'UF_XML_ID');
@@ -166,6 +165,7 @@ foreach ($colors as &$color) {
     }
 }
 unset($color);
+
 
 $extents = ArrayHelper::index($arResult['EVENT']['EXTENTS'], 'UF_XML_ID');
 
@@ -187,6 +187,25 @@ $services    = Json::encode($arResult['SERVICES'][ADDITIONAL_SERVICES_SECTION_ID
 $allServices = Json::encode($arResult['EVENT']['ALL_SERVICES']);
 $vat         = VAT_DEFAULT;
 
+$langs = Json::encode([
+	'filePlaceholder' => Loc::getMessage('file_placeholder'),
+	'fileNumber' => Loc::getMessage('file_number'),
+	'selectPlaceholder' => Loc::getMessage('select_placeholder'),
+	'selectSearchNotFound' => Loc::getMessage('search_not_found'),
+	'selectSearchPlaceholder' => Loc::getMessage('search_placeholder'),
+]);
+
+$standTypes = ['row', 'head', 'corner', 'island'];
+$langMessages = Json::encode([
+    array_combine(
+        $standTypes,
+        array_map(function($val) {
+            return Loc::getMessage($val);
+        }, $standTypes)
+    )
+]);
+
+$selectedParams = Json::encode($selectedParams);
 
 $am = Asset::getInstance();
 
@@ -203,8 +222,10 @@ $am->addString(<<<JS
 	    services = $services,
 	    options = $options,
 	    allServices = $allServices,
-	    extents = $extents
-		vat = $vat
+	    extents = $extents,
+		vat = $vat,
+		langs = $langs,
+		langMessages = $langMessages
 	</script>
 JS
     , true, AssetLocation::AFTER_JS_KERNEL);

@@ -43,7 +43,6 @@ class SaleOrder
 		if ($prop = \CSaleOrderProps::GetList(array(), array('CODE' => $code))->Fetch()) {
 			
 			if ($propval = \CSaleOrderPropsValue::GetList(array(), array('ORDER_ID' => $id, 'CODE' => $prop['CODE']))->Fetch()) {
-				
 				return \CSaleOrderPropsValue::Update($propval['ID'], array(
 				   'NAME' 			=> $prop['NAME'],
 				   'CODE' 			=> $prop['CODE'],
@@ -74,7 +73,7 @@ class SaleOrder
 		$items  = [];
 		while ($item = $result->Fetch()) {
 			if ($withprops) {
-				$item['PROPS'] = SaleBasket::getProperties($id);
+				$item['PROPS'] = SaleBasket::getProperties($item['ID']);
 			}
 			$items []= $item;
 		}

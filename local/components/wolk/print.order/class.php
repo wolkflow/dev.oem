@@ -100,6 +100,35 @@ class PrintOrderComponent extends \CBitrixComponent
 		unset($item, $basket);
 		
 		
+		
+		// Количество позиций с ненулевой стоимостью.
+		$count   = 0;
+		$summary = 0;
+		foreach ($this->arResult['BASKETS'] as $basket) {
+			if ($basket['SUMMARY_PRICE'] > 0) {
+				$count++;
+				$summary += $basket['SUMMARY_PRICE'];
+			}
+		}
+		
+		
+		// Стоимость товаров в корзине (без наценок).
+		$this->arResult['ORDER']['BASKET_PRICE'] = $summary;
+		
+		// Стоимость заказа без налогов и с наценками.
+		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] = $this->arResult['ORDER']['PRICE'] - $this->arResult['ORDER']['TAX_VALUE'];
+		
+		
+		if ($count > 0) {
+			$overprice = ($this->arResult['ORDER']['BASKET_TOTAL_PRICE'] - $this->arResult['ORDER']['BASKET_PRICE']) / $count;
+			
+			foreach ($this->arResult['BASKETS'] as &$basket) {
+				if ($basket['SUMMARY_PRICE'] > 0) {
+					$basket['TOTAL_PRICE'] = $basket['SUMMARY_PRICE'] + $overprice;
+				}
+			}
+		}
+		
 		// Подключение шаблона.
 		$this->includeComponentTemplate();
 	}

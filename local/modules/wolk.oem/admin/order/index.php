@@ -48,7 +48,7 @@ if (!empty($_POST)) {
     $action = (string)$_POST['action'];
 
     switch ($action) {
-		
+
         // Сохранение данных заказа.
         case 'data':
             $status = (string)$_POST['STATUS'];
@@ -71,45 +71,45 @@ if (!empty($_POST)) {
                 }
             }
             break;
-		
+
 		// Отправка письма.
 		case 'mail':
 			$invoicetpl = (string) $_POST['INVOICE'];
 			$email   = (string) $_POST['EMAIL'];
-			
+
 			if (!empty($email) && file_exists(Wolk\OEM\Invoice::getFolder().$invoicetpl)) {
 				// Данные.
 				$order    = CSaleOrder::getByID($ID);
 				$customer = CUser::getByID($order['USER_ID'])->Fetch();
-				
+
 				// Файл для отправки.
 				$file = CFile::MakeFileArray(Wolk\OEM\Invoice::getFolder().$invoicetpl);
 				$file['name'] = Wolk\OEM\Invoice::getClientFileName($customer['WORK_COMPANY'], $customer['UF_CLIENT_NUMBER']);
-				
+
 				$fid = CFile::SaveFile($file);
-				
+
 				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
 					// Отправка письма.
 					CEvent::Send('SEND_INVOICE', SITE_DEFAULT, array('EMAIL' => $email),  'Y',  '', array($fid));
 				}
-			}			
+			}
 			break;
-		
+
 		// Сохранение данных покупателя.
 		case 'user':
 			$number     = (string) $_POST['CLIENT_NUMBER'];
 			$requisites = (string) $_POST['REQUISITES'];
-			
+
 			$order = CSaleOrder::getByID($ID);
-			
+
 			$user = new CUser();
 			$user->Update($order['USER_ID'], array('UF_CLIENT_NUMBER' => $number, 'UF_REQUISITES' => $requisites));
 			break;
-		
+
         // Сохранение скетча заказа.
         case 'sketch':
 			$objects = (string) $_POST['OBJECTS'];
-			
+
 			if (!empty($objects)) {
                 if (!\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'sketch', $objects)) {
                     $message = new CAdminMessage([
@@ -153,9 +153,10 @@ foreach ($baskets as &$basket) {
     $item['IMAGE'] = CFile::getPath($item['PREVIEW_PICTURE']);
 
     $basket['ITEM'] = $item;
-    
+
     if ($basket['SET_PARENT_ID'] == 0 && $basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
         $stand['BASKET'] = $basket;
+		$stand['ITEM']   = $item;
     }
 }
 // break reference to the last element
@@ -182,15 +183,15 @@ $sketch = json_decode($order['PROPS']['sketch']['VALUE_ORIG'], true);
 
 $sketch['items'] = [];
 foreach ($baskets as $basket) {
-    if ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] && $basket['ITEM']['PROPS']['HEIGHT']['VALUE']) {
-        if(array_key_exists($basket['ITEM']['ID'], $sketch['items'])) {
+    if ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] && $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] && $basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE']) {
+        if (array_key_exists($basket['ITEM']['ID'], $sketch['items'])) {
             $sketch['items'][$basket['ITEM']['ID']]['quantity'] += $basket['QUANTITY'];
         } else {
             $sketch['items'][$basket['ITEM']['ID']] = [
                 'id'        => $basket['ITEM']['ID'],
                 'imagePath' => CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], [
-                    'width' => ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10 < 30) ? 30 : $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10,
-                    'height' => ($basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10 < 30) ? 30 : $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10,
+                    'width' => ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10 < 5) ? 5 : $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10,
+                    'height' => ($basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10 < 5) ? 5 : $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10,
                 ])['src'],
                 'quantity'  => $basket['QUANTITY'],
                 'title'     => $basket['ITEM']['NAME'],
@@ -201,6 +202,9 @@ foreach ($baskets as $basket) {
         }
     }
 }
+
+
+
 
 // Печать заказа.
 $orderprint = new \Wolk\OEM\OrderPrint($ID);
@@ -217,7 +221,6 @@ $aTabs = [
     ]
 ];
 
-// print_r($sketch);
 
 /*
  * Инициализируем табы
@@ -227,6 +230,8 @@ $oTabControl = new CAdmintabControl('tabControl', $aTabs);
 CJSCore::Init(['jquery']);
 
 Bitrix\Main\Page\Asset::getInstance()->addJs('/local/templates/.default/javascripts/designer.js');
+Bitrix\Main\Page\Asset::getInstance()->addJs('/local/templates/.default/build/js/vendor.js');
+Bitrix\Main\Page\Asset::getInstance()->addCss('/assets/css/sketch.css');
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
 /*
@@ -239,7 +244,7 @@ type: "droppable"
 w: 1
 */
 
-// echo '<pre>'; print_r($baskets); echo '</pre>';
+// echo '<pre>'; print_r($order); echo '</pre>';
 
 ?>
 
@@ -248,8 +253,6 @@ w: 1
 
     $(document).ready(function() {
 
-        var sketchitems = <?= json_encode(array_values($sketch['items'])) ?>;
-		
 		// Генерация счета.
         $('#js-invoice-button-id').on('click', function(e) {
             $('#js-invoice-response-id').html('');
@@ -257,10 +260,15 @@ w: 1
                 url: '/bitrix/admin/wolk_oem_remote.php',
                 data: {'action': 'invoice-print', 'oid': <?= $ID ?>, 'tpl': $('#js-invoice-select-id').val()},
                 dataType: 'json',
+				beforeSend: function() {
+					BX.closeWait('.js-invoices-wrapper');
+					BX.showWait('.js-invoices-wrapper');
+				},
                 success: function (response) {
+					BX.closeWait('.js-invoices-wrapper');
                     if (response.status) {
                         $('#js-invoice-response-id').html('<a href="' + response.data['link'] + '?' + (new Date()).getTime() + '" target="_blank">Скачать счет</a>');
-						
+
 						var exist = false;
 						$('#js-order-invoice-select-id option').each(function() {
 							if ($(this).val() == response.data['name']) {
@@ -276,8 +284,8 @@ w: 1
                 }
             });
         });
-		
-		
+
+
 		// Генерация заказа.
 		$('#js-print-order-button-id').on('click', function (event) {
 			$.ajax({
@@ -293,18 +301,64 @@ w: 1
                 }
             });
 		});
-		
-		
+
+
 		// Сохранение скетча.
 		$('#js-sketch-button-id').on('click', function (event) {
-			$('#js-sketch-input-id').val(JSON.stringify(ru.octasoft.oem.designer.Main.getScene()));
-			$(this).closest('form').trigger('submit');
+			var savesketch = function() {
+				$('#js-sketch-input-id').val(JSON.stringify(ru.octasoft.oem.designer.Main.getScene()));
+			}
+			var $that = $(this);
+
+			$.when(savesketch()).done(function() {
+				$that.closest('form').trigger('submit');
+			});
 		});
-		
-		
+
+
         /*
          * Обработчики скетча.
          */
+		var sketchitems = <?= json_encode(array_values($sketch['items'])) ?>;
+        console.log(sketchitems);
+
+		var loadsketch = function()
+		{
+			window.addEventListener('touchmove', function(event) {
+				event.preventDefault();
+			}, false);
+
+			if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+				var meta = document.getElementById('viewport');
+				meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+			}
+
+			var gridX = <?= (int) ($arResult['PROPS']['width']['VALUE']) ?: 5 ?>;
+			var gridY = <?= (int) ($arResult['PROPS']['depth']['VALUE']) ?: 5 ?>;
+
+			// compute initial editor's height
+			(window.resizeEditor = function(items) {
+				$('#designer').height(Math.max(120 + (items.length * 135), 675));
+			})(sketchitems);
+
+			window.onEditorReady = function() {
+                $(window).on("scroll", function(e) {
+                    ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
+                });
+				ru.octasoft.oem.designer.Main.init({
+					w: gridX,
+					h: gridY,
+					type: '<?= (!empty($order['PROPS']['standType']['VALUE'])) ? ($order['PROPS']['standType']['VALUE']) : ('row') ?>',
+					items: sketchitems,
+					placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('{}') ?>
+				});
+			};
+			lime.embed('designer', 0, 0, '', '/');
+		}
+
+		loadsketch();
+
+		/*
         window.addEventListener('touchmove', function (event) {
             event.preventDefault();
         }, false);
@@ -313,19 +367,19 @@ w: 1
             var meta = document.getElementById('viewport');
             meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
         }
-		
+
 		var gridX   = <?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>;
 		var gridY   = <?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>;
-        
-		// compute initial editor's height		
+
+		// compute initial editor's height
 		window.resizeEditor = function(items) {
 			var editorH = Math.max(120 + (items.length * 135), 675);
-			
+
 			$('#designer').height(editorH);
-			
+
 			window.editorScrollTop = $('#designer').offset().top - 30;
 			window.editorScrollBottom = window.editorScrollTop - 30 + editorH - $(window).height();
-			
+
 			if (window.editorScrollBottom < window.editorScrollTop) {
 				window.editorScrollTop = window.editorScrollBottom;
 			}
@@ -340,7 +394,7 @@ w: 1
 				}
 			}
 		};
-        
+
 		window.onEditorReady = function() {
 			ru.octasoft.oem.designer.Main.init({
 				w: gridX,
@@ -351,12 +405,19 @@ w: 1
 			});
 		};
 		lime.embed('designer', 0, 0, '', '/');
-        
+
 		setTimeout(function() { window.resizeEditor(sketchitems); }, 100);
+		*/
     });
 
 </script>
 
+<style>
+	.note {
+		color: #909090;
+		margin-top: 5px;
+	}
+</style>
 
 <? if (!empty($message)) { ?>
     <?= $message->show() ?>
@@ -368,7 +429,7 @@ w: 1
     </a>
     <div class="adm-detail-toolbar-right" style="top: 0px;">
         <a href="/bitrix/admin/sale_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit" title="Редактировать заказа в Битркисе">Редактировать состав</a>
-		
+
 		<a href="<?= $orderprint->getURL() ?>" target="_blank" class="adm-btn adm-btn-edit">Распечатать заказ</a>
     </div>
 </div>
@@ -427,16 +488,16 @@ w: 1
 							<?= CurrencyFormat($goodprice, $order['CURRENCY']) ?>
 						</span>
                     </li>
+					<li class="adm-bus-orderinfoblock-content-redtext">
+                        <span class="adm-bus-orderinfoblock-content-order-info-param">Наценки</span>
+						<span class="adm-bus-orderinfoblock-content-order-info-value">
+							<?= CurrencyFormat($order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'], $order['CURRENCY']) ?>
+						</span>
+                    </li>
 					<li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param">НДС</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
 							<?= CurrencyFormat($order['TAX_VALUE'], $order['CURRENCY']) ?>
-						</span>
-                    </li>
-                    <li class="adm-bus-orderinfoblock-content-redtext">
-                        <span class="adm-bus-orderinfoblock-content-order-info-param">Стоимость с учётом скидок и наценок</span>
-						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($order['PRICE'], $order['CURRENCY']) ?>
 						</span>
                     </li>
                 </ul>
@@ -457,7 +518,7 @@ w: 1
 <? $oTabControl->BeginNextTab() ?>
 <tr class="lm_carsale_details lm_admin_table">
     <td width="50%" valign="top" class="lm_inspector_left_block">
-		
+
         <div style="position: relative; vertical-align: top;">
             <div style="height:5px;width:100%"></div>
             <a id="edit-order"></a>
@@ -491,7 +552,15 @@ w: 1
                                                 <input type="text" name="BILL" value="<?= $order['PROPS']['BILL']['VALUE'] ?>" size="40" />
                                             </td>
                                         </tr>
-                                        <tr>
+										<tr>
+                                            <td class="adm-detail-content-cell-l">Комментарий к заказу:</td>
+                                            <td class="adm-detail-content-cell-r">
+												<div>
+													<?= ($order['USER_DESCRIPTION']) ?: ('&mdash;') ?>
+												</div>
+                                            </td>
+                                        </tr>
+										<tr>
                                             <td colspan="2" align="left">
                                                 <input type="submit" class="amd-btn-save adm-btn-green" value="Сохранить" />
                                             </td>
@@ -502,7 +571,7 @@ w: 1
                         </div>
                         <hr width="96%" color="e7f2f2"/>
                         <div class="adm-bus-component-content-container">
-                            <div class="adm-bus-table-container">
+                            <div class="adm-bus-table-container js-invoices-wrapper">
                                 <table cellpadding="10">
                                     <tr>
                                         <td class="adm-detail-content-cell-l" width="100">Шаблон счета:</td>
@@ -524,7 +593,7 @@ w: 1
                                         </td>
                                     </tr>
 								</table>
-								
+
 								<form method="post">
 									<input type="hidden" name="action" value="mail" />
 									<table cellpadding="10">
@@ -656,6 +725,7 @@ w: 1
                                             <td align="left">Количество</td>
                                             <td align="left">Цена</td>
                                             <td align="left">Стоимость</td>
+											<td align="left">Дополнительные данные</td>
                                         </tr>
                                     </thead>
                                     <tbody style="text-align: left; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(221, 221, 221);">
@@ -678,13 +748,39 @@ w: 1
                                                 <td align="left">
                                                     <?= CurrencyFormat($basket['SUMMARY_PRICE'], $basket['CURRENCY']) ?>
                                                 </td>
+												<td>
+													<? if ($basket['ITEM']['CODE'] == 'form') { ?>
+														<div>
+															<table>
+																<? foreach ($basket['PROPS'] as $prop) { ?>
+																	<tr>
+																		<td><?= $prop['NAME'] ?>:</td>
+																		<td>
+																			<b><?= $prop['VALUE'] ?></b>
+																		</td>
+																	</tr>
+																<? } ?>
+															</table>
+														</div>
+													<? } ?>
+													<? if ($basket['ITEM']['CODE'] == 'file_upload') { ?>
+														<? if (!empty($basket['PROPS']['FILE_ID']['VALUE'])) { ?>
+															<div>
+																<a href="<?= CFile::getPath($basket['PROPS']['FILE_ID']['VALUE']) ?>" target="_blank">файл</a>
+																<div class="note">
+																	<?= $basket['PROPS']['COMMENTS']['VALUE'] ?>
+																</div>
+															</div>
+														<? } ?>
+													<? } ?>
+												</td>
                                             </tr>
                                             <? $cnt++ ?>
                                         <? } ?>
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="3" align="left" style="height: 50px; margin-left: 15px;">
+                                            <td colspan="4" align="left" style="height: 50px; margin-left: 15px;">
                                                 <b>Всего товаров <?= $cnt ?></b>.
                                             </td>
                                             <td colspan="2" align="right">
@@ -692,7 +788,7 @@ w: 1
                                             </td>
                                         <tr>
                                         </tr>
-                                            <td colspan="3"></td>
+                                            <td colspan="4"></td>
                                             <td colspan="2" align="right">
                                                 <h2 style="3px 20px 0 0">Итого с НДС: <?= CurrencyFormat($order['PRICE'], $order['CURRENCY']) ?></h2>
                                             </td>
@@ -754,7 +850,7 @@ w: 1
                 </div>
             </div>
         </div>
-		
+
 		<? /*
 		<input type="button" id="js-print-order-button-id" class="amd-btn-save" value="Распечатать заказ"/>
 		*/ ?>

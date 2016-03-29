@@ -21,3 +21,9 @@ $MESS['Additional Equipment'] = 'Доп оборудование';
 $MESS['Services'] = 'Услуги';
 $MESS['сhangeview_order'] = 'Изменить / Посмотреть заказ';
 $MESS['view_order'] = 'Посмотреть заказ';
+
+$MESS['total_price'] = 'Итого';
+$MESS['tax'] = 'НДС';
+$MESS['total_with_vat'] = 'Итого<br>c НДС';
+$MESS['surcharge'] = 'Наценка';
+$MESS['total_with_surcharge'] = 'Итого с<br>наценкой';

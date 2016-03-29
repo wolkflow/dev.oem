@@ -18,11 +18,11 @@
 	</div>
 
 	<div class="invoiceText">
-		<p>ДИСТАНЦИЯ</p>
-		<p><?= $arResult['USER']['UF_REQUISITES'] ?></p>
+		<p><?= $arResult['USER']['WORK_COMPANY'] ?></p>
+		<p><?= $arResult['USER']['WORK_STREET'] ?></p>
 	</div>
 	<div class="invoiceTextRight">
-		<p class="invoiceTb"><b>В платежном документе обязательна ссылка на № и дату счета, № клиента</b></p>
+		<p class="invoiceTb"><b>В платежном документе<br> обязательна ссылка на <br>№ и дату счета, № клиента</b></p>
 		<p>Дата: <span><?= date('d.m.Y') ?></span></p>
 		<p>Номер клиента: <span><?= $arResult['USER']['UF_CLIENT_NUMBER'] ?></span></p>
 		<p>Номер счета: <span><?= $arResult['PROPS']['BILL']['VALUE'] ?></span></p>
@@ -60,10 +60,10 @@
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
 					<td></td>
-					<td><?= $basket['PRICE'] ?></td>
+					<td><?= $basket['SURCHARGE_PRICE'] ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
 					<td></td>
-					<td><?= $basket['SUMMARY_PRICE'] ?></td>
+					<td><?= $basket['SURCHARGE_SUMMARY_PRICE'] ?></td>
 				</tr>
 			<? } ?>
 

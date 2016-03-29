@@ -49,7 +49,9 @@
 						<td><?= $basket['NAME'] ?></td>
 						<td><?= number_format($basket['PRICE'], 2, ',', ' ') ?></td>
 						<td><?= intval($basket['QUANTITY']) ?></td>
-						<td><?= number_format($basket['SUMMARY_PRICE'], 2, ',', ' ') ?></td>
+						<td>
+							<?= number_format($basket['SUMMARY_PRICE'], 2, ',', ' ') ?>
+						</td>
 					</tr>
 				<? } ?>
 			</tbody>
@@ -57,7 +59,7 @@
 				<tr class="invoiceItems__table-amount">
 					<td colspan="3"></td>
 					<td class="text-left">Всего без НДС:</td>
-					<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+					<td><?= number_format($arResult['ORDER']['BASKET_TOTAL_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 				<tr class="invoiceItems__table-amount">
 					<td colspan="3"></td>
@@ -67,7 +69,9 @@
 				<tr class="invoiceItems__table-total">
 					<td colspan="3"></td>
 					<td class="text-left">ВСЕГО С НДС:</td>
-					<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
+					<td>
+						<?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?>
+					</td>
 				</tr>
 			</tfoot>
 		</table>
@@ -105,8 +109,7 @@
 			// compute initial editor's height
 			(window.resizeEditor = function(items) {
 				var editorH = Math.max(120 + (items.length * 135), 675);
-				
-				$('#designer').height(editorH); // gridY * 100 + 12);
+				$('#designer').height(editorH);
 			})(sketchitems);
 
 			window.onEditorReady = function() {
@@ -114,16 +117,16 @@
 					w: gridX,
 					h: gridY,
 					hideControls: true,
-					type: '<?= $arResult['PROPS']['standType']['VALUE'] ?>',
+					type: '<?= (!empty($order['PROPS']['standType']['VALUE'])) ? ($order['PROPS']['standType']['VALUE']) : ('row') ?>',
 					items: sketchitems,
-					placedItems: <?= (!empty($arResult['SKETCH']['objects'])) ? (json_encode($arResult['SKETCH']['objects'])) : ('null') ?>
+					placedItems: <?= (!empty($arResult['SKETCH']['objects'])) ? (json_encode($arResult['SKETCH']['objects'])) : ('{}') ?>
 				});
 			};
-			lime.embed('designer', 0, 0);
+			lime.embed('designer', 0, 0, '', '/');
 		}
 		
 		$.when(loadsketch()).done(function() {
-			// setTimeout(function() {window.print();}, 1000);
-		});
+			setTimeout(function() {window.print();}, 1000);
+		}); 
     });
 </script>

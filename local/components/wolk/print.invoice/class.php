@@ -73,6 +73,35 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		$this->arResult['EVENT'] = $event->getFields();
 		$this->arResult['EVENT']['PROPS'] = $event->getProperties();
 		
+		
+		// Количество позиций с ненулевой стоимостью.
+		$count   = 0;
+		$summary = 0;
+		foreach ($this->arResult['BASKETS'] as $basket) {
+			if ($basket['SUMMARY_PRICE'] > 0) {
+				$count   += $basket['QUANTITY'];
+				$summary += $basket['SUMMARY_PRICE'];
+			}
+		}
+		
+		
+		// Стоимость товаров в корзине (без наценок).
+		$this->arResult['ORDER']['BASKET_PRICE'] = $summary;
+		
+		// Стоимость заказа без налогов и с наценками.
+		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] = $this->arResult['ORDER']['PRICE'] - $this->arResult['ORDER']['TAX_VALUE'];
+		
+		if ($count > 0) {
+			$overprice = ($this->arResult['ORDER']['BASKET_TOTAL_PRICE'] - $this->arResult['ORDER']['BASKET_PRICE']) / $count;
+			
+			foreach ($this->arResult['BASKETS'] as &$basket) {
+				if ($basket['SUMMARY_PRICE'] > 0) {
+					$basket['SURCHARGE_PRICE'] = $basket['PRICE'] + $overprice;
+					$basket['SURCHARGE_SUMMARY_PRICE'] = $basket['SURCHARGE_PRICE'] * $basket['QUANTITY'];
+				}
+			}
+		}
+		
 		/*
 		foreach ($this->arResult['BASKETS'] as $basket) {
 			if ($basket['TYPE'] == 0) {

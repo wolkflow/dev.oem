@@ -11,7 +11,8 @@ $(function () {
             curEvent: null,
             status: null,
             TOTAL_PRICE_FORMATTED: null,
-			TOTAL_PRICE_TAX_FORMATTED: null
+			TOTAL_PRICE_TAX_FORMATTED: null,
+			PRICES: null
         },
         methods: {
             loadOrder: function(id) {
@@ -31,6 +32,7 @@ $(function () {
                     self.status = data.status;
 					self.TOTAL_PRICE_FORMATTED = data.TOTAL_PRICE_FORMATTED;
 					self.TOTAL_PRICE_TAX_FORMATTED = data.TOTAL_PRICE_TAX_FORMATTED;
+					self.PRICES = data.PRICES;
 					
 					// Сокрытие позиций с нулевой стоимостью.
 					

@@ -231,7 +231,7 @@
                         </select>
                     </div>
                     <div class="setDateBlock">
-                        <div class="serviceItem__subtitle">Даты</div>
+                        <div class="serviceItem__subtitle"><?=Loc::getMessage('dates')?></div>
                         <div class="setDate hasDatepicker" v-pickmeup="selectedItem.calendar">
                             <div class="loolee">
                                 <div class="looleeHead">

@@ -20,3 +20,9 @@ $MESS['Standard Equipment'] = 'Standard Equipment';
 $MESS['Additional Equipment'] = 'Additional Equipment';
 $MESS['Services'] = 'Services';
 $MESS['view_order'] = 'View order';
+
+$MESS['total_price'] = 'total<br>price';
+$MESS['tax'] = 'VAT';
+$MESS['total_with_vat'] = 'total<br>with VAT';
+$MESS['surcharge'] = 'surcharge';
+$MESS['total_with_surcharge'] = 'total with<br>surcharge';

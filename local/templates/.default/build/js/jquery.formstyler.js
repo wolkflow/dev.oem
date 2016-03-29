@@ -22,19 +22,19 @@
 }(function($) {
 
 	'use strict';
-
+	
 	var pluginName = 'styler',
 			defaults = {
 				wrapper: 'form',
 				idSuffix: '-styler',
-				filePlaceholder: 'Файл не выбран',
+				filePlaceholder: langs.filePlaceholder, //'Файл не выбран',
 				fileBrowse: '&nbsp;',
-				fileNumber: 'Выбрано файлов: %s',
-				selectPlaceholder: 'Выберите...',
+				fileNumber: langs.fileNumber, //'Выбрано файлов: %s',
+				selectPlaceholder: langs.selectPlaceholder, //'Выберите...',
 				selectSearch: false,
 				selectSearchLimit: 10,
-				selectSearchNotFound: 'Совпадений не найдено',
-				selectSearchPlaceholder: 'Поиск...',
+				selectSearchNotFound: langs.selectSearchNotFound, //'Совпадений не найдено',
+				selectSearchPlaceholder: langs.selectSearchPlaceholder, //'Поиск...',
 				selectVisibleOptions: 0,
 				singleSelectzIndex: '100',
 				selectSmartPositioning: true,
