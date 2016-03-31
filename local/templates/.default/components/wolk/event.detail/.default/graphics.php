@@ -1,8 +1,8 @@
 <?use Bitrix\Main\Localization\Loc;?>
 <script type="x/template" id="graphics">
     <div class="servicescontainer serviceContainer">
-        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle"
-             :class="{'open': visible == true}">{{ section.NAME }}
+        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle open"
+             :class="{'open': visible == false}">{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">
             <fascia-name></fascia-name>

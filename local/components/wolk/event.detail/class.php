@@ -135,6 +135,7 @@ class EventDetailComponent extends BaseListComponent
             }
 
             $servicesSections = \Bitrix\Iblock\SectionTable::getList([
+				'order' => ['SORT' => 'ASC', 'ID' => 'ASC'],
                 'filter' =>
                     [
                         'ID' => array_keys($arServices)

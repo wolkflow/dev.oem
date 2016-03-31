@@ -709,6 +709,7 @@ var currencyMixin = {
 // Компонент: "Электрика и коммуникации".
 Vue.component('electrics-and-communications', {
     template: '#electrics-and-communications',
+	/*
     methods: {
         save: function () {
             this.$children.forEach(function (comp) {
@@ -716,6 +717,10 @@ Vue.component('electrics-and-communications', {
             })
         }
     },
+	*/
+	parent: function() {
+		return this;
+	},
     data: function () {
         return {
             sectionId: 1,
@@ -738,7 +743,7 @@ Vue.component('electrics-and-communications', {
                     selectedItems: [
                         {
                             ID: '',
-                            QUANTITY: 1
+                            QUANTITY: 0
                         }
                     ]
                 }
@@ -753,9 +758,37 @@ Vue.component('electrics-and-communications', {
                 addItem: function () {
                     this.selectedItems.push({
                         ID: '',
-                        QUANTITY: 1
+                        QUANTITY: 0
                     })
-                }
+                },
+				incQty: function (selectedItem) {
+					if (selectedItem.ID > 0) {
+						selectedItem.QUANTITY++;
+						this.addToCart(selectedItem);
+					}
+				},
+				decQty: function (selectedItem) {
+					if (selectedItem.ID > 0) {
+						if (selectedItem.QUANTITY > 0) {
+							selectedItem.QUANTITY--;
+							this.addToCart(selectedItem);
+						}
+					}
+				},
+				addToCart: function(selectedItem) {
+					if (selectedItem.QUANTITY > 0) {
+						var item = this.items[parseInt(selectedItem.ID)];
+						
+						this.$root.$set('selectedStand.SERVICES[' + this.section.ID + '][' + item.ID + ']', {
+							ID: item.ID,
+							NAME: item.NAME,
+							PRICE: parseFloat(item.PRICE).toFixed(2),
+							QUANTITY: selectedItem.QUANTITY
+						});
+					} else {
+						Vue.delete(this.$root.selectedStand.SERVICES[this.section.ID], selectedItem.ID);
+					}					
+				}
             },
             ready: function () {
                 if (
@@ -771,7 +804,7 @@ Vue.component('electrics-and-communications', {
                 }
             },
             mixins: [
-                quantityMixin,
+                // quantityMixin,
                 addToCartMixin,
                 currencyMixin
             ]
@@ -1295,7 +1328,6 @@ Vue.component('additional-equipment', {
                 } else {
                     Vue.delete(this.$root.selectedStand.OPTIONS[this.section.ID], this.item.ID);
                 }
-
             }
         },
         incQty: function () {
@@ -1315,9 +1347,7 @@ Vue.component('additional-equipment', {
         },
         colors: function () {
             var colors = !$.isEmptyObject(this.item.EQ_COLORS) ? this.item.EQ_COLORS : false;
-
-//            console.log(colors);
-
+			
             if (typeof colors == 'object') {
                 if (Object.keys(colors).length == 1) {
                     return {ID: Object.keys(colors)[0], VALUE: colors[Object.keys(colors)[0]]}
@@ -1862,7 +1892,8 @@ Vue.component('vip-passes', {
         }
     },
     mixins: [
-        quantityMixin, currencyMixin
+        quantityMixin,
+		currencyMixin
     ]
 });
 
@@ -1934,7 +1965,8 @@ Vue.component('car-passes-to-loading-unloading-zone', {
         }
     },
     mixins: [
-        quantityMixin, currencyMixin
+        quantityMixin,
+		currencyMixin
     ]
 });
 
@@ -2061,7 +2093,6 @@ Vue.component('stand-security', {
 					}
 					var multiplier = daysCount * hoursCount;
 					
-					console.log(daysCount, hoursCount, item.QUANTITY);
 					
                     self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
                         ID: item.ID,

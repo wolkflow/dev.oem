@@ -9,12 +9,12 @@ $(document).ready(function() {
 
 
 	// 26
-	$(document).on('click', '.saveButton', function(){
+	/*$(document).on('click', '.saveButton', function(){
 		$(this).parents('.serviceContainer').find('[data-module="pagesubtitle-dropdown"]').removeClass('open');
 		$(this).parents('.serviceContainer').next('.serviceContainer').find('[data-module="pagesubtitle-dropdown"]').addClass('open')
         $('.styler').trigger('refresh');
 	});
-
+*/
 
 	/**
 	 * Обработка выпадалки

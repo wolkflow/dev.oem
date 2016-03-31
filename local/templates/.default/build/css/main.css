@@ -55,7 +55,7 @@ input[type="password"] {
 }
 .headersection__logo {
   display: block;
-  background-position: center;
+  background-position: 0 50%;
   background-repeat: no-repeat;
   background-image: url('../images/header-logo.png?1446649774');
   width: 220px;
@@ -443,6 +443,7 @@ input[type="password"] {
   font-size: 61px;
   line-height: 72px;
 	margin-bottom: 31px;
+  text-transform: none;
 }
 .indexpage__generalinfocontainer {
   margin-top: 100px;

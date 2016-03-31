@@ -29,8 +29,7 @@
                     <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
                     <div class="itemCount__button itemCount__down" @click="decQty"></div>
                     <div class="itemCount__button itemCount__up" @click="incQty"></div>
-                    <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number
-                           :value="item.QUANTITY">
+                    <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number :value="item.QUANTITY">
                 </div>
             </div>
 			<? /*

@@ -107,6 +107,14 @@ class wolk_core extends CModule
             'GetUserTypeDescription',
 			750
         ),
+		array(
+            'iblock',
+            'OnIBlockPropertyBuildList',
+            'wolk.core',
+            'Wolk\Core\System\Exprops\IBlock\Assoc',
+            'GetUserTypeDescription',
+			750
+        ),
     );
     
     

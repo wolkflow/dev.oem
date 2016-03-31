@@ -2,8 +2,8 @@
 <script type="x/template" id="hanging-structure">
     <!-- Секция: hanging structure -->
     <div class="servicescontainer serviceContainer">
-        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle"
-             :class="{'open': visible == true}">{{ section.NAME }}
+        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle open"
+             :class="{'open': visible == false}">{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">
             <suspension-points></suspension-points>
