@@ -8,7 +8,7 @@
 			{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">
-            <electrics-and-communications-item v-for="section in sections" :section="section"></electrics-and-communications-item>
+            <electrics-and-communications-item v-for="section in sections | orderBy SORT" :section="section"></electrics-and-communications-item>
             <? /*
 			<input @click.prevent="save" type="button" class="styler saveButton" value="<?= Loc::getMessage('save') ?>" />
 			*/ ?>
@@ -32,7 +32,7 @@
                         <option value="">
                             <?= Loc::getMessage('not selected') ?>
                         </option>
-                        <option value="{{ item.ID }}" v-for="item in items">
+                        <option value="{{ item.ID }}" v-for="item in items | orderBy SORT">
                             {{ item.NAME }} ({{ item.PRICE | format_currency ' ' currency_format }})
                         </option>
                     </select>

@@ -805,7 +805,7 @@ Vue.component('electrics-and-communications', {
             },
             mixins: [
                 // quantityMixin,
-                addToCartMixin,
+                // addToCartMixin,
                 currencyMixin
             ]
         }

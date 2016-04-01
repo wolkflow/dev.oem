@@ -89,7 +89,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                     class="standstypescontainer__standcontainer <? if ($s_id % 2 == 0): ?>standsTypesLeft<? else: ?>standsTypesRight<? endif; ?>">
 					<? if ($s_id < 2) { ?>
 						<div class="standsTypes__window">
-							<?Helper::includeFile('choose_wall_conf_'.$curLang)?>
+							<? Helper::includeFile('choose_wall_conf_'.$curLang) ?>
 							<form method="get" name="standsTypes__window_<?=$s_id?>" action="">
 								<div class="chooseType__row">
 								
@@ -120,16 +120,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 					<? } ?>
 
                     <div class="pagesubtitle"><?= $stand['NAME'] ?></div>
-                    <div class="standstypescontainer__pricecontiner"><?= FormatCurrency(
-                            $stand['PRICE']['PRICE'],
-                            $arResult['EVENT']['CURRENCY']['NAME']
-                        ) ?>
-                        <span><?= FormatCurrency(
-                                $stand['BASE_PRICE']['PRICE'],
-                                $arResult['EVENT']['CURRENCY']['NAME']
-                            ) ?>/<?= Loc::getMessage('m2') ?>
+                    <div class="standstypescontainer__pricecontiner">
+						<?= FormatCurrency($stand['PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?>
+                        <span>
+							<?= FormatCurrency($stand['BASE_PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?> / <?= Loc::getMessage('m2') ?>
                         </span>
-
                         <div class="standstypescontainer__choosebutton customizable"
                              :class="{'current': selectedStand.ID == <?= $stand['ID'] ?>}"
                              @click="setSelected('<?= $stand['ID'] ?>', <?=$s_id?>);">
@@ -216,7 +211,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <!--STEP 3-->
     <div id="step3" v-show="curStep == 3">
         <div class="equipmentcontainer">
-            <div class="options_group" v-for="section in options.SECTIONS">
+            <div class="options_group" v-for="section in options.SECTIONS | orderBy 'SORT'">
                 <div
 					v-if="section.ITEMS" 
 					@click="toggleSectionVisible(section)" 
@@ -227,7 +222,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 					{{ section.NAME }}
                 </div>
                 <div class="pagesubtitleopencontainer">
-                    <additional-equipment v-for="item in section.ITEMS" :item="item" :section="section"></additional-equipment>
+                    <additional-equipment v-for="item in section.ITEMS | orderBy 'SORT'" :item="item" :section="section"></additional-equipment>
                 </div>
             </div>
         </div>

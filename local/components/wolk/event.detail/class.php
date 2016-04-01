@@ -163,10 +163,12 @@ class EventDetailComponent extends BaseListComponent
                 'ID',
                 'NAME',
                 'CODE',
+				'SORT',
                 'DEPTH_LEVEL',
                 'IBLOCK_SECTION_ID',
                 'UF_SUBTITLE_' . $this->curLang,
-                'UF_NAME_' . $this->curLang
+                'UF_NAME_' . $this->curLang,
+                'UF_SORT'
             ]);
 
             while ($arSection = $obSections->Fetch()) {
@@ -213,7 +215,8 @@ class EventDetailComponent extends BaseListComponent
             'PREVIEW_PICTURE',
             'PREVIEW_TEXT',
             'IBLOCK_SECTION_ID',
-            'CODE'
+            'CODE',
+			'SORT',
         ]);
         while ($arService = $obServices->Fetch()) {
             if ($arService['PREVIEW_PICTURE']) {
