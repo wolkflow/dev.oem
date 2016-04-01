@@ -12,7 +12,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             v-for="step in steps | visibleSteps selectedStand.ID"
             href="javascript:void(0)" 
             class="breadcrumbs__button"
-           :class="{ 'active': step.NUM == curStep, 'hidden': ([2,3,5].indexOf(parseInt(step.NUM)) != -1) && selectedStand.ID == 0 }"
+           :class="{ 'active': step.NUM == curStep, 'hidden': ([3,4].indexOf(parseInt(step.NUM)) != -1) && selectedStand.ID == 0 }"
         > 
            <span class="breadcrumbs__buttoncontainer">{{ $index + 1 }}. {{ step.NAME }}</span>
         </a>
@@ -152,12 +152,15 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 </div>
 
+<? /*
 <div class="pagetitle" v-show="curStep == 2"><?= Loc::getMessage('Configure standard equipment') ?></div>
-<div class="pagetitle" v-show="curStep == 4"><?= Loc::getMessage('Services') ?></div>
-<div class="pagetitle" v-show="curStep == 3"><?= Loc::getMessage('Additional equipment') ?></div>
+*/ ?>
+<div class="pagetitle" v-show="curStep == 3"><?= Loc::getMessage('Services') ?></div>
+<div class="pagetitle" v-show="curStep == 2"><?= Loc::getMessage('Additional equipment') ?></div>
 <div class="main" v-show="[2,3,4].indexOf(parseInt(curStep)) != -1">
 
     <!--STEP 2-->
+	<? /*
     <div class="standartequipmentcontainer" v-show="curStep == 2">
         <div v-if="selectedStand.ID" class="standartequipmentcontainer__itemcontainer"
              v-for="eq in selectedStand.EQUIPMENT">
@@ -207,9 +210,10 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             </div>
         </div>
     </div>
+	*/ ?>
 
     <!--STEP 3-->
-    <div id="step3" v-show="curStep == 3">
+    <div id="step3" v-show="curStep == 2">
         <div class="equipmentcontainer">
             <div class="options_group" v-for="section in options.SECTIONS | orderBy 'SORT'">
                 <div
@@ -229,7 +233,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 
     <!--STEP 4-->
-    <div id="step4" v-show="curStep == 4">
+    <div id="step4" v-show="curStep == 3">
         <electrics-and-communications></electrics-and-communications>
         <graphics v-if="selectedStand.ID > 0"></graphics>
         <hanging-structure></hanging-structure>
@@ -239,20 +243,20 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 </div>
 
 <aside class="siteAside" data-sticky_column>
-    <div class="basketcontainer" v-if="[2,3,4].indexOf(parseInt(curStep)) != -1">
+    <div class="basketcontainer" v-if="[2,3].indexOf(parseInt(curStep)) != -1">
         <basket></basket>
     </div>
 </aside>
 
-<div style="clear:both;" v-show="[2,3,4].indexOf(parseInt(curStep)) != -1"></div>
+<div style="clear:both;" v-show="[2,3].indexOf(parseInt(curStep)) != -1"></div>
 
 <!--STEP 5-->
-<div class="sketchpage" id="step5" v-show="curStep == 5" transition="fade">
+<div class="sketchpage" id="step5" v-show="curStep == 4" transition="fade">
     <? include 'sketch.php' ?>
 </div>
 
 <!--STEP 6-->
-<div class="orderpage" id="order" v-show="curStep == 6">
+<div class="orderpage" id="order" v-show="curStep == 5">
     <div class="pagetitle"><?= Loc::getMessage('order') ?></div>
     <div class="pagedescription">
         <? Helper::includeFile('orderpage_textdesc_'.$curLang) ?>

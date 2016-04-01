@@ -121,24 +121,25 @@ $steps = [
         'NUM' => 1,
         'NAME' => Loc::getMessage('stand type')
     ],
+	/*
     [
         'NUM' => 2,
         'NAME' => Loc::getMessage('standard equipment')
-    ],
+    ],*/
     [
-        'NUM' => 3,
+        'NUM' => 2,
         'NAME' => Loc::getMessage('equipment')
     ],
     [
-        'NUM' => 4,
+        'NUM' => 3,
         'NAME' => Loc::getMessage('services')
     ],
     [
-        'NUM' => 5,
+        'NUM' => 4,
         'NAME' => Loc::getMessage('sketch')
     ],
     [
-        'NUM' => 6,
+        'NUM' => 5,
         'NAME' => Loc::getMessage('order')
     ]
 ];

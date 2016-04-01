@@ -52,9 +52,9 @@ $(function () {
             },
             nextStep: function () {
                 if (this.curStep == 1 && this.selectedStand.ID == 0) {
-                    this.setStep(4);
-                } else if (this.curStep == 4 && this.selectedStand.ID == 0) {
-                    this.setStep(6);
+                    this.setStep(3);
+                } else if (this.curStep == 3 && this.selectedStand.ID == 0) {
+                    this.setStep(5);
                 } else {
                     this.setStep(parseInt(this.curStep) + 1);
                 }
@@ -63,7 +63,7 @@ $(function () {
             },
             prevStep: function () {
                 if (this.curStep > 1) {
-                    if (this.curStep == 3 && this.selectedStand.ID == 0) {
+                    if (this.curStep == 2 && this.selectedStand.ID == 0) {
                         this.setStep(1);
                     } else {
                         this.setStep(parseInt(this.curStep) - 1);
@@ -84,10 +84,10 @@ $(function () {
                     case 3:
                         valid = true;
                         break;
+                    //case 4:
+                      //  valid = true;
+                        //break;
                     case 4:
-                        valid = true;
-                        break;
-                    case 5:
                         if (this.selectedStand.ID == 0) {
                             valid = true;
                             break;
@@ -126,7 +126,7 @@ $(function () {
             },
             setStep: function (step) {
                 if (this.curStep > step || this.validateStep(step - 1)) {
-                    if (!(this.selectedStand.ID == 0 && (step == 2 || step == 3 || step == 5))) {
+                    if (!(this.selectedStand.ID == 0 && (step == 3 || step == 4))) {
                         top.BX.ajax.history.put({}, window.location.search.replace(/&*step=[\d]/, "") + '&step=' + step);
                         this.curStep = step;
 
@@ -2622,7 +2622,7 @@ Vue.filter('visibleInCart', function (arr) {
 Vue.filter('visibleSteps', function (arr, standId) {
     var res = {};
     $.each(arr, function (key, val) {
-        if ( !([2,3,5].indexOf(parseInt(val.NUM)) != -1 && standId == 0) ) {
+        if (!([2, 4].indexOf(parseInt(val.NUM)) != -1 && standId == 0)) {
             res[key] = val;
         }
     });
