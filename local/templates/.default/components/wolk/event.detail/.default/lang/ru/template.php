@@ -133,3 +133,5 @@ $MESS['file_number'] = 'Выбрано файлов: %s';
 $MESS['select_placeholder'] = 'Выберите...';
 $MESS['search_not_found'] = 'Совпадений не найдено';
 $MESS['search_placeholder'] = 'Поиск...';
+
+$MESS['sketchtitle'] = 'Оборудование';

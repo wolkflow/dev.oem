@@ -133,3 +133,5 @@ $MESS['file_number'] = 'Selected file: %s';
 $MESS['select_placeholder'] = 'Select...';
 $MESS['search_not_found'] = 'No matches found';
 $MESS['search_placeholder'] = 'Search...';
+
+$MESS['sketchtitle'] = 'Equipment';

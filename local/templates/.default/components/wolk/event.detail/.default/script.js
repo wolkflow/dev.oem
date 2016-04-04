@@ -1,6 +1,6 @@
 $(function () {
 	
-    //Vue.config.debug = true;
+    // Vue.config.debug = true;
     var vm = new Vue({
         el: 'body',
         data: {
@@ -58,8 +58,8 @@ $(function () {
                 } else {
                     this.setStep(parseInt(this.curStep) + 1);
                 }
-				destination = $('.main').offset().top -100;
-                $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 700);
+                    destination = $('.main').offset().top -100;
+                    $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 700);
             },
             prevStep: function () {
                 if (this.curStep > 1) {
@@ -72,7 +72,6 @@ $(function () {
             },
             validateStep: function (step) {
                 var valid = false;
-				console.log('STEP :' + step);
                 switch (parseInt(step)) {
                     case 1:
                         if (this.selectedStand) {
@@ -85,9 +84,6 @@ $(function () {
                     case 3:
                         valid = true;
                         break;
-                    //case 4:
-                      //  valid = true;
-                        //break;
                     case 4:
                         if (this.selectedStand.ID == 0) {
                             valid = true;
@@ -121,13 +117,14 @@ $(function () {
                                 $('#modalSketchError').arcticmodal();
                             }
                         }
+						break;
                 }
 
                 return valid;
             },
             setStep: function (step) {
                 if (this.curStep > step || this.validateStep(step - 1)) {
-                    if (!(this.selectedStand.ID == 0 && (step == 3 || step == 4))) {
+                    if (!(this.selectedStand.ID == 0 && (step == 2 || step == 4))) {
                         top.BX.ajax.history.put({}, window.location.search.replace(/&*step=[\d]/, "") + '&step=' + step);
                         this.curStep = step;
 
@@ -159,7 +156,7 @@ $(function () {
                     event: this.curEvent.ID
                 }).done(function (data) {
                     self.services = data[11];
-                    self.options = data[10];
+                    self.options  = data[10];
                     Vue.nextTick(function () {
                         $('.styler').trigger('refresh');
                     });
@@ -254,7 +251,6 @@ $(function () {
                     var result = [];
 
                     this.selectedStand.EQUIPMENT.forEach(function (eq) {
-                        // console.log(eq);
                         if (eq.WIDTH && eq.HEIGHT) {
                             result.push({
                                 title: eq.NAME,
@@ -359,7 +355,6 @@ $(function () {
                     }
                     return parseFloat(price.toFixed(2)) || 0;
                 }
-
                 return null;
             },
             selectedServices: {
@@ -461,12 +456,10 @@ $(function () {
             'sketch': {
                 handler: function (val, oldVal) {
                     var prevVal = JSON.parse(sessionStorage.getItem(this.curEvent.ID));
-                    sessionStorage.setItem(this.curEvent.ID, JSON.stringify(
-                        {
-                            selectedStand: prevVal && prevVal.selectedStand ? prevVal.selectedStand : null,
-                            sketch: val
-                        }
-                    ));
+                    sessionStorage.setItem(this.curEvent.ID, JSON.stringify({
+						selectedStand: prevVal && prevVal.selectedStand ? prevVal.selectedStand : null,
+						sketch: val
+                    }));
                 },
                 deep: true
             },
@@ -475,17 +468,15 @@ $(function () {
                     Vue.nextTick(function () {
                         $('.styler').trigger('refresh');
                     });
-                    if (val < 5) {
+                    if (val < 4) {
                         Vue.nextTick(function () {
                             $("[data-sticky_column]").stick_in_parent({
                                 parent: "[data-sticky_parent]"
                             });
                         });
-                    } else {
-
                     }
                 }
-                if (val >= 3) {
+                if (val >= 2) {
                     if ($.isEmptyObject(this.services)) {
                         var self = this;
                         Vue.nextTick(function () {
@@ -498,9 +489,7 @@ $(function () {
                         });
                     }
                 }
-                if (val == 2) {
-
-                } else if (val == 4) {
+                if (val == 3) {
                     this.$root.$children.forEach(function (val, key) {
                         if (val.hasOwnProperty('toggleVisible')) {
                             val.hide();
@@ -509,11 +498,11 @@ $(function () {
                     Vue.nextTick(function () {
                         $('.serviceContainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
                     })
-                } else if (val == 3) {
+                } else if (val == 2) {
                     Vue.nextTick(function () {
                         $('.equipmentcontainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
                     })
-                } else if (val == 5) {
+                } else if (val == 4) {
                     var self = this;
                     var curItems = null;
                     if (self.sketch) {
@@ -531,9 +520,11 @@ $(function () {
                         if (window.editorScrollBottom < window.editorScrollTop) window.editorScrollTop = window.editorScrollBottom;
                         if (!firstRun) {
                             ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
-                            // trigger resize event to update layout with new height
+                            
+							// trigger resize event to update layout with new height
                             if (Event.prototype.initEvent) {
-                                // for IE
+								
+                                // Для IE.
                                 var evt = window.document.createEvent('UIEvents');
                                 evt.initUIEvent('resize', true, false, window, 0);
                                 window.dispatchEvent(evt);
@@ -558,8 +549,10 @@ $(function () {
                                     ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
                                 });
                                 ru.octasoft.oem.designer.Main.init({
+									labelTitle: langs.sketchtitle,
                                     w: self.selectedParams.WIDTH,
                                     h: self.selectedParams.DEPTH,
+									
                                     // row corner head island
                                     type: self.selectedParams.TYPE || "row",
                                     items: itemsForSketch,
@@ -570,14 +563,15 @@ $(function () {
                             lime.embed("designer", 0, 0, '', '/');
                         });
                     } else {
-                        //window.resizeEditor(itemsForSketch);
                         if (JSON.stringify(itemsForSketch) != JSON.stringify(self.itemsForSketch)) {
                             itemsForSketch = self.itemsForSketch;
                             Vue.nextTick(function () {
                                 ru.octasoft.oem.designer.Main.init({
+									labelTitle: langs.sketchtitle,
                                     w: self.selectedParams.WIDTH,
                                     h: self.selectedParams.DEPTH,
-                                    // row corner head island
+                                    
+									// row corner head island
                                     type: self.selectedParams.TYPE || "row",
                                     items: itemsForSketch,
                                     placedItems: curItems || {}
@@ -630,8 +624,8 @@ $(function () {
 
     var hash = window.location.search,
         found = false;
-    if (found = hash.match(/step=([1-6])/)) {
-        vm.setStep(found[1] == 6 ? 5 : found[1]);
+    if (found = hash.match(/step=([1-5])/)) {
+        vm.setStep(found[1] == 5 ? 4 : found[1]);
     }
 });
 
@@ -2066,9 +2060,6 @@ Vue.component('stand-security', {
                     var hoursCount, daysCount;
                     if (item.calendar.datesType == 'range') {
                         try {
-                            //var dateStart = new Date(item.calendar.dates[0] + ' ' + item.timeStart);
-                            //var dateEnd = new Date(item.calendar.dates[1] + ' ' + item.timeEnd);
-                            
                             var date1 = item.calendar.dates[0].split('-');
                             var date2 = item.calendar.dates[1].split('-');
                             
@@ -2623,7 +2614,7 @@ Vue.filter('visibleInCart', function (arr) {
 Vue.filter('visibleSteps', function (arr, standId) {
     var res = {};
     $.each(arr, function (key, val) {
-        if (!([2, 4].indexOf(parseInt(val.NUM)) != -1 && standId == 0)) {
+        if ( !([2,4].indexOf(parseInt(val.NUM)) != -1 && standId == 0) ) {
             res[key] = val;
         }
     });
@@ -2824,7 +2815,6 @@ Vue.directive('fileupload', {
                 sessid: BX.bitrix_sessid()
             },
             done: function (e, data) {
-                //console.log(data);
                 self.set(data.result.files[0].id);
             },
             fail: function (e, data) {
