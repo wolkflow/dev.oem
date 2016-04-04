@@ -58,8 +58,8 @@ $(function () {
                 } else {
                     this.setStep(parseInt(this.curStep) + 1);
                 }
-                    destination = $('.main').offset().top -100;
-                    $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 700);
+				destination = $('.main').offset().top -100;
+                $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 700);
             },
             prevStep: function () {
                 if (this.curStep > 1) {
@@ -72,6 +72,7 @@ $(function () {
             },
             validateStep: function (step) {
                 var valid = false;
+				console.log('STEP :' + step);
                 switch (parseInt(step)) {
                     case 1:
                         if (this.selectedStand) {
