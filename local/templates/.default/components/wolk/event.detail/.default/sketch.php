@@ -1,9 +1,11 @@
 <? use Bitrix\Main\Localization\Loc; ?>
-<div class="pagetitle"><?=ucfirst(Loc::getMessage('sketch'))?>
-    <div class="active pagetitle__button customizable"><?=Loc::getMessage('help')?></div>
+<div class="pagetitle"><?= ucfirst(Loc::getMessage('sketch')) ?>
+    <div class="active pagetitle__button customizable">
+		<?= Loc::getMessage('help') ?>
+	</div>
 </div>
 <div class="pagedescription">
-    <?Helper::includeFile('sketch_desc_'.\Bitrix\Main\Context::getCurrent()->getLanguage());?>
+    <? Helper::includeFile('sketch_desc_'.\Bitrix\Main\Context::getCurrent()->getLanguage()); ?>
 </div>
 <div id="designer" style="margin-top:40px; width: 940px; height:680px" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()" ></div>
 <div class="sketchNav">

@@ -219,8 +219,11 @@ input[type="password"] {
   line-height: 15px;
   position: relative;
   height: 60px;
-  width: 114.5px;
+  width: 146px;
   font-weight: bold;
+}
+.breadcrumbs__button:first-child {
+  width: 145px; 
 }
 .indStand .breadcrumbs__button {
   width: 271px;

@@ -137,3 +137,6 @@ $MESS['search_placeholder'] = 'Поиск...';
 $MESS['sketchtitle'] = 'Оборудование';
 $MESS['eqipment_standart_include'] = 'Стенд включает: ';
 
+$MESS['terms_conditions'] = 'Условия и положения';
+$MESS['general_information'] = 'Основная информация';
+

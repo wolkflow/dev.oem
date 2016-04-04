@@ -299,16 +299,22 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ allServices[item.ID].NAME }} | {{ allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
                         </div>
                         <div class="ordercontainer__changebutton">
-                            <a href="#"><?=Loc::getMessage('change')?></a> |
-                            <a @click.prevent="deleteOption(sectionId, item)" href="#"><?=Loc::getMessage('delete')?></a>
+                            <a href="#"><?= Loc::getMessage('change') ?></a> |
+                            <a @click.prevent="deleteOption(sectionId, item)" href="#">
+								<?= Loc::getMessage('delete') ?>
+							</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="ordercontainer__column">
-                <div class="pagesubtitle"><?=Loc::getMessage('stand_type')?></div>
+                <div class="pagesubtitle">
+					<?= Loc::getMessage('stand_type') ?>
+				</div>
                 <div class="ordercontainer__itemscontainer">
-                    <div class="pagesubsubtitle"><?=Loc::getMessage('system_stand')?></div>
+                    <div class="pagesubsubtitle">
+						<?= Loc::getMessage('system_stand') ?>
+					</div>
                     <div class="last ordercontainer__item">
                         <div class="ordercontainer__itemtotalprice" v-if="selectedStand.PRICE.PRICE">
                             {{ selectedStand.PRICE.PRICE | format_currency ' ' currency_format  }}
@@ -317,7 +323,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ selectedStand.NAME }}
                         </div>
                         <div class="ordercontainer__changebutton">
-                            <a @click.prevent="setStep(1)" href="#"><?=Loc::getMessage('change')?></a>
+                            <a @click.prevent="setStep(1)" href="#">
+								<?= Loc::getMessage('change') ?>
+							</a>
                         </div>
                     </div>
                 </div>
@@ -336,7 +344,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                         <div class="ordercontainer__changebutton">
                             <a @click.prevent="setStep(4)" href="#"><?=Loc::getMessage('change')?></a> |
                             <a href="#" @click.prevent="deleteServiceItem(sectionName, $index)">
-                                <?=Loc::getMessage('delete')?>
+                                <?= Loc::getMessage('delete') ?>
                             </a>
                         </div>
                     </div>
@@ -358,9 +366,8 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                     <input type="text" v-model="pavillion" />
                 </div>
             </div>
-            <div class="ordertotalcontainer__placeorder"
-                 data-modal="<? if ($USER->IsAuthorized()): ?>#placeLogin<? else: ?>#placeUnlogin<? endif; ?>">
-                <?=Loc::getMessage('place_order')?>
+            <div class="ordertotalcontainer__placeorder" data-modal="<? if ($USER->IsAuthorized()) { ?>#placeLogin<? } else { ?>#placeUnlogin<? } ?>">
+                <?= Loc::getMessage('place_order') ?>
             </div>
         </div>
         <div class="ordertotalcontainer__total" v-show="summaryPrice">
@@ -427,6 +434,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 					<?= Loc::getMessage('place_order') ?>
 				</button>
             </div>
+			<hr/>
+			<div class="placeOrder_docs">
+				<a href="" data-modal="#termsConditions" class="footersection__terms"><?= Loc::getMessage('terms_conditions') ?></a>
+				<a href="" data-modal="#generalInfo" class="footersection__information"><?= Loc::getMessage('general_information') ?></a>
+			</div>
         </form>
     </div>
     <!--// .Окно: залогинен -->

@@ -13,3 +13,7 @@
 .breadcrumbs__button.hidden {
     display: none;
 }
+
+.ordertotalcontainer__surchargetotal {
+	width: 200px;
+}
