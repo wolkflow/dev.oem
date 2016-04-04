@@ -2,7 +2,6 @@
 use Bitrix\Main\Localization\Loc;
 use Wolk\Core\Helpers\Text as TextHelper;
 
-#dump($arResult);die;
 $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 ?>
 <div class="breadcrumbs">
@@ -12,9 +11,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             v-for="step in steps | visibleSteps selectedStand.ID"
             href="javascript:void(0)" 
             class="breadcrumbs__button"
-           :class="{ 'active': step.NUM == curStep, 'hidden': ([3,4].indexOf(parseInt(step.NUM)) != -1) && selectedStand.ID == 0 }"
+           :class="{ 'active': step.NUM == curStep, 'hidden': ([2,4].indexOf(parseInt(step.NUM)) != -1) && selectedStand.ID == 0 }"
         > 
-           <span class="breadcrumbs__buttoncontainer">{{ $index + 1 }}. {{ step.NAME }}</span>
+			<span class="breadcrumbs__buttoncontainer">
+				{{ $index + 1 }}. {{ step.NAME }}
+			</span>
         </a>
     </div>
 </div>
@@ -412,7 +413,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <!-- Окно: залогинен -->
     <div class="modal placeOrder placeOrder__login" id="placeLogin">
         <div class="modalClose arcticmodal-close"></div>
-        <div class="modalTitle"><?=Loc::getMessage('place_order')?></div>
+        <div class="modalTitle"><?= Loc::getMessage('place_order') ?></div>
         <form>
             <div class="placeOrder__text">
                 <? Helper::includeFile('placeOrder_logged_in_text_'.$curLang) ?>
@@ -432,55 +433,60 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 
     <div class="modal modalRegister" id="modalRegister">
         <div class="modalClose arcticmodal-close"></div>
-        <div class="modalPrev arcticmodal-close" data-modal="#placeUnlogin"><?=Loc::getMessage('back')?></div>
-        <div class="modalTitle"><?=Loc::getMessage('register')?></div>
+        <div class="modalPrev arcticmodal-close" data-modal="#placeUnlogin">
+			<?= Loc::getMessage('back') ?>
+		</div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('register') ?>
+		</div>
+		
         <form>
             <div class="userForm__left">
                 <div class="formRow">
                     <label for="comName"><?=Loc::getMessage('company_name')?>*</label>
-                    <input type="text" class="styler" id="comName" required v-model="userData.companyName">
+                    <input type="text" class="styler" id="comName" required v-model="userData.companyName" />
                 </div>
                 <div class="formRow">
                     <label for="comAddr"><?=Loc::getMessage('company_address')?>*</label>
-                    <input type="text" class="styler" id="comAddr" required v-model="userData.companyAddress">
+                    <input type="text" class="styler" id="comAddr" required v-model="userData.companyAddress" />
                 </div>
                 <div class="formRow">
                     <label for="comName"><?=Loc::getMessage('name')?>*</label>
-                    <input type="text" class="styler" id="comName" required v-model="userData.name">
+                    <input type="text" class="styler" id="comName" required v-model="userData.name" />
                 </div>
                 <div class="formRow">
                     <label for="comLastName"><?=Loc::getMessage('last_name')?>*</label>
-                    <input type="text" class="styler" id="comLastName" required v-model="userData.lastName">
+                    <input type="text" class="styler" id="comLastName" required v-model="userData.lastName" />
                 </div>
                 <div class="formRow">
                     <label for="comPhone"><?=Loc::getMessage('phone_number')?></label>
-                    <input type="text" class="styler" id="comPhone" v-model="userData.phone">
+                    <input type="text" class="styler" id="comPhone" v-model="userData.phone" />
                 </div>
             </div>
             <div class="userForm__right">
                 <div class="formRow">
                     <label for="comMail"><?=Loc::getMessage('email')?>*</label>
-                    <input type="text" class="styler" id="comMail" v-model="userData.email">
+                    <input type="text" class="styler" id="comMail" v-model="userData.email" />
                 </div>
                 <div class="formRow">
                     <label for="comMail"><?=Loc::getMessage('confirm_email')?>*</label>
-                    <input type="text" class="styler" id="email_confirm" v-model="userData.email_confirm">
+                    <input type="text" class="styler" id="email_confirm" v-model="userData.email_confirm" />
                 </div>
                 <div class="formRow">
                     <label for="comVat"><?=Loc::getMessage('vat_id')?></label>
-                    <input type="text" class="styler" id="comVat" v-model="userData.vatId">
+                    <input type="text" class="styler" id="comVat" v-model="userData.vatId" />
                 </div>
                 <div class="formRow">
                     <label for="comPass"><?=Loc::getMessage('password')?>*</label>
-                    <input pattern=".{6,}" type="password" class="styler" id="comPass" v-model="userData.password">
+                    <input pattern=".{6,}" type="password" class="styler" id="comPass" v-model="userData.password" />
                 </div>
                 <div class="formRow">
                     <label for="comPassRe"><?=Loc::getMessage('confirm_password')?>*</label>
-                    <input type="password" class="styler" id="comPassRe" v-model="userData.password_confirm">
+                    <input type="password" class="styler" id="comPassRe" v-model="userData.password_confirm" />
                 </div>
                 <div class="formRow">
                     <label>&nbsp;</label>
-                    <input type="button" class="styler modalSend" value="<?=Loc::getMessage('register')?>" @click="placeOrder('register')">
+                    <input type="button" class="styler modalSend" value="<?=Loc::getMessage('register')?>" @click="placeOrder('register')" />
                 </div>
             </div>
             <div class="clear"></div>
@@ -493,20 +499,24 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <!-- Окно: вход -->
     <div class="modal modalLogin" id="modalLogin">
         <div class="modalClose arcticmodal-close"></div>
-        <div class="modalPrev arcticmodal-close" data-modal="#placeUnlogin"><?=Loc::getMessage('back')?></div>
-        <div class="modalTitle"><?=Loc::getMessage('login')?></div>
+        <div class="modalPrev arcticmodal-close" data-modal="#placeUnlogin">
+			<?= Loc::getMessage('back') ?>
+		</div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('login') ?>
+		</div>
+		
         <form>
-
             <div class="formRow">
-                <label for="userLogin"><?=Loc::getMessage('login')?></label>
-                <input type="text" class="styler" id="userLogin" v-model="userData.login">
+                <label for="userLogin"><?= Loc::getMessage('login') ?></label>
+                <input type="text" class="styler" id="userLogin" v-model="userData.login" />
             </div>
             <div class="formRow">
-                <label for="userPassword"><?=Loc::getMessage('password')?></label>
-                <input type="password" class="styler" id="userPassword" v-model="userData.password">
+                <label for="userPassword"><?= Loc::getMessage('password') ?></label>
+                <input type="password" class="styler" id="userPassword" v-model="userData.password" />
             </div>
             <div class="formRow">
-                <input type="button" class="styler full-width" value="<?=Loc::getMessage('login')?>" @click="placeOrder('login')">
+                <input type="button" class="styler full-width" value="<?= Loc::getMessage('login') ?>" @click="placeOrder('login')" />
             </div>
             <div class="clear"></div>
             <div class="errortext"></div>
@@ -515,27 +525,39 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <!--// .Окно: вход -->
 
     <div class="modal modalSuccessOrder" id="modalSuccessOrder">
-        <div class="modalTitle"><?=Loc::getMessage('success')?>!</div>
-        <p><?=Loc::getMessage('order_placed')?></p>
+        <div class="modalTitle">
+			<?= Loc::getMessage('success') ?>!
+		</div>
+        <p>
+			<?= Loc::getMessage('order_placed') ?>
+		</p>
         <a href="/events/{{curEvent.CODE}}/" class="styler modalSend">
-            <?=Loc::getMessage('home')?>
+            <?= Loc::getMessage('home') ?>
         </a>
         <br>
         <a href="/personal/orders-history.php">
-            <?=Loc::getMessage('review_order')?>
+            <?= Loc::getMessage('review_order') ?>
         </a>
         <div class="clear"></div>
     </div>
     <div class="modal modalError" id="modalSketchError">
         <div class="modalClose arcticmodal-close"></div>
-        <div class="modalTitle"><?=Loc::getMessage('error')?>!</div>
-        <div class="modalContent"><?=Loc::getMessage('put_all_eq')?></div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('error') ?>!
+		</div>
+        <div class="modalContent">
+			<?= Loc::getMessage('put_all_eq') ?>
+		</div>
     </div>
 
     <div class="modal modalError" id="modalColorError">
         <div class="modalClose arcticmodal-close"></div>
-        <div class="modalTitle"><?=Loc::getMessage('error')?>!</div>
-        <div class="modalContent"><?=Loc::getMessage('select_color')?></div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('error') ?>!
+		</div>
+        <div class="modalContent">
+			<?= Loc::getMessage('select_color') ?>
+		</div>
     </div>
 </div>
 

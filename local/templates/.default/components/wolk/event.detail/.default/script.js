@@ -1609,7 +1609,6 @@ Vue.component('hanging-structure-mock-up', {
         addToCart: function () {
             var self = this;
             this.selectedItems.forEach(function (item, index) {
-                console.log(item);
                 if (item.FILE_ID && item.QUANTITY > 0) {
                     self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
                         ID: self.item.ID,
@@ -2723,7 +2722,7 @@ Vue.directive('pickmeup', {
             // Показываем окно
             $(this).find('.loolee').addClass('active');
         });
-
+		
         // Очищаем результат в календаре и инпуте
         $(self.el).on('click', '.dateClear', function (e) {
             e.preventDefault();
@@ -2733,13 +2732,13 @@ Vue.directive('pickmeup', {
                 datesType: $(self.el).find('.dpBlock').first().attr('data-mode')
             });
         });
-
+		
         // Закрываем окно при клике на "ОК"
         $(document).on('click', '.looleeClose', function (e) {
             e.preventDefault();
             $(self.el).find('.loolee.active').removeClass('active');
         });
-
+		
         $(document).mouseup(function (e) {
             var container = $('.loolee.active');
             if (container.has(e.target).length === 0) {
@@ -2752,15 +2751,17 @@ Vue.directive('pickmeup', {
     }
 });
 
+
+// Директива "Стили".
 Vue.directive('styler', {
     twoWay: true,
     priority: 1000,
     deep: true,
-
+	
     bind: function () {
         var self = this;
         var el = $(this.el);
-
+		
         el.styler().on('change', function () {
             value = this.value;
             if (el.is(':checkbox')) {
@@ -2780,7 +2781,7 @@ Vue.directive('styler', {
 
 Vue.directive('timepicker', {
     twoWay: true,
-
+	
     bind: function () {
         var self = this;
         var el = $(this.el);
@@ -2789,11 +2790,10 @@ Vue.directive('timepicker', {
         });
 
         el.styler()
-            .on('change', function () {
-                self.set(this.value);
-            });
+          .on('change', function () {
+			self.set(this.value);
+          });
     },
-
     update: function (value) {
         $(this.el).val(value).trigger('refresh');
     }
@@ -2818,7 +2818,7 @@ Vue.directive('fileupload', {
                 self.set(data.result.files[0].id);
             },
             fail: function (e, data) {
-                console.log(data);
+                // console.log(data);
             }
         });
     }
@@ -2858,7 +2858,7 @@ function array_combine(keys, values) {
 
     // number of elements does not match
     if (keycount != values.length) {
-        console.log('number of elements does not match');
+        // console.log('number of elements does not match');
         return false;
     }
 
