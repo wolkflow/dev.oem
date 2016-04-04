@@ -135,3 +135,4 @@ $MESS['search_not_found'] = 'No matches found';
 $MESS['search_placeholder'] = 'Search...';
 
 $MESS['sketchtitle'] = 'Equipment';
+$MESS['eqipment_standart_include'] = 'Stand includes: ';

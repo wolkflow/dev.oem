@@ -249,7 +249,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 </aside>
 
-<div style="clear:both;" v-show="[2,3].indexOf(parseInt(curStep)) != -1"></div>
+<div style="clear:both;" v-show="[2,3,4].indexOf(parseInt(curStep)) != -1"></div>
 
 <!--STEP 5-->
 <div class="sketchpage" id="step5" v-show="curStep == 4" transition="fade">

@@ -1462,6 +1462,9 @@ float: left}
 .equipmentcontainer__opencategoriesbutton:hover {
   background: #999999;
 }
+.equipmentcontainer__standartnote {
+  font-size: 12px;
+}
 .servicescontainer {
   width: 540px;
 }

@@ -145,19 +145,23 @@ unset($element);
 // Состав заказа.
 $baskets = Wolk\Core\Helpers\SaleOrder::getBaskets($ID);
 
+// echo '<pre>'; print_r($baskets); echo '</pre>'; die();
+
 foreach ($baskets as &$basket) {
-    $element = CIBlockElement::getByID($basket['PRODUCT_ID'])->GetNextElement();
+	if ($basket['PRODUCT_ID'] > 0) {
+		$element = CIBlockElement::getByID($basket['PRODUCT_ID'])->GetNextElement();
 
-    $item = $element->getFields();
-    $item['PROPS'] = $element->getProperties();
-    $item['IMAGE'] = CFile::getPath($item['PREVIEW_PICTURE']);
+		$item = $element->getFields();
+		$item['PROPS'] = $element->getProperties();
+		$item['IMAGE'] = CFile::getPath($item['PREVIEW_PICTURE']);
 
-    $basket['ITEM'] = $item;
-
-    if ($basket['SET_PARENT_ID'] == 0 && $basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
-        $stand['BASKET'] = $basket;
-		$stand['ITEM']   = $item;
-    }
+		$basket['ITEM'] = $item;
+	
+		if ($basket['SET_PARENT_ID'] == 0 && $basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
+			$stand['BASKET'] = $basket;
+			$stand['ITEM']   = $item;
+		}
+	}
 }
 // break reference to the last element
 unset($basket);

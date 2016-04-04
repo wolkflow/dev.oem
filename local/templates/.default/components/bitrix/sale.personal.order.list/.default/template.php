@@ -58,7 +58,7 @@
                         </div>
                         <div class="pagesubtitle"><?=Loc::getMessage('additional equipment')?>
                             <div class="pagesubtitle__addbutton" v-show="status == 'N'">
-                                <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=3'"></a>
+                                <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'"></a>
                             </div>
                         </div>
                         <div class="ordercontainer__itemscontainer" v-for="(sectionId, items) in selectedStand.OPTIONS">
@@ -73,7 +73,7 @@
                                     {{ item.NAME }} | {{ item.PRICE_FORMATTED }} &times; {{ item.QUANTITY }}
                                 </div>
                                 <div class="ordercontainer__changebutton" v-show="status == 'N'">
-                                    <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=3'">
+                                    <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'">
                                         <?= Loc::getMessage('change') ?>
                                     </a>
                                 </div>
@@ -98,7 +98,7 @@
                         </div>
                         <div class="pagesubtitle"><?=Loc::getMessage('services')?>
                             <div class="pagesubtitle__addbutton"  v-show="status == 'N'">
-                                <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=4'"></a>
+                                <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=3'"></a>
                             </div>
                         </div>
                         <div class="ordercontainer__itemscontainer" v-for="(sectionId, items) in selectedStand.SERVICES">
@@ -111,7 +111,7 @@
                                     {{ item.NAME }} | {{ item.PRICE_FORMATTED }} &times; {{ item.QUANTITY }}
                                 </div>
                                 <div class="ordercontainer__changebutton" v-show="status == 'N'">
-                                    <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=4'"><?= Loc::getMessage('change') ?></a>
+                                    <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=3'"><?= Loc::getMessage('change') ?></a>
                                 </div>
                             </div>
                         </div>

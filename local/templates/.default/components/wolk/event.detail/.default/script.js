@@ -1291,11 +1291,17 @@ Vue.component('additional-equipment', {
             Vue.set(this.item, 'QUANTITY', this.$root.selectedStand.OPTIONS[this.section.ID][this.item.ID].QUANTITY);
 
             if (this.$parent.selectedStand.OPTIONS[this.section.ID][this.item.ID].PROPS.hasOwnProperty('COLOR')) {
-                this.selectedColor = this.$parent.selectedStand.OPTIONS[this.section.ID][this.item.ID].PROPS.COLOR.VALUE ||
-                    this.$parent.selectedStand.OPTIONS[this.section.ID][this.item.ID].PROPS.COLOR;
+                this.selectedColor = this.$parent.selectedStand.OPTIONS[this.section.ID][this.item.ID].PROPS.COLOR.VALUE
+								  || this.$parent.selectedStand.OPTIONS[this.section.ID][this.item.ID].PROPS.COLOR;
             }
         } else {
             if (typeof this.item == 'object') {
+				for (var i in this.$parent.selectedStand.EQUIPMENT) {
+					var eq = this.$parent.selectedStand.EQUIPMENT[i];
+					if (eq.ID == this.item.ID) {
+						Vue.set(this.item, 'STANDART', eq.QUANTITY);
+					}
+				}
                 Vue.set(this.item, 'QUANTITY', 0);
             }
         }

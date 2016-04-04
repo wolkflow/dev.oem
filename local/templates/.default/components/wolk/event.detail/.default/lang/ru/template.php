@@ -135,3 +135,5 @@ $MESS['search_not_found'] = 'Совпадений не найдено';
 $MESS['search_placeholder'] = 'Поиск...';
 
 $MESS['sketchtitle'] = 'Оборудование';
+$MESS['eqipment_standart_include'] = 'Стенд включает: ';
+
