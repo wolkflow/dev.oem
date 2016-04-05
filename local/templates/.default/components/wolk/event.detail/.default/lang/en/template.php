@@ -140,3 +140,5 @@ $MESS['eqipment_standart_include'] = 'Stand includes: ';
 $MESS['terms_conditions'] = 'Terms & Conditions';
 $MESS['general_information'] = 'General Information';
 
+$MESS['additional_info'] = 'Additioan information about your order';
+

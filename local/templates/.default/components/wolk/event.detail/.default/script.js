@@ -464,6 +464,7 @@ $(function () {
                 deep: true
             },
             'curStep': function (val, oldVal) {
+				console.log('VAL: ' + val);
                 if (val > 1) {
                     Vue.nextTick(function () {
                         $('.styler').trigger('refresh');
@@ -496,11 +497,11 @@ $(function () {
                         }
                     });
                     Vue.nextTick(function () {
-                        $('.serviceContainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
+                        $('.serviceContainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open');
                     })
                 } else if (val == 2) {
                     Vue.nextTick(function () {
-                        $('.equipmentcontainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open')
+                        $('.equipmentcontainer div[data-module="pagesubtitle-dropdown"]:first').not('.open').addClass('open');
                     })
                 } else if (val == 4) {
                     var self = this;
@@ -534,7 +535,7 @@ $(function () {
                         }
                     };
                     if (typeof itemsForSketch === 'undefined') {
-                        $("head").append('<script src="/local/templates/.default/javascripts/designer.js"></script>');
+                        $('head').append('<script src="/local/templates/.default/javascripts/designer.js"></script>');
                         itemsForSketch = self.itemsForSketch;
                         window.addEventListener("touchmove", function (event) {
                             event.preventDefault();

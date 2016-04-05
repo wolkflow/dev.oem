@@ -140,3 +140,5 @@ $MESS['eqipment_standart_include'] = 'Стенд включает: ';
 $MESS['terms_conditions'] = 'Условия и положения';
 $MESS['general_information'] = 'Основная информация';
 
+$MESS['additional_info'] = 'Дополнительная информация о вашем заказе';
+
