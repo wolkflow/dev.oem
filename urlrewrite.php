@@ -25,6 +25,12 @@ $arUrlRewrite = array(
 		"ID" => "",
 		"PATH" => "/printorder/print.php",
 	),
+	array(
+		"CONDITION" => "#^/printsketch/([\d]+)/#",
+		"RULE" => "ID=$1",
+		"ID" => "",
+		"PATH" => "/printsketch/print.php",
+	),
 );
 
 ?>

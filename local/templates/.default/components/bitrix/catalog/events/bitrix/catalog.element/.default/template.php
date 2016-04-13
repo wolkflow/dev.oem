@@ -127,14 +127,20 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             <div class="indexpage__choosestandtitlecontainer">
                 <div class="indexpage__choosestandtitle"><?=Loc::getMessage('System stand')?></div>
                 <form class="indexpage__choosestandform">
-                    <input type="hidden" name="ORDER_TYPE" value="standart">
+                    <input type="hidden" name="ORDER_TYPE" value="standart" />
                     <div class="indexpage__choosestandinputscontainer">
                         <div class="indexpage__choosestandinputcontainer">
-                            <div class="indexpage__choosestandinputtitle"><?=Loc::getMessage('Stand width')?> <span>(<?=Loc::getMessage('m')?>)</span></div>
-                            <input required name="WIDTH" type="text" value=""></div>
+                            <div class="indexpage__choosestandinputtitle">
+								<?=Loc::getMessage('Stand width')?> <span>(<?=Loc::getMessage('m')?>)</span>
+							</div>
+                            <input required name="WIDTH" type="text" value="" />
+						</div>
                         <div class="indexpage__choosestandinputcontainer">
-                            <div class="indexpage__choosestandinputtitle"><?=Loc::getMessage('Stand length')?> <span>(<?=Loc::getMessage('m')?>)</span></div>
-                            <input required name="DEPTH" type="text" value=""></div>
+                            <div class="indexpage__choosestandinputtitle">
+								<?=Loc::getMessage('Stand length')?> <span>(<?=Loc::getMessage('m')?>)</span>
+							</div>
+                            <input required name="DEPTH" type="text" value="" />
+						</div>
                     </div>
 
                     <div class="indexpage__choosestandtypecontainer">
@@ -162,7 +168,7 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                     <button type="submit" class="indexpage__choosestandnextbutton"><?= Loc::getMessage('next') ?></button>
                 </form>
             </div>
-            <img src="/local/templates/.default/build/images/index/stand-system.jpg">
+            <img src="/local/templates/.default/build/images/index/stand-system.jpg" />
         </div>
 
         <div class="indexpage__choosestand individual">
@@ -170,14 +176,20 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <a href="#" class="indexpage__choosestandtitle"><?= Loc::getMessage('individual stand') ?></a>
 
                 <form class="indexpage__choosestandform">
-                    <input type="hidden" name="ORDER_TYPE" value="individual">
+                    <input type="hidden" name="ORDER_TYPE" value="individual" />
                     <div class="indexpage__choosestandinputscontainer">
                         <div class="indexpage__choosestandinputcontainer">
-                            <div class="indexpage__choosestandinputtitle"><?= Loc::getMessage('Stand width') ?> <span>(<?= Loc::getMessage('m') ?>)</span></div>
-                            <input required name="WIDTH" type="text" value=""></div>
+                            <div class="indexpage__choosestandinputtitle">
+								<?= Loc::getMessage('Stand width') ?> <span>(<?= Loc::getMessage('m') ?>)</span>
+							</div>
+                            <input required name="WIDTH" type="text" value="" />
+						</div>
                         <div class="indexpage__choosestandinputcontainer">
-                            <div class="indexpage__choosestandinputtitle"><?= Loc::getMessage('Stand length') ?> <span>(<?= Loc::getMessage('m') ?>)</span></div>
-                            <input required name="DEPTH" type="text" value=""></div>
+                            <div class="indexpage__choosestandinputtitle">
+								<?= Loc::getMessage('Stand length') ?> <span>(<?= Loc::getMessage('m') ?>)</span>
+							</div>
+                            <input required name="DEPTH" type="text" value="" />
+						</div>
                     </div>
                     <button type="submit" class="indexpage__choosestandnextbutton"><?= Loc::getMessage('next') ?></button>
                 </form>

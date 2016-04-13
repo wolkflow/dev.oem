@@ -42,8 +42,8 @@
                         <div class="serviceItem__subtitle">
 							<?= Loc::getMessage('quantity') ?>
 						</div>
-                        <div class="itemCount__button itemCount__down" @click="decQty(selectedItem)"></div>
-                        <div class="itemCount__button itemCount__up" @click="incQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__down" @click="decQty(selectedItem, $index)"></div>
+                        <div class="itemCount__button itemCount__up" @click="incQty(selectedItem, $index)"></div>
                         <input type="text" v-model="selectedItem.QUANTITY" class="itemCount__input styler" number />
                     </div>
                 </div>

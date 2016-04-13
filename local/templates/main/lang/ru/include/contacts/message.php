@@ -1,4 +1,3 @@
-If you have troubles with submitting
-the form or if you want to hear our
-voices, do not hesitate to call
-or message us directly.
+Если у вас возникли проблемы с отправкой формы
+или если вы хотите услышать наши голоса, не стесняйтесь 
+и позвоните или отправьте сообщение нам напрямую.

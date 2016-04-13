@@ -27,3 +27,9 @@ $MESS['tax'] = 'НДС';
 $MESS['total_with_vat'] = 'Итого<br>c НДС';
 $MESS['surcharge'] = 'Наценка';
 $MESS['total_with_surcharge'] = 'Итого с<br>наценкой';
+
+$MESS['file_placeholder'] = 'Файл не выбран';
+$MESS['file_number'] = 'Выбрано файлов: %s';
+$MESS['select_placeholder'] = 'Выберите...';
+$MESS['search_not_found'] = 'Совпадений не найдено';
+$MESS['search_placeholder'] = 'Поиск...';

@@ -1,1 +1,1 @@
-<a href="mailto:sergey.dubovickiy@businessmediarussia.ru">sergey.dubovickiy@businessmediarussia.ru</a>
+<a href="mailto:sergey.dubovickiy@businessmediarussia.ru">nikita.titov@businessmediarussia.ru</a>

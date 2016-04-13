@@ -17,11 +17,69 @@ $(function () {
         methods: {
             loadOrder: function(id) {
                 var self = this;
+								
+				$.ajax({
+					'url': '/local/components/wolk/event.detail/ajax.php',
+					'method': 'post',
+					'data': {
+						'sessid': BX.bitrix_sessid(),
+						'action': 'getOrder',
+						'orderId': id						
+					},
+					'dataType': 'json',
+					'success': function(data) {						
+						self.selectedStand = data.selectedStand;
+						self.orderId = data.ID;
+						self.orderProps = data.PROPS;
+						self.taxPrice = data.taxPrice;
+						self.totalPrice = data.totalPrice;
+						self.totalTaxPrice = data.totalTaxPrice;
+						self.curEvent = data.curEvent;
+						self.status = data.status;
+						self.TOTAL_PRICE_FORMATTED = data.TOTAL_PRICE_FORMATTED;
+						self.TOTAL_PRICE_TAX_FORMATTED = data.TOTAL_PRICE_TAX_FORMATTED;
+						self.PRICES = data.PRICES;
+						
+						// Сокрытие позиций с нулевой стоимостью.
+						
+						for (var i in self.selectedStand.EQUIPMENT) {
+							var item = self.selectedStand.EQUIPMENT[i];
+							if (parseFloat(item.COST) <= 0) {
+								delete self.selectedStand.EQUIPMENT[i];
+							}
+						}
+						
+						for (var i in self.selectedStand.OPTIONS) {
+							var item = self.selectedStand.OPTIONS[i];
+							if (parseFloat(item.COST) <= 0) {
+								delete self.selectedStand.OPTIONS[i];
+							}
+						}
+						
+						for (var i in self.selectedStand.SERVICES) {
+							var item = self.selectedStand.SERVICES[i];
+							if (parseFloat(item[0].COST) <= 0) {
+								delete self.selectedStand.SERVICES[i];
+							}
+						}
+						
+						Vue.nextTick(function() {
+						   self.showOrder();
+						});
+					},
+					'error': function(response) {
+						console.log(response);
+					}
+				});
+				
+				/*
                 $.post('/local/components/wolk/event.detail/ajax.php', {
                     sessid: BX.bitrix_sessid(),
                     action: 'getOrder',
                     orderId: id
                 }).done(function(data) {
+					console.log(data);
+					
                     self.selectedStand = data.selectedStand;
                     self.orderId = data.ID;
                     self.orderProps = data.PROPS;
@@ -60,7 +118,8 @@ $(function () {
                     Vue.nextTick(function() {
                        self.showOrder();
                     });
-                })
+                });
+				*/
             },
             showOrder: function() {
                 $("#order-detail").arcticmodal();
@@ -78,7 +137,6 @@ $(function () {
                             })
                         });
                     }
-
                     return res;
                 }
             },
@@ -96,7 +154,6 @@ $(function () {
                         }
                         res[service.CART_SECTION.NAME].push(service);
                     });
-
                     return res;
                 }
             }

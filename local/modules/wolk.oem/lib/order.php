@@ -68,6 +68,14 @@ class Order
 	}
 	
 	
+	public function getUser()
+	{
+		$this->load();
+		
+		return (\CUser::getByID($this->data['USER_ID'])->Fetch());
+	}
+	
+	
 	public function getStandNumber()
 	{
 		$this->load();

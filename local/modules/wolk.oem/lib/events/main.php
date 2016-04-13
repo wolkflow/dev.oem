@@ -36,6 +36,7 @@ class Main
         return $menu;
     }
 
+	
     public function onBeforeUserUpdateHandler(&$fields)
     {
         global $USER;
@@ -43,19 +44,36 @@ class Main
             $fields['LOGIN'] = $fields['EMAIL'];
         }
     }
+	
+	
+	public function OnAfterUserRegister($fields)
+	{
+		global $APPLICATION;
+		
+		$html = $APPLICATION->IncludeComponent(
+			'wolk:mail.user',
+			'confirmation',
+			['ID' => $fields['USER_ID'], 'EVENT' => $_SESSION['REGEVENT'], 'FIELDS' => $fields]
+		);
+		
+		// Отправка сообщения о подтвеерждении регистрации.
+		$event = new \CEvent();
+		$event->Send('CONFIRMATION', SITE_DEFAULT, ['EMAIL' => $fields['EMAIL'], 'HTML' => $html]);
+	}
+	
 
     public function onBeforeUserRegisterHandler(&$fields)
     {
-        if(isset($_REQUEST['userData']) && $data = Json::decode($_REQUEST['userData'])) {
-            if($data['email_confirm'] != $fields['LOGIN']) {
-                $GLOBALS['APPLICATION']->ThrowException('Email confirmation does not match');
-
+		global $APPLICATION;
+		
+        if (isset($_REQUEST['userData']) && $data = Json::decode($_REQUEST['userData'])) {
+            if ($data['email_confirm'] != $fields['LOGIN']) {
+                $APPLICATION->ThrowException('Email confirmation does not match');
                 return false;
             }
-        } elseif(isset($_REQUEST['REGISTER']['EMAIL_CONFIRM'])) {
-            if($_REQUEST['REGISTER']['EMAIL_CONFIRM'] != $fields['LOGIN']) {
-                $GLOBALS['APPLICATION']->ThrowException('Email confirmation does not match');
-
+        } elseif (isset($_REQUEST['REGISTER']['EMAIL_CONFIRM'])) {
+            if ($_REQUEST['REGISTER']['EMAIL_CONFIRM'] != $fields['LOGIN']) {
+                $APPLICATION->ThrowException('Email confirmation does not match');
                 return false;
             }
             $fields['EMAIL'] = $fields['LOGIN'];

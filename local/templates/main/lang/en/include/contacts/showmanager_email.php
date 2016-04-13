@@ -1,1 +1,1 @@
-<a href="mailto:marina.bolotskaya@businessmediarussia.ru">marina.bolotskaya@businessmediarussia.ru</a>
+<a href="mailto:marina.bolotskaya@businessmediarussia.ru">g.boyko@itemf.ru</a>

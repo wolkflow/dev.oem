@@ -10,27 +10,24 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 // подключим языковой файл
 IncludeModuleLangFile(__FILE__);
 
-$ID = (int)$_REQUEST['ID'];
+$ID = (int) $_REQUEST['ID'];
 
 if ($ID <= 0) {
-    LocalRedirect('/bitrix/admin/linemedia.carsale_operator.php?lang=' . LANG);
+    LocalRedirect('/bitrix/admin/wolk_oem_order_list.php?lang=' . LANG);
 }
 
 if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
     ShowError('Модуль wolk.core не устанволен.');
-
     return;
 }
 
 if (!\Bitrix\Main\Loader::includeModule('iblock')) {
     ShowError('Модуль iblock не устанволен.');
-
     return;
 }
 
 if (!\Bitrix\Main\Loader::includeModule('sale')) {
     ShowError('Модуль sale не устанволен.');
-
     return;
 }
 
@@ -47,19 +44,30 @@ $oemorder = new Wolk\OEM\Order($ID);
 if (!empty($_POST)) {
     $action = (string)$_POST['action'];
 
+	
     switch ($action) {
 
         // Сохранение данных заказа.
         case 'data':
-            $status = (string)$_POST['STATUS'];
-            $bill = (string)$_POST['BILL'];
-
-
-            if (!\CSaleOrder::StatusOrder($ID, $status)) {
-                $message = new CAdminMessage([
+			$status = (string) $_POST['STATUS'];
+            $bill   = (string) $_POST['BILL'];
+			
+            if (!CSaleOrder::StatusOrder($oemorder->getID(), $status)) {
+				$message = new CAdminMessage([
                     'MESSAGE' => 'При изменнии данных заказа возникла ошибка',
                     'TYPE'    => 'ERROR'
                 ]);
+			} else {
+				
+				// Заказчик.
+				$customer = $oemorder->getUser();
+				
+				// Шаблон письма.
+				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'status', ['ID' => $oemorder->getID()]);
+								
+				// Отправка письма.
+				$event = new \CEvent();
+				$event->Send('SALE_NEW_ORDER_STATUS', SITE_DEFAULT, ['EMAIL' => $customer['EMAIL'], 'HTML' => $html]);
             }
 
             if (!empty($bill)) {
@@ -72,10 +80,11 @@ if (!empty($_POST)) {
             }
             break;
 
+		
 		// Отправка письма.
 		case 'mail':
 			$invoicetpl = (string) $_POST['INVOICE'];
-			$email   = (string) $_POST['EMAIL'];
+			$email      = (string) $_POST['EMAIL'];
 
 			if (!empty($email) && file_exists(Wolk\OEM\Invoice::getFolder().$invoicetpl)) {
 				// Данные.
@@ -89,12 +98,16 @@ if (!empty($_POST)) {
 				$fid = CFile::SaveFile($file);
 
 				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
+					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'invoice', array('ID' => $ID));
+					
 					// Отправка письма.
-					CEvent::Send('SEND_INVOICE', SITE_DEFAULT, array('EMAIL' => $email),  'Y',  '', array($fid));
+					$event = new \CEvent();
+					$event->Send('SEND_INVOICE', SITE_DEFAULT, array('EMAIL' => $email, 'HTML' => $html), 'N', '', [$fid]);
 				}
 			}
 			break;
 
+			
 		// Сохранение данных покупателя.
 		case 'user':
 			$number     = (string) $_POST['CLIENT_NUMBER'];
@@ -106,6 +119,7 @@ if (!empty($_POST)) {
 			$user->Update($order['USER_ID'], array('UF_CLIENT_NUMBER' => $number, 'UF_REQUISITES' => $requisites));
 			break;
 
+			
         // Сохранение скетча заказа.
         case 'sketch':
 			$objects = (string) $_POST['OBJECTS'];
@@ -116,6 +130,16 @@ if (!empty($_POST)) {
                         'MESSAGE' => 'При изменнии данных скетча возникла ошибка',
                         'TYPE'    => 'ERROR'
                     ]);
+				} else {
+					// Заказчик.
+					$customer = $oemorder->getUser();
+					
+					// Шаблон письма.
+					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change', ['ID' => $oemorder->getID()]);
+					
+					// Отправка письма.
+					$event = new \CEvent();
+					$event->Send('SALE_UPDATE_ORDER', SITE_DEFAULT, ['EMAIL' => $customer['EMAIL'], 'HTML' => $html]);
                 }
             }
             break;
@@ -750,7 +774,7 @@ w: 1
                                                     <?= CurrencyFormat($basket['PRICE'], $basket['CURRENCY']) ?>
                                                 </td>
                                                 <td align="left">
-                                                    <?= CurrencyFormat($basket['SUMMARY_PRICE'], $basket['CURRENCY']) ?>
+                                                    <?= CurrencyFormat($basket['PRICE'] * $basket['QUANTITY'], $basket['CURRENCY']) ?>
                                                 </td>
 												<td>
 													<? if ($basket['ITEM']['CODE'] == 'form') { ?>

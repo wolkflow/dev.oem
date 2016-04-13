@@ -531,7 +531,7 @@ class EventDetailComponent extends BaseListComponent
      */
     protected function placeOrder($fuserId, $strOrderList, $order = null)
     {
-        global $USER, $DB;
+        global $USER, $DB, $APPLICATION;
 
         $totalPrice = BasketTable::getRow([
             'select'  =>
@@ -659,44 +659,56 @@ class EventDetailComponent extends BaseListComponent
                 "ORDER_LIST"    => $strOrderList,
                 "MANAGER_EMAIL" => $managerEmail,
             ];
-
+			
             if (is_null($order)) {
                 global $DB;
-                $eventName = "SALE_NEW_ORDER";
-
-                $bSend = true;
+                				
+				/*
+				$bSend = true;
                 foreach (GetModuleEvents("sale", "OnOrderNewSendEmail", true) as $arEvent) {
                     if (ExecuteModuleEventEx($arEvent, [$orderId, &$eventName, &$arFields]) === false) {
-                        $bSend = false;
+                        // $bSend = false;
                     }
                 }
+				*/
 
-                if ($bSend) {
-                    $event = new CEvent;
-                    $event->Send($eventName, SITE_ID, $arFields, "N");
-                }
-            } else {
-                $event = new CEvent;
-                $event->Send('SALE_UPDATE_ORDER', SITE_ID, $arFields, "N");
+				// Отправка письма о новом заказе клиенту.
+				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info', array('ID' => $arFields['ORDER_ID']));
+				$event = new \CEvent();
+				$event->Send('SALE_NEW_ORDER', SITE_DEFAULT, ['EMAIL' => $arFields['EMAIL'], 'HTML' => $html]);
+				
+				// Отправка письма о новом заказе менеджеру.
+				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info-manager', array('ID' => $arFields['ORDER_ID']));
+				$event = new \CEvent();
+				$event->Send('SALE_NEW_ORDER_MANAGER', SITE_DEFAULT, ['EMAIL' => $arFields['MANAGER_EMAIL'], 'HTML' => $html]);
+			} else {
+				// Отправка письма об изменение заказа клиенту.
+				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change', array('ID' => $arFields['ORDER_ID']));
+				$event = new \CEvent();
+				$event->Send('SALE_UPDATE_ORDER', SITE_DEFAULT, ['EMAIL' => $arFields['EMAIL'], 'HTML' => $html]);
+				
+				// Отправка письма об изменение заказа менеджеру.
+				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change-manager', array('ID' => $arFields['ORDER_ID']));
+				$event = new \CEvent();
+				$event->Send('SALE_UPDATE_ORDER_MANAGER', SITE_DEFAULT, ['EMAIL' => $arFields['MANAGER_EMAIL'], 'HTML' => $html]);
             }
 
             return $this->orderBasket($orderId, $fuserId);
         } else {
-            global $APPLICATION;
             throw new Exception($APPLICATION->GetException()->GetString());
         }
     }
 
+	
     protected function getSelectedServices($json, $eventServices)
     {
         try {
-            $res = \Bitrix\Main\Web\Json::decode($json);
-
-            return $res;
+            return (\Bitrix\Main\Web\Json::decode($json));
         } catch (Exception $e) {
             return false;
         }
     }
+
 
     protected function getSelectedOptions($json, $eventOptions)
     {
@@ -786,12 +798,13 @@ class EventDetailComponent extends BaseListComponent
 
         if (!empty($props['STANDS']['VALUE'])) {
             $selectedArea = $this->arParams['WIDTH'] * $this->arParams['DEPTH'];
-            $obStandOffers = CIBlockElement::getList([], [
+			
+            $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC'], [
                 'IBLOCK_ID'           => STANDS_OFFERS_IBLOCK_ID,
                 'ACTIVE'              => 'Y',
                 'PROPERTY_CML2_LINK'  => $props['STANDS']['VALUE'],
-                '>=PROPERTY_AREA_MIN' => $selectedArea,
-                '<=PROPERTY_AREA_MAX' => $selectedArea
+                '<=PROPERTY_AREA_MIN' => $selectedArea,
+                '>=PROPERTY_AREA_MAX' => $selectedArea
             ]);
 
             if (!$obStandOffers->SelectedRowsCount()) {

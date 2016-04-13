@@ -134,11 +134,18 @@ $MESS['select_placeholder'] = 'Select...';
 $MESS['search_not_found'] = 'No matches found';
 $MESS['search_placeholder'] = 'Search...';
 
-$MESS['sketchtitle'] = 'Equipment';
-$MESS['eqipment_standart_include'] = 'Stand includes: ';
+$MESS['eqipment_standart_include'] = 'Stand includes';
 
 $MESS['terms_conditions'] = 'Terms & Conditions';
 $MESS['general_information'] = 'General Information';
 
 $MESS['additional_info'] = 'Additioan information about your order';
 
+
+$MESS['placeholder_comments'] = 'Any additional information';
+$MESS['placeholder_mockup'] = 'Describe where and how you want your print to be placed';
+
+$MESS['equipment'] = 'Equipment';
+$MESS['ordered'] = 'Ordered';
+$MESS['placed'] = 'Placed';
+$MESS['popuplabel'] = '';

@@ -200,15 +200,21 @@
                 </div>
             </div>
             <div class="serviceItem__row">
-                <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
-                    <div class="serviceItem__subtitle">
-						<?= Loc::getMessage('price') ?>
+				<div class="serviceItem__left">
+					<div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
+						<div class="serviceItem__subtitle">
+							<?= Loc::getMessage('price') ?>
+						</div>
+						<div class="serviceItem__cost-value">
+							{{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
+						</div>
 					</div>
-                    <div class="serviceItem__cost-value">
-                        {{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
-                    </div>
-                </div>
-                <div class="serviceItem__desc">* <?=Loc::getMessage('cleaning_desc')?></div>
+					<div class="serviceItem__desc">* <?=Loc::getMessage('cleaning_desc')?></div>
+				</div>
+                <a href="#" @click.prevent="addItem" class="itemAdd_field">
+                    <i></i>
+                    <span><?=Loc::getMessage('add_field')?></span>
+                </a>
             </div>
         </div>
     </div>

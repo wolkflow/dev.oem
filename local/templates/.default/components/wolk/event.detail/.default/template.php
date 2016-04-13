@@ -66,11 +66,14 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             <div class="standspagetop__currentstandcontainer">
                 <div class="standspagetop__currentstanddescription">
                     <p>{{{ selectedStand.PROPS['LANG_DESCRIPTION_' + curLang]['~VALUE'].TEXT }}}</p>
-                    <ul v-show="selectedStand.EQUIPMENT"><?= Loc::getMessage('Including') ?>:
-                        <li v-for="eq in selectedStand.EQUIPMENT">{{ eq.COUNT }} &times; {{ eq.NAME }}</li>
+                    <ul v-show="selectedStand.EQUIPMENT">
+						<?= Loc::getMessage('Including') ?>:
+                        <li v-for="eq in selectedStand.EQUIPMENT">
+							{{ eq.COUNT }} &times; {{ eq.NAME }}
+						</li>
                     </ul>
                 </div>
-                <img :src="selectedStand.PREVIEW_PICTURE" class="standspagetop__photo" alt="">
+                <img :src="selectedStand.PREVIEW_PICTURE" class="standspagetop__photo" />
                 <a href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton customizable">
                     <?= Loc::getMessage('continue') ?>
                 </a>
@@ -87,7 +90,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             <? $s_id = 0;
             foreach ($arResult['ITEMS'] as $stand) { ?>
                 <div
-                    class="standstypescontainer__standcontainer <? if ($s_id % 2 == 0): ?>standsTypesLeft<? else: ?>standsTypesRight<? endif; ?>">
+                    class="standstypescontainer__standcontainer <? if ($s_id % 2 == 0) { ?>standsTypesLeft<? } else { ?>standsTypesRight<? } ?>">
 					<? if ($s_id < 2) { ?>
 						<div class="standsTypes__window">
 							<? Helper::includeFile('choose_wall_conf_'.$curLang) ?>
@@ -278,14 +281,15 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ allServices[eq.ID].NAME }} | {{ allServices[eq.ID].PRICE | format_currency ' ' currency_format }} &times; {{ eq.QUANTITY }}
                         </div>
                         <div class="ordercontainer__changebutton">
-                            <a @click.prevent="setStep(2)" href="#">
+                            <a @click.prevent="setStep(2)" href="javascript:void(0)">
 								<?= Loc::getMessage('change') ?>
 							</a>
                         </div>
                     </div>
                 </div>
-                <div class="pagesubtitle"><?=Loc::getMessage('additional_equipment')?>
-                    <div class="pagesubtitle__addbutton customizable" @click="setStep(3)"></div>
+                <div class="pagesubtitle">
+					<?= Loc::getMessage('additional_equipment') ?>
+                    <div class="pagesubtitle__addbutton customizable" @click="setStep(2)"></div>
                 </div>
                 <div class="ordercontainer__itemscontainer" v-for="(sectionId, items) in selectedStand.OPTIONS">
                     <div v-if="!isEmptyObject(items)" class="pagesubsubtitle">
@@ -299,8 +303,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ allServices[item.ID].NAME }} | {{ allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
                         </div>
                         <div class="ordercontainer__changebutton">
-                            <a href="#"><?= Loc::getMessage('change') ?></a> |
-                            <a @click.prevent="deleteOption(sectionId, item)" href="#">
+                            <a  @click.prevent="setStep(2)"  href="javascript:void(0)">
+								<?= Loc::getMessage('change') ?>
+							</a>
+							|
+                            <a @click.prevent="deleteOption(sectionId, item)" href="javascript:void(0)">
 								<?= Loc::getMessage('delete') ?>
 							</a>
                         </div>
@@ -323,14 +330,15 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ selectedStand.NAME }}
                         </div>
                         <div class="ordercontainer__changebutton">
-                            <a @click.prevent="setStep(1)" href="#">
+                            <a @click.prevent="setStep(1)" href="javascript:void(0)">
 								<?= Loc::getMessage('change') ?>
 							</a>
                         </div>
                     </div>
                 </div>
-                <div class="pagesubtitle"><?=Loc::getMessage('services')?>
-                    <div class="pagesubtitle__addbutton customizable" @click="setStep(4)"></div>
+                <div class="pagesubtitle">
+					<?= Loc::getMessage('services') ?>
+                    <div class="pagesubtitle__addbutton customizable" @click="setStep(3)"></div>
                 </div>
                 <div class="ordercontainer__itemscontainer" v-for="(sectionName, items) in groupedSelectedServices">
                     <div class="pagesubsubtitle">{{ sectionName }}</div>
@@ -342,7 +350,10 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             {{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ' - ' + item.FASCIA_COLOR +')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
                         </div>
                         <div class="ordercontainer__changebutton">
-                            <a @click.prevent="setStep(4)" href="#"><?=Loc::getMessage('change')?></a> |
+                            <a @click.prevent="setStep(3)" href="javascript:void(0)">
+								<?= Loc::getMessage('change') ?>
+							</a>
+							|
                             <a href="#" @click.prevent="deleteServiceItem(sectionName, $index)">
                                 <?= Loc::getMessage('delete') ?>
                             </a>
@@ -426,7 +437,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <? Helper::includeFile('placeOrder_logged_in_text_'.$curLang) ?>
             </div>
             <label>
-                <input type="checkbox" class="styler" v-styler="agreement">
+                <input type="checkbox" class="styler" v-styler="agreement" />
                 <? Helper::includeFile('rules_text_with_link_'.$curLang) ?>
             </label>
             <div class="placeOrder__buttons" v-if="agreement">
@@ -435,10 +446,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 				</button>
             </div>
 			<hr/>
+			<? /*
 			<div class="placeOrder_docs">
 				<a href="" data-modal="#termsConditions" class="footersection__terms"><?= Loc::getMessage('terms_conditions') ?></a>
 				<a href="" data-modal="#generalInfo" class="footersection__information"><?= Loc::getMessage('general_information') ?></a>
 			</div>
+			*/ ?>
         </form>
     </div>
     <!--// .Окно: залогинен -->

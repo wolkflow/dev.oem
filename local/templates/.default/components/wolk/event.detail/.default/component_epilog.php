@@ -194,7 +194,9 @@ $langs = Json::encode([
 	'selectPlaceholder' => Loc::getMessage('select_placeholder'),
 	'selectSearchNotFound' => Loc::getMessage('search_not_found'),
 	'selectSearchPlaceholder' => Loc::getMessage('search_placeholder'),
-	'sketchtitle' => Loc::getMessage('sketchtitle'),
+	'equipment' => Loc::getMessage('equipment'),
+	'ordered' => Loc::getMessage('ordered'),
+	'placed' => Loc::getMessage('placed'),
 ]);
 
 $standTypes = ['row', 'head', 'corner', 'island'];

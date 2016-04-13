@@ -61,11 +61,14 @@ class PrintOrderComponent extends \CBitrixComponent
 		$this->arResult['EVENT']['PROPS'] = $event->getProperties();
 		
 		foreach ($this->arResult['BASKETS'] as &$basket) {
-			$item = CIBlockElement::getByID($basket['PRODUCT_ID'])->GetNextElement();
 			
-			$basket['ITEM'] = $item->getFields();
-			$basket['ITEM']['PROPS'] = $item->getProperties();
-			$basket['ITEM']['IMAGE'] = CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], ['width' => 78, 'height' => 78])['src']; // CFile::getPath($basket['ITEM']['PREVIEW_PICTURE']);
+			if ($basket['PRODUCT_ID'] > 0) {
+				$item = CIBlockElement::getByID($basket['PRODUCT_ID'])->GetNextElement();
+				
+				$basket['ITEM'] = $item->getFields();
+				$basket['ITEM']['PROPS'] = $item->getProperties();
+				$basket['ITEM']['IMAGE'] = CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], ['width' => 78, 'height' => 78])['src']; // CFile::getPath($basket['ITEM']['PREVIEW_PICTURE']);
+			}
 			
 			// явл€етс€ ли товар стендом.
 			$basket['IS_STAND'] = ($basket['TYPE'] == 0);

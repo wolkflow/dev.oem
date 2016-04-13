@@ -1,18 +1,18 @@
 <div class="pagetitle">
     Профиль
-    <div rel="personal" class="double pagetitle__button active">
-		<a href="/personal/profile/">
-        Персональная информация
+	<a href="/personal/profile/">
+		<div rel="personal" class="double pagetitle__button active">
+			Персональная информация
+		</div>
 	</a>
-</div>
-    <div rel="history" class="double pagetitle__button active">
-<a href="/personal/orders-history.php">
-        История заказов
-</a>
-    </div>
-	<div class="pagetitle__button profileBack active" onclick="history.back();">
-		<a href="javascript:void(0);">
+    <a href="/personal/orders-history.php">
+		<div rel="history" class="double pagetitle__button active">
+			История заказов
+		</div>
+	</a>
+	<a href="javascript:void(0);">
+		<div class="pagetitle__button profileBack active" onclick="history.back();">
 			Назад
-		</a>
-	</div>
+		</div>
+	</a>
 </div>

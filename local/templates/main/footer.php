@@ -4,6 +4,9 @@
 }
 use Bitrix\Main\Localization\Loc;
 Loc::loadLanguageFile(__FILE__);
+
+$curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+
 ?>
 	<div class="footersection">
 		<a href="" data-modal="#contactUs" class="footersection__contact" id="js-contacts-link-id">
@@ -27,13 +30,13 @@ Loc::loadLanguageFile(__FILE__);
 	<!-- Окно: Условия -->
 	<div class="modal modalContact" id="termsConditions">
 		<div class="modalClose arcticmodal-close"></div>
-		<div class="modalTitle"><?=Loc::getMessage('Terms & Conditions')?></div>
+		<div class="modalTitle"><?= Loc::getMessage('Terms & Conditions') ?></div>
 
 		<div class="modalContent">
 			<div class="generalInfoContent">
 				<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 					'AREA_FILE_SHOW' => 'file',
-					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/terms_conditions.php',
+					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/terms_conditions.php',
 					'EDIT_TEMPLATE' => 'html'
 				]); ?>
 			</div>
@@ -55,11 +58,10 @@ Loc::loadLanguageFile(__FILE__);
 					<div>Slide 3</div>
 				</div>
 			 -->
-
 			<div class="generalInfoContent">
 				<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 					'AREA_FILE_SHOW' => 'file',
-					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/general_information.php',
+					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/general_information.php',
 					'EDIT_TEMPLATE' => 'html'
 				]); ?>
 			</div>
@@ -70,7 +72,9 @@ Loc::loadLanguageFile(__FILE__);
 	<!-- Окно: контакты -->
 	<div class="modal modalContact" id="contactUs">
 		<div class="modalClose arcticmodal-close"></div>
-		<div class="modalTitle"><?=Loc::getMessage('Contact Us')?></div>
+		<div class="modalTitle">
+			<?= Loc::getMessage('Contact Us') ?>
+		</div>
 		
 		<?	// Контакты.
 			$APPLICATION->IncludeComponent(
@@ -89,31 +93,34 @@ Loc::loadLanguageFile(__FILE__);
 			<div class="modalMessage">
 				<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 					'AREA_FILE_SHOW' => 'file',
-					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/message.php',
+					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/message.php',
 					'EDIT_TEMPLATE' => 'html'
 				]); ?>
 			</div>
 			<div class="modalContacts">
+				<? $APPLICATION->IncludeComponent('wolk:element.data', 'contacts', ['IBLOCK_ID' => EVENTS_IBLOCK_ID]); ?>
+				
+				<? /*
 				<ul class="modalContactsBlock">
 					<li class="contactTitle">Technical Director</li>
 					<li>
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_name.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/director_name.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
 					<li>P:
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_phone.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/director_phone.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
 					<li>E: 
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/director_email.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/director_email.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
@@ -123,21 +130,21 @@ Loc::loadLanguageFile(__FILE__);
 					<li>
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_name.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/showmanager_name.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
 					<li>P:
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_phone.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/showmanager_phone.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
 					<li>E: 
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/showmanager_email.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/showmanager_email.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
@@ -147,25 +154,26 @@ Loc::loadLanguageFile(__FILE__);
 					<li>
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_name.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/itmanager_name.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
 					<li>P: 
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_phone.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/itmanager_phone.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
 					<li>E: 
 						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
 							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.LANGUAGE_ID.'/include/contacts/itmanager_email.php',
+							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/itmanager_email.php',
 							'EDIT_TEMPLATE' => 'html'
 						]); ?>
 					</li>
 				</ul>
+				*/ ?>
 			</div>
 		</div>
 		

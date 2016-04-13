@@ -453,6 +453,12 @@ $(function () {
                 },
                 deep: true
             },
+            'selectedStand.SERVICES' : {
+                handler: function (val, oldVal) {
+                    console.log(val, oldVal);
+                },
+                deep: true
+            },
             'sketch': {
                 handler: function (val, oldVal) {
                     var prevVal = JSON.parse(sessionStorage.getItem(this.curEvent.ID));
@@ -550,7 +556,12 @@ $(function () {
                                     ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
                                 });
                                 ru.octasoft.oem.designer.Main.init({
-									labelTitle: langs.sketchtitle,
+									language: {
+										rightColumnLabel: langs.equipment,
+										ordered: langs.ordered,
+										placed: langs.placed,
+										shelfPopupLabel: ""
+									},
                                     w: self.selectedParams.WIDTH,
                                     h: self.selectedParams.DEPTH,
 									
@@ -568,7 +579,12 @@ $(function () {
                             itemsForSketch = self.itemsForSketch;
                             Vue.nextTick(function () {
                                 ru.octasoft.oem.designer.Main.init({
-									labelTitle: langs.sketchtitle,
+									language: {
+										rightColumnLabel: langs.equipment,
+										ordered: langs.ordered,
+										placed: langs.placed,
+										shelfPopupLabel: ""
+									},
                                     w: self.selectedParams.WIDTH,
                                     h: self.selectedParams.DEPTH,
                                     
@@ -757,32 +773,34 @@ Vue.component('electrics-and-communications', {
                         QUANTITY: 0
                     })
                 },
-				incQty: function (selectedItem) {
+				incQty: function (selectedItem, index) {
 					if (selectedItem.ID > 0) {
 						selectedItem.QUANTITY++;
-						this.addToCart(selectedItem);
+						this.addToCart(selectedItem, index);
 					}
 				},
-				decQty: function (selectedItem) {
+				decQty: function (selectedItem, index) {
 					if (selectedItem.ID > 0) {
 						if (selectedItem.QUANTITY > 0) {
 							selectedItem.QUANTITY--;
-							this.addToCart(selectedItem);
+							this.addToCart(selectedItem, index);
 						}
 					}
 				},
-				addToCart: function(selectedItem) {
+				addToCart: function(selectedItem, index) {
+                    console.log(selectedItem, index);
 					if (selectedItem.QUANTITY > 0) {
 						var item = this.items[parseInt(selectedItem.ID)];
 						
-						this.$root.$set('selectedStand.SERVICES[' + this.section.ID + '][' + item.ID + ']', {
+						this.$root.$set('selectedStand.SERVICES[' + this.section.ID + '][' + index + ']', {
 							ID: item.ID,
 							NAME: item.NAME,
+                            CART_SECTION: {ID: this.section.ID, NAME: this.section.NAME},
 							PRICE: parseFloat(item.PRICE).toFixed(2),
 							QUANTITY: selectedItem.QUANTITY
 						});
 					} else {
-						Vue.delete(this.$root.selectedStand.SERVICES[this.section.ID], selectedItem.ID);
+						Vue.delete(this.$root.selectedStand.SERVICES[this.section.ID], index);
 					}					
 				}
             },
@@ -2019,8 +2037,8 @@ Vue.component('stand-security', {
                         dates: [],
                         datesType: 'multiple'
                     },
-                    timeStart: '09:00',
-                    timeEnd: '23:00'
+                    timeStart: '08:00',
+                    timeEnd: '20:00'
                 }
             ]
         }
@@ -2792,7 +2810,7 @@ Vue.directive('timepicker', {
     bind: function () {
         var self = this;
         var el = $(this.el);
-        ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'].forEach(function (val) {
+        ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'].forEach(function (val) {
             el.append('<option value="' + val + '">' + val + '</option>');
         });
 

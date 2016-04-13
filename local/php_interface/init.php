@@ -23,9 +23,9 @@ if (Loader::includeModule('wolk.oem')) {
     $em->addEventHandler('iblock', 'OnAfterIBlockElementUpdate', ['\Wolk\OEM\Events\Iblock', 'saveProductsSet']);
     $em->addEventHandler('main', 'OnBeforeUserUpdate', ['\Wolk\OEM\Events\Main', 'onBeforeUserUpdateHandler']);
     $em->addEventHandler('main', 'OnBeforeUserRegister', ['\Wolk\OEM\Events\Main', 'onBeforeUserRegisterHandler']);
+	$em->addEventHandler('main', 'OnAfterUserRegister', ['\Wolk\OEM\Events\Main', 'OnAfterUserRegister']);
     $em->addEventHandler('catalog', 'OnGetOptimalPrice', ['\Wolk\OEM\Events\Catalog', 'onGetOptimalPriceHandler']);
-    $em->addEventHandler('sale', 'OnSaleStatusOrder', ['\Wolk\OEM\Events\Sale', 'OnOrderStatusSendEmail']);
-    
+    // $em->addEventHandler('sale', 'OnSaleStatusOrder', ['\Wolk\OEM\Events\Sale', 'OnOrderStatusSendEmail']);
 }
 
 Loader::registerAutoLoadClasses(

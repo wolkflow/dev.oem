@@ -35,6 +35,9 @@
                     <div class="itemCount__button itemCount__up" @click="incQty"></div>
                     <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number :value="item.QUANTITY" />
                 </div>
+				<div class="equipmentcontainer__standartnote" v-if="item.STANDART > 0">
+					<?= Loc::getMessage('eqipment_standart_include') ?> <b>{{ item.STANDART }}</b>
+				</div>
             </div>
         </div>
         <div class="equipmentcontainer__itemleftside">
@@ -42,9 +45,6 @@
                 <a class="photoZoom" :href="item.PICTURE.BIG"></a>
                 <img :src="item.PICTURE.SMALL" class="equipmentcontainer__itemphoto" />
             </div>
-			<div class="equipmentcontainer__standartnote" v-if="item.STANDART > 0">
-				<?= Loc::getMessage('eqipment_standart_include') ?> {{ item.STANDART }}
-			</div>
             <div class="equipmentcontainer__itemsize">
                 {{{ description }}}
             </div>

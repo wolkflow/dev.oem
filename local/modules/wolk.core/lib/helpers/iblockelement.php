@@ -6,6 +6,19 @@ namespace Wolk\Core\Helpers;
 class IBlockElement
 {	
 	
+	public static function getByCode($iblockID, $code)
+	{
+		$resutl  = null;
+		$element = \CIBlockElement::GetList(array(), array('IBLOCK_ID' => intval($iblockID), 'CODE' => strval($code)), false, array('nTopCount' => 1))->getNextElement();
+				
+		if ($element) {
+			$result = $element->getFields();
+			$result['PROPERTIES'] = $element->getProperties();
+		}
+		return $result;
+	}
+	
+	
 	/**
 	 * Получение свойств.
 	 */

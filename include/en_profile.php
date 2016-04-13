@@ -1,18 +1,18 @@
 <div class="pagetitle">
     Profile
-    <div rel="personal" class="double pagetitle__button active">
-		<a href="/personal/profile/">
-        personal information
+	<a href="/personal/profile/">
+		<div rel="personal" class="double pagetitle__button active">
+			Personal information
+		</div>
 	</a>
-</div>
-    <div rel="history" class="double pagetitle__button active">
-<a href="/personal/orders-history.php">
-        order history
-</a>
-    </div>
-	<div class="pagetitle__button profileBack active" onclick="history.back();">
-		<a href="javascript:void(0);">
+    <a href="/personal/orders-history.php">
+		<div rel="history" class="double pagetitle__button active">
+			Order history
+		</div>
+	</a>
+	<a href="javascript:void(0);">
+		<div class="pagetitle__button profileBack active" onclick="history.back();">
 			Back
-		</a>
-	</div>
+		</div>
+	</a>
 </div>

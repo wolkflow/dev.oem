@@ -1,4 +1,29 @@
-<?use Bitrix\Main\Localization\Loc;?>
+<?php
+
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Page\Asset;
+use Bitrix\Main\Page\AssetLocation;
+use Bitrix\Main\Web\Json;
+
+$langs = Json::encode([
+	'filePlaceholder' => Loc::getMessage('file_placeholder'),
+	'fileNumber' => Loc::getMessage('file_number'),
+	'selectPlaceholder' => Loc::getMessage('select_placeholder'),
+	'selectSearchNotFound' => Loc::getMessage('search_not_found'),
+	'selectSearchPlaceholder' => Loc::getMessage('search_placeholder'),
+	'sketchtitle' => Loc::getMessage('sketchtitle'),
+]);
+
+$am = Asset::getInstance();
+$am->addString(<<<JS
+	<script>
+		langs = $langs
+	</script>
+JS
+, true, AssetLocation::AFTER_JS_KERNEL);
+
+?>
+
 <div class="profilecontainer__column left">
     <? foreach ($arResult['EVENTS'] as $n => $event) { ?>
         <? if ($n > count($arResult['EVENTS']) / 2) { ?>
@@ -30,7 +55,9 @@
 <div class="hide">
     <div class="modal modalFull modalOrder" id="order-detail">
         <div class="modalClose arcticmodal-close"></div>
-        <div class="modalTitle"><?=Loc::getMessage('сhangeview_order')?> {{orderId}}</div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('сhangeview_order') ?> {{ orderId }}
+		</div>
         <div class="modalContent">
             <div class="ordercontainer">
                 <div class="ordercontainer__columnscontainer">
@@ -102,7 +129,9 @@
                             </div>
                         </div>
                         <div class="ordercontainer__itemscontainer" v-for="(sectionId, items) in selectedStand.SERVICES">
-                            <div class="pagesubsubtitle">{{ sectionName }}</div>
+                            <div class="pagesubsubtitle">
+								{{ sectionName }}
+							</div>
                             <div class="ordercontainer__item" v-for="item in items">
                                 <div class="ordercontainer__itemtotalprice">
                                     {{ item.COST_FORMATTED }}
@@ -194,4 +223,4 @@
             </div>
         </div>
     </div>
-
+</div>

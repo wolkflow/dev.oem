@@ -81,12 +81,9 @@ try {
     }
 } catch (Exception $e) {
     $result = $e->getMessage();
-    CHTTP::SetStatus('422 Unprocessable Entity');
+    CHTTP::SetStatus('422 Unprocessable Entity: '.$result.'[file: '.$e->getFile().', line: '.$e->getLine().']');
 }
 
 $response = Json::encode($result, JSON_UNESCAPED_UNICODE);
-$len = strlen((string)$response);
-header("Content-Length: {$len}");
-header('Content-type: application/json');
-echo $response;
-die();
+header("Content-type: application/json");
+die($response);

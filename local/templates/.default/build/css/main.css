@@ -589,16 +589,16 @@ input[type="password"] {
   border-radius: 100%;
 }
 .indexpage__choosestandtype[for="row"] .indexpage__choosestandtypeicon {
-  border-top: 2px solid #acacac;
-  border-left: 2px solid #acacac;
-  border-right: 2px solid #acacac;
+  border-top: 3px solid #7f7f7f;/*acacac*/
+  border-left: 3px solid #7f7f7f;
+  border-right: 3px solid #7f7f7f;
 }
 .indexpage__choosestandtype[for="corner"] .indexpage__choosestandtypeicon {
-  border-top: 2px solid #acacac;
-  border-right: 2px solid #acacac;
+  border-top: 3px solid #7f7f7f;
+  border-right: 3px solid #7f7f7f;
 }
-.indexpage__choosestandtype[for="head"] .indexpage__choosestandtypeicon {
-  border-top: 2px solid #acacac;
+.indexpage__choosestandtype[for="peninsular"] .indexpage__choosestandtypeicon {
+  border-top: 3px solid #7f7f7f;
 }
 .indexpage__choosestandtypeicon {
   position: absolute;
@@ -1466,7 +1466,8 @@ float: left}
   background: #999999;
 }
 .equipmentcontainer__standartnote {
-  font-size: 12px;
+  font-size: 13px;
+  margin-top: 16px;
 }
 .servicescontainer {
   width: 540px;

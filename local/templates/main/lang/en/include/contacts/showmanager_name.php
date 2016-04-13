@@ -1,1 +1,1 @@
-Marina Bolotskaya
+Georgy Boyko

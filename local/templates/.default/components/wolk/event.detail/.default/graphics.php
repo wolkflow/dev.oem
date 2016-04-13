@@ -160,7 +160,7 @@
             </div>
             <div class="serviceItem__row">
                 <div class="serviceItem__subtitle"><?=Loc::getMessage('comments')?></div>
-                <textarea v-model="item.COMMENTS" class="styler" placeholder="Any additional information"></textarea>
+                <textarea v-model="item.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('placeholder_comments') ?>"></textarea>
             </div>
 
             <div class="hide">
@@ -221,8 +221,7 @@
             </div>
             <div class="serviceItem__row">
                 <div class="serviceItem__subtitle"><?=Loc::getMessage('comments')?></div>
-            <textarea v-model="item.COMMENTS" class="styler"
-                      placeholder="Describe where and how you want your print to be placed"></textarea>
+            <textarea v-model="item.COMMENTS" class="styler" placeholder="<?=Loc::getMessage('placeholder_mockup')?>"></textarea>
             </div>
         </div>
 

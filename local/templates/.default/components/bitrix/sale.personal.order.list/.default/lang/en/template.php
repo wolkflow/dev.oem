@@ -26,3 +26,9 @@ $MESS['tax'] = 'VAT';
 $MESS['total_with_vat'] = 'total<br>with VAT';
 $MESS['surcharge'] = 'surcharge';
 $MESS['total_with_surcharge'] = 'total with<br>surcharge';
+
+$MESS['file_placeholder'] = 'The file is not selected';
+$MESS['file_number'] = 'Selected file: %s';
+$MESS['select_placeholder'] = 'Select...';
+$MESS['search_not_found'] = 'No matches found';
+$MESS['search_placeholder'] = 'Search...';

@@ -134,11 +134,17 @@ $MESS['select_placeholder'] = 'Выберите...';
 $MESS['search_not_found'] = 'Совпадений не найдено';
 $MESS['search_placeholder'] = 'Поиск...';
 
-$MESS['sketchtitle'] = 'Оборудование';
-$MESS['eqipment_standart_include'] = 'Стенд включает: ';
+$MESS['eqipment_standart_include'] = 'Стенд включает';
 
 $MESS['terms_conditions'] = 'Условия и положения';
 $MESS['general_information'] = 'Основная информация';
 
 $MESS['additional_info'] = 'Дополнительная информация о вашем заказе';
 
+$MESS['placeholder_comments'] = 'Любая дополнительная информация';
+$MESS['placeholder_mockup'] = 'Опишите где и как Вы хотите разместить Ваш принт';
+
+$MESS['equipment'] = 'Оборудование';
+$MESS['ordered'] = 'Заказано';
+$MESS['placed'] = 'Размещено';
+$MESS['popuplabel'] = '';

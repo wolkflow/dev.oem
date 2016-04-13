@@ -82,21 +82,22 @@ $(document).ready(function() {
 
 
 	// Modals
-	$(document).on('click', '[data-modal]',function(){
-		var modal = $(this).attr('data-modal');
+	$(document).on('click', '[data-modal]',function() {
+		var modal = $(this).data('modal');
 		$(modal).arcticmodal();
 		return false;
 	});
 
 
-	$('.itemColor__custom').click(function(){
+	$('.itemColor__custom').click(function() {
 		var modal = $(this).attr('data-modal');
 		var vortex = $(this).attr('id');
 		$(modal).arcticmodal();
 		$(modal).attr('data-vortex', vortex);
 		return false;
 	});
-	$('[data-module="pagesubtitle-dropdown"]').click(function(){
+	
+	$('[data-module="pagesubtitle-dropdown"]').click(function() {
 		$(this).toggleClass('open');
 	});
 

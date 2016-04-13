@@ -8,7 +8,9 @@ use Bitrix\Main\Localization\Loc;
 Loc::loadLanguageFile(__FILE__);
 ?>
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	
     <? $am = \Bitrix\Main\Page\Asset::getInstance(); ?>
     <?  // Подключение скриптов и стилей.
         $am->addJs('/local/templates/.default/build/js/vendor.js');
@@ -31,12 +33,9 @@ Loc::loadLanguageFile(__FILE__);
         <? $APPLICATION->ShowViewContent('custom_color_styles') ?>
     </style>
     <script>
-        window.addEventListener("touchmove", function (event) {
-            event.preventDefault();
-        }, false);
         if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
             var meta = document.getElementById("viewport");
-            meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+            meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio));
         }
     </script>
 	<script>
