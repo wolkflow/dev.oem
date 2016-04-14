@@ -211,6 +211,7 @@ $(function () {
                 });
             },
             deleteServiceItem: function (cartSectionName, index) {
+                $("input#"+cartSectionName+"_"+index).val(0);
                 var self = this,
                     i = 1;
                 $.each(this.selectedStand.SERVICES, function (sectionId, items) {
@@ -224,6 +225,7 @@ $(function () {
                 });
             },
             deleteOption: function (sectionId, item) {
+                $("input#"+sectionId+"_"+item.ID).val(0);
                 Vue.delete(this.selectedStand.OPTIONS[sectionId], item.ID);
             },
             toggleSectionVisible: function (section) {
@@ -455,7 +457,7 @@ $(function () {
             },
             'selectedStand.SERVICES' : {
                 handler: function (val, oldVal) {
-                    console.log(val, oldVal);
+
                 },
                 deep: true
             },
@@ -788,7 +790,6 @@ Vue.component('electrics-and-communications', {
 					}
 				},
 				addToCart: function(selectedItem, index) {
-                    console.log(selectedItem, index);
 					if (selectedItem.QUANTITY > 0) {
 						var item = this.items[parseInt(selectedItem.ID)];
 						
@@ -1315,12 +1316,15 @@ Vue.component('additional-equipment', {
             }
         } else {
             if (typeof this.item == 'object') {
-				for (var i in this.$parent.selectedStand.EQUIPMENT) {
-					var eq = this.$parent.selectedStand.EQUIPMENT[i];
-					if (eq.ID == this.item.ID) {
-						Vue.set(this.item, 'STANDART', eq.QUANTITY);
+				//if (this.$parent.selectedStand) {
+				console.log(this.$parent.selectedStand);
+					for (var i in this.$parent.selectedStand.EQUIPMENT) {
+						var eq = this.$parent.selectedStand.EQUIPMENT[i];
+						if (eq.ID == this.item.ID) {
+							Vue.set(this.item, 'STANDART', eq.QUANTITY);
+						}
 					}
-				}
+				//}
                 Vue.set(this.item, 'QUANTITY', 0);
             }
         }

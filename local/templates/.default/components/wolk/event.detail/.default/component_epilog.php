@@ -50,7 +50,6 @@ if ($arResult['INDIVIDUAL_STAND']) {
     }
 }
 
-#dump($arResult['ITEMS']);
 
 $stands = array_map(function ($val) use ($curLang) {
     $item = ArrayHelper::only($val, [

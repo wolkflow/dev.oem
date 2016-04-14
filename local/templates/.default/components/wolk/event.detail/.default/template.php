@@ -19,8 +19,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         </a>
     </div>
 </div>
-<!--<pre>{{ selectedStand.SERVICES | json }}</pre>-->
-<!--<pre>{{ options | json }}</pre>-->
+
+<? if ($USER->IsAdmin()) { ?>
+	<!--<pre>{{ selectedStand.SERVICES | json }}</pre>-->
+	<!--<pre>{{ services | json }}</pre>-->
+<? } ?>
 
 <div class="catalogdeadline" v-show="hasMargins">
 	<div class="catalogdeadline__deadlinecontainer">

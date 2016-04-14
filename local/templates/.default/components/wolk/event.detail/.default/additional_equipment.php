@@ -33,7 +33,7 @@
                     <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
                     <div class="itemCount__button itemCount__down" @click="decQty"></div>
                     <div class="itemCount__button itemCount__up" @click="incQty"></div>
-                    <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number :value="item.QUANTITY" />
+                    <input id="{{section.ID}}_{{item.ID}}" v-model="item.QUANTITY" type="text" class="itemCount__input styler" number :value="item.QUANTITY" />
                 </div>
 				<div class="equipmentcontainer__standartnote" v-if="item.STANDART > 0">
 					<?= Loc::getMessage('eqipment_standart_include') ?> <b>{{ item.STANDART }}</b>

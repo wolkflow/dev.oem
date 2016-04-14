@@ -224,7 +224,7 @@ class Assoc
 	 */
 	public function ConvertToDB($property, $value)
     {
-		$value['VALUE'] = array_filter($value['VALUE'], function($item) { return (is_numeric($item)); });
+		$value['VALUE'] = array_filter($value['VALUE'], function($item) { return (!empty($item)); });
 		
 		if (empty($value['VALUE'])) {
 			return '';

@@ -48,14 +48,17 @@ class MailUserComponent extends \CBitrixComponent
 		
 		// Мероприятие.
 		if (!empty($this->arParams['EVENT'])) {
-			$this->arResult['EVENT'] = Wolk\Core\Helpers\IBlockElement::getByCode($this->arParams['EVENT']);
+			$context  = \Bitrix\Main\Application::getInstance()->getContext();
+			$language = strtoupper($context->getLanguage());
+			
+			$this->arResult['EVENT'] = Wolk\Core\Helpers\IBlockElement::getByCode(EVENTS_IBLOCK_ID, $this->arParams['EVENT']);
+			$this->arResult['EVENT']['LOGO'] = CFile::ResizeImageGet($this->arResult['EVENT']['PROPERTIES']['LANG_LOGO_'.$language]['VALUE'], ['width' => 168, 'height' => 68], BX_RESIZE_IMAGE_PROPORTIONAL_ALT)['src'];
 		}
 		
 		// Дополнительные поля.
 		$this->arResult['FIELDS'] = $this->arParams['FIELDS'];
 		
 		// Подключение шаблона.
-		// ob_clean();
 		ob_start();
 		
 		$this->includeComponentTemplate();

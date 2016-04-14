@@ -1,10 +1,11 @@
-﻿<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die() ?>
+﻿<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
 
-<? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Dwai\Kvartirolog\Helpers\Text as TextHelper; ?>
 
-<pre>
-<? //print_r($arResult) ?>
-</pre>
+<? $context  = \Bitrix\Main\Application::getInstance()->getContext(); ?>
+<? $language = strtoupper($context->getLanguage()); ?>
+
+<? $this->setFrameMode(true); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -52,22 +53,26 @@
 										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Выставочная команда</p>
 									</td>
 								</tr>
-								<tr>
-									<td>
-										<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Технический директор</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">Дубовицкий Сергей</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;"><a href="mailto:sergey.dubovitskiy@businessmediarussia.ru" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">sergey.dubovitskiy@businessmediarussia.ru</a></p>
-										<p style="margin: 0 0 43px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">+7 965 887 0909</p>
-									</td>
-								</tr>
-								<tr>
-									<td style="padding-bottom: 57px;">
-										<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Технический директор</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">Дубовицкий Сергей</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;"><a href="mailto:sergey.dubovitskiy@businessmediarussia.ru" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">sergey.dubovitskiy@businessmediarussia.ru</a></p>
-										<p style="margin: 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">+7 965 887 0909</p>
-									</td>
-								</tr>
+								<? foreach $arResult['EVENT']['PROPERTIES']['LANG_CONTACTS_'.$language]['VALUE'] as $contact) { ?>
+									<tr>
+										<td>
+											<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+												<?= $contact['POST'] ?>
+											</p>
+											<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												<?= $contact['NAME'] ?>
+											</p>
+											<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												<a href="mailto:<?= $contact['EMAIL'] ?>" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">
+													<?= $contact['EMAIL'] ?>
+												</a>
+											</p>
+											<p style="margin: 0 0 43px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												<?= $contact['PHONE'] ?>
+											</p>
+										</td>
+									</tr>
+								<? } ?>
 								<tr>
 									<td style="border-top: 1px solid #7f7f7f;">
 										<a href="http://<?= SITE_SERVER_NAME ?>/events/<?= $arResult['EVENT']['CODE'] ?>/" style="text-decoration: none;display: block;padding-top: 60px;padding-bottom: 8px;">

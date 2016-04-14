@@ -43,6 +43,9 @@ if($obEvent = $obElement->GetNextElement()) {
         $APPLICATION->AddViewContent('custom_color_styles', '.customizable {background: '.$event['PROPS']['COLOR']['VALUE'].'!important;}');
     }
 }
+
+$_SESSION['REGEVENT'] = $arResult['VARIABLES']['ELEMENT_CODE'];
+
 ?>
 <? if (
     (isset($_REQUEST['ORDER_TYPE'])

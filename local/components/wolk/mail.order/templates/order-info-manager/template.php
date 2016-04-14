@@ -1,6 +1,11 @@
-<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die() ?>
+<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
 
-<? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Dwai\Kvartirolog\Helpers\Text as TextHelper; ?>
+
+<? $context  = \Bitrix\Main\Application::getInstance()->getContext(); ?>
+<? $language = strtoupper($context->getLanguage()); ?>
+
+<? $this->setFrameMode(true); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

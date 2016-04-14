@@ -8,8 +8,6 @@ use Bitrix\Main\Localization\Loc;
  */
 class ElementDataComponent extends \CBitrixComponent
 {
-	const COOKIE = 'REGEVENT';
-	
 	
 	/** 
 	 * Установка настроек.
@@ -56,13 +54,7 @@ class ElementDataComponent extends \CBitrixComponent
 			$variables
 		);
 		
-		// Сохранение мероприятия в cookie.
-		// if (empty($_SESSION[self::COOKIE])) {
-			$_SESSION[self::COOKIE] = $variables['CODE'];
-		// }
-		
 		$this->arResult['ELEMENT'] = Wolk\Core\Helpers\IBlockElement::getByCode($this->arParams['IBLOCK_ID'], $variables['CODE']);
-		
 		
 		$this->includeComponentTemplate();
 	}

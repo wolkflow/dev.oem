@@ -2,6 +2,9 @@
 
 <? use Dwai\Kvartirolog\Helpers\Text as TextHelper; ?>
 
+<? $context  = \Bitrix\Main\Application::getInstance()->getContext(); ?>
+<? $language = strtoupper($context->getLanguage()); ?>
+
 <? $this->setFrameMode(true); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -16,10 +19,16 @@
 <body style="margin: 0;padding: 0;">
 	<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%;background-image: url('http://<?= SITE_SERVER_NAME ?>/upload/mail/images/bg.jpg');background-repeat: no-repeat;background-position: 50% 0;">
 		<tr align="center">
-			<td style="padding-top: 59px;padding-bottom: 57px;">
-				<a href="http://<?= SITE_SERVER_NAME ?>/" style="text-decoration: none;">
-					<img src="http://<?= SITE_SERVER_NAME ?>/upload/mail/images/logoTop.png" alt="OSEC" style="display: block;" />
-				</a>
+			<td style="padding-top: 59px;padding-bottom: 57px;">				
+				<? if (!empty($arParams['EVENT'])) { ?>
+					<a href="http://<?= SITE_SERVER_NAME ?>/events/<?= $arResult['EVENT']['CODE'] ?>/" style="text-decoration: none;">
+						<img src="http://<?= SITE_SERVER_NAME ?><?= $arResult['EVENT']['LOGO'] ?>" style="display: block;" />
+					</a>
+				<? } else { ?>
+					<a href="http://<?= SITE_SERVER_NAME ?>/" style="text-decoration: none;">
+						<img src="http://<?= SITE_SERVER_NAME ?>/upload/mail/images/logoTop.png" alt="OSEC" style="display: block;" />
+					</a>
+				<? } ?>
 			</td>
 		</tr>
 		<tr>
@@ -147,30 +156,52 @@
 
 								<tr>
 									<td style="padding-top: 57px">
-										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Выставочная команда</p>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											Технический директор
+										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+											Выставочная команда
 										</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">Дубовицкий Сергей</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;"><a href="mailto:sergey.dubovitskiy@businessmediarussia.ru" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">sergey.dubovitskiy@businessmediarussia.ru</a></p>
-										<p style="margin: 0 0 43px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">+7 965 887 0909</p>
 									</td>
 								</tr>
-								<tr>
-									<td style="padding-bottom: 57px;">
-										<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											Технический директор
-										</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">Дубовицкий Сергей</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;"><a href="mailto:sergey.dubovitskiy@businessmediarussia.ru" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">sergey.dubovitskiy@businessmediarussia.ru</a></p>
-										<p style="margin: 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">+7 965 887 0909</p>
-									</td>
-								</tr>
-
+								<? if (!empty($arParams['EVENT'])) { ?>
+									<? foreach ($arResult['EVENT']['PROPERTIES']['LANG_CONTACTS_'.$language]['VALUE'] as $contact) { ?>
+										<tr>
+											<td>
+												<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+													<?= $contact['POST'] ?>
+												</p>
+												<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+													<?= $contact['NAME'] ?>
+												</p>
+												<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+													<a href="mailto:<?= $contact['EMAIL'] ?>" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">
+														<?= $contact['EMAIL'] ?>
+													</a>
+												</p>
+												<p style="margin: 0 0 43px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+													<?= $contact['PHONE'] ?>
+												</p>
+											</td>
+										</tr>
+									<? } ?>
+								<? } else { ?>
+									<tr>
+										<td>
+											<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+												Технический директор
+											</p>
+											<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												Дубовицкий Сергей
+											</p>
+											<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												<a href="mailto:sergey.dubovitskiy@businessmediarussia.ru" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">
+													sergey.dubovitskiy@businessmediarussia.ru
+												</a>
+											</p>
+											<p style="margin: 0 0 43px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												+7 965 887 0909
+											</p>
+										</td>
+									</tr>
+								<? } ?>
 								<tr>
 									<td style="border-top: 1px solid #7f7f7f;">
 										<a href="http://<?= SITE_SERVER_NAME ?>" style="text-decoration: none;display: block;padding-top: 60px;padding-bottom: 8px;">

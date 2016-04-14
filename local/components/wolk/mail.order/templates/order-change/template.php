@@ -1,6 +1,9 @@
-﻿<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die() ?>
+﻿<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
 
-<? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Dwai\Kvartirolog\Helpers\Text as TextHelper; ?>
+
+<? $context  = \Bitrix\Main\Application::getInstance()->getContext(); ?>
+<? $language = strtoupper($context->getLanguage()); ?>
 
 <? $this->setFrameMode(true); ?>
 
@@ -208,23 +211,26 @@
 										</p>
 									</td>
 								</tr>
-								<tr>
-									<td>
-										<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Технический директор</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">Дубовицкий Сергей</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;"><a href="mailto:sergey.dubovitskiy@businessmediarussia.ru" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">sergey.dubovitskiy@businessmediarussia.ru</a></p>
-										<p style="margin: 0 0 43px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">+7 965 887 0909</p>
-									</td>
-								</tr>
-								<tr>
-									<td style="padding-bottom: 57px;">
-										<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Технический директор</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">Дубовицкий Сергей</p>
-										<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;"><a href="mailto:sergey.dubovitskiy@businessmediarussia.ru" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">sergey.dubovitskiy@businessmediarussia.ru</a></p>
-										<p style="margin: 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">+7 965 887 0909</p>
-									</td>
-								</tr>
-
+								<? foreach $arResult['EVENT']['PROPERTIES']['LANG_CONTACTS_'.$language]['VALUE'] as $contact) { ?>
+									<tr>
+										<td>
+											<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+												<?= $contact['POST'] ?>
+											</p>
+											<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												<?= $contact['NAME'] ?>
+											</p>
+											<p style="margin: 0 0 7px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												<a href="mailto:<?= $contact['EMAIL'] ?>" style="color: #333333;-webkit-text-size-adjust: none;text-decoration: underline;">
+													<?= $contact['EMAIL'] ?>
+												</a>
+											</p>
+											<p style="margin: 0 0 43px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
+												<?= $contact['PHONE'] ?>
+											</p>
+										</td>
+									</tr>
+								<? } ?>
 								<tr>
 									<td style="border-top: 1px solid #7f7f7f;">
 										<a href="{site_link}" style="text-decoration: none;display: block;padding-top: 60px;padding-bottom: 8px;"><img style="display: block;" src="http://<?= SITE_SERVER_NAME ?>/upload/mail/images/logo.png" alt="Universal exhibition configuration" /></a>

@@ -797,7 +797,11 @@ class EventDetailComponent extends BaseListComponent
         $this->loadEquipmentPrices($event);
 
         if (!empty($props['STANDS']['VALUE'])) {
-            $selectedArea = $this->arParams['WIDTH'] * $this->arParams['DEPTH'];
+            $selectedArea = ceil($this->arParams['WIDTH'] * $this->arParams['DEPTH']);
+			
+			$standsIds = [];
+			$standsOfferIds = [];
+            $equipmentIds = [];
 			
             $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC'], [
                 'IBLOCK_ID'           => STANDS_OFFERS_IBLOCK_ID,
@@ -806,23 +810,12 @@ class EventDetailComponent extends BaseListComponent
                 '<=PROPERTY_AREA_MIN' => $selectedArea,
                 '>=PROPERTY_AREA_MAX' => $selectedArea
             ]);
-
-            if (!$obStandOffers->SelectedRowsCount()) {
-                $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC'], [
-                    'IBLOCK_ID'          => STANDS_OFFERS_IBLOCK_ID,
-                    'ACTIVE'             => 'Y',
-                    'PROPERTY_CML2_LINK' => $props['STANDS']['VALUE']
-                ]);
-            }
-
-            $standsIds = [];
-            $equipmentIds = [];
-            while ($obStandOffer = $obStandOffers->GetNextElement(false, false)) {
+			
+						
+			while ($obStandOffer = $obStandOffers->GetNextElement(false, false)) {
                 $arStandOffer = $obStandOffer->GetFields();
                 $arStandOffer['PROPS'] = $obStandOffer->GetProperties(
-                    [
-
-                    ],
+                    [],
                     [
                         'CODE' =>
                             [
@@ -832,18 +825,61 @@ class EventDetailComponent extends BaseListComponent
                     ]
                 );
                 $arStandOffers[$arStandOffer['PROPS']['CML2_LINK']['VALUE']] = $arStandOffer;
-                $standsIds[] = $arStandOffer['PROPS']['CML2_LINK']['VALUE'];
+                $standsIds []= $arStandOffer['PROPS']['CML2_LINK']['VALUE'];
                 if (is_array($arStandOffer['PROPS']['EQUIPMENT']['VALUE'])) {
                     $equipmentIds = array_merge($equipmentIds, $arStandOffer['PROPS']['EQUIPMENT']['VALUE']);
                 }
+				$standsOfferIds []= $arStandOffer['ID'];
             }
+			
+			// Дополнение незагруженных стендов 9по площади).
+            if ($obStandOffers->SelectedRowsCount() < count($props['STANDS']['VALUE'])) {
+                $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC'], [
+                    'IBLOCK_ID'          => STANDS_OFFERS_IBLOCK_ID,
+                    'ACTIVE'             => 'Y',
+                    'PROPERTY_CML2_LINK' => $props['STANDS']['VALUE'],
+					// '!ID'				 => $standsOfferIds // WHY?!
+                ]);
+				
+				while ($obStandOffer = $obStandOffers->GetNextElement(false, false)) {
+					$arStandOffer = $obStandOffer->GetFields();
+					$arStandOffer['PROPS'] = $obStandOffer->GetProperties(
+						[],
+						[
+							'CODE' =>
+								[
+									'CML2_LINK',
+									'EQUIPMENT'
+								]
+						]
+					);
+					
+					//if (!in_array($arStandOffer['PROPS']['CML2_LINK']['VALUE'], $standsIds)) {
+					if (!in_array($arStandOffer['ID'], $standsOfferIds)) {
+						$arStandOffers[$arStandOffer['PROPS']['CML2_LINK']['VALUE']] = $arStandOffer;
+						$standsIds []= $arStandOffer['PROPS']['CML2_LINK']['VALUE'];
+						if (is_array($arStandOffer['PROPS']['EQUIPMENT']['VALUE'])) {
+							$equipmentIds = array_merge($equipmentIds, $arStandOffer['PROPS']['EQUIPMENT']['VALUE']);
+						}
+						$standsOfferIds []= $arStandOffer['ID'];
+					}
+				}
+            }
+			
 
             if (!empty($standsIds)) {
-                $obEquipment = CIBlockElement::GetList([], [
-                    'IBLOCK_ID' => EQUIPMENT_IBLOCK_ID,
-                    'ACTIVE'    => 'Y',
-                    'ID'        => $equipmentIds
-                ], false, false, ['ID', 'IBLOCK_ID', 'NAME', 'PREVIEW_PICTURE', 'CATALOG_GROUP_1']);
+                $obEquipment = CIBlockElement::GetList(
+					[],
+					[
+						'IBLOCK_ID' => EQUIPMENT_IBLOCK_ID,
+						'ACTIVE'    => 'Y',
+						'ID'        => $equipmentIds
+					],
+					false,
+					false,
+					['ID', 'IBLOCK_ID', 'NAME', 'PREVIEW_PICTURE', 'CATALOG_GROUP_1']
+				);
+				
                 while ($obEquipmentItem = $obEquipment->GetNextElement()) {
                     $equipmentItem = $obEquipmentItem->GetFields();
                     $equipmentItem['PROPS'] = $obEquipmentItem->GetProperties();
@@ -902,26 +938,35 @@ class EventDetailComponent extends BaseListComponent
                 ]);
                 while ($obStand = $obStands->GetNextElement(false, false)) {
                     $arStand = $obStand->GetFields();
-                    $standProps = $obStand->GetProperties();
+                    $arStand['PROPS'] = $obStand->GetProperties();
+					
                     $arStand['PREVIEW_PICTURE'] = CFile::ResizeImageGet(
                         $arStand['PREVIEW_PICTURE'], ['width' => 420, 'height' => 270], BX_RESIZE_IMAGE_EXACT
                     )['src'];
                     $arStand['PRICE'] = $arStand['BASE_PRICE'] = CPrice::GetBasePrice($arStand['ID']);
 
-                    $arStand['PRICE']['PRICE'] = $arEvent['PROPS']['PRESELECT']['VALUE'] == $arStand['ID'] ? 0 : $this->calcStandPrice(
-                        $arStand['BASE_PRICE']['PRICE'],
-                        $this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
-                        $this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
-                    );
+                    $arStand['PRICE']['PRICE'] = (
+						($arEvent['PROPS']['PRESELECT']['VALUE'] == $arStand['ID'])
+						? 0 
+						: $this->calcStandPrice(
+							$arStand['BASE_PRICE']['PRICE'],
+							$this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
+							$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
+						  )
+					);
                     $arStand['PROPS'] = $obStand->GetProperties();
                     $arStand['OFFER'] = $arStandOffers[$arStand['ID']];
-                    $arStand['NAME'] = $standProps['LANG_NAME_'.$this->curLang]['VALUE'] ?: $arStand['NAME'];
+                    $arStand['NAME']  = $arStand['PROPS']['LANG_NAME_'.$this->curLang]['VALUE'] ?: $arStand['NAME'];
                     $arStands[$arStand['ID']] = $arStand;
                 }
             }
         }
         $arEvent['STANDS'] = $arStands;
 
+		if (isset($_GET['dbg'])) {
+			echo (count($arStands));
+		}
+		
         if ($eventCurrency = $arEvent['PROPS']['LANG_CURRENCY_' . $this->curLang]['VALUE']) {
             $currencyFormat = \Bitrix\Currency\CurrencyLangTable::getById([
                 'CURRENCY' => $eventCurrency,
@@ -933,39 +978,37 @@ class EventDetailComponent extends BaseListComponent
                 'FORMAT' => $currencyFormat['FORMAT_STRING']
             ];
         }
-
-        #dump($arEvent['STANDS'][60]['OFFER']['EQUIPMENT']);die;
-
+		
         return $arEvent;
     }
 
+	
+	
     protected function getSurcharge($time = null)
     {
         if (is_null($time)) {
             $time = time();
         }
 
-        if (!empty($this->event['PROPS']['MARGIN_DATES']['VALUE'])
-            &&
-            is_array($this->event['PROPS']['MARGIN_DATES']['VALUE'])
+        if (
+			!empty($this->event['PROPS']['MARGIN_DATES']['VALUE'])
+            && is_array($this->event['PROPS']['MARGIN_DATES']['VALUE'])
         ) {
             $activeIndex = null;
             foreach ($this->event['PROPS']['MARGIN_DATES']['VALUE'] as $n => $date) {
                 if (
                     strtotime($date) <= $time
-                    &&
-                    (is_null($activeIndex) || strtotime($date) > $this->event['PROPS']["MARGIN_DATES"]['VALUE'][$activeIndex])
+                    && (is_null($activeIndex) || strtotime($date) > $this->event['PROPS']["MARGIN_DATES"]['VALUE'][$activeIndex])
                 ) {
                     $activeIndex = $n;
                 }
             }
-
             return $this->event['PROPS']["MARGIN_DATES"]['DESCRIPTION'][$activeIndex];
         }
-
         return 0;
     }
 
+	
     /**
      * @param $orderId
      * @param $fuserId
@@ -988,10 +1031,10 @@ class EventDetailComponent extends BaseListComponent
                 return false;
             }
         }
-
         return true;
     }
 
+	
     public function getOrder($id)
     {
         global $USER;
@@ -1025,9 +1068,8 @@ class EventDetailComponent extends BaseListComponent
             foreach ($props as $prop) {
                 $newProps[$prop['BASKET_ID']][] = $prop;
             }
-
-            #dump($newProps);die;
-
+			
+			
             foreach ($items as &$item) {
                 $item['PRICE_FORMATTED'] = CurrencyFormat($item['PRICE'], $order['CURRENCY']);
                 if ($item['TYPE'] == 1 && $item['SET_PARENT_ID']) {
