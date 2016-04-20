@@ -1,6 +1,7 @@
 $(function () {
 	
     // Vue.config.debug = true;
+	
     var vm = new Vue({
         el: 'body',
         data: {

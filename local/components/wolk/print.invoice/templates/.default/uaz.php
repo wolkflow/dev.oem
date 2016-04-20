@@ -48,7 +48,7 @@
 		</tr>
 		<tr>
 			<td>Покупатель:</td>
-			<td><?= $arResult['USER']['UF_REQUISITES'] ?> </td>
+			<td><?= $arResult['USER']['UF_REQUISITES'] ?></td>
 		</tr>
 	</table>
 
@@ -64,6 +64,7 @@
 		</thead>
 		<tbody>
 			<? foreach ($arResult['BASKETS'] as $basket) { ?>
+				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>

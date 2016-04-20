@@ -53,6 +53,9 @@ class MailOrderComponent extends \CBitrixComponent
 		// Установка текущего языка.
 		Loc::setCurrentLang($this->arParams['LANG']);
 		
+		// TODO: Не менять язык.
+		// Loc::loadLanguageFile(__FILE__, $this->arParams['LANG']);
+		
 		$site = \CSite::GetByID(SITE_DEFAULT)->Fetch();
 		
 		$this->arResult['SERVER_NAME'] = $site['SERVER_NAME'];

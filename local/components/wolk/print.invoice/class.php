@@ -56,8 +56,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
 			'uaz' 		=> 'Uaz',
 			'malcorp' 	=> 'MALCORP',
 			'distance' 	=> 'ÄÈÑÒÀÍÖÈß',
-			//'itemfru'   => 'ITEM F (ru)',
-			//'itemfen'   => 'ITEM F (en)',
+			'itemf.ru'  => 'ITEMF (ru)',
+			'itemf.en'  => 'ITEMF (en)',
 		];
 		
 		if (!array_key_exists($this->arParams['TEMPLATE'], $invoices)) {
