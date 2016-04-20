@@ -35,8 +35,10 @@ if (!\Bitrix\Main\Loader::includeModule('sale')) {
 $message = null;
 
 
+/*
+ * Заказ.
+ */ 
 $oemorder = new Wolk\OEM\Order($ID);
-
 
 /*
  * Сохранение данных заказа.
@@ -52,9 +54,14 @@ if (!empty($_POST)) {
 			$status = (string) $_POST['STATUS'];
             $bill   = (string) $_POST['BILL'];
 			
-            if (!CSaleOrder::StatusOrder($oemorder->getID(), $status)) {
+			$result = true;
+			if ($status != $oemorder->getStatus()) {
+				$result = CSaleOrder::StatusOrder($oemorder->getID(), $status);
+			}
+			
+            if (!$result) {
 				$message = new CAdminMessage([
-                    'MESSAGE' => 'При изменнии данных заказа возникла ошибка',
+                    'MESSAGE' => Loc::getMessage('ERROR_CHANGE_DATA'),
                     'TYPE'    => 'ERROR'
                 ]);
 			} else {
@@ -63,17 +70,21 @@ if (!empty($_POST)) {
 				$customer = $oemorder->getUser();
 				
 				// Шаблон письма.
-				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'status', ['ID' => $oemorder->getID()]);
-								
+				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'status', ['ID' => $oemorder->getID(), 'LANG' => $oemorder->getLanguage()]);
+				
 				// Отправка письма.
 				$event = new \CEvent();
-				$event->Send('SALE_NEW_ORDER_STATUS', SITE_DEFAULT, ['EMAIL' => $customer['EMAIL'], 'HTML' => $html]);
+				$event->Send('SALE_NEW_ORDER_STATUS', SITE_DEFAULT, [
+					'EMAIL' => $customer['EMAIL'], 
+					'HTML' => $html, 
+					'THEME' => Loc::getMessage('MESSAGE_THEME_ORDER_STATUS_CHANGE', Loc::loadLanguageFile(__FILE__, $oemorder->getLanguage()), $oemorder->getLanguage())
+				]);
             }
-
+			
             if (!empty($bill)) {
                 if (!\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'BILL', $bill)) {
                     $message = new CAdminMessage([
-                        'MESSAGE' => 'При изменнии данных заказа возникла ошибка',
+                        'MESSAGE' => Loc::getMessage('ERROR_CHANGE_DATA'),
                         'TYPE'    => 'ERROR'
                     ]);
                 }
@@ -102,7 +113,11 @@ if (!empty($_POST)) {
 					
 					// Отправка письма.
 					$event = new \CEvent();
-					$event->Send('SEND_INVOICE', SITE_DEFAULT, array('EMAIL' => $email, 'HTML' => $html), 'N', '', [$fid]);
+					$event->Send('SEND_INVOICE', SITE_DEFAULT, [
+						'EMAIL' => $email,
+						'HTML'  => $html,
+						'THEME' => Loc::getMessage('MESSAGE_THEME_INVOICE', Loc::loadLanguageFile(__FILE__, $oemorder->getLanguage()), $oemorder->getLanguage())
+					], 'N', '', [$fid]);
 				}
 			}
 			break;
@@ -123,24 +138,31 @@ if (!empty($_POST)) {
         // Сохранение скетча заказа.
         case 'sketch':
 			$objects = (string) $_POST['OBJECTS'];
-
+			$image   = (string) $_POST['IMAGE'];
+			
 			if (!empty($objects)) {
-                if (!\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'sketch', $objects)) {
+				$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'sketch', $objects);
+				if ($result) {
+					$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SKETCH_IMAGE', $image);
+				}
+				if ($result) {
+					$order['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($ID);
+					
+					$file = array(
+						'name'    	  => 'sketch-'.$ID.'.jpg',
+						'description' => 'Изображение скетча для заказа №'.$ID,
+						'content'     => base64_decode($image),
+						'old_file'	  => $order['PROPS']['SKETCH_FILE']['VALUE_ORIG']
+					);
+					$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SKETCH_FILE', CFile::SaveFile($file, 'sketchs'));
+				}
+				
+                if (!$result) {
                     $message = new CAdminMessage([
                         'MESSAGE' => 'При изменнии данных скетча возникла ошибка',
                         'TYPE'    => 'ERROR'
                     ]);
-				} else {
-					// Заказчик.
-					$customer = $oemorder->getUser();
-					
-					// Шаблон письма.
-					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change', ['ID' => $oemorder->getID()]);
-					
-					// Отправка письма.
-					$event = new \CEvent();
-					$event->Send('SALE_UPDATE_ORDER', SITE_DEFAULT, ['EMAIL' => $customer['EMAIL'], 'HTML' => $html]);
-                }
+				}
             }
             break;
     }
@@ -169,12 +191,18 @@ unset($element);
 // Состав заказа.
 $baskets = Wolk\Core\Helpers\SaleOrder::getBaskets($ID);
 
-// echo '<pre>'; print_r($baskets); echo '</pre>'; die();
+
 
 foreach ($baskets as &$basket) {
 	if ($basket['PRODUCT_ID'] > 0) {
+		
 		$element = CIBlockElement::getByID($basket['PRODUCT_ID'])->GetNextElement();
 
+		// Элемент удален.
+		if (!$element) {
+			continue;
+		}
+		
 		$item = $element->getFields();
 		$item['PROPS'] = $element->getProperties();
 		$item['IMAGE'] = CFile::getPath($item['PREVIEW_PICTURE']);
@@ -187,19 +215,15 @@ foreach ($baskets as &$basket) {
 		}
 	}
 }
-// break reference to the last element
 unset($basket);
 
+
+// echo '<pre>'; print_r($order['PROPS']); echo '</pre>'; die();
 
 
 // Статусы заказа.
 $statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
 
-/*  
-echo '<pre>';
-print_r($oemorder->getData());
-echo '</pre>';
-*/
 
 $goodprice = 0;
 foreach ($baskets as $basket) {
@@ -262,25 +286,23 @@ Bitrix\Main\Page\Asset::getInstance()->addJs('/local/templates/.default/build/js
 Bitrix\Main\Page\Asset::getInstance()->addCss('/assets/css/sketch.css');
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
-/*
-h: 0.5
-id: "93"
-imagePath: "/upload/resize_cache/iblock/ad3/90_75_1/_i_110.jpg"
-quantity: "1"
-title: "Шкаф архивный Н=110"
-type: "droppable"
-w: 1
-*/
-
-// echo '<pre>'; print_r($order); echo '</pre>';
 
 ?>
 
 <? // Скетч // ?>
 <script type="text/javascript">
+	window.addEventListener('touchmove', function(event) {
+		event.preventDefault();
+	}, false);
 
+	if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+		var meta = document.getElementById('viewport');
+		meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+	}
+	
     $(document).ready(function() {
-
+		
+		
 		// Генерация счета.
         $('#js-invoice-button-id').on('click', function(e) {
             $('#js-invoice-response-id').html('');
@@ -333,8 +355,10 @@ w: 1
 
 		// Сохранение скетча.
 		$('#js-sketch-button-id').on('click', function (event) {
+			var image;
 			var savesketch = function() {
-				$('#js-sketch-input-id').val(JSON.stringify(ru.octasoft.oem.designer.Main.getScene()));
+				$('#js-sketch-scene-input-id').val(JSON.stringify(ru.octasoft.oem.designer.Main.getScene()));
+				$('#js-sketch-image-input-id').val(ru.octasoft.oem.designer.Main.saveJPG());
 			}
 			var $that = $(this);
 
@@ -348,31 +372,29 @@ w: 1
          * Обработчики скетча.
          */
 		var sketchitems = <?= json_encode(array_values($sketch['items'])) ?>;
-        console.log(sketchitems);
-
-		var loadsketch = function()
-		{
-			window.addEventListener('touchmove', function(event) {
-				event.preventDefault();
-			}, false);
-
-			if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
-				var meta = document.getElementById('viewport');
-				meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
-			}
-
-			var gridX = <?= (int) ($arResult['PROPS']['width']['VALUE']) ?: 5 ?>;
-			var gridY = <?= (int) ($arResult['PROPS']['depth']['VALUE']) ?: 5 ?>;
-
-			// compute initial editor's height
+        
+		var loadsketch = function() {
+			
+			var gridX = <?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>;
+			var gridY = <?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>;
+			
 			(window.resizeEditor = function(items) {
-				$('#designer').height(Math.max(120 + (items.length * 135), 675));
+				var height =  Math.max(120 + (items.length * 135), $(window).height());
+				//$('#designer').height(editorH);
+				$('#designer').height(height);
+				
+				window.editorScrollTop = $('#designer').offset().top - 30;
+				window.editorScrollBottom = window.editorScrollTop - 30 + height - $(window).height();
+				if (window.editorScrollBottom < window.editorScrollTop) {
+					window.editorScrollTop = window.editorScrollBottom;
+				}
 			})(sketchitems);
-
+			
 			window.onEditorReady = function() {
                 $(window).on("scroll", function(e) {
                     ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
                 });
+				
 				ru.octasoft.oem.designer.Main.init({
 					w: gridX,
 					h: gridY,
@@ -382,60 +404,11 @@ w: 1
 				});
 			};
 			lime.embed('designer', 0, 0, '', '/');
+			
+			setTimeout(function() { window.resizeEditor(sketchitems); }, 300);
 		}
 
 		loadsketch();
-
-		/*
-        window.addEventListener('touchmove', function (event) {
-            event.preventDefault();
-        }, false);
-
-        if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
-            var meta = document.getElementById('viewport');
-            meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
-        }
-
-		var gridX   = <?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>;
-		var gridY   = <?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>;
-
-		// compute initial editor's height
-		window.resizeEditor = function(items) {
-			var editorH = Math.max(120 + (items.length * 135), 675);
-
-			$('#designer').height(editorH);
-
-			window.editorScrollTop = $('#designer').offset().top - 30;
-			window.editorScrollBottom = window.editorScrollTop - 30 + editorH - $(window).height();
-
-			if (window.editorScrollBottom < window.editorScrollTop) {
-				window.editorScrollTop = window.editorScrollBottom;
-			}
-			if (items) {
-				ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
-				if (Event.prototype.initEvent) {
-					var evt = window.document.createEvent('UIEvents');
-					evt.initUIEvent('resize', true, false, window, 0);
-					window.dispatchEvent(evt);
-				} else {
-					window.dispatchEvent(new Event('resize'));
-				}
-			}
-		};
-
-		window.onEditorReady = function() {
-			ru.octasoft.oem.designer.Main.init({
-				w: gridX,
-                h: gridY,
-				type: '<?= (!empty($order['PROPS']['standType']['VALUE'])) ? ($order['PROPS']['standType']['VALUE']) : ('row') ?>',
-				items: sketchitems,
-				placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('{}') ?>
-			});
-		};
-		lime.embed('designer', 0, 0, '', '/');
-
-		setTimeout(function() { window.resizeEditor(sketchitems); }, 100);
-		*/
     });
 
 </script>
@@ -459,6 +432,7 @@ w: 1
         <a href="/bitrix/admin/sale_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit" title="Редактировать заказа в Битркисе">Редактировать состав</a>
 
 		<a href="<?= $orderprint->getURL() ?>" target="_blank" class="adm-btn adm-btn-edit">Распечатать заказ</a>
+		<a href="/bitrix/admin/wolk_oem_image.php?action=sketch-download&ID=<?= $ID ?>" target="_blank" id="js-sketch-image-download-id" class="adm-btn adm-btn-edit">Распечатать скетч</a>
     </div>
 </div>
 
@@ -741,10 +715,6 @@ w: 1
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
-                                <p>
-                                    В списке состава заказанаходится стенд, а также входящее в него оборудование с
-                                    нулевой стоимостью.
-                                </p>
                                 <table class="adm-s-order-table-ddi-table" style="width: 100%">
                                     <thead>
                                         <tr>
@@ -759,7 +729,7 @@ w: 1
                                     <tbody style="text-align: left; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(221, 221, 221);">
                                         <? $cnt = 0; ?>
                                         <? foreach ($baskets as $basket) { ?>
-                                            <? if ($basket['TYPE'] == 1) { continue; } ?>
+                                            <? if ($basket['PRICE'] <= 0) { continue; } ?>
                                             <tr>
                                                 <td class="adm-s-order-table-ddi-table-img">
                                                     <? if (!empty($basket['ITEM']['PREVIEW_PICTURE'])) { ?>
@@ -768,7 +738,13 @@ w: 1
                                                         <div class="no_foto">Нет картинки</div>
                                                     <? } ?>
                                                 </td>
-                                                <td align="left"><?= $basket['NAME'] ?></td>
+                                                <td align="left">
+													<? if ($basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) { ?> 
+														Стенд &laquo;<?= $basket['NAME'] ?>&raquo;
+													<? } else { ?>
+														<?= $basket['NAME'] ?>
+													<? } ?>
+												</td>
                                                 <td align="center"><?= $basket['QUANTITY'] ?></td>
                                                 <td align="left">
                                                     <?= CurrencyFormat($basket['PRICE'], $basket['CURRENCY']) ?>
@@ -777,30 +753,7 @@ w: 1
                                                     <?= CurrencyFormat($basket['PRICE'] * $basket['QUANTITY'], $basket['CURRENCY']) ?>
                                                 </td>
 												<td>
-													<? if ($basket['ITEM']['CODE'] == 'form') { ?>
-														<div>
-															<table>
-																<? foreach ($basket['PROPS'] as $prop) { ?>
-																	<tr>
-																		<td><?= $prop['NAME'] ?>:</td>
-																		<td>
-																			<b><?= $prop['VALUE'] ?></b>
-																		</td>
-																	</tr>
-																<? } ?>
-															</table>
-														</div>
-													<? } ?>
-													<? if ($basket['ITEM']['CODE'] == 'file_upload') { ?>
-														<? if (!empty($basket['PROPS']['FILE_ID']['VALUE'])) { ?>
-															<div>
-																<a href="<?= CFile::getPath($basket['PROPS']['FILE_ID']['VALUE']) ?>" target="_blank">файл</a>
-																<div class="note">
-																	<?= $basket['PROPS']['COMMENTS']['VALUE'] ?>
-																</div>
-															</div>
-														<? } ?>
-													<? } ?>
+													&nbsp;
 												</td>
                                             </tr>
                                             <? $cnt++ ?>
@@ -809,7 +762,7 @@ w: 1
                                     <tfoot>
                                         <tr>
                                             <td colspan="4" align="left" style="height: 50px; margin-left: 15px;">
-                                                <b>Всего товаров <?= $cnt ?></b>.
+                                                <b style="margin-left: 30px;">Всего товаров <?= $cnt ?></b>.
                                             </td>
                                             <td colspan="2" align="right">
                                                 <h2 style="3px 20px 0 0">Итого: <?= CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'], $order['CURRENCY']) ?></h2>
@@ -829,7 +782,92 @@ w: 1
                 </div>
             </div>
         </div>
-
+		
+		<div style="position: relative; vertical-align: top;">
+            <div style="height:5px;width:100%"></div>
+            <a id="company-order"></a>
+            <div class="adm-container-draggable">
+                <div class="adm-bus-statusorder">
+                    <div class="adm-bus-component-container">
+                        <div class="adm-bus-component-title-container">
+                            <div class="adm-bus-component-title">Прикрепленые данные</div>
+                        </div>
+                        <div class="adm-bus-component-content-container">
+                            <div class="adm-bus-table-container">
+								<ul>
+									<? foreach ($baskets as $basket) { ?>
+										<? if ($basket['ITEM']['CODE'] == 'logo') { ?>
+											<li>
+												<a href="<?= CFile::getPath($basket['PROPS']['LOGO_FILE']['VALUE']) ?>" target="_blank">Логотип</a>
+												<? if (!empty($basket['PROPS']['LOGO_COMMENTS']['VALUE'])) { ?>
+													<p class="note"><?= $basket['PROPS']['LOGO_COMMENTS']['VALUE'] ?></p>
+												<? } ?>
+											</li>
+										<? } ?>
+										
+										<? if ($basket['ITEM']['CODE'] == 'file_upload') { ?>
+											<li>
+												<a href="<?= CFile::getPath($basket['PROPS']['FILE_ID']['VALUE']) ?>" target="_blank">Логотип</a>
+												<? if (!empty($basket['PROPS']['LOGO_COMMENTS']['VALUE'])) { ?>
+													<p class="note"><?= $basket['PROPS']['LOGO_COMMENTS']['VALUE'] ?></p>
+												<? } ?>
+											</li>
+										<? } ?>
+										
+										<? if ($basket['ITEM']['CODE'] == 'FULL_COLOR_PRINTING') { ?>
+											<li>
+												<a href="<?= $basket['PROPS']['LINK']['VALUE'] ?>" target="_blank">Ссылка на изображение</a>
+												<? if (!empty($basket['PROPS']['COMMENTS']['VALUE'])) { ?>
+													<p class="note"><?= $basket['PROPS']['COMMENTS']['VALUE'] ?></p>
+												<? } ?>
+											</li>
+										<? } ?>
+										
+										
+									<? } ?>
+								</ul>
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+		
+		<div style="position: relative; vertical-align: top;">
+            <div style="height:5px;width:100%"></div>
+            <a id="company-order"></a>
+            <div class="adm-container-draggable">
+                <div class="adm-bus-statusorder">
+                    <div class="adm-bus-component-container">
+                        <div class="adm-bus-component-title-container">
+                            <div class="adm-bus-component-title">Заполненные формы</div>
+                        </div>
+                        <div class="adm-bus-component-content-container">
+                            <div class="adm-bus-table-container">
+								<? foreach ($baskets as $basket) { ?>
+									<? if ($basket['ITEM']['CODE'] == 'form') { ?>
+										<div class="filled-form">
+											<table>
+												<? foreach ($basket['PROPS'] as $prop) { ?>
+													<tr>
+														<td><?= $prop['NAME'] ?>:</td>
+														<td>
+															<b><?= $prop['VALUE'] ?></b>
+														</td>
+													</tr>
+												<? } ?>
+											</table>
+										</div>
+									<? } ?>
+								<? } ?>
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
 
         <div style="position: relative; vertical-align: top;">
             <style scoped>
@@ -853,7 +891,15 @@ w: 1
                     font-weight: normal;
                     font-style: normal;
                 }
-
+				.filled-form {
+					border: solid 1px #cccccc;
+					border-right: none;
+					border-top: none;
+					border-bottom: none;
+					border-radius: 30px;
+					padding: 15px;
+					max-width: 800px;
+				}
             </style>
             <div style="height: 5px; width: 100%"></div>
             <a id="sketch-order"></a>
@@ -865,11 +911,14 @@ w: 1
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
+							
 								<? // Контейнер для скетча. // ?>
                                 <div id="designer" style="margin-top:40px; width: 940px; height:680px" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()"></div>
-                                <form method="post">
+                                
+								<form method="post">
                                     <input type="hidden" name="action" value="sketch" />
-									<input type="hidden" name="OBJECTS" value="" id="js-sketch-input-id" />
+									<input type="hidden" name="OBJECTS" value="" id="js-sketch-scene-input-id" />
+									<input type="hidden" name="IMAGE" value="" id="js-sketch-image-input-id" />
                                     <input type="button" id="js-sketch-button-id" class="amd-btn-save adm-btn-green" value="Сохранить" />
                                 </form>
                             </div>

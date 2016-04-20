@@ -31,7 +31,7 @@
     </div>
     <div class="sketchAfterRight">
         <div class="pagetitle"><?= Loc::getMessage('Review your configuration') ?></div>
-        <div class="reviewconfigurationcontainer">
+        <div class="reviewconfigurationcontainer customizable_border">
             <div class="reviewconfigurationcontainer__configuration">
                 <span class="reviewconfigurationcontainer__configurationtitle">
 					<?= Loc::getMessage('system_booth') ?>:
@@ -66,4 +66,3 @@
     </div>
     <div class="clear"></div>
 </div>
-

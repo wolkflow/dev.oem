@@ -40,7 +40,7 @@ if($obEvent = $obElement->GetNextElement()) {
     $APPLICATION->AddViewContent('EVENT_LINK', '/events/'.$event['CODE'].'/');
     $APPLICATION->AddViewContent('EVENT_LOGO', $logo ?: '/local/templates/.default/build/images/header-logo.png');
     if($event['PROPS']['COLOR']['VALUE']) {
-        $APPLICATION->AddViewContent('custom_color_styles', '.customizable {background: '.$event['PROPS']['COLOR']['VALUE'].'!important;}');
+        $APPLICATION->AddViewContent('custom_color_styles', '.customizable {background: '.$event['PROPS']['COLOR']['VALUE'].'!important;} .customizable_border {border-color:'.$event['PROPS']['COLOR']['VALUE'].';}');
     }
 }
 

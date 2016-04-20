@@ -3,6 +3,7 @@
 namespace Wolk\OEM\Events;
 
 use Bitrix\Main\Web\Json;
+use Bitrix\Main\Localization\Loc;
 
 IncludeModuleLangFile(__FILE__);
 
@@ -58,7 +59,7 @@ class Main
 		
 		// Отправка сообщения о подтвеерждении регистрации.
 		$event = new \CEvent();
-		$event->Send('CONFIRMATION', SITE_DEFAULT, ['EMAIL' => $fields['EMAIL'], 'HTML' => $html]);
+		$event->Send('CONFIRMATION', SITE_DEFAULT, ['EMAIL' => $fields['EMAIL'], 'HTML' => $html, 'THEME' => Loc::getMessage('MESSAGE_THEME_CONFIRMATION')]);
 	}
 	
 

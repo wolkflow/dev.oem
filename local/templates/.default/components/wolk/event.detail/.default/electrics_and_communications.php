@@ -4,7 +4,7 @@
 
 <script type="x/template" id="electrics-and-communications">
     <div class="servicescontainer serviceContainer" v-if="sections">
-        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle open":class="{'open': visible == false}">
+        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle customizable_border open":class="{'open': visible == false}">
 			{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">

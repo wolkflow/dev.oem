@@ -160,12 +160,13 @@ input.styler.modalSend		{width: 100%}
 .generalInfoContent p {line-height: 30px;font-size: 17px;margin: 4px 0 44px}
 p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom: 19px}
 .generalInfoContent div {width: 780px}
-.generalInfoContent .slick-prev {width: 14px;height: 23px;border: 0;background: url(../images/globals/sprite.png) 0 0;text-indent: -99999px;font-size: 0;cursor: pointer;top: -224px;left: -48px;position: absolute;outline: none !important}
-.generalInfoContent .slick-prev.slick-disabled,
-.generalInfoContent .slick-prev:hover{background-position: 0 -28px}
-.generalInfoContent .slick-next {width: 14px;height: 23px;border: 0;background: url(../images/globals/sprite.png) -19px 0;text-indent: -99999px;font-size: 0;cursor: pointer;top: -224px;left: -4px;position: absolute;outline: none !important}
-.generalInfoContent .slick-next.slick-disabled,
-.generalInfoContent .slick-next:hover{background-position: -19px -28px}
+.windowNavigate		{position: relative;}
+.windowNavigate .slick-prev {width: 14px;height: 23px;border: 0;background: url(/local/templates/.default/build/images/globals/sprite.png) 0 0;text-indent: -99999px;font-size: 0;cursor: pointer;top: -75px;left: -48px;position: absolute;outline: none !important}
+.windowNavigate .slick-prev.slick-disabled,
+.windowNavigate .slick-prev:hover{background-position: 0 -28px}
+.windowNavigate .slick-next {width: 14px;height: 23px;border: 0;background: url(/local/templates/.default/build/images/globals/sprite.png) -19px 0;text-indent: -99999px;font-size: 0;cursor: pointer;top: -75px;left: -4px;position: absolute;outline: none !important}
+.windowNavigate .slick-next.slick-disabled,
+.windowNavigate .slick-next:hover{background-position: -19px -28px}
 
 #timetable table	{width: 100%}
 #timetable td		{border: 1px solid #d0d0d0;padding: 22px 10px 22px 28px;font-size: 13px;color: #333}
@@ -312,6 +313,7 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 
 
 /* Slider */
+/* Slider */
 .slick-slider
 {
 	position: relative;
@@ -339,7 +341,7 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 
 	display: block;
 	overflow: hidden;
-
+	height: auto;
 	margin: 0;
 	padding: 0;
 }
@@ -386,12 +388,12 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 {
 	visibility: hidden;
 }
-
 .slick-slide
 {
 	display: none;
 	float: left;
-
+	outline: none !important;
+	margin: 0 10px;
 	height: 100%;
 	min-height: 1px;
 }

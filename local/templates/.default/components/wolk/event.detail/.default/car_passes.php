@@ -2,7 +2,7 @@
 <script type="x/template" id="car-passes">
     <!-- Секция: car passes -->
     <div class="servicescontainer serviceContainer">
-        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle open" :class="{'open': visible == false}">
+        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle customizable_border open" :class="{'open': visible == false}">
             {{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">

@@ -40,6 +40,7 @@ $MESS['place_order'] = 'place order';
 $MESS['pavillion'] = 'Pavillion';
 $MESS['total'] = 'total';
 $MESS['total_with_sur'] = 'total with<br>surcharge';
+$MESS['total_summ'] = 'total with vat';
 $MESS['event_timetable'] = 'Event timetable';
 $MESS['place_order'] = 'Place order';
 $MESS['register'] = 'Register';

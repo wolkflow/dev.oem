@@ -103,7 +103,7 @@ else
                     </script>
                 <? endif ?>
             <? endif ?>
-            <div class="profilecontainer__savebutton" id="profilecontainer__savebutton">
+            <div class="profilecontainer__savebutton customizable" id="profilecontainer__savebutton">
                 <?= GetMessage("MAIN_SAVE") ?>
                 <input type="submit" name="save" value="<?= (($arResult["ID"] > 0) ? GetMessage("MAIN_SAVE") : GetMessage("MAIN_ADD")) ?>">
             </div>

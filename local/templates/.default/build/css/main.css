@@ -306,6 +306,7 @@ input[type="password"] {
 }
 .footersection__contact {
   float: right;
+  /* margin-top: 72px; */
 }
 .footersection__terms {
   margin-right: 25px;
@@ -1516,3 +1517,4 @@ float: left}
 	top: 101px;
 }
 .ordercontainer__changebutton.changeallorder {text-align: right}
+.footerLinks          {clear: both;padding-bottom: 24px;}

@@ -27,7 +27,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 
 <div class="catalogdeadline" v-show="hasMargins">
 	<div class="catalogdeadline__deadlinecontainer">
-		<div class="catalogdeadline__deadlinetitle">
+		<div class="catalogdeadline__deadlinetitle customizable_border">
 			<?= Loc::getMessage('deadline') ?>
 			<span class="catalogdeadline__deadlinedate">
                 <? if (\Bitrix\Main\Context::getCurrent()->getLanguage() == 'ru') { ?>
@@ -66,7 +66,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         </div>
         <div v-show="selectedStand.ID > 0">
             <div class="pagetitle"><?= Loc::getMessage('Your current stand type') ?></div>
-            <div class="standspagetop__currentstandcontainer">
+            <div class="standspagetop__currentstandcontainer customizable_border">
                 <div class="standspagetop__currentstanddescription">
                     <p>{{{ selectedStand.PROPS['LANG_DESCRIPTION_' + curLang]['~VALUE'].TEXT }}}</p>
                     <ul v-show="selectedStand.EQUIPMENT">
@@ -82,7 +82,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 </a>
             </div>
         </div>
-		<a v-show="selectedStand.ID == 0" href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton">
+		<a v-show="selectedStand.ID == 0" href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton customizable">
 			<?= Loc::getMessage('continue') ?>
 		</a>        
     </div>
@@ -126,7 +126,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 						</div>
 					<? } ?>
 
-                    <div class="pagesubtitle"><?= $stand['NAME'] ?></div>
+                    <div class="pagesubtitle customizable_border"><?= $stand['NAME'] ?></div>
                     <div class="standstypescontainer__pricecontiner">
 						<?= FormatCurrency($stand['PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?>
                         <span>
@@ -227,7 +227,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 					v-if="section.ITEMS" 
 					@click="toggleSectionVisible(section)" 
 					data-module="pagesubtitle-dropdown"
-                    class="pagesubtitle moduleinited"
+                    class="pagesubtitle moduleinited customizable_border"
                     :class="{'open': section.visible == true || !section.hasOwnProperty('visible')}"
 				>
 					{{ section.NAME }}
@@ -345,22 +345,22 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 </div>
                 <div class="ordercontainer__itemscontainer" v-for="(sectionName, items) in groupedSelectedServices">
                     <div class="pagesubsubtitle">{{ sectionName }}</div>
-                    <div class="ordercontainer__item" v-for="item in items">
-                        <div class="ordercontainer__itemtotalprice">
-                            {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.QUANTITY * item.MULTIPLIER : allServices[item.ID].PRICE * item.QUANTITY | format_currency ' ' currency_format }}
-                        </div>
-                        <div class="ordercontainer__itemname">
-                            {{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ' - ' + item.FASCIA_COLOR +')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
-                        </div>
-                        <div class="ordercontainer__changebutton">
-                            <a @click.prevent="setStep(3)" href="javascript:void(0)">
+                    <div class="ordercontainer__item" v-for="item in items" v-show="allServices[item.ID].PRICE > 0">
+						<div class="ordercontainer__itemtotalprice">
+							{{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.QUANTITY * item.MULTIPLIER : allServices[item.ID].PRICE * item.QUANTITY | format_currency ' ' currency_format }}
+						</div>
+						<div class="ordercontainer__itemname">
+							{{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ' - ' + item.FASCIA_COLOR +')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
+						</div>
+						<div class="ordercontainer__changebutton">
+							<a @click.prevent="setStep(3)" href="javascript:void(0)">
 								<?= Loc::getMessage('change') ?>
 							</a>
 							|
-                            <a href="#" @click.prevent="deleteServiceItem(sectionName, $index)">
-                                <?= Loc::getMessage('delete') ?>
-                            </a>
-                        </div>
+							<a href="#" @click.prevent="deleteServiceItem(sectionName, $index)">
+								<?= Loc::getMessage('delete') ?>
+							</a>
+						</div>
                     </div>
                 </div>
             </div>
@@ -390,14 +390,16 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 		<div class="ordertotalcontainer__surcharge" v-show="curEvent.SURCHARGE > 0 && totalSurchargePrice">
             <?= Loc::getMessage('surcharge') ?>: <span>{{ curEvent.SURCHARGE }} % ({{ moneySurcharge }})</span>
         </div>
-		<div class="ordertotalcontainer__total" v-show="totalSurchargePrice">
+		<? // Если есть наценка, то этот блок просто показывает с НДС, иначе это показывает последняя строка - итого. // ?>
+		<div class="ordertotalcontainer__total" v-show="curEvent.SURCHARGE > 0 && totalSurchargePrice">
 			<?= Loc::getMessage('total_with_vat') ?>: <span>{{totalSurchargePrice | format_currency ' ' currency_format }}</span>
 		</div>
 		<div class="ordertaxcontainer__total" v-show="taxPrice">
 			<?= Loc::getMessage('tax') ?>: <span>{{taxPrice | format_currency ' ' currency_format }}</span>
 		</div>
-        <div class="ordertotalcontainer__surchargetotal" v-show="curEvent.SURCHARGE > 0 && totalPrice">
-            <div class="ordertotalcontainer__surchargetotaltitle"><?= Loc::getMessage('total_with_sur') ?>:</div>
+        <div class="ordertotalcontainer__surchargetotal" v-show="totalPrice">
+            <div class="ordertotalcontainer__surchargetotaltitle" v-show="curEvent.SURCHARGE > 0"><?= Loc::getMessage('total_with_sur') ?>:</div>
+			<div class="ordertotalcontainer__surchargetotaltitle" v-show="curEvent.SURCHARGE <= 0"><?= Loc::getMessage('total_summ') ?>:</div>
             <div class="ordertotalcontainer__surchargetotalcount">
                 {{ totalPrice | format_currency ' ' currency_format }}
             </div>
@@ -448,7 +450,6 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 					<?= Loc::getMessage('place_order') ?>
 				</button>
             </div>
-			<hr/>
 			<? /*
 			<div class="placeOrder_docs">
 				<a href="" data-modal="#termsConditions" class="footersection__terms"><?= Loc::getMessage('terms_conditions') ?></a>

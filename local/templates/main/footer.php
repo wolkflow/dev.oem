@@ -1,4 +1,4 @@
-﻿<?if(\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
+<?if(\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
     ?></div><?
     die;
 }
@@ -8,16 +8,25 @@ Loc::loadLanguageFile(__FILE__);
 $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 
 ?>
-	<div class="footersection">
-		<a href="" data-modal="#contactUs" class="footersection__contact" id="js-contacts-link-id">
-			<?= Loc::getMessage('Contact Us') ?>
-		</a>
+	<div class="footersection customizable_border">
+
+		<div class="footerLinks">
+			<a href="javascript:void(0)" data-modal="#contact-us" class="footersection__contact" id="js-contacts-link-id">
+				<?= Loc::getMessage('Contact Us') ?>
+			</a>
+			<a href="javascript:void(0)" data-modal="#general-info" class="footersection__information">
+				<?= Loc::getMessage('General Information') ?>
+			</a>
+		</div>
+		<? /*
 		<a href="" data-modal="#termsConditions" class="footersection__terms">
 			<?= Loc::getMessage('Terms & Conditions') ?>
 		</a>
 		<a href="" data-modal="#generalInfo" class="footersection__information">
 			<?= Loc::getMessage('General Information') ?>
 		</a>
+		*/ ?>
+		
 		<div class="footerLogo">
 			<a href="/"><img src="/local/templates/.default/build/images/oem_logo.png"></a>
 		</div>
@@ -26,7 +35,16 @@ $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 </div>
 
 <div class="hide">
-
+	
+	<div class="modal modalContact" id="general-info">
+		<div class="modalClose arcticmodal-close"></div>
+		<div class="windowNavigate"></div>
+		<div class="modalContent">
+			<? $APPLICATION->IncludeComponent('wolk:element.data', 'documents', ['IBLOCK_ID' => EVENTS_IBLOCK_ID]); ?>
+		</div>
+	</div>
+	
+	<? /*
 	<!-- Окно: Условия -->
 	<div class="modal modalContact" id="termsConditions">
 		<div class="modalClose arcticmodal-close"></div>
@@ -42,7 +60,7 @@ $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 			</div>
 		</div>
 	</div>
-	<!--// .Окно: Условия -->
+	
 
 	<!-- Окно: Инфо -->
 	<div class="modal modalContact" id="generalInfo">
@@ -67,10 +85,11 @@ $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 			</div>
 		</div>
 	</div>
-	<!--// .Окно: Инфо -->
+	*/ ?>
+	
 
 	<!-- Окно: контакты -->
-	<div class="modal modalContact" id="contactUs">
+	<div class="modal modalContact" id="contact-us">
 		<div class="modalClose arcticmodal-close"></div>
 		<div class="modalTitle">
 			<?= Loc::getMessage('Contact Us') ?>
@@ -99,86 +118,10 @@ $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 			</div>
 			<div class="modalContacts">
 				<? $APPLICATION->IncludeComponent('wolk:element.data', 'contacts', ['IBLOCK_ID' => EVENTS_IBLOCK_ID]); ?>
-				
-				<? /*
-				<ul class="modalContactsBlock">
-					<li class="contactTitle">Technical Director</li>
-					<li>
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/director_name.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-					<li>P:
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/director_phone.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-					<li>E: 
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/director_email.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-				</ul>
-				<ul class="modalContactsBlock">
-					<li class="contactTitle">Show Manager</li>
-					<li>
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/showmanager_name.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-					<li>P:
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/showmanager_phone.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-					<li>E: 
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/showmanager_email.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-				</ul>
-				<ul class="modalContactsBlock">
-					<li class="contactTitle">IT Manager</li>
-					<li>
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/itmanager_name.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-					<li>P: 
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/itmanager_phone.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-					<li>E: 
-						<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-							'AREA_FILE_SHOW' => 'file',
-							'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/contacts/itmanager_email.php',
-							'EDIT_TEMPLATE' => 'html'
-						]); ?>
-					</li>
-				</ul>
-				*/ ?>
 			</div>
 		</div>
-		
 	</div>
-	<!--// .Окно: контакты -->
+	
 </div>
 </body>
 </html>

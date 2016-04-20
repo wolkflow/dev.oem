@@ -89,7 +89,7 @@ Loc::loadLanguageFile(__FILE__);
                 <? foreach ($langs as $key => $name) { ?>
                     <a
                         href="<?= $APPLICATION->GetCurPageParam('set_lang='.$key, ['set_lang'], false) ?>"
-                        class="<? if ($key == \Bitrix\Main\Context::getCurrent()->getLanguage()) { ?>active <? } ?>headersection__languagedropdownbutton"
+                        class="<? if ($key == \Bitrix\Main\Context::getCurrent()->getLanguage()) { ?>active <? } ?>headersection__languagedropdownbutton customizable"
                     >
                         <?= $name ?>
                     </a>

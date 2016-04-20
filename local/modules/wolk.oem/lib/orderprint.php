@@ -49,7 +49,8 @@ class OrderPrint
 	
 	public function getURL($absolute = false)
 	{
-		$url = '/printorder/'.$this->getOrderID().'/';
+		$site = \CSite::GetByID(SITE_DEFAULT)->Fetch();
+		$url  = '/printorder/'.$this->getOrderID().'/';
 		
 		if ($absolute) {
 			$url = 'http://'.$site['SERVER_NAME'].$url;
@@ -63,8 +64,7 @@ class OrderPrint
 	 */
 	public function make($delay = 0)
 	{		
-		$site = \CSite::GetByID(SITE_DEFAULT)->Fetch();
-		$url  = $this->getURL(true); 
+		$url = $this->getURL(true); 
 		
 		// Аргументы.
 		$args = array('-q' => '', '--no-stop-slow-scripts' => '');

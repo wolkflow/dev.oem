@@ -167,48 +167,63 @@ $(function () {
             },
             placeOrder: function (type) {
                 $('#js-place-order-id').attr("disabled", true);
+				var image, that = this;
 				
-                $.post('/local/components/wolk/event.detail/ajax.php', {
-                    sessid: BX.bitrix_sessid(),
-                    action: 'placeOrder',
-                    event: this.curEvent.ID,
-                    stand: JSON.stringify({
-                        ID: this.selectedStand.ID,
-                        NAME: this.selectedStand.NAME
-                    }),
-                    equipment: JSON.stringify(this.selectedStand.EQUIPMENT.map(function(val) {
-                        return {
-                            'ID': val.ID,
-                            'COUNT': val.COUNT
-                        };
-                    })),
-                    options: JSON.stringify(this.selectedStand.OPTIONS),
-                    services: JSON.stringify(this.selectedStand.SERVICES),
-                    selectedParams: JSON.stringify(this.selectedParams),
-                    orderParams: {
-                        standNum: this.standNum,
-                        pavillion: this.pavillion,
-                        sketch: JSON.stringify(this.sketch),
-                        eventId: this.curEvent.ID,
-                        eventName: this.curEvent.NAME,
-                        width: this.selectedParams.WIDTH,
-                        depth: this.selectedParams.DEPTH,
-                        standType: this.selectedParams.TYPE
-                    },
-                    orderDesc: this.orderDesc,
-                    userData: JSON.stringify(this.userData),
-                    orderId: this.order ? this.order.ID : '',
-                    placeType: type
-                }).done(function (data) {
-                    $('#modalSuccessOrder').arcticmodal({
-                        closeOnOverlayClick: false
-                    });
-                    $('#js-place-order-id').attr("disabled", false);
-                    sessionStorage.clear();
-                }).fail(function (data) {
-                    $('.errortext:visible').html(data.responseText);
-                    $('#js-place-order-id').attr("disabled", false)
-                });
+				var getSketchImage = function() {
+					image = ru.octasoft.oem.designer.Main.saveJPG();
+				}
+				
+				$.when(getSketchImage()).done(function() {
+					$.ajax({
+						url: '/local/components/wolk/event.detail/ajax.php',
+						type: 'post',
+						data: {
+							sessid: BX.bitrix_sessid(),
+							action: 'placeOrder',
+							event: that.curEvent.ID,
+							stand: JSON.stringify({
+								ID: that.selectedStand.ID,
+								NAME: that.selectedStand.NAME
+							}),
+							equipment: JSON.stringify(that.selectedStand.EQUIPMENT.map(function(val) {
+								return {
+									'ID': val.ID,
+									'COUNT': val.COUNT
+								};
+							})),
+							options: JSON.stringify(that.selectedStand.OPTIONS),
+							services: JSON.stringify(that.selectedStand.SERVICES),
+							selectedParams: JSON.stringify(that.selectedParams),
+							orderParams: {
+								standNum: that.standNum,
+								pavillion: that.pavillion,
+								sketch: JSON.stringify(that.sketch),
+								eventId: that.curEvent.ID,
+								eventName: that.curEvent.NAME,
+								width: that.selectedParams.WIDTH,
+								depth: that.selectedParams.DEPTH,
+								standType: that.selectedParams.TYPE,
+								SKETCH_IMAGE: image
+							},
+							orderDesc: that.orderDesc,
+							userData: JSON.stringify(that.userData),
+							orderId: that.order ? that.order.ID : '',
+							placeType: type
+						},
+						dataType: 'json',
+						success: function(data) {
+							$('#modalSuccessOrder').arcticmodal({
+								closeOnOverlayClick: false
+							});
+							$('#js-place-order-id').attr("disabled", false);
+							sessionStorage.clear();
+						},
+						error: function (data) {
+							$('.errortext:visible').html(data.responseText);
+							$('#js-place-order-id').attr("disabled", false)
+						}
+					});
+				});
             },
             deleteServiceItem: function (cartSectionName, index) {
                 $("input#"+cartSectionName+"_"+index).val(0);
@@ -472,7 +487,6 @@ $(function () {
                 deep: true
             },
             'curStep': function (val, oldVal) {
-				console.log('VAL: ' + val);
                 if (val > 1) {
                     Vue.nextTick(function () {
                         $('.styler').trigger('refresh');
@@ -1316,15 +1330,12 @@ Vue.component('additional-equipment', {
             }
         } else {
             if (typeof this.item == 'object') {
-				//if (this.$parent.selectedStand) {
-				console.log(this.$parent.selectedStand);
-					for (var i in this.$parent.selectedStand.EQUIPMENT) {
-						var eq = this.$parent.selectedStand.EQUIPMENT[i];
-						if (eq.ID == this.item.ID) {
-							Vue.set(this.item, 'STANDART', eq.QUANTITY);
-						}
+				for (var i in this.$parent.selectedStand.EQUIPMENT) {
+					var eq = this.$parent.selectedStand.EQUIPMENT[i];
+					if (eq.ID == this.item.ID) {
+						Vue.set(this.item, 'STANDART', eq.QUANTITY);
 					}
-				//}
+				}
                 Vue.set(this.item, 'QUANTITY', 0);
             }
         }
@@ -2776,7 +2787,7 @@ Vue.directive('pickmeup', {
         });
     },
     update: function (value) {
-        //console.log(value);
+        // console.log(value);
     }
 });
 
@@ -2814,7 +2825,7 @@ Vue.directive('timepicker', {
     bind: function () {
         var self = this;
         var el = $(this.el);
-        ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'].forEach(function (val) {
+        ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'].forEach(function (val) {
             el.append('<option value="' + val + '">' + val + '</option>');
         });
 

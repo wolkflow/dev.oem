@@ -605,25 +605,33 @@ class EventDetailComponent extends BaseListComponent
                     }
                 }
 
-                //Параметры заказа.
+                // Параметры заказа.
                 $params = $_POST['orderParams'];
-
-                // file_put_contents($_SERVER['DOCUMENT_ROOT'].'/ord.txt', print_r($params, true));
-
+				
                 // Язык, на котором сделан заказ.
                 $params['LANGUAGE'] = \Bitrix\Main\Context::getCurrent()->getLanguage();
-
+				
+				// Файл со скетчем.
+				$file = array(
+					'name'    	  => 'sketch-'.$orderId.'.jpg',
+					'description' => 'Изображение скетча для заказа №'.$orderId,
+					'content'     => base64_decode($params['SKETCH_IMAGE'])
+				);
+				$params['SKETCH_FILE'] = CFile::SaveFile($file, 'sketchs');
+				unlink($filename);			
+				
+				
                 // Наценка.
                 $params['SURCHARGE'] = (float)$surcharge;
                 $params['SURCHARGE_PRICE'] = (float)$moneySurcharge;
 
                 foreach ($params as $code => $value) {
                     $res = OrderPropsValueTable::add([
-                        "ORDER_ID"       => $orderId,
-                        "ORDER_PROPS_ID" => $arOrderProperties[$code]["ID"],
-                        "NAME"           => $arOrderProperties[$code]["NAME"] ?: $code,
-                        "CODE"           => $code,
-                        "VALUE"          => $value
+                        'ORDER_ID'       => $orderId,
+                        'ORDER_PROPS_ID' => $arOrderProperties[$code]['ID'],
+                        'NAME'           => $arOrderProperties[$code]['NAME'] ?: $code,
+                        'CODE'           => $code,
+                        'VALUE'          => $value
                     ]);
                     if (!$res->isSuccess()) {
                         throw new Exception(join("<br>", $res->getErrorMessages()) . ' ' . $code);
@@ -660,9 +668,11 @@ class EventDetailComponent extends BaseListComponent
                 "MANAGER_EMAIL" => $managerEmail,
             ];
 			
-            if (is_null($order)) {
+			$result = $this->orderBasket($orderId, $fuserId);
+			
+            if (is_null($order) && $result) {
                 global $DB;
-                				
+                
 				/*
 				$bSend = true;
                 foreach (GetModuleEvents("sale", "OnOrderNewSendEmail", true) as $arEvent) {
@@ -671,29 +681,45 @@ class EventDetailComponent extends BaseListComponent
                     }
                 }
 				*/
-
+				
 				// Отправка письма о новом заказе клиенту.
 				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info', array('ID' => $arFields['ORDER_ID']));
 				$event = new \CEvent();
-				$event->Send('SALE_NEW_ORDER', SITE_DEFAULT, ['EMAIL' => $arFields['EMAIL'], 'HTML' => $html]);
+				$event->Send('SALE_NEW_ORDER', SITE_DEFAULT, [
+					'EMAIL' => $arFields['EMAIL'], 
+					'HTML'  => $html,
+					'THEME' => Loc::getMessage('THEME_NEW_ORDER')
+				]);
 				
 				// Отправка письма о новом заказе менеджеру.
 				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info-manager', array('ID' => $arFields['ORDER_ID']));
 				$event = new \CEvent();
-				$event->Send('SALE_NEW_ORDER_MANAGER', SITE_DEFAULT, ['EMAIL' => $arFields['MANAGER_EMAIL'], 'HTML' => $html]);
+				$event->Send('SALE_NEW_ORDER_MANAGER', SITE_DEFAULT, [
+					'EMAIL' => $arFields['MANAGER_EMAIL'],
+					'HTML'  => $html,
+					'THEME' => Loc::getMessage('THEME_NEW_ORDER_MANAGER')
+				]);
 			} else {
 				// Отправка письма об изменение заказа клиенту.
 				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change', array('ID' => $arFields['ORDER_ID']));
 				$event = new \CEvent();
-				$event->Send('SALE_UPDATE_ORDER', SITE_DEFAULT, ['EMAIL' => $arFields['EMAIL'], 'HTML' => $html]);
+				$event->Send('SALE_UPDATE_ORDER', SITE_DEFAULT, [
+					'EMAIL' => $arFields['EMAIL'],
+					'HTML'  => $html,
+					'THEME' => Loc::getMessage('THEME_UPDATE_ORDER')
+				]);
 				
 				// Отправка письма об изменение заказа менеджеру.
 				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change-manager', array('ID' => $arFields['ORDER_ID']));
 				$event = new \CEvent();
-				$event->Send('SALE_UPDATE_ORDER_MANAGER', SITE_DEFAULT, ['EMAIL' => $arFields['MANAGER_EMAIL'], 'HTML' => $html]);
+				$event->Send('SALE_UPDATE_ORDER_MANAGER', SITE_DEFAULT, [
+					'EMAIL' => $arFields['MANAGER_EMAIL'],
+					'HTML'  => $html,
+					'THEME' => Loc::getMessage('THEME_UPDATE_ORDER_MANAGER')
+				]);
             }
-
-            return $this->orderBasket($orderId, $fuserId);
+			
+            return $result;
         } else {
             throw new Exception($APPLICATION->GetException()->GetString());
         }

@@ -1,9 +1,7 @@
 <? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
 
-<? use Dwai\Kvartirolog\Helpers\Text as TextHelper; ?>
-
-<? $context  = \Bitrix\Main\Application::getInstance()->getContext(); ?>
-<? $language = strtoupper($context->getLanguage()); ?>
+<? use Wolk\Core\Helpers\Text as TextHelper; ?>
+<? use Bitrix\Main\Localization\Loc; ?>
 
 <? $this->setFrameMode(true); ?>
 
@@ -13,15 +11,15 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<title></title>
 	<style type="text/css">
-		@import url(http://<?= SITE_SERVER_NAME ?>/mail/fonts/fonts.css);
+		@import url(http://<?= $arResult['SERVER_NAME'] ?>/mail/fonts/fonts.css);
 	</style>
 </head>
 <body style="margin: 0;padding: 0;">
-	<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%;background-image: url('http://<?= SITE_SERVER_NAME ?>/upload/mail/images/bg.jpg');background-repeat: no-repeat;background-position: 50% 0;">
+	<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%;background-image: url('http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/bg.jpg');background-repeat: no-repeat;background-position: 50% 0;">
 		<tr align="center">
 			<td style="padding-top: 59px;padding-bottom: 57px;">
-				<a href="http://<?= SITE_SERVER_NAME ?>/events/<?= $arResult['EVENT']['CODE'] ?>/" style="text-decoration: none;">
-					<img src="http://<?= SITE_SERVER_NAME ?><?= $arResult['EVENT']['LOGO'] ?>" style="display: block;" />
+				<a href="http://<?= $arResult['SERVER_NAME'] ?>/events/<?= $arResult['EVENT']['CODE'] ?>/" style="text-decoration: none;">
+					<img src="http://<?= $arResult['SERVER_NAME'] ?><?= $arResult['EVENT']['LOGO'] ?>" style="display: block;" />
 				</a>
 			</td>
 		</tr>
@@ -29,31 +27,35 @@
 			<td align="center" style="padding-bottom: 20px;">
 				<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%;max-width: 600px;vertical-align: top;">
 					<tr>
-						<td height="5" style="height: 5px;background: url('http://<?= SITE_SERVER_NAME ?>/upload/mail/images/top.png');"></td>
+						<td height="5" style="height: 5px;background: url('http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/top.png');"></td>
 					</tr>
 					<tr valign="top">
-						<td style="padding-top: 52px;padding-bottom: 50px;background-image: url('http://<?= SITE_SERVER_NAME ?>/upload/mail/images/mid.png');background-repeat: repeat-y;padding-right: 61px;padding-left: 61px;">
+						<td style="padding-top: 52px;padding-bottom: 50px;background-image: url('http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/mid.png');background-repeat: repeat-y;padding-right: 61px;padding-left: 61px;">
 							<p style="margin: 0 0 34px 0;padding: 0;font-size: 15px;font-weight: 700;text-transform: uppercase;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
-								Уважаемый <?= $arResult['USER']['NAME'] ?>!
+								<?= $arResult['USER']['NAME'] ?>, <?= Loc::getMessage('goodday') ?>!
 							</p>
 							<p style="margin: 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;line-height: 24px;color: #333333;">
-								Статус вашего заказа для выставки <?= $arResult['EVENT']['NAME'] ?> изменён.
-								Следить за состоянием заказа вы можете в личном кабинете системы.
+								<?= Loc::getMessage('status_order') ?> <?= $arResult['EVENT']['NAME'] ?> <?= Loc::getMessage('changed') ?>.
+								<?= Loc::getMessage('follow') ?>
 							</p>
 
 							<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%">
 								<tr>
 									<td style="padding-top: 53px;padding-bottom: 1px;">
-										<div><img style="display: block;" src="http://<?= SITE_SERVER_NAME ?>/upload/mail/images/line.png" /></div>
+										<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" /></div>
 										<p style="margin: 0;padding: 23px 0 23px 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #333333;line-height: 1px">
-											текущий статус заказа: <b><?= $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
+											<?= Loc::getMessage('status') ?>: <b><?= $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
 										</p>
-										<div><img style="display: block;" src="http://<?= SITE_SERVER_NAME ?>/upload/mail/images/line.png" /></div>
+										<div>
+											<img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" />
+										</div>
 									</td>
 								</tr>
 								<tr>
 									<td style="padding-top: 58px;padding-bottom: 7px;">
-										<a href="http://<?= SITE_SERVER_NAME ?>/personal/profile/" style="display: block;height: 60px;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #ffffff;font-weight: 700;text-align: center;line-height: 60px;text-decoration: none;width: 100%;background-color: #7f7f7f;">войти в личный кабинет</a>
+										<a href="http://<?= $arResult['SERVER_NAME'] ?>/personal/profile/" style="display: block;height: 60px;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #ffffff;font-weight: 700;text-align: center;line-height: 60px;text-decoration: none;width: 100%;background-color: #7f7f7f;">
+											<?= Loc::getMessage('cabinet') ?>
+										</a>
 									</td>
 								</tr>
 							</table>
@@ -61,10 +63,12 @@
 							<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%">
 								<tr>
 									<td style="padding-top: 111px">
-										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Выставочная команда</p>
+										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+											<?= Loc::getMessage('team') ?>
+										</p>
 									</td>
 								</tr>
-								<? foreach $arResult['EVENT']['PROPERTIES']['LANG_CONTACTS_'.$language]['VALUE'] as $contact) { ?>
+								<? foreach ($arResult['EVENT']['PROPS']['LANG_CONTACTS_'.$arResult['LANGUAGE']]['VALUE'] as $contact) { ?>
 									<tr>
 										<td>
 											<p style="margin: 0 0 13px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
@@ -86,8 +90,8 @@
 								<? } ?>
 								<tr>
 									<td style="border-top: 1px solid #7f7f7f;">
-										<a href="http://<?= SITE_SERVER_NAME ?>/events/<?= $arResult['EVENT']['CODE'] ?>/" style="text-decoration: none;display: block;padding-top: 60px;padding-bottom: 8px;">
-											<img style="display: block;" src="http://<?= SITE_SERVER_NAME ?>/upload/mail/images/logo.png" alt="Universal exhibition configuration" />
+										<a href="http://<?= $arResult['SERVER_NAME'] ?>/events/<?= $arResult['EVENT']['CODE'] ?>/" style="text-decoration: none;display: block;padding-top: 60px;padding-bottom: 8px;">
+											<img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/logo.png" alt="Universal exhibition configuration" />
 										</a>
 									</td>
 								</tr>
@@ -95,7 +99,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td height="5" style="height: 5px;background: url('http://<?= SITE_SERVER_NAME ?>/upload/mail/images/bot.png');"></td>
+						<td height="5" style="height: 5px;background: url('http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/bot.png');"></td>
 					</tr>
 				</table>
 			</td>

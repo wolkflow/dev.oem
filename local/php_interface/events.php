@@ -17,8 +17,3 @@ define('BX_CRONTAB_SUPPORT', true);
 define('BX_CRONTAB', true);
 
 CEvent::CheckEvents();
-
-if (CModule::IncludeModule('subscribe')) {
-	$posting = new CPosting();
-    $posting->AutoSend();
-}

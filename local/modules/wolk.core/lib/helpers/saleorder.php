@@ -75,6 +75,8 @@ class SaleOrder
 			if ($withprops) {
 				$item['PROPS'] = SaleBasket::getProperties($item['ID']);
 			}
+			$item['SUMMARY_PRICE'] = $item['PRICE'] * $item['QUANTITY'];
+			
 			$items []= $item;
 		}
 		return $items;

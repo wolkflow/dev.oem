@@ -1,7 +1,7 @@
 <?use Bitrix\Main\Localization\Loc;?>
 <script type="x/template" id="temporary-staff">
     <div class="servicescontainer serviceContainer">
-        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle open"
+        <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle customizable_border open"
              :class="{'open': visible == false}">{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">

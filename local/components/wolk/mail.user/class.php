@@ -43,16 +43,18 @@ class MailUserComponent extends \CBitrixComponent
 			return;
 		}
 		
+		$site = \CSite::GetByID(SITE_DEFAULT)->Fetch();
+		
+		$this->arResult['SERVER_NAME'] = $site['SERVER_NAME'];
+		$this->arResult['LANGUAGE'] = strtoupper(\Bitrix\Main\Application::getInstance()->getContext()->getLanguage());
+		
 		// Пользователь.
 		$this->arResult['USER'] = CUser::getByID($this->arParams['ID'])->Fetch();
 		
 		// Мероприятие.
 		if (!empty($this->arParams['EVENT'])) {
-			$context  = \Bitrix\Main\Application::getInstance()->getContext();
-			$language = strtoupper($context->getLanguage());
-			
 			$this->arResult['EVENT'] = Wolk\Core\Helpers\IBlockElement::getByCode(EVENTS_IBLOCK_ID, $this->arParams['EVENT']);
-			$this->arResult['EVENT']['LOGO'] = CFile::ResizeImageGet($this->arResult['EVENT']['PROPERTIES']['LANG_LOGO_'.$language]['VALUE'], ['width' => 168, 'height' => 68], BX_RESIZE_IMAGE_PROPORTIONAL_ALT)['src'];
+			$this->arResult['EVENT']['LOGO'] = CFile::ResizeImageGet($this->arResult['EVENT']['PROPERTIES']['LANG_LOGO_'.$this->arResult['LANGUAGE']]['VALUE'], ['width' => 168, 'height' => 68], BX_RESIZE_IMAGE_PROPORTIONAL_ALT)['src'];
 		}
 		
 		// Дополнительные поля.

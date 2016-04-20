@@ -109,6 +109,12 @@ $ladmin->AddHeaders(array(
 		"default"   => true,
 	),
 	array( 
+		"id"    	=> 'EVENT',
+		"content"   => Loc::getMessage('HEADER_EVENT'),
+		"sort"      => 'EVENT',
+		"default"   => true,
+	),
+	array( 
 		"id"    	=> 'COMPANY',
 		"content"   => Loc::getMessage('HEADER_COMPANY'),
 		"sort"      => false,
@@ -151,8 +157,9 @@ while ($item = $result->NavNext(true, "f_")) {
 	$oemorder = new Wolk\OEM\Order($item['ID']);
 	$props    = Wolk\Core\Helpers\SaleOrder::getProperties($item['ID']);
 	$user	  = CUser::getByID($item['USER_ID'])->Fetch();
+	$event    = $oemorder->getEvent();
 	
-	
+	$row->AddViewField('EVENT', $event['NAME']);
 	$row->AddViewField('COMPANY', $user['WORK_COMPANY']);
 	$row->AddViewField('PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
 	$row->AddViewField('BILL', ((!empty($props['BILL']['VALUE'])) ? ($props['BILL']['VALUE']) : ('&mdash;')));

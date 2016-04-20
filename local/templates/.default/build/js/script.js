@@ -80,11 +80,30 @@ $(document).ready(function() {
 		});
 
 
-
+	$('#general-info .generalInfoContent').slick({
+		infinite: false,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+		appendArrows: '.windowNavigate',
+		adaptiveHeight: true
+	});
 	// Modals
 	$(document).on('click', '[data-modal]',function() {
+		var sliderStatus = 0;
 		var modal = $(this).data('modal');
-		$(modal).arcticmodal();
+		if(modal == '#general-info' && sliderStatus == 0) {
+			$(modal).arcticmodal({
+				beforeOpen: function (data, el) {
+					$('.windowNavigate').html('')
+				},
+				afterOpen: function (data, el) {
+					$('#general-info .generalInfoContent').slick('reinit')
+				}
+			});
+			sliderStatus = 1;
+		} else {
+			$(modal).arcticmodal();
+		}
 		return false;
 	});
 
@@ -99,13 +118,6 @@ $(document).ready(function() {
 	
 	$('[data-module="pagesubtitle-dropdown"]').click(function() {
 		$(this).toggleClass('open');
-	});
-
-	$('.generalInfoContent').slick({
-		infinite: false,
-		slidesToShow: 1,
-		slidesToScroll: 1,
-		variableWidth: true
 	});
 
 

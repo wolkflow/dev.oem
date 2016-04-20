@@ -48,7 +48,7 @@ endif;
         <p><?echo GetMessage("REGISTER_EMAIL_WILL_BE_SENT")?></p>
     <?endif?>
     <div rel="personal" class="profilecontainer active">
-        <div class="pagesubtitle"></div>
+        <div class="pagesubtitle customizable_border"></div>
         <div class="profilecontainer__columnscontainer">
             <div class="profilecontainer__column right">
                 <div class="pagesubsubtitle">
@@ -104,7 +104,7 @@ endif;
                         </div>
                     </div>
                 </div>
-                <div class="profilecontainer__savebutton"><?=GetMessage("AUTH_REGISTER")?>
+                <div class="profilecontainer__savebutton customizable"><?=GetMessage("AUTH_REGISTER")?>
                     <input type="submit" name="register_submit_button" value="<?=GetMessage("AUTH_REGISTER")?>" />
                 </div>
             </div>
