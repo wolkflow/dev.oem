@@ -24,7 +24,7 @@ $MESS['view_order'] = 'Посмотреть заказ';
 
 $MESS['total_price'] = 'Итого';
 $MESS['tax'] = 'НДС';
-$MESS['total_with_vat'] = 'Итого<br>c НДС';
+$MESS['total_with_vat'] = 'Итого c НДС';
 $MESS['surcharge'] = 'Наценка';
 $MESS['total_with_surcharge'] = 'Итого с<br>наценкой';
 

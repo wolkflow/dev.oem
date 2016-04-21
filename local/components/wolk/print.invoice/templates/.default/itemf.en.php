@@ -58,6 +58,11 @@
 			<? } ?>
 			<tr>
 				<td class="unborder">&nbsp;</td>
+				<td class="finvoiceDetail-2">Total without VAT:</td>
+				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+			</tr>
+			<tr>
+				<td class="unborder">&nbsp;</td>
 				<td class="finvoiceDetail-2">VAT:</td>
 				<td class="finvoiceDetail-3">18%</td>
 			</tr>
@@ -83,8 +88,7 @@
 	<div class="bottomSignature">
 		<div class="bottomSignatureLeft">
 			Director General S. Alexandrov
-			<div class="bottomSignatureCode"><img src="<?= $this->getFolder() ?>/images/code.png" alt=""></div>
-			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/itemf_stamp.png" alt=""></div>
+			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" alt=""></div>
 		</div>
 		<div class="bottomSignatureRight">
 			Chief accountant S. Samsonova

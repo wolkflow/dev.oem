@@ -63,7 +63,12 @@
 						</td>
 					<td class="fiSumm"><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
-			<? } ?>			
+			<? } ?>
+			<tr>
+				<td class="unborder">&nbsp;</td>
+				<td class="finvoiceDetail-2">Итого без НДС:</td>
+				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+			</tr>			
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="finvoiceDetail-2">Ставка НДС:</td>
@@ -83,7 +88,7 @@
 	</table>
 
 	<div class="finvoiceDetailSum">
-		<p>Всего к оплате: <?= TextHelper::mb_ucfirst(TextHelper::num2str($arResult['ORDER']['PRICE'])) ?></p>
+		<p>Всего к оплате: <?= TextHelper::mb_ucfirst(TextHelper::num2str($arResult['ORDER']['PRICE'], true)) ?></p>
 	</div>
 	<div class="finvoiceDetailLeg">
 		<p><b>*Оплата производится в рублях по безналичному расчету. При оплате указывайте номер счета.</b></p>
@@ -99,8 +104,7 @@
 				Первый экземпляр (оригинал) – участник<br>
 				Второй экземпляр (копия) – организатор
 			</div>
-			<div class="bottomSignatureCode"><img src="<?= $this->getFolder() ?>/images/code2.png" /></div>
-			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/itemf_stamp.png" /></div>
+			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" /></div>
 		</div>
 		<div class="bottomSignatureRight">
 			Главный бухгалтер <br>Самсонова А.В.

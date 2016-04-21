@@ -60,7 +60,6 @@
 		<thead>
 			<tr>
 				<th>Description</th>
-				<th>Code</th>
 				<th>Price</th>
 				<th>Quantity</th>
 				<th>Unit</th>
@@ -72,7 +71,6 @@
 				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
-					<td></td>
 					<td><?= number_format($basket['SURCHARGE_PRICE'], 2, ',', ' ') ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
 					<td></td>

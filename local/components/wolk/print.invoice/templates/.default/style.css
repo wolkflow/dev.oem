@@ -150,7 +150,16 @@ body						{font: 400 13px/normal Arial, helvetika, sans-serif}
 .invoiceStamp3:before			{display: block;content: '';width: 131px;height: 48px;background: url(./images/autograph2.png);position: absolute;top: 40px;left: 0}
 
 
-
+.finvoiceStamp:before {
+    display: block;
+    content: '';
+    width: 131px;
+    height: 48px;
+    background: url(./images/autograph2.png);
+    position: absolute;
+    top: 40px;
+    left: 0;
+}
 
 
 .ficontainer				{padding: 25px 20px;width: 680px;margin: 0 auto}

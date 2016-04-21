@@ -72,8 +72,10 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		
 		$event = CIBlockElement::getByID($this->arResult['PROPS']['eventId']['VALUE'])->GetNextElement();
 		
-		$this->arResult['EVENT'] = $event->getFields();
-		$this->arResult['EVENT']['PROPS'] = $event->getProperties();
+		if ($event) {
+			$this->arResult['EVENT'] = $event->getFields();
+			$this->arResult['EVENT']['PROPS'] = $event->getProperties();
+		}
 		
 		
 		//  оличество позиций с ненулевой стоимостью.
