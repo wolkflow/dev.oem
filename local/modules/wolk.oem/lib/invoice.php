@@ -48,7 +48,8 @@ class Invoice
 	 */
 	public function getFileName()
 	{
-		return ('invoice_'.$this->getCompany().'_'.$this->getNumber().'_'.$this->getOrderID().'_'.$this->getTemplate().'.pdf');
+		// return ('invoice_'.$this->getCompany().'_'.$this->getNumber().'_'.$this->getOrderID().'_'.$this->getTemplate().'.pdf');
+		return ('invoice_'.$this->getCompany().'_'.$this->getNumber().'.pdf');
 	}
 	
 	

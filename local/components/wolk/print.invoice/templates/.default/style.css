@@ -41,12 +41,6 @@ table {
     border-spacing: 0;
 }
 
-/*
- *	@author:	Антон Городецкий
- *	@mail:		umke@ya.ru
- *
-*/
-
 @import "reset.css";
 body						{font: 400 13px/normal Arial, helvetika, sans-serif}
 .invoiceHead				{font-size: 10px;font-weight: 700;text-align: center;padding: 30px 0 20px}

@@ -54,8 +54,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		// Ñïèñîê äîñòóïíûõ ñ÷åòîâ.
 		$invoices = [
 			'uaz' 		=> 'Uaz',
-			'malcorp' 	=> 'MALCORP',
-			'distance' 	=> 'ÄÈÑÒÀÍÖÈß',
+			'mf.ru' 	=> 'MF (ru)',
+			'mf.en' 	=> 'MF (en)',
 			'itemf.ru'  => 'ITEMF (ru)',
 			'itemf.en'  => 'ITEMF (en)',
 		];

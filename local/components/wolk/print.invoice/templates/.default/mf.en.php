@@ -80,17 +80,17 @@
 				</tr>
 			<? } ?>
 			<tr class="invoiceItems__table-amount">
-				<td colspan="3"></td>
+				<td colspan="2"></td>
 				<td colspan="2">Net amount:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-amount">
-				<td colspan="3"></td>
+				<td colspan="2"></td>
 				<td colspan="2">VAT (18%):</td>
 				<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-total">
-				<td colspan="3"></td>
+				<td colspan="2"></td>
 				<td colspan="2">Total:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>

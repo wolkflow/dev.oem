@@ -13,7 +13,7 @@
 
             <stand-assistant></stand-assistant>
 
-            <input @click.prevent="save" type="button" class="styler saveButton" value="<?=Loc::getMessage('save')?>">
+            <input @click.prevent="save" type="button" class="styler saveButton" value="<?= Loc::getMessage('save') ?>" />
         </div>
     </div>
 </script>

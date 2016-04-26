@@ -558,7 +558,7 @@ $(function () {
                         }
                     };
                     if (typeof itemsForSketch === 'undefined') {
-                        $('head').append('<script src="/local/templates/.default/javascripts/designer.js"></script>');
+                        // $('head').append('<script src="/local/templates/.default/javascripts/designer.js"></script>');
                         itemsForSketch = self.itemsForSketch;
                         window.addEventListener("touchmove", function (event) {
                             event.preventDefault();

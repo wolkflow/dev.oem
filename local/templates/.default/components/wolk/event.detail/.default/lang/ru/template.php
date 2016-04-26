@@ -89,6 +89,7 @@ $MESS['stand'] = 'Стенд';
 $MESS['size'] = 'Размер';
 $MESS['material'] = 'Материал';
 $MESS['weight'] = 'Вес';
+$MESS['height'] = 'Высота';
 $MESS['List of the equipment placing on the structure'] = 'Список размещения оборудования на структуру';
 $MESS['Weight per point'] = 'Вес на одну точку';
 $MESS['Total weight'] = 'Итоговый вес';
@@ -144,8 +145,11 @@ $MESS['additional_info'] = 'Дополнительная информация о
 
 $MESS['placeholder_comments'] = 'Любая дополнительная информация';
 $MESS['placeholder_mockup'] = 'Опишите где и как Вы хотите разместить Ваш принт';
+$MESS['placeholder_list_equipment'] = 'Просьба указать вес каждого элемента (освещения, рекламного оборудования, элементов декора)';
 
 $MESS['equipment'] = 'Оборудование';
 $MESS['ordered'] = 'Заказано';
 $MESS['placed'] = 'Размещено';
 $MESS['popuplabel'] = '';
+
+

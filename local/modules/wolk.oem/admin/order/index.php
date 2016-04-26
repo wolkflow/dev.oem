@@ -94,19 +94,15 @@ if (!empty($_POST)) {
 		
 		// Отправка письма.
 		case 'mail':
-			$invoicetpl = (string) $_POST['INVOICE'];
-			$email      = (string) $_POST['EMAIL'];
+			$email = (string) $_POST['EMAIL'];
 
-			if (!empty($email) && file_exists(Wolk\OEM\Invoice::getFolder().$invoicetpl)) {
+			if (!empty($email)) {
 				// Данные.
 				$order    = CSaleOrder::getByID($ID);
 				$customer = CUser::getByID($order['USER_ID'])->Fetch();
 
 				// Файл для отправки.
-				$file = CFile::MakeFileArray(Wolk\OEM\Invoice::getFolder().$invoicetpl);
-				$file['name'] = Wolk\OEM\Invoice::getClientFileName($customer['WORK_COMPANY'], $customer['UF_CLIENT_NUMBER']);
-
-				$fid = CFile::SaveFile($file);
+				$fid = $oemorder->getInvoice();
 
 				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
 					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'invoice', array('ID' => $ID));
@@ -317,7 +313,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 success: function (response) {
 					BX.closeWait('.js-invoices-wrapper');
                     if (response.status) {
-                        $('#js-invoice-response-id').html('<a href="' + response.data['link'] + '?' + (new Date()).getTime() + '" target="_blank">Скачать счет</a>');
+                        $('#js-invoice-response-id').html('<input type="button" class="amd-btn-save" onclick="javascript: window.open(\'' + response.data['link'] + '?' + (new Date()).getTime() + '\');" target="_blank" value="Скачать счет" />');
 
 						var exist = false;
 						$('#js-order-invoice-select-id option').each(function() {
@@ -361,7 +357,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 				$('#js-sketch-image-input-id').val(ru.octasoft.oem.designer.Main.saveJPG());
 			}
 			var $that = $(this);
-
+			
 			$.when(savesketch()).done(function() {
 				$that.closest('form').trigger('submit');
 			});
@@ -574,9 +570,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                         <hr width="96%" color="e7f2f2"/>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container js-invoices-wrapper">
-                                <table cellpadding="10">
+                                <table cellpadding="5">
                                     <tr>
-                                        <td class="adm-detail-content-cell-l" width="100">Шаблон счета:</td>
+                                        <td class="adm-detail-content-cell-l" width="235">Генерация счета:</td>
                                         <td width="200">
                                             <? // Счета // ?>
                                             <select name="invoice" id="js-invoice-select-id" style="width: 200px;">
@@ -591,28 +587,23 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                             <input type="button" id="js-invoice-button-id" class="amd-btn-save" value="Получить счет"/>
                                         </td>
                                         <td>
-                                            <div id="js-invoice-response-id"></div>
+                                            <div id="js-invoice-response-id">
+												<? $invoice = $oemorder->getInvoice() ?>
+												<? if (!empty($invoice)) { ?>
+													<input type="button" class="amd-btn-save" onclick="javascript: window.open('<?= $oemorder->getInvoiceLink() ?>?<?= time() ?>');" target="_blank" value="Скачать счет" />
+												<? } ?>
+											</div>
                                         </td>
                                     </tr>
 								</table>
 
 								<form method="post">
 									<input type="hidden" name="action" value="mail" />
-									<table cellpadding="10">
+									<table cellpadding="5">
 										<tr>
-											<td class="adm-detail-content-cell-l" width="100">Счет:</td>
-											<td width="200">
-												<? // Счета // ?>
-												<select name="INVOICE" id="js-order-invoice-select-id" style="width: 200px;">
-													<? foreach ($order['PROPS']['INVOICES']['VALUE_ORIG'] as $invoice) { ?>
-														<option value="<?= $invoice['name'] ?>">
-															<?= $invoice['name'] ?>
-														</option>
-													<? } ?>
-												</select>
-											</td>
+											<td class="adm-detail-content-cell-l" width="235">Отправка счета:</td>
 											<td>
-												<input type="text" name="EMAIL" value="<?= $customer['EMAIL'] ?>" size="30" />
+												<input type="text" name="EMAIL" value="<?= $customer['EMAIL'] ?>" size="23" />
 											</td>
 											<td>
 												<input type="submit" id="js-send-button-id" class="amd-btn-save" value="Отправить счет" />
@@ -620,6 +611,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 											<td>
 												<? if (!empty($order['PROPS']['SENDTIME']['VALUE'])) { ?>
 													Отправлено <?= date('H:i d.m.Y', strtotime($order['PROPS']['SENDTIME']['VALUE'])) ?>
+												<? } else { ?>
+													Счет еще не был отправлен.
 												<? } ?>
 											</td>
 										</tr>

@@ -8,7 +8,7 @@
         <div class="pagesubtitleopencontainer">
             <vip-passes></vip-passes>
             <car-passes-to-loading-unloading-zone></car-passes-to-loading-unloading-zone>
-            <input @click="save" type="button" class="styler saveButton" value="<?=LOc::getMessage('save')?>">
+            <input @click="save" type="button" class="styler saveButton" value="<?= Loc::getMessage('save') ?>" />
         </div>
     </div>
     <!-- Секция: car passes -->
@@ -23,21 +23,25 @@
         <div class="serviceItem__block" v-for="selectedItem in selectedItems">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
-                    <div class="serviceItem__subtitle"><?=Loc::getMessage('type')?></div>
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('type') ?>
+					</div>
                     <select v-styler="selectedItem.ID" class="styler">
-                        <option value=""><?=Loc::getMessage('not selected')?></option>
+                        <option value="">
+							<?= Loc::getMessage('not selected') ?>
+						</option>
                         <option :value="item.ID" v-for="item in items">
-                            {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_number ' ' }}
+                            {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format }}
                         </option>
                     </select>
                 </div>
                 <div class="serviceItem__right">
                     <div class="itemCount">
                         <div class="itemCount">
-                            <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
+                            <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
                             <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
                             <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
-                            <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
+                            <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler" />
                         </div>
                     </div>
                 </div>
@@ -45,14 +49,21 @@
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
                     <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('price') ?>
+						</div>
                         <div class="serviceItem__cost-value">
-                            {{ section.ITEMS[selectedItem.ID].PRICE | format_number ' ' }}
+                            {{ section.ITEMS[selectedItem.ID].PRICE | format_currency ' ' currency_format }}
                         </div>
                     </div>
-                    <div class="serviceItem__desc">* <?=Loc::getMessage('vis_pass_desc')?></div>
+                    <div class="serviceItem__desc">
+						* <?= Loc::getMessage('vis_pass_desc') ?>
+					</div>
                 </div>
-                <a href="#" @click.prevent="addItem" class="itemAdd_field"><i></i><span><?=Loc::getMessage('add_field')?></span></a>
+                <a href="javascript:void(0)" @click.prevent="addItem" class="itemAdd_field">
+					<i></i>
+					<span><?= Loc::getMessage('add_field')?></span>
+				</a>
             </div>
         </div>
     </div>
@@ -71,16 +82,16 @@
                     <select v-styler="selectedItem.ID" class="styler">
                         <option value=""><?=Loc::getMessage('not selected')?></option>
                         <option :value="item.ID" v-for="item in items">
-                            {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_number ' ' }}
+                            {{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format }}
                         </option>
                     </select>
                 </div>
                 <div class="serviceItem__right">
                     <div class="itemCount">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
+                        <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
                         <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
                         <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
-                        <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler">
+                        <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler" />
                     </div>
                 </div>
             </div>
@@ -89,13 +100,14 @@
                     <div class="serviceItem__cost serviceItem__cost-small" v-if="selectedItem.ID">
                         <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
                         <div class="serviceItem__cost-value">
-                            {{ section.ITEMS[selectedItem.ID].PRICE | format_number ' ' }}
+                            {{ section.ITEMS[selectedItem.ID].PRICE | format_currency ' ' currency_format }}
                         </div>
                     </div>
-                    <div class="serviceItem__desc">* <?=Loc::getMessage('passes_desc')?>
+                    <div class="serviceItem__desc">
+						* <?= Loc::getMessage('passes_desc') ?>
                     </div>
                 </div>
-                <a href="#" @click.prevent="addItem" class="itemAdd_field"><i></i><span><?=Loc::getMessage('add_field')?></span></a>
+                <a href="javascript:void(0)" @click.prevent="addItem" class="itemAdd_field"><i></i><span><?=Loc::getMessage('add_field')?></span></a>
             </div>
         </div>
     </div>

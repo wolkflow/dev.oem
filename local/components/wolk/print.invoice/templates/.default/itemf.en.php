@@ -52,7 +52,7 @@
 				<tr class="fiItemRow">
 					<td colspan="2">
 						<?= $basket['NAME'] ?>
-						</td>
+					</td>
 					<td class="fiSumm"><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
@@ -88,11 +88,11 @@
 	<div class="bottomSignature">
 		<div class="bottomSignatureLeft">
 			Director General S. Alexandrov
-			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" alt=""></div>
+			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" /></div>
 		</div>
 		<div class="bottomSignatureRight">
 			Chief accountant S. Samsonova
-			<div class="finvoiceSignature"><img src="<?= $this->getFolder() ?>/images/itemf_signature.png" alt=""></div>
+			<div class="finvoiceSignature"><img src="<?= $this->getFolder() ?>/images/itemf_signature.png" /></div>
 		</div>
 		<div class="clear"></div>
 	</div>

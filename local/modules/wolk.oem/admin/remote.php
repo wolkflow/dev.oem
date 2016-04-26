@@ -52,12 +52,9 @@ switch ($action) {
 		if ($result !== 0) {
 			jsonresponse(false, 'Ошибка создания счета');
 		}
+		$invoiceID = CFile::SaveFile(CFile::MakeFileArray($invoice->getInvoice()));
 		
-		$invoices = \Wolk\Core\Helpers\SaleOrder::getProperty($order_id, 'INVOICES');
-		$invoices = $invoices['VALUE_ORIG'];
-		$invoices []= CFile::MakeFileArray($invoice->getInvoice());
-		
-		\Wolk\Core\Helpers\SaleOrder::saveProperty($order_id, 'INVOICES', $invoices);
+		\Wolk\Core\Helpers\SaleOrder::saveProperty($order_id, 'INVOICE', $invoiceID);
 		
 		jsonresponse(true, '', ['link' => $invoice->getInvoice(), 'name' => $invoice->getFileName()]);
 		break;

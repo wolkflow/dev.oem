@@ -32,6 +32,7 @@ Loc::loadLanguageFile(__FILE__);
     <style>
         <? $APPLICATION->ShowViewContent('custom_color_styles') ?>
     </style>
+	<script type="text/javascript" src="/local/templates/.default/javascripts/designer.js"></script>
     <script>
         if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
             var meta = document.getElementById("viewport");

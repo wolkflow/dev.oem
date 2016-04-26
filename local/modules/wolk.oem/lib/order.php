@@ -11,6 +11,7 @@ class Order
 	const PROP_PAVILLION    = 'pavillion';
 	const PROP_STANDNUM		= 'standNum';
 	const PROP_LANGUAGE     = 'LANGUAGE';
+	const PROP_INVOICE		= 'INVOICE';
 	
 	
 	protected $id;
@@ -145,6 +146,27 @@ class Order
 			imagejpeg($image);
 			imagedestroy($image);
 		}
+	}
+	
+	
+	/**
+	 * Получение счета.
+	 */ 
+	public function getInvoice()
+	{
+		$this->load();
+		
+		return intval($this->data['PROPS'][self::PROP_INVOICE]['VALUE']);
+	}
+	
+	/**
+	 * Получение пути к счету.
+	 */ 
+	public function getInvoiceLink()
+	{
+		$this->load();
+		
+		return \CFile::getPath($this->getInvoice());
 	}
 	
 	

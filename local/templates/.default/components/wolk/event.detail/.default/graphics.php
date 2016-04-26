@@ -190,7 +190,7 @@
 
 <script type="x/template" id="full-color-printing">
     <div class="serviceItem" v-if="item">
-        <div class="serviceItem__title">{{ section.NAME }} <span>{{price | format_currency ' ' currency_format}} (<?=Loc::getMessage('m2')?>)</span></div>
+        <div class="serviceItem__title">{{ section.NAME }} <span>{{price | format_currency ' ' currency_format}} (<?= Loc::getMessage('m2') ?>)</span></div>
         <div class="serviceItem__block" v-for="item in items">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
@@ -205,41 +205,72 @@
                 </div>
                 <div class="serviceItem__right">
                     <div class="itemCount">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('quantity') ?>
+						</div>
                         <div class="itemCount__button itemCount__down justcnt" @click="decQty(item)"></div>
                         <div class="itemCount__button itemCount__up justcnt" @click="incQty(item)"></div>
-                        <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number>
+                        <input v-model="item.QUANTITY" type="text" class="itemCount__input styler" number />
                     </div>
                 </div>
             </div>
 
             <div class="serviceItem__row">
-                <div class="serviceItem__subtitle"><?=Loc::getMessage('link_to_your_mockup')?></div>
-                <input v-model="item.LINK" type="text" class="styler">
-
-                <p class="thisDesc"><?=Loc::getMessage('mockup_requirements')?></p>
+                <div class="serviceItem__subtitle">
+					<?= Loc::getMessage('link_to_your_mockup') ?>
+				</div>
+                <input v-model="item.LINK" type="text" class="styler" />
+                <p class="thisDesc">
+					<?= Loc::getMessage('mockup_requirements') ?>
+				</p>
             </div>
             <div class="serviceItem__row">
-                <div class="serviceItem__subtitle"><?=Loc::getMessage('comments')?></div>
-            <textarea v-model="item.COMMENTS" class="styler" placeholder="<?=Loc::getMessage('placeholder_mockup')?>"></textarea>
+                <div class="serviceItem__subtitle">
+					<?= Loc::getMessage('comments') ?>
+				</div>
+				<textarea v-model="item.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('placeholder_mockup') ?>"></textarea>
             </div>
         </div>
 
-        <a href="#" @click.prevent="addItem" class="itemAdd_field itemAdd__filed-left">
+        <a href="javascript:void(0)" @click.prevent="addItem" class="itemAdd_field itemAdd__filed-left">
             <i></i>
-            <span><?=Loc::getMessage('one_more_print')?></span>
+            <span><?= Loc::getMessage('one_more_print') ?></span>
         </a>
 
         <div class="clear"></div>
-        <!-- Контактное лицо -->
-        <div class="serviceItem__block serviceItem__manager">
-            <div class="serviceItem__row">
-                <div class="serviceItem__subtitle"><?=Loc::getMessage('show_manager_contacts')?></div>
-                <p>
-                    {{{ event.MANAGER_CONTACTS.TEXT }}}
-                </p>
-            </div>
-        </div>
-        <!--// .Контактное лицо -->
+        <? // Контактное лицо // ?>
+		<? $language = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage()); ?>
+		<? $contacts = $arResult['EVENT']['PROPS']['LANG_CONTACTS_'.$language]['VALUE'] ?>
+		<? if (!empty($contacts)) { ?>
+			<div class="serviceItem__block serviceItem__manager">
+				<div class="serviceItem__row">
+					<div class="serviceItem__subtitle"><?= Loc::getMessage('show_manager_contacts') ?></div>
+					<p>
+						<? foreach ($contacts as $contact) { ?>
+							<ul class="modalContactsBlock">
+								<li class="contactTitle">
+									<?= $contact['POST'] ?>
+								</li>
+								<li>
+									<?= $contact['NAME'] ?>
+								</li>
+								<li>
+									P: <?= $contact['PHONE'] ?>
+								</li>
+								<li>
+									E: <a href="mailto:<?= $contact['EMAIL'] ?>"><?= $contact['EMAIL'] ?></a>
+								</li>
+							</ul>
+						<? } ?>
+						
+						<? // {{{ event.MANAGER_CONTACTS.TEXT }}} ?>
+					</p>
+				</div>
+			</div>
+		<? } ?>
     </div>
 </script>
+
+
+
+

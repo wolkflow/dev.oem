@@ -89,6 +89,7 @@ $MESS['stand'] = 'Stand';
 $MESS['size'] = 'Size';
 $MESS['material'] = 'Material';
 $MESS['weight'] = 'Weight';
+$MESS['height'] = 'Height';
 $MESS['List of the equipment placing on the structure'] = 'List of the equipment placing on the structure';
 $MESS['Weight per point'] = 'Weight per point';
 $MESS['Total weight'] = 'Total weight';
@@ -145,6 +146,7 @@ $MESS['additional_info'] = 'Additioan information about your order';
 
 $MESS['placeholder_comments'] = 'Any additional information';
 $MESS['placeholder_mockup'] = 'Describe where and how you want your print to be placed';
+$MESS['placeholder_list_equipment'] = 'Please indicate weight of each item (lightings, advertising equipment, decoration elements)';
 
 $MESS['equipment'] = 'Equipment';
 $MESS['ordered'] = 'Ordered';

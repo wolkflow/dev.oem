@@ -60,7 +60,7 @@
 				<tr class="fiItemRow">
 					<td colspan="2">
 						<?= $basket['NAME'] ?>
-						</td>
+					</td>
 					<td class="fiSumm"><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
@@ -103,8 +103,8 @@
 				Без печати недействительно.<br>
 				Первый экземпляр (оригинал) – участник<br>
 				Второй экземпляр (копия) – организатор
+				<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" /></div>
 			</div>
-			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" /></div>
 		</div>
 		<div class="bottomSignatureRight">
 			Главный бухгалтер <br>Самсонова А.В.

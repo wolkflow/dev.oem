@@ -31,7 +31,9 @@
 	<div class="invoiceParams">
 		<p><span class="toleft">Выставка:</span> <?= $arResult['EVENT']['NAME'] ?></p>
 		<p><span class="toleft">Место проведения:</span> <span class="red"><?= $arResult['EVENT']['PROPS']['LANG_LOCATION_RU']['VALUE'] ?></span></p>
+		<? /*
 		<p><span class="toleft">Дата:</span> <span class="red"><?= date('d.m.Y', strtotime($arResult['EVENT']['ACTIVE_FROM'])) ?> – <?= date('d.m.Y', strtotime($arResult['EVENT']['ACTIVE_TO'])) ?></span></p>
+		*/ ?>
 	</div>
 
 	<div class="invoiceParams2">
@@ -47,7 +49,6 @@
 		<thead>
 			<tr>
 				<th>Наименование</th>
-				<th>Код</th>
 				<th>Цена</th>
 				<th>Кол-во</th>
 				<th>Ед. Изм.</th>
@@ -59,7 +60,6 @@
 				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
-					<td></td>
 					<td><?= $basket['SURCHARGE_PRICE'] ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
 					<td></td>
@@ -68,17 +68,17 @@
 			<? } ?>
 
 			<tr class="invoiceItems__table-amount">
-				<td colspan="3"></td>
+				<td colspan="2"></td>
 				<td colspan="2" class="text-left">Всего без НДС:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-amount">
-				<td colspan="3"></td>
+				<td colspan="2"></td>
 				<td colspan="2" class="text-left">НДС (18%):</td>
 				<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-total">
-				<td colspan="3"></td>
+				<td colspan="2"></td>
 				<td colspan="2" class="text-left">ВСЕГО С НДС:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>
