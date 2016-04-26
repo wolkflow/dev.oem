@@ -36,10 +36,12 @@
 	<div class="invoiceParams">
 		<p><span class="toleft">Event:</span> <?= $arResult['EVENT']['NAME'] ?></p>
 		<p><span class="toleft">Place:</span> <span class="red"><?= $arResult['EVENT']['PROPS']['LANG_LOCATION_EN']['VALUE'] ?></span></p>
+		<? /*
 		<p>
 			<span class="toleft">From..To:</span> 
 			<span class="red"><?= date('d.m.Y', strtotime($arResult['EVENT']['ACTIVE_FROM'])) ?> – <?= date('d.m.Y', strtotime($arResult['EVENT']['ACTIVE_TO'])) ?></span>
 		</p>
+		*/ ?>
 	</div>
 
 	<div class="invoiceParams2">

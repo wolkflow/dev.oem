@@ -26,6 +26,7 @@ $event['MARGIN_DATES'] = array_combine(
 );
 $event['LOCATION'] = $arResult['EVENT']['PROPS']["LANG_LOCATION_{$curLang}"]['VALUE'];
 
+
 $event = Json::encode($event);
 
 if ($arResult['INDIVIDUAL_STAND']) {

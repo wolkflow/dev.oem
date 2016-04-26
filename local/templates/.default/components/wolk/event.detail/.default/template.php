@@ -271,6 +271,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <div class="ordercontainer">
         <div class="ordercontainer__columnscontainer">
             <div class="ordercontainer__column right">
+				<? /*
                 <div class="pagesubtitle">
 					<?= Loc::getMessage('standart_equipment') ?>
                     <div class="pagesubtitle__addbutton customizable" @click="setStep(2)"></div>
@@ -290,6 +291,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                         </div>
                     </div>
                 </div>
+				*/ ?>
                 <div class="pagesubtitle">
 					<?= Loc::getMessage('additional_equipment') ?>
                     <div class="pagesubtitle__addbutton customizable" @click="setStep(2)"></div>
