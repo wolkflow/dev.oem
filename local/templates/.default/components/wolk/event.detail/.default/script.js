@@ -168,10 +168,12 @@ $(function () {
             },
             placeOrder: function (type) {
                 $('#js-place-order-id').attr("disabled", true);
-				var image, that = this;
+				var image = '', that = this;
 				
 				var getSketchImage = function() {
-					image = ru.octasoft.oem.designer.Main.saveJPG();
+					if (that.selectedStand.ID > 0) {
+						image = ru.octasoft.oem.designer.Main.saveJPG();
+					}
 				}
 				
 				$.when(getSketchImage()).done(function() {

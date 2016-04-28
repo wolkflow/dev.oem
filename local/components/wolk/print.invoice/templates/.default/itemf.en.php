@@ -69,29 +69,25 @@
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2 no-right-border"">Total without VAT:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border"">Total without VAT:</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2 no-right-border"">VAT:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border"">VAT:</td>
 				<td class="finvoiceDetail-3">18%</td>
 			</tr>
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2 no-right-border"">Total VAT:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border"">Total VAT:</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">Currency: EURO</td>
-				<td class="finvoiceDetail-2 no-right-border"">Total value:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border"">Total value:</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>
 		</tbody>

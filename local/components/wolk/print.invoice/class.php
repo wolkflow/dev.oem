@@ -77,7 +77,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
 			$this->arResult['EVENT']['PROPS'] = $event->getProperties();
 		}
 		
-		$this->arResult['DATE'] = (empty($this->arResult['PROPS']['INVOICE_DATE']['VALUE'])) 
+		$this->arResult['DATE'] = (!empty($this->arResult['PROPS']['INVOICE_DATE']['VALUE'])) 
 								? (strtotime($this->arResult['PROPS']['INVOICE_DATE']['VALUE'])) 
 								: (time());
 		

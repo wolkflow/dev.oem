@@ -21,6 +21,9 @@ class Order
 	protected $id;
 	protected $data;
 	protected $baskets;
+	protected $individual;
+	
+	
 	
 	
     public function __construct($id = null, $data = [])
@@ -183,6 +186,37 @@ class Order
 		$this->load();
 		
 		return intval($this->data['PROPS'][self::PROP_INVOICE_DATE]['VALUE']);
+	}
+	
+	
+	/**
+	 * Индивидуальный стенд.
+	 */
+	public function isIndividual()
+	{
+		if (!isset($this->individual)) {
+			//return $this->individual;
+		}
+		$this->individual = true;
+		
+		$baskets = $this->getBaskets();
+		
+		foreach ($baskets as $basket) {
+			if ($basket['PRODUCT_ID'] > 0) {
+				$element = \CIBlockElement::getByID($basket['PRODUCT_ID'])->Fetch();
+
+				// Элемент не существует.
+				if (!$element) {
+					continue;
+				}
+				
+				if ($element['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
+					$this->individual = false;
+					break;
+				}
+			}
+		}
+		return $this->individual;
 	}
 	
 	

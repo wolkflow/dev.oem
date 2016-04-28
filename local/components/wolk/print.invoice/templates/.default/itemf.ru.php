@@ -77,29 +77,25 @@
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2 no-right-border">Итого без НДС:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border">Итого без НДС:</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>			
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2 no-right-border">Ставка НДС:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border">Ставка НДС:</td>
 				<td class="finvoiceDetail-3">18%</td>
 			</tr>
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2 no-right-border">Сумма НДС:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border">Сумма НДС:</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr>
 				<td class="unborder">&nbsp;</td>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2 no-right-border">Всего с НДС:</td>
-				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
+				<td colspan="2" class="finvoiceDetail-2 no-right-border">Всего с НДС:</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>
 		</tbody>

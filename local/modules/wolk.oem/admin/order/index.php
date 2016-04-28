@@ -371,12 +371,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
         
 		var loadsketch = function() {
 			
-			var gridX = <?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>;
-			var gridY = <?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>;
+			var gridX = parseInt(<?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>);
+			var gridY = parseInt(<?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>);
 			
 			(window.resizeEditor = function(items) {
 				var height =  Math.max(120 + (items.length * 135), $(window).height());
-				//$('#designer').height(editorH);
 				$('#designer').height(height);
 				
 				window.editorScrollTop = $('#designer').offset().top - 30;
@@ -894,36 +893,36 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 					max-width: 800px;
 				}
             </style>
-            <div style="height: 5px; width: 100%"></div>
-            <a id="sketch-order"></a>
-            <div class="adm-container-draggable">
-                <div class="adm-bus-statusorder">
-                    <div class="adm-bus-component-container">
-                        <div class="adm-bus-component-title-container">
-                            <div class="adm-bus-component-title">Скетч</div>
-                        </div>
-                        <div class="adm-bus-component-content-container">
-                            <div class="adm-bus-table-container">
-							
-								<? // Контейнер для скетча. // ?>
-                                <div id="designer" style="margin-top:40px; width: 940px; height:680px" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()"></div>
-                                
-								<form method="post">
-                                    <input type="hidden" name="action" value="sketch" />
-									<input type="hidden" name="OBJECTS" value="" id="js-sketch-scene-input-id" />
-									<input type="hidden" name="IMAGE" value="" id="js-sketch-image-input-id" />
-                                    <input type="button" id="js-sketch-button-id" class="amd-btn-save adm-btn-green" value="Сохранить" />
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			
+			<? if (!$oemorder->isIndividual()) { ?>
+				<div style="height: 5px; width: 100%"></div>
+				<a id="sketch-order"></a>
+				<div class="adm-container-draggable">
+					<div class="adm-bus-statusorder">
+						<div class="adm-bus-component-container">
+							<div class="adm-bus-component-title-container">
+								<div class="adm-bus-component-title">Скетч</div>
+							</div>
+							<div class="adm-bus-component-content-container">
+								<div class="adm-bus-table-container">
+								
+									<? // Контейнер для скетча. // ?>
+									<div id="designer" style="margin-top:40px; width: 940px; height:680px" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()"></div>
+									
+									<form method="post">
+										<input type="hidden" name="action" value="sketch" />
+										<input type="hidden" name="OBJECTS" value="" id="js-sketch-scene-input-id" />
+										<input type="hidden" name="IMAGE" value="" id="js-sketch-image-input-id" />
+										<input type="button" id="js-sketch-button-id" class="amd-btn-save adm-btn-green" value="Сохранить" />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<? } ?>
+			
         </div>
-
-		<? /*
-		<input type="button" id="js-print-order-button-id" class="amd-btn-save" value="Распечатать заказ"/>
-		*/ ?>
     </td>
 </tr>
 

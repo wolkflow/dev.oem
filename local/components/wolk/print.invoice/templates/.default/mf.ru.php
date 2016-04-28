@@ -59,9 +59,9 @@
 				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
 				<tr>
 					<td><?= $basket['NAME'] ?></td>
-					<td><?= $basket['SURCHARGE_PRICE'] ?></td>
+					<td><?= number_format($basket['SURCHARGE_PRICE'], 2, ',', ' ') ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
-					<td><?= $basket['SURCHARGE_SUMMARY_PRICE'] ?></td>
+					<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
 
