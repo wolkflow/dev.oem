@@ -135,14 +135,14 @@
 								<tr>
 									<td valign="middle" style="padding-top: 5px;">
 										<p style="margin: 0 0 11px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											<span style="display: inline-block;width: 145px;">
+											<span style="display: inline-block;width: 165px;">
 												<?= Loc::getMessage('price_total') ?>:
 											</span>
 											<?= CurrencyFormat($arResult['PRICES']['BASKET'], $arResult['ORDER']['CURRENCY']) ?>
 										</p>
 										<? if ($arResult['PRICES']['SURCHARGE'] > 0) { ?>
 											<p style="margin: 0 0 11px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #ff3f25;text-transform: uppercase">
-												<span style="display: inline-block;width: 145px;">
+												<span style="display: inline-block;width: 165px;">
 													<?= Loc::getMessage('price_surcharge') ?>:
 												</span>
 												<?= $arResult['PRICES']['SURCHARGE'] ?>%
@@ -150,32 +150,32 @@
 											</p>
 										<? } ?>
 										<p style="margin: 0 0 11px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											<span style="display: inline-block;width: 145px;">
+											<span style="display: inline-block;width: 165px;">
 												<?= Loc::getMessage('price_vat') ?>:
 											</span>
 											<?= CurrencyFormat($arResult['PRICES']['VAT'], $arResult['ORDER']['CURRENCY']) ?>
 										</p>
 										<? if ($arResult['PRICES']['SURCHARGE'] > 0) { ?>
 											<p style="margin: 0 0 5px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-												<span style="display: inline-block;width: 145px;">
+												<span style="display: inline-block;width: 165px;">
 													<?= Loc::getMessage('price_total_vat') ?>:
 												</span>
 												<?= CurrencyFormat($arResult['PRICES']['TOTAL_WITH_VAT'], $arResult['ORDER']['CURRENCY']) ?>
 											</p>
-											<p style="margin: 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;">
-												<span style="display: block;float: left;text-transform: uppercase;width: 145px;line-height: 21px;">
+											<p style="margin: 22px 0 0 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;">
+												<span style="display: block;float: left;text-transform: uppercase;width: 165px;line-height: 38px;">
 													<?= Loc::getMessage('price_total_surcharge') ?>:
 												</span>
-												<span style="display: block;margin-left: 145px;font-size: 49px;line-height: 38px;font-weight: 400;">
+												<span style="display: block;margin-left: 165px;font-size: 49px;line-height: 38px;font-weight: 400;">
 													 <?= CurrencyFormat($arResult['PRICES']['TOTAL_WITH_SURCHARGE'], $arResult['ORDER']['CURRENCY']) ?>
 												</span>
 											</p>
 										<? } else { ?>
-											<p style="margin: 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;">
-												<span style="display: block;float: left;text-transform: uppercase;width: 145px;line-height: 21px;">
+											<p style="margin: 22px 0 0 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;">
+												<span style="display: block;float: left;text-transform: uppercase;width: 165px;line-height: 38px;">
 													<?= Loc::getMessage('price_total_vat') ?>:
 												</span>
-												<span style="display: block;margin-left: 145px;font-size: 49px;line-height: 38px;font-weight: 400;">
+												<span style="display: block;margin-left: 165px;font-size: 49px;line-height: 38px;font-weight: 400;">
 													 <?= CurrencyFormat($arResult['PRICES']['TOTAL_WITH_SURCHARGE'], $arResult['ORDER']['CURRENCY']) ?>
 												</span>
 											</p>

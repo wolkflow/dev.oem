@@ -23,7 +23,7 @@
 	</div>
 	<div class="invoiceTextRight">
 		<p class="invoiceTb"><b>В платежном документе<br> обязательна ссылка на <br>№ и дату счета, № клиента</b></p>
-		<p>Дата: <span><?= date('d.m.Y') ?></span></p>
+		<p>Дата: <span><?= date('d.m.Y', $arResult['DATE']) ?></span></p>
 		<p>Номер клиента: <span><?= $arResult['USER']['UF_CLIENT_NUMBER'] ?></span></p>
 		<p>Номер счета: <span><?= $arResult['PROPS']['BILL']['VALUE'] ?></span></p>
 	</div>
@@ -51,7 +51,6 @@
 				<th>Наименование</th>
 				<th>Цена</th>
 				<th>Кол-во</th>
-				<th>Ед. Изм.</th>
 				<th>Сумма</th>
 			</tr>
 		</thead>
@@ -62,24 +61,23 @@
 					<td><?= $basket['NAME'] ?></td>
 					<td><?= $basket['SURCHARGE_PRICE'] ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
-					<td></td>
 					<td><?= $basket['SURCHARGE_SUMMARY_PRICE'] ?></td>
 				</tr>
 			<? } ?>
 
 			<tr class="invoiceItems__table-amount">
 				<td colspan="2"></td>
-				<td colspan="2" class="text-left">Всего без НДС:</td>
+				<td class="text-left">Всего без НДС:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-amount">
 				<td colspan="2"></td>
-				<td colspan="2" class="text-left">НДС (18%):</td>
+				<td class="text-left">НДС (18%):</td>
 				<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-total">
 				<td colspan="2"></td>
-				<td colspan="2" class="text-left">ВСЕГО С НДС:</td>
+				<td class="text-left">ВСЕГО С НДС:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>
 		</tbody>

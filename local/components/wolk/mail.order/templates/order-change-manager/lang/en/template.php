@@ -1,6 +1,7 @@
 ﻿<?php
 
-$MESS['goodday']  = 'good afternoon';
+$MESS['dear']	  = 'Dear ';
+$MESS['goodday']  = '';
 $MESS['thanks']   = 'Thank you for registering in';
 $MESS['event']    = '';
 $MESS['configurator'] = 'online configurator';

@@ -1,6 +1,7 @@
 ﻿<?php
 
-$MESS['goodday']  = 'добрый день';
+$MESS['dear']	  = '';
+$MESS['goodday']  = ', добрый день';
 $MESS['company']  = 'Компания и персональные данные';
 $MESS['title']	  = 'Название';
 $MESS['address']  = 'Адрес';

@@ -28,7 +28,7 @@
 	<? } ?>
 	<div class="invoiceTextRight">
 		<p class="invoiceTb"><b>To be indicated on payment</b></p>
-		<p>Date: <span><?= date('d.m.Y') ?></span></p>
+		<p>Date: <span><?= date('d.m.Y', $arResult['DATE']) ?></span></p>
 		<p>Customer number: <span><?= $arResult['USER']['UF_CLIENT_NUMBER'] ?></span></p>
 		<p>Invoice number: <span><?= $arResult['PROPS']['BILL']['VALUE'] ?></span></p>
 	</div>
@@ -64,7 +64,6 @@
 				<th>Description</th>
 				<th>Price</th>
 				<th>Quantity</th>
-				<th>Unit</th>
 				<th>EUR <br>Amount</th>
 			</tr>
 		</thead>
@@ -75,23 +74,22 @@
 					<td><?= $basket['NAME'] ?></td>
 					<td><?= number_format($basket['SURCHARGE_PRICE'], 2, ',', ' ') ?></td>
 					<td><?= $basket['QUANTITY'] ?></td>
-					<td></td>
 					<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
 			<tr class="invoiceItems__table-amount">
 				<td colspan="2"></td>
-				<td colspan="2">Net amount:</td>
+				<td>Net amount:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-amount">
 				<td colspan="2"></td>
-				<td colspan="2">VAT (18%):</td>
+				<td>VAT (18%):</td>
 				<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr class="invoiceItems__table-total">
 				<td colspan="2"></td>
-				<td colspan="2">Total:</td>
+				<td>Total:</td>
 				<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>
 		</tbody>

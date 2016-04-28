@@ -3,6 +3,8 @@
 <? use Wolk\Core\Helpers\Text as TextHelper; ?>
 <? use Bitrix\Main\Localization\Loc; ?>
 
+<? $order = new Wolk\OEM\Order($arResult['ORDER']['ID']); ?>
+
 <? $this->setFrameMode(true); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,7 +34,7 @@
 					<tr valign="top">
 						<td style="padding-top: 52px;padding-bottom: 50px;background-image: url('http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/mid.png');background-repeat: repeat-y;padding-right: 61px;padding-left: 61px;">
 							<p style="margin: 0 0 34px 0;padding: 0;font-size: 15px;font-weight: 700;text-transform: uppercase;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
-								<?= $arResult['USER']['NAME'] ?>, <?= Loc::getMessage('goodday') ?>!
+								<?= Loc::getMessage('dear') ?><?= $arResult['USER']['NAME'] ?><?= Loc::getMessage('goodday') ?>!
 							</p>
 							<p style="margin: 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;line-height: 24px;color: #333333;">
 								<?= Loc::getMessage('status_order') ?> <?= $arResult['EVENT']['NAME'] ?> <?= Loc::getMessage('changed') ?>.
@@ -44,7 +46,7 @@
 									<td style="padding-top: 53px;padding-bottom: 1px;">
 										<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" /></div>
 										<p style="margin: 0;padding: 23px 0 23px 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #333333;line-height: 1px">
-											<?= Loc::getMessage('status') ?>: <b><?= $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
+											<?= Loc::getMessage('status') ?>: <b><?= $order->getStatusLangTitle();// $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
 										</p>
 										<div>
 											<img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" />

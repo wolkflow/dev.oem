@@ -1,6 +1,6 @@
 $(function () {
 	
-    // Vue.config.debug = true;
+     //Vue.config.debug = true;
 	
     var vm = new Vue({
         el: 'body',
@@ -343,8 +343,12 @@ $(function () {
             },
             summaryPrice: function () {
                 if (this.selectedStand) {
-                    var price = this.selectedStand.PRICE.PRICE,
+                    var price = 0,
                         self = this;
+
+                    if(this.selectedStand.PRICE !== null && this.selectedStand.PRICE.hasOwnProperty('PRICE')) {
+                        price = this.selectedStand.PRICE.PRICE;
+                    }
                     if (this.selectedStand.EQUIPMENT.length > 0) {
                         price = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
                             if (eq.QUANTITY > eq.COUNT) {
@@ -569,7 +573,7 @@ $(function () {
                         }
                         Vue.nextTick(function () {
                             window.onEditorReady = function () {
-                                $(window).on("scroll", function (e) {
+                                $(window).on('scroll', function (e) {
                                     ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
                                 });
                                 ru.octasoft.oem.designer.Main.init({
@@ -579,8 +583,8 @@ $(function () {
 										placed: langs.placed,
 										shelfPopupLabel: ""
 									},
-                                    w: self.selectedParams.WIDTH,
-                                    h: self.selectedParams.DEPTH,
+                                    w: parseInt(self.selectedParams.WIDTH),
+                                    h: parseInt(self.selectedParams.DEPTH),
 									
                                     // row corner head island
                                     type: self.selectedParams.TYPE || "row",
@@ -589,27 +593,32 @@ $(function () {
                                 });
                                 setTimeout(function() { window.resizeEditor(itemsForSketch); }, 100);
                             };
-                            lime.embed("designer", 0, 0, '', '/');
+                            lime.embed('designer', 0, 0, '', '/');
                         });
                     } else {
                         if (JSON.stringify(itemsForSketch) != JSON.stringify(self.itemsForSketch)) {
                             itemsForSketch = self.itemsForSketch;
                             Vue.nextTick(function () {
-                                ru.octasoft.oem.designer.Main.init({
-									language: {
-										rightColumnLabel: langs.equipment,
-										ordered: langs.ordered,
-										placed: langs.placed,
-										shelfPopupLabel: ""
-									},
-                                    w: self.selectedParams.WIDTH,
-                                    h: self.selectedParams.DEPTH,
-                                    
-									// row corner head island
-                                    type: self.selectedParams.TYPE || "row",
-                                    items: itemsForSketch,
-                                    placedItems: curItems || {}
-                                });
+								window.onEditorReady = function () {
+									$(window).on('scroll', function (e) {
+										ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
+									});
+									ru.octasoft.oem.designer.Main.init({
+										language: {
+											rightColumnLabel: langs.equipment,
+											ordered: langs.ordered,
+											placed: langs.placed,
+											shelfPopupLabel: ""
+										},
+										w: parseInt(self.selectedParams.WIDTH),
+										h: parseInt(self.selectedParams.DEPTH),
+										
+										// row corner head island
+										type: self.selectedParams.TYPE || "row",
+										items: itemsForSketch,
+										placedItems: curItems || {}
+									});
+								}
                             });
                             setTimeout(function() { window.resizeEditor(itemsForSketch); }, 300);
                         }

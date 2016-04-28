@@ -36,13 +36,15 @@
 	</table>
 
 	<div class="finvoiceNum">
-		Invoice No <?= $arResult['PROPS']['BILL']['VALUE'] ?> Date <?= date('d.m.y') ?>
+		Invoice No <?= $arResult['PROPS']['BILL']['VALUE'] ?> Date <?= date('d.m.y', $arResult['DATE']) ?>
 	</div>
 
 	<table class="finvoiceDetail">
 		<thead>
 			<tr>
 				<th colspan="2">Product</th>
+				<th>Price</th>
+				<th>Quantity</th>
 				<th class="finvoiceDetail-3">Total amount</th>
 			</tr>
 		</thead>
@@ -53,27 +55,43 @@
 					<td colspan="2">
 						<?= $basket['NAME'] ?>
 					</td>
-					<td class="fiSumm"><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
+					<td class="fiSumm">
+						<?= number_format($basket['PRICE'], 2, ',', ' ') ?>
+					</td>
+					<td class="fiSumm">
+						<?= $basket['QUANTITY'] ?>
+					</td>
+					<td class="fiSumm">
+						<?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?>
+					</td>
 				</tr>
 			<? } ?>
 			<tr>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2">Total without VAT:</td>
+				<td class="unborder">&nbsp;</td>
+				<td class="finvoiceDetail-2 no-right-border"">Total without VAT:</td>
+				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2">VAT:</td>
+				<td class="unborder">&nbsp;</td>
+				<td class="finvoiceDetail-2 no-right-border"">VAT:</td>
+				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
 				<td class="finvoiceDetail-3">18%</td>
 			</tr>
 			<tr>
 				<td class="unborder">&nbsp;</td>
-				<td class="finvoiceDetail-2">Total VAT:</td>
+				<td class="unborder">&nbsp;</td>
+				<td class="finvoiceDetail-2 no-right-border"">Total VAT:</td>
+				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
 			</tr>
 			<tr>
+				<td class="unborder">&nbsp;</td>
 				<td class="unborder">Currency: EURO</td>
-				<td class="finvoiceDetail-2">Total value:</td>
+				<td class="finvoiceDetail-2 no-right-border"">Total value:</td>
+				<td class="finvoiceDetail-2 unborder bottom-border">&nbsp;</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>
 		</tbody>
@@ -88,7 +106,7 @@
 	<div class="bottomSignature">
 		<div class="bottomSignatureLeft">
 			Director General S. Alexandrov
-			<div class="finvoiceStamp"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" /></div>
+			<div class="finvoiceStamp finvoiceStamp_en"><img src="<?= $this->getFolder() ?>/images/stamp_inv.png" /></div>
 		</div>
 		<div class="bottomSignatureRight">
 			Chief accountant S. Samsonova

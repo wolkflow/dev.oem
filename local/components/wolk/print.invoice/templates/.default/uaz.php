@@ -38,7 +38,7 @@
 
 	<div class="invoiceTitle">
 		Счет на оплату № <?= $arResult['PROPS']['BILL']['VALUE'] ?> 
-		от <?= date('d') ?> <?= TextHelper::i18nmonth(date('n'), false) ?> <?= date('Y') ?>
+		от <?= date('d', $arResult['DATE']) ?> <?= TextHelper::i18nmonth(date('n', $arResult['DATE']), false) ?> <?= date('Y', $arResult['DATE']) ?>
 	</div>
 
 	<table class="invoiceDetails">

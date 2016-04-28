@@ -2,6 +2,10 @@
 
 namespace Wolk\OEM;
 
+use \Bitrix\Main\Loader;
+use \Bitrix\Main\Localization\Loc;
+use \Bitrix\Main\Application;
+
 \Bitrix\Main\Loader::includeModule('sale');
 
 class Order
@@ -12,7 +16,7 @@ class Order
 	const PROP_STANDNUM		= 'standNum';
 	const PROP_LANGUAGE     = 'LANGUAGE';
 	const PROP_INVOICE		= 'INVOICE';
-	
+	const PROP_INVOICE_DATE = 'INVOICE_DATE';
 	
 	protected $id;
 	protected $data;
@@ -159,6 +163,7 @@ class Order
 		return intval($this->data['PROPS'][self::PROP_INVOICE]['VALUE']);
 	}
 	
+	
 	/**
 	 * Получение пути к счету.
 	 */ 
@@ -167,6 +172,33 @@ class Order
 		$this->load();
 		
 		return \CFile::getPath($this->getInvoice());
+	}
+	
+	
+	/**
+	 * Получение даты выставления счета.
+	 */ 
+	public function getInvoiceDate()
+	{
+		$this->load();
+		
+		return intval($this->data['PROPS'][self::PROP_INVOICE_DATE]['VALUE']);
+	}
+	
+	
+	/**
+	 * Получение названия статуса с учтом языка
+	 */
+	public function getStatusLangTitle($lang = null)
+	{
+		if (is_null($lang)) {
+			$lang = $this->getLanguage();
+		}
+		$this->load();
+		
+		$title = Loc::getMessage('ORDER_STATUS_'.$this->data['STATUS_ID'], Loc::loadLanguageFile(__FILE__, $lang), $lang); 
+		
+		return $title;
 	}
 	
 	

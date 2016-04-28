@@ -105,7 +105,7 @@ if (!empty($_POST)) {
 				$fid = $oemorder->getInvoice();
 
 				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
-					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'invoice', array('ID' => $ID));
+					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'invoice', array('ID' => $ID, 'LANG' => $oemorder->getLanguage()));
 					
 					// Отправка письма.
 					$event = new \CEvent();
@@ -265,7 +265,7 @@ $aTabs = [
         'DIV'   => 'data',
         'TAB'   => 'Данные заказа',
         'ICON'  => 'data',
-        'TITLE' => 'Заказ №' . $ID
+        'TITLE' => 'Заказ №'.$ID.' | '.$oemorder->getLanguage()
     ]
 ];
 

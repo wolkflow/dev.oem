@@ -1,6 +1,7 @@
 ﻿<?php
 
-$MESS['goodday']  = 'good afternoon';
+$MESS['dear']	    = 'Dear ';
+$MESS['goodday']    = '';
 $MESS['bill']       = 'Attached to this letter you can find the invoice';
 $MESS['from']       = 'of';
 $MESS['additional'] = 'for additional services for the exhibition';

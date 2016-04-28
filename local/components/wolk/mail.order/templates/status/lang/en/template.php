@@ -1,6 +1,7 @@
 ﻿<?php
 
-$MESS['goodday']  = 'good afternoon';
+$MESS['dear']	  = 'Dear ';
+$MESS['goodday']  = '';
 $MESS['company']  = 'Company and personal data';
 $MESS['title']	  = 'Title';
 $MESS['address']  = 'Address';
@@ -10,7 +11,7 @@ $MESS['phone']	  = 'Phone';
 $MESS['email']	  = 'E-mail';
 $MESS['vat']	  = 'VAT';
 $MESS['password'] = 'Password';
-$MESS['cabinet']  = 'Entry into personal cabinet';
+$MESS['cabinet']  = 'Personal account';
 $MESS['team']	  = 'Exhibition team';
 $MESS['director'] = 'Technical director';
 

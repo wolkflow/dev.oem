@@ -20,10 +20,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 </div>
 
-<? if ($USER->IsAdmin()) { ?>
-	<!--<pre>{{ selectedStand.SERVICES | json }}</pre>-->
-	<!--<pre>{{ services | json }}</pre>-->
-<? } ?>
+<pre style="display: none;">{{selectedStand | json}}</pre>
 
 <div class="catalogdeadline" v-show="hasMargins">
 	<div class="catalogdeadline__deadlinecontainer">
@@ -159,9 +156,6 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 </div>
 
-<? /*
-<div class="pagetitle" v-show="curStep == 2"><?= Loc::getMessage('Configure standard equipment') ?></div>
-*/ ?>
 <div class="pagetitle" v-show="curStep == 3"><?= Loc::getMessage('Services') ?></div>
 <div class="pagetitle" v-show="curStep == 2"><?= Loc::getMessage('Additional equipment') ?></div>
 <div class="main" v-show="[2,3,4].indexOf(parseInt(curStep)) != -1">
@@ -219,7 +213,8 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 	*/ ?>
 
-    <!--STEP 3-->
+    <!--STEP 2-->
+	<? // Выбор оборудования // ?>
     <div id="step3" v-show="curStep == 2">
         <div class="equipmentcontainer">
             <div class="options_group" v-for="section in options.SECTIONS | orderBy 'SORT'">
@@ -239,7 +234,8 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         </div>
     </div>
 
-    <!--STEP 4-->
+    <!--STEP 3-->
+	<? // Выбор услуг // ?>
     <div id="step4" v-show="curStep == 3">
         <electrics-and-communications></electrics-and-communications>
         <graphics v-if="selectedStand.ID > 0"></graphics>
@@ -257,12 +253,14 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 
 <div style="clear:both;" v-show="[2,3,4].indexOf(parseInt(curStep)) != -1"></div>
 
-<!--STEP 5-->
+<!--STEP 4-->
+<? // Создание скетча // ?>
 <div class="sketchpage" id="step5" v-show="curStep == 4" transition="fade">
     <? include 'sketch.php' ?>
 </div>
 
-<!--STEP 6-->
+<!--STEP 5-->
+<? // Формирование заказа // ?>
 <div class="orderpage" id="order" v-show="curStep == 5">
     <div class="pagetitle"><?= Loc::getMessage('order') ?></div>
     <div class="pagedescription">
@@ -327,9 +325,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                     <div class="pagesubsubtitle">
 						<?= Loc::getMessage('system_stand') ?>
 					</div>
-                    <div class="last ordercontainer__item">
+                    <div class="last ordercontainer__item" v-show="selectedStand.ID > 0">
                         <div class="ordercontainer__itemtotalprice" v-if="selectedStand.PRICE.PRICE">
-                            {{ selectedStand.PRICE.PRICE | format_currency ' ' currency_format  }}
+                            {{ selectedStand.PRICE.PRICE | format_currency ' ' currency_format }}
                         </div>
                         <div class="ordercontainer__itemname">
                             {{ selectedStand.NAME }}
@@ -371,18 +369,22 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <div class="ordertotalcontainer">
         <div class="ordertotalcontainer__standandpavillion">
             <div class="ordertotalcontainer__standcontainer">
-                <div class="ordertotalcontainer__title"><?= Loc::getMessage('stand') ?> №</div>
+                <div class="ordertotalcontainer__title">
+					<?= Loc::getMessage('stand') ?> №
+				</div>
                 <div class="ordertotalcontainer__number">
                     <input type="text" v-model="standNum" />
                 </div>
             </div>
             <div class="ordertotalcontainer__pavillioncontainer">
-                <div class="ordertotalcontainer__title"><?= Loc::getMessage('pavillion') ?></div>
+                <div class="ordertotalcontainer__title">
+					<?= Loc::getMessage('pavillion') ?>
+				</div>
                 <div class="ordertotalcontainer__number">
                     <input type="text" v-model="pavillion" />
                 </div>
             </div>
-            <div class="ordertotalcontainer__placeorder" data-modal="<? if ($USER->IsAuthorized()) { ?>#placeLogin<? } else { ?>#placeUnlogin<? } ?>">
+            <div class="ordertotalcontainer__placeorder" data-modal="<?= ($USER->IsAuthorized()) ? ('#placeLogin') : ('#placeUnlogin') ?>">
                 <?= Loc::getMessage('place_order') ?>
             </div>
         </div>
@@ -397,11 +399,16 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 			<?= Loc::getMessage('total_with_vat') ?>: <span>{{totalSurchargePrice | format_currency ' ' currency_format }}</span>
 		</div>
 		<div class="ordertaxcontainer__total" v-show="taxPrice">
-			<?= Loc::getMessage('tax') ?>: <span>{{taxPrice | format_currency ' ' currency_format }}</span>
+			<?= Loc::getMessage('tax') ?>:
+			<span>{{taxPrice | format_currency ' ' currency_format }}</span>
 		</div>
         <div class="ordertotalcontainer__surchargetotal" v-show="totalPrice">
-            <div class="ordertotalcontainer__surchargetotaltitle" v-show="curEvent.SURCHARGE > 0"><?= Loc::getMessage('total_with_sur') ?>:</div>
-			<div class="ordertotalcontainer__surchargetotaltitle" v-show="curEvent.SURCHARGE <= 0"><?= Loc::getMessage('total_summ') ?>:</div>
+            <div class="ordertotalcontainer__surchargetotaltitle" v-show="curEvent.SURCHARGE > 0">
+				<?= Loc::getMessage('total_with_sur') ?>:
+			</div>
+			<div class="ordertotalcontainer__surchargetotaltitle" v-show="curEvent.SURCHARGE <= 0">
+				<?= Loc::getMessage('total_summ') ?>:
+			</div>
             <div class="ordertotalcontainer__surchargetotalcount">
                 {{ totalPrice | format_currency ' ' currency_format }}
             </div>
@@ -412,9 +419,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 <div class="hide">
     <div class="modal" id="timetable">
         <div class="modalClose arcticmodal-close"></div>
-        <div class="modalTitle"><?=Loc::getMessage('event_timetable')?></div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('event_timetable') ?>
+		</div>
         {{{ curEvent.SCHEDULE }}}
     </div>
+	
     <!-- Окно: не залогинен -->
     <div class="modal placeOrder placeOrder__unlogin" id="placeUnlogin">
         <div class="modalClose arcticmodal-close"></div>
@@ -428,12 +438,15 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <? Helper::includeFile('rules_text_with_link_'.$curLang) ?>
             </label>
             <div class="placeOrder__buttons" v-if="guest_agreement">
-                <button class="styler arcticmodal-close" data-modal="#modalLogin"><?= Loc::getMessage('login') ?></button>
-                <button class="styler arcticmodal-close" data-modal="#modalRegister"><?= Loc::getMessage('register') ?></button>
+                <button class="styler arcticmodal-close" data-modal="#modalLogin">
+					<?= Loc::getMessage('login') ?>
+				</button>
+                <button class="styler arcticmodal-close" data-modal="#modalRegister">
+					<?= Loc::getMessage('register') ?>
+				</button>
             </div>
         </form>
     </div>
-    <!--// .Окно: не залогинен -->
 
     <!-- Окно: залогинен -->
     <div class="modal placeOrder placeOrder__login" id="placeLogin">
@@ -460,7 +473,6 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 			*/ ?>
         </form>
     </div>
-    <!--// .Окно: залогинен -->
 
     <div class="modal modalRegister" id="modalRegister">
         <div class="modalClose arcticmodal-close"></div>
@@ -474,58 +486,80 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <form>
             <div class="userForm__left">
                 <div class="formRow">
-                    <label for="comName"><?=Loc::getMessage('company_name')?>*</label>
+                    <label for="comName">
+						<?= Loc::getMessage('company_name') ?>*
+					</label>
                     <input type="text" class="styler" id="comName" required v-model="userData.companyName" />
                 </div>
                 <div class="formRow">
-                    <label for="comAddr"><?=Loc::getMessage('company_address')?>*</label>
+                    <label for="comAddr">
+						<?= Loc::getMessage('company_address') ?>*
+					</label>
                     <input type="text" class="styler" id="comAddr" required v-model="userData.companyAddress" />
                 </div>
                 <div class="formRow">
-                    <label for="comName"><?=Loc::getMessage('name')?>*</label>
+                    <label for="comName">
+						<?= Loc::getMessage('name') ?>*
+					</label>
                     <input type="text" class="styler" id="comName" required v-model="userData.name" />
                 </div>
                 <div class="formRow">
-                    <label for="comLastName"><?=Loc::getMessage('last_name')?>*</label>
+                    <label for="comLastName">
+						<?= Loc::getMessage('last_name') ?>*
+					</label>
                     <input type="text" class="styler" id="comLastName" required v-model="userData.lastName" />
                 </div>
                 <div class="formRow">
-                    <label for="comPhone"><?=Loc::getMessage('phone_number')?></label>
+                    <label for="comPhone">
+						<?= Loc::getMessage('phone_number') ?>
+					</label>
                     <input type="text" class="styler" id="comPhone" v-model="userData.phone" />
                 </div>
             </div>
             <div class="userForm__right">
                 <div class="formRow">
-                    <label for="comMail"><?=Loc::getMessage('email')?>*</label>
+                    <label for="comMail">
+						<?= Loc::getMessage('email') ?>*
+					</label>
                     <input type="text" class="styler" id="comMail" v-model="userData.email" />
                 </div>
                 <div class="formRow">
-                    <label for="comMail"><?=Loc::getMessage('confirm_email')?>*</label>
+                    <label for="comMail">
+						<?= Loc::getMessage('confirm_email') ?>*
+					</label>
                     <input type="text" class="styler" id="email_confirm" v-model="userData.email_confirm" />
                 </div>
                 <div class="formRow">
-                    <label for="comVat"><?=Loc::getMessage('vat_id')?></label>
+                    <label for="comVat">
+						<?= Loc::getMessage('vat_id') ?>
+					</label>
                     <input type="text" class="styler" id="comVat" v-model="userData.vatId" />
                 </div>
                 <div class="formRow">
-                    <label for="comPass"><?=Loc::getMessage('password')?>*</label>
+                    <label for="comPass">
+						<?= Loc::getMessage('password') ?>*
+					</label>
                     <input pattern=".{6,}" type="password" class="styler" id="comPass" v-model="userData.password" />
                 </div>
                 <div class="formRow">
-                    <label for="comPassRe"><?=Loc::getMessage('confirm_password')?>*</label>
+                    <label for="comPassRe">
+						<?= Loc::getMessage('confirm_password') ?>*
+					</label>
                     <input type="password" class="styler" id="comPassRe" v-model="userData.password_confirm" />
                 </div>
                 <div class="formRow">
                     <label>&nbsp;</label>
-                    <input type="button" class="styler modalSend" value="<?=Loc::getMessage('register')?>" @click="placeOrder('register')" />
+                    <input type="button" class="styler modalSend" value="<?= Loc::getMessage('register') ?>" @click="placeOrder('register')" />
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="userForm__note">* <?=Loc::getMessage('userform_note')?></div>
+            <div class="userForm__note">
+				* <?= Loc::getMessage('userform_note') ?>
+			</div>
             <div class="errortext"></div>
         </form>
     </div>
-    <!--// .Окно: регистрация -->
+	
 
     <!-- Окно: вход -->
     <div class="modal modalLogin" id="modalLogin">
@@ -553,7 +587,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             <div class="errortext"></div>
         </form>
     </div>
-    <!--// .Окно: вход -->
+    
 
     <div class="modal modalSuccessOrder" id="modalSuccessOrder">
         <div class="modalTitle">

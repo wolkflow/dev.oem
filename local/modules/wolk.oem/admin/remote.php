@@ -41,10 +41,9 @@ switch ($action) {
 			jsonresponse(false, 'Ошибка выполнения: модуль не установлен');
 		}
 		
-		$order    = CSaleOrder::getByID($order_id);
-		$customer = CUser::getByID($order['USER_ID'])->Fetch();
-		
-		$invoice = new Wolk\OEM\Invoice($order_id, $template, $customer['WORK_COMPANY'], $customer['UF_CLIENT_NUMBER']);
+		$order    = new Wolk\OEM\Order($order_id);
+		$customer = $order->getUser();
+		$invoice  = new Wolk\OEM\Invoice($order_id, $template, $customer['WORK_COMPANY'], $customer['UF_CLIENT_NUMBER']);
 		
 		// Печать счета.
 		$result = $invoice->make();
@@ -55,6 +54,10 @@ switch ($action) {
 		$invoiceID = CFile::SaveFile(CFile::MakeFileArray($invoice->getInvoice()));
 		
 		\Wolk\Core\Helpers\SaleOrder::saveProperty($order_id, 'INVOICE', $invoiceID);
+		
+		if (strtotime($order->getInvoiceDate()) <= 0)  {
+			\Wolk\Core\Helpers\SaleOrder::saveProperty($order_id, 'INVOICE_DATE', date('d.m.Y'));
+		}
 		
 		jsonresponse(true, '', ['link' => $invoice->getInvoice(), 'name' => $invoice->getFileName()]);
 		break;
