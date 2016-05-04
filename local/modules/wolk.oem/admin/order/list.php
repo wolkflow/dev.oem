@@ -51,13 +51,15 @@ $ladmin  = new CAdminList($table, $sorting);
 
 $filters = array(
 	"find_id",
-	"find_bill",
 	"find_status",
+	"find_company",
+	"find_event",
+	"find_date_order_from",
+	"find_date_order_to",
+	"find_bill",
 );
 
 $ladmin->InitFilter($filters);
-
-
 
 
 // Статусы заказа.
@@ -65,21 +67,81 @@ $statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
 
 
 
-
 // Фильтр.
 $filter = array();
 
 if (CheckFilter()) {
+	
+	// Фильтр по номеру.
 	if (!empty($find_id)) {
 		$filter['ID'] = (int) $find_id;
 	}
-
-	if (!empty($find_bill)) {
-		//$filter['ID'] = (string) $find_bill;
-	}
 	
+	// Фильтр по статусу.
 	if (!empty($find_status)) {
 		$filter['STATUS_ID'] = array_map('strval', (array) $find_status);
+	}
+	
+	// Фильтр по названию компании.
+	if (!empty($find_company)) {
+		$rids = array();
+		$result = CUser::GetList($b='ID', $o='ASC', ['WORK_COMPANY' => '%'.$find_company.'%'], ['SELECT' => ['ID']]);
+		while ($item = $result->Fetch()) {
+			$rids []= (int) $item['ID'];
+		}
+		unset($result, $item);
+		
+		if (empty($rids)) {
+			$filter['ID'] = '0';
+		} else {
+			$filter['USER_ID'] = array_unique($rids);
+		}
+	}
+	
+	// Фильтр по названию выставки.
+	if (!empty($find_event)) {
+		$rids = array();
+		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'eventName', '%VALUE' => $find_event], false, false, ['ORDER_ID']);
+		while ($item = $result->Fetch()) {
+			$rids []= (int) $item['ORDER_ID'];
+		}
+		unset($result, $item);
+		
+		$rids = array_unique(array_filter($rids));
+		
+		if (empty($rids)) {
+			$filter['ID'] = '0';
+		} else {
+			$filter['ID'] = (!empty($filter['ID'])) ? (array_intersect((array) $filter['ID'], $rids)) : ($rids);
+		}
+	}
+	
+	// Фильтр по дате создания заказа (от).
+	if (!empty($find_date_order_from)) {
+		$filter['>=DATE_INSERT'] = $find_date_order_from;
+	}
+	
+	// Фильтр по дате создания заказа (до).
+	if (!empty($find_date_order_to)) {
+		$filter['<=DATE_INSERT'] = $find_date_order_to;
+	}
+	
+	// Фильтр по номеру счета.
+	if (!empty($find_bill)) {
+		$rids = array();
+		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'BILL', '%VALUE' => $find_bill], false, false, ['ORDER_ID']);
+		while ($item = $result->Fetch()) {
+			$rids []= (int) $item['ORDER_ID'];
+		}
+		unset($result, $item);
+		
+		$rids = array_unique(array_filter($rids));
+		
+		if (empty($rids)) {
+			$filter['ID'] = '0';
+		} else {
+			$filter['ID'] = (!empty($filter['ID'])) ? (array_intersect((array) $filter['ID'], $rids)) : ($rids);
+		}
 	}
 }
 
@@ -210,8 +272,11 @@ $formfilter = new CAdminFilter(
 	$table."_filter",
 	array(
 		Loc::getMessage('ORDER_ID'),
-		//Loc::getMessage('ORDER_BILL'),
 		Loc::getMessage('ORDER_STATUS'),
+		Loc::getMessage('ORDER_COMPANY'),
+		Loc::getMessage('ORDER_EVENT'),
+		Loc::getMessage('ORDER_DATE'),
+		Loc::getMessage('ORDER_BILL'),
 	)
 );
 
@@ -224,14 +289,6 @@ $formfilter = new CAdminFilter(
 			<input type="text" size="25" name="find_id" value="<?= htmlspecialchars($find_id) ?>" />
 		</td>
 	</tr>
-	<? /*
-	<tr>
-		<td><?= Loc::getMessage('ORDER_BILL') ?>:</td>
-		<td>
-			<input type="text" name="find_bill" size="40" value="<?= htmlspecialchars($find_bill) ?>" />
-		</td>
-	</tr>
-	*/ ?>
 	<tr>
 		<td><?= Loc::getMessage('ORDER_STATUS') ?>:</td>
 		<td>
@@ -244,6 +301,31 @@ $formfilter = new CAdminFilter(
 			</select>
 		</td>
 	</tr>
+	<tr>
+		<td><b><?= Loc::getMessage('ORDER_COMPANY') ?>:</b></td>
+		<td>
+			<input type="text" size="25" name="find_company" value="<?= htmlspecialchars($find_company) ?>" />
+		</td>
+	</tr>
+	<tr>
+		<td><b><?= Loc::getMessage('ORDER_EVENT') ?>:</b></td>
+		<td>
+			<input type="text" size="25" name="find_event" value="<?= htmlspecialchars($find_event) ?>" />
+		</td>
+	</tr>
+	<tr>
+		<td><b><?= Loc::getMessage('ORDER_DATE') ?>:</b></td>
+		<td>
+			<?= CalendarPeriod('find_date_order_from', htmlspecialcharsex($find_date_order_from), 'find_date_order_to', htmlspecialcharsex($find_date_order_to), 'find_form', 'Y') ?>
+		</td>
+	</tr>
+	<tr>
+		<td><b><?= Loc::getMessage('ORDER_BILL') ?>:</b></td>
+		<td>
+			<input type="text" size="25" name="find_bill" value="<?= htmlspecialchars($find_bill) ?>" />
+		</td>
+	</tr>
+	
 	<? $formfilter->Buttons(array("table_id" => $table, "url" => $APPLICATION->GetCurPage(), "form" => "find_form")) ?>
 	<? $formfilter->End() ?>
 </form>
