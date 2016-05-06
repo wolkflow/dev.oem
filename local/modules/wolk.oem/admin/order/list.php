@@ -11,10 +11,18 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admi
 IncludeModuleLangFile(__FILE__);
 
 
-$permission = $APPLICATION->GetGroupRight('sale');
+$permission = $APPLICATION->GetGroupRight('wolk.oem');
 
 if ($permission == 'D') {
 	$APPLICATION->AuthForm(Loc::getMessage('ACCESS_DENIED'));
+}
+
+
+$groups = $USER->GetUserGroupArray();
+
+$ismanager = false;
+if (in_array(GROUP_MANAGERS_ID, $groups)) {
+	$ismanager = true;
 }
 
 
@@ -144,6 +152,33 @@ if (CheckFilter()) {
 		}
 	}
 }
+
+if ($ismanager) {
+	$eids = array();
+	$result = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'ACTIVE' => 'Y', 'PROPERTY_MANAGERS' => $USER->getID()], false, false, ['ID']);
+	while ($item = $result->Fetch()) {
+		$eids []= (int) $item['ID'];
+	}
+	unset($result, $item);
+	
+	$eids = array_unique(array_filter($eids));
+	
+	$rids = array();
+	$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'eventId', '@VALUE' => $eids], false, false, ['ORDER_ID']);
+	while ($item = $result->Fetch()) {
+		$rids []= (int) $item['ORDER_ID'];
+	}
+	unset($result, $item, $eids);
+	
+	$rids = array_unique(array_filter($rids));
+	
+	if (empty($rids)) {
+		$filter['ID'] = '0';
+	} else {
+		$filter['ID'] = (!empty($filter['ID'])) ? (array_intersect((array) $filter['ID'], $rids)) : ($rids);
+	}
+}
+
 
 
 $params = array(

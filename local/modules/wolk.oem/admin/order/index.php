@@ -7,6 +7,15 @@ use Bitrix\Sale\Helpers\Admin\Blocks;
 // подключим все необходимые файлы:
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
 
+$permission = $APPLICATION->GetGroupRight('wolk.oem');
+
+if ($permission == 'D') {
+	$APPLICATION->AuthForm(Loc::getMessage('ACCESS_DENIED'));
+}
+
+
+
+
 // подключим языковой файл
 IncludeModuleLangFile(__FILE__);
 
