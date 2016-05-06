@@ -49,3 +49,5 @@ define('EQUIPMENT_COLORS_ENTITY_ID', 5);
 
 define('VAT_DEFAULT', 18);
 
+// IP боевого сервера.
+define('PRODUCTION_IP', '89.253.254.58');
