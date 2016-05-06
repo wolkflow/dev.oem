@@ -1,5 +1,15 @@
 ﻿<? use Wolk\Core\Helpers\Text as TextHelper ?>
 
+<script>
+	$(document).ready(function(){
+		var allheight = $('.ficontainer').height();
+		if(allheight >= 880 && allheight < 1200) {
+			$('.ficontainer').css({'padding-bottom': '400px'})
+		}
+	});
+</script>
+
+
 <div class="ficontainer cur-ru">
 	<div class="filogo">
 		<img src="<?= $this->getFolder() ?>/images/itemf_logo.png" alt="">
@@ -48,15 +58,12 @@
 	</div>
 
 	<table class="finvoiceDetail">
-		<thead>
-			<tr>
-				<th colspan="2">Наименование услуги </th>
-				<th>Цена в руб.*</th>
-				<th>Количество</th>
-				<th class="finvoiceDetail-3">Сумма в руб.*</th>
-			</tr>
-		</thead>
-		<tbody>
+		<tr class="thead">
+			<td colspan="2">Наименование услуги </td>
+			<td>Цена в руб.*</td>
+			<td>Количество</td>
+			<td class="finvoiceDetail-3">Сумма в руб.*</td>
+		</tr>
 			<? foreach ($arResult['BASKETS'] as $basket) { ?>
 				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
 				<tr class="fiItemRow">
@@ -98,7 +105,6 @@
 				<td colspan="2" class="finvoiceDetail-2 no-right-border">Всего с НДС:</td>
 				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
 			</tr>
-		</tbody>
 	</table>
 
 	<div class="finvoiceDetailSum">
@@ -128,4 +134,6 @@
 		</div>
 		<div class="clear"></div>
 	</div>
+
+
 </div>

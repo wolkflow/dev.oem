@@ -129,8 +129,10 @@ class Order
 		
 		$event = \CIBlockElement::getByID($data['PROPS']['eventId']['VALUE'])->GetNextElement();
 		
-		$result = $event->getFields();
-		$result['PROPS'] = $event->getProperties();
+		if ($event) {
+			$result = $event->getFields();
+			$result['PROPS'] = $event->getProperties();
+		}
 		
 		return $result;
 	}

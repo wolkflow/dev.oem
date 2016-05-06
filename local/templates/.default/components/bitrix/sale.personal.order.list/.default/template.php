@@ -62,6 +62,7 @@ JS
             <div class="ordercontainer">
                 <div class="ordercontainer__columnscontainer">
                     <div class="ordercontainer__column right">
+						<? /*
                         <div class="pagesubtitle">
                             <?= Loc::getMessage('standard equipment') ?>
                             <div class="pagesubtitle__addbutton" v-show="status == 'N'">
@@ -83,6 +84,7 @@ JS
                                 </div>
                             </div>
                         </div>
+						*/ ?>
                         <div class="pagesubtitle"><?=Loc::getMessage('additional equipment')?>
                             <div class="pagesubtitle__addbutton" v-show="status == 'N'">
                                 <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'"></a>

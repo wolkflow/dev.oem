@@ -155,8 +155,8 @@ body						{font: 400 13px/normal Arial, helvetika, sans-serif}
     left: 0;
 }
 
-
-.ficontainer				{padding: 0 20px 25px;width: 680px;margin: 0 auto}
+html,body {height: 100%;min-height: 100%}
+.ficontainer				{padding: 0 20px 200px;width: 680px;margin: 0 auto;position: relative;height: 100%;min-height: 100%;box-sizing: border-box;-moz-box-sizing: border-box}
 .filogo						{text-align: center;}
 .finvoiceName				{text-align: center;font-size: 18px;margin: 25px 0 30px}
 
@@ -167,19 +167,18 @@ body						{font: 400 13px/normal Arial, helvetika, sans-serif}
 table						{width: 100%;}
 .finvoiceDetail				{margin-bottom: 15px}
 .importantBlock	p			{margin-bottom: 15px}
-.finvoiceDetail tr th,
+
 .finvoiceDetail tr td		{border: 1px solid #000;padding: 5px}
-.finvoiceDetail tr th		{font-weight: 700;}
+.finvoiceDetail tr.thead td	{font-weight: 700;}
 .finvoiceDetail tr td.fiSumm{vertical-align: bottom;text-align: right;width: 100px !important;}
-.finvoiceDetail	th.finvoiceDetail-3,
+
 .finvoiceDetail	td.finvoiceDetail-3	{width: 100px !important;}
 .finvoiceDetail	td.finvoiceDetail-3	{text-align: right}
-.finvoiceDetail	th.finvoiceDetail-2,
-.finvoiceDetail	td.finvoiceDetail-2	{}
+
 td.unborder					{border: 0 !important;}
 
 .finvoiceNum				{font-size: 19px;text-align: center;margin: 50px 0}
-
+.bottomSignature            {height: 150px;position: absolute;bottom: 0;left: 0;width: 100%;}
 .bottomSignatureLeft		{float: left;width: 50%;position: relative;}
 .bottomSignatureRight		{margin-left: 60%;position: relative;min-height: 60px;}
 .finvoiceStamp				{position: absolute;left: 0;bottom: 0}
@@ -196,7 +195,7 @@ td.unborder					{border: 0 !important;}
 .cur-ru .finvoiceNum		{margin: 10px 0 20px}
 .cur-ru .finvoiceDetailSum	{border-bottom: 1px solid #000;padding-bottom: 10px;margin-bottom: 5px}
 .cur-ru .finvoiceDetailLeg	{font-size: 13px;margin-bottom: 45px}
-.cur-ru .finvoiceDeadline	{font-size: 12px;margin-bottom: 100px;font-weight: 700;}
+.cur-ru .finvoiceDeadline	{font-size: 12px;font-weight: 700;}
 .cur-ru .bottomSignatureLeg			{font-size: 12px;padding-left: 50px;padding-top: 40px}
 .cur-ru .bottomSignatureLeg	span	{margin-left: -50px}
 .cur-ru .bottomSignatureCode		{padding-top: 0}

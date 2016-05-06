@@ -238,6 +238,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 	<? // Выбор услуг // ?>
     <div id="step4" v-show="curStep == 3">
         <electrics-and-communications></electrics-and-communications>
+		<telecommunications></telecommunications>
         <graphics v-if="selectedStand.ID > 0"></graphics>
         <hanging-structure></hanging-structure>
         <temporary-staff></temporary-staff>
@@ -631,6 +632,8 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 <? include 'basket.php' ?>
 
 <? include 'electrics_and_communications.php' ?>
+
+<? include 'telecommunications.php' ?>
 
 <? include 'graphics.php' ?>
 

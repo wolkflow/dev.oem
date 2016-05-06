@@ -49,6 +49,14 @@ Loc::loadLanguageFile(__FILE__);
 			stickyCall();
 		});
 	</script>
+	
+	<?  // Янекдс.Метрика.
+		$APPLICATION->IncludeComponent('bitrix:main.include', '', array(
+			'AREA_FILE_SHOW' => 'file',
+			'PATH' => SITE_TEMPLATE_PATH.'/include/counters/yandex-metrica.php',
+		));
+	?>
+	
 </head>
 <body>
 <? $APPLICATION->ShowPanel(); ?>

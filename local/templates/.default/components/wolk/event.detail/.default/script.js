@@ -1,4 +1,4 @@
-$(function () {
+﻿$(function () {
 	
      //Vue.config.debug = true;
 	
@@ -778,6 +778,106 @@ Vue.component('electrics-and-communications', {
     components: {
         'electrics-and-communications-item': {
             template: '#electrics-and-communications-item',
+            data: function () {
+                return {
+                    selectedItems: [
+                        {
+                            ID: '',
+                            QUANTITY: 0
+                        }
+                    ]
+                }
+            },
+            props: ['section'],
+            computed: {
+                items: function () {
+                    return this.section.ITEMS;
+                }
+            },
+            methods: {
+                addItem: function () {
+                    this.selectedItems.push({
+                        ID: '',
+                        QUANTITY: 0
+                    })
+                },
+				incQty: function (selectedItem, index) {
+					if (selectedItem.ID > 0) {
+						selectedItem.QUANTITY++;
+						this.addToCart(selectedItem, index);
+					}
+				},
+				decQty: function (selectedItem, index) {
+					if (selectedItem.ID > 0) {
+						if (selectedItem.QUANTITY > 0) {
+							selectedItem.QUANTITY--;
+							this.addToCart(selectedItem, index);
+						}
+					}
+				},
+				addToCart: function(selectedItem, index) {
+					if (selectedItem.QUANTITY > 0) {
+						var item = this.items[parseInt(selectedItem.ID)];
+						
+						this.$root.$set('selectedStand.SERVICES[' + this.section.ID + '][' + index + ']', {
+							ID: item.ID,
+							NAME: item.NAME,
+                            CART_SECTION: {ID: this.section.ID, NAME: this.section.NAME},
+							PRICE: parseFloat(item.PRICE).toFixed(2),
+							QUANTITY: selectedItem.QUANTITY
+						});
+					} else {
+						Vue.delete(this.$root.selectedStand.SERVICES[this.section.ID], index);
+					}					
+				}
+            },
+            ready: function () {
+                if (
+                    this.$root.selectedStand
+                    &&
+                    this.$root.selectedStand.hasOwnProperty('SERVICES')
+                    &&
+                    this.$root.selectedStand.SERVICES
+                    &&
+                    this.$root.selectedStand.SERVICES.hasOwnProperty(this.section.ID)
+                ) {
+                    this.selectedItems = this.$root.selectedStand.SERVICES[this.section.ID];
+                }
+            },
+            mixins: [
+                // quantityMixin,
+                // addToCartMixin,
+                currencyMixin
+            ]
+        }
+    },
+    mixins: [toggleableMixin]
+});
+
+
+// Компонент: "Телекоммуникации".
+Vue.component('telecommunications', {
+    template: '#telecommunications',
+	parent: function() {
+		return this;
+	},
+    data: function () {
+        return {
+            sectionId: 38,
+            visible: true
+        }
+    },
+    computed: {
+        section: function () {
+            return this.$parent.services.SECTIONS[this.sectionId];
+        },
+        sections: function () {
+            return this.section.SECTIONS;
+        }
+    },
+    components: {
+        'telecommunications-item': {
+            template: '#telecommunications-item',
             data: function () {
                 return {
                     selectedItems: [

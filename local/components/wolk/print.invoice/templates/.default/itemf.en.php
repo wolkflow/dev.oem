@@ -1,5 +1,13 @@
 ﻿<? use Wolk\Core\Helpers\Text as TextHelper ?>
 
+<script>
+	$(document).ready(function(){
+		var allheight = $('.ficontainer').height();
+		if(allheight >= 880 && allheight < 1200) {
+			$('.ficontainer').css({'padding-bottom': '400px'})
+		}
+	});
+</script>
 <div class="ficontainer">
 	<div class="filogo">
 		<img src="<?= $this->getFolder() ?>/images/itemf_logo.png" alt="">

@@ -32,6 +32,7 @@ class EventDetailComponent extends BaseListComponent
 
     protected $equipmentColors = [];
 
+	
     /**
      * EventDetailComponent constructor.
      * @param CBitrixComponent|null $component
@@ -45,6 +46,7 @@ class EventDetailComponent extends BaseListComponent
         Loc::loadMessages(__FILE__);
     }
 
+	
     /**
      * @return array
      * @throws \Bitrix\Main\ArgumentException
@@ -113,6 +115,7 @@ class EventDetailComponent extends BaseListComponent
         $this->arResult['ITEMS'] = $this->event['STANDS'];
         $this->arResult['SERVICES'] = $this->getServices($this->event['ID']);
     }
+	
 
     /**
      * @param $eventId
@@ -190,8 +193,11 @@ class EventDetailComponent extends BaseListComponent
 
         return $arSections;
     }
+	
 
     /**
+	 * Услуги мероприятия.
+	 *
      * @param _CIBElement $event
      * @return array
      */
@@ -199,25 +205,33 @@ class EventDetailComponent extends BaseListComponent
     {
         $arServices = [];
         $servicesIds = $event->GetProperty('OPTIONS')['VALUE'];
+		
         $colors = array_map(function ($val) {
             return $val['UF_NAME_' . $this->curLang];
         }, $this->getEquipmentColors());
-        #dump($servicesIds);die;
-        $obServices = CIBlockElement::GetList([], [
-            'IBLOCK_ID' => OPTIONS_IBLOCK_ID,
-            'ACTIVE'    => 'Y',
-            'ID'        => $servicesIds
-        ], false, false, [
-            'ID',
-            'NAME',
-            'PROPERTY_*',
-            'CATALOG_GROUP_1',
-            'PREVIEW_PICTURE',
-            'PREVIEW_TEXT',
-            'IBLOCK_SECTION_ID',
-            'CODE',
-			'SORT',
-        ]);
+        
+        $obServices = CIBlockElement::GetList(
+			[],
+			[
+				'IBLOCK_ID' => OPTIONS_IBLOCK_ID,
+				'ACTIVE'    => 'Y',
+				'ID'        => $servicesIds
+			], 
+			false, 
+			false, 
+			[
+				'ID',
+				'NAME',
+				'PROPERTY_*',
+				'CATALOG_GROUP_1',
+				'PREVIEW_PICTURE',
+				'PREVIEW_TEXT',
+				'IBLOCK_SECTION_ID',
+				'CODE',
+				'SORT',
+			]
+		);
+		
         while ($arService = $obServices->Fetch()) {
             if ($arService['PREVIEW_PICTURE']) {
                 $arService['PICTURE'] = [
@@ -231,27 +245,28 @@ class EventDetailComponent extends BaseListComponent
                     ])['src']
                 ];
             }
-
+			
+			// TODO: Убрать ID свойств / вынести в константы.
             $arService['EQ_COLORS'] = ArrayHelper::only($colors, $arService['PROPERTY_38']);
-
-            $width = ($arService['PROPERTY_41'] / 10) <= 5 ? 5 : $arService['PROPERTY_41'] / 10;
+			
+            $width  = ($arService['PROPERTY_41'] / 10) <= 5 ? 5 : $arService['PROPERTY_41'] / 10;
             $height = ($arService['PROPERTY_40'] / 10) <= 5 ? 5 : $arService['PROPERTY_40'] / 10;
-            $src = CFile::GetFileArray($arService['PROPERTY_42'])['SRC'];
-
+            $src    = CFile::GetFileArray($arService['PROPERTY_42'])['SRC'];
+			
             list(
                 $arService['WIDTH'],
                 $arService['HEIGHT'],
                 $arService['SKETCH_IMAGE'],
                 $arService['SKETCH_TYPE'],
-                ) = [
+            ) = [
                 $arService['PROPERTY_41'] / 1000,
                 $arService['PROPERTY_40'] / 1000,
                 $src ? "/i.php?w={$width}&h={$height}&src={$src}&zc=0" : false,
                 $arService['PROPERTY_48'] ?: 'droppable'
             ];
-
+			
             $arService['NAME'] = ($this->curLang == 'RU' ? $arService['PROPERTY_51'] : $arService['PROPERTY_52']) ?: $arService['NAME'];
-
+			
             $arServices[$arService['ID']] = $arService;
         }
 
@@ -262,6 +277,7 @@ class EventDetailComponent extends BaseListComponent
 
         return $arServices;
     }
+	
 
     /**
      * @param $data
@@ -604,7 +620,7 @@ class EventDetailComponent extends BaseListComponent
                         CSaleOrderPropsValue::Delete($arValue['ID']);
                     }
                 }
-
+				
                 // Параметры заказа.
                 $params = $_POST['orderParams'];
 				
@@ -620,6 +636,8 @@ class EventDetailComponent extends BaseListComponent
 				$params['SKETCH_FILE'] = CFile::SaveFile($file, 'sketchs');
 				unlink($filename);			
 				
+				// Не сохраняем base64.
+				unlink($params['SKETCH_IMAGE']);
 				
                 // Наценка.
                 $params['SURCHARGE'] = (float)$surcharge;
