@@ -56,7 +56,6 @@ Loc::loadLanguageFile(__FILE__);
 			'PATH' => SITE_TEMPLATE_PATH.'/include/counters/yandex-metrica.php',
 		));
 	?>
-	
 </head>
 <body>
 <? $APPLICATION->ShowPanel(); ?>

@@ -637,12 +637,12 @@ class EventDetailComponent extends BaseListComponent
 				unlink($filename);			
 				
 				// Не сохраняем base64.
-				unlink($params['SKETCH_IMAGE']);
+				unset($params['SKETCH_IMAGE']);
 				
                 // Наценка.
                 $params['SURCHARGE'] = (float)$surcharge;
                 $params['SURCHARGE_PRICE'] = (float)$moneySurcharge;
-
+				
                 foreach ($params as $code => $value) {
                     $res = OrderPropsValueTable::add([
                         'ORDER_ID'       => $orderId,
@@ -686,6 +686,7 @@ class EventDetailComponent extends BaseListComponent
                 "MANAGER_EMAIL" => $managerEmail,
             ];
 			
+					
 			$result = $this->orderBasket($orderId, $fuserId);
 			
             if (is_null($order) && $result) {
@@ -1061,6 +1062,9 @@ class EventDetailComponent extends BaseListComponent
      */
     protected function orderBasket($orderId, $fuserId)
     {
+		return CSaleBasket::OrderBasket($orderId, $fuserId, SITE_ID);
+		
+		/*
         $basketItems = BasketTable::getList([
             'filter' =>
                 [
@@ -1075,6 +1079,8 @@ class EventDetailComponent extends BaseListComponent
                 return false;
             }
         }
+		*/
+		
         return true;
     }
 

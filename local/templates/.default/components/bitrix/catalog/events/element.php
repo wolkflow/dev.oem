@@ -35,7 +35,7 @@ if($obEvent = $obElement->GetNextElement()) {
 
     $logo = false;
     if($event['PROPS']['LANG_LOGO_'.$curLang]['VALUE']) {
-        $logo = CFile::ResizeImageGet($event['PROPS']['LANG_LOGO_'.$curLang]['VALUE'], ['width' => 220, 'height' => 55])['src'];
+        $logo = CFile::ResizeImageGet($event['PROPS']['LANG_LOGO_'.$curLang]['VALUE'], ['width' => 220, 'height' => 65])['src'];
     }
     $APPLICATION->AddViewContent('EVENT_LINK', '/events/'.$event['CODE'].'/');
     $APPLICATION->AddViewContent('EVENT_LOGO', $logo ?: '/local/templates/.default/build/images/header-logo.png');

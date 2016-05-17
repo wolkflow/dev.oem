@@ -23,6 +23,10 @@
 
 	'use strict';
 	
+	if (typeof langs == 'undefined') {
+		var langs = {};
+	}
+	
 	var pluginName = 'styler',
 			defaults = {
 				wrapper: 'form',
