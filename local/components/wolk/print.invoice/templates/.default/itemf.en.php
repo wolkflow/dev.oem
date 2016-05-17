@@ -48,14 +48,14 @@
 	</div>
 
 	<table class="finvoiceDetail">
-		<thead>
+		<tr class="thead">
 			<tr>
-				<th colspan="2">Product</th>
-				<th>Price</th>
-				<th>Quantity</th>
-				<th class="finvoiceDetail-3">Total amount</th>
+				<td colspan="2">Product</td>
+				<td>Price</td>
+				<td>Quantity</td>
+				<td class="finvoiceDetail-3">Total amount</td>
 			</tr>
-		</thead>
+		</tr>
 		<tbody>
 			<? foreach ($arResult['BASKETS'] as $basket) { ?>
 				<? if ($basket['SUMMARY_PRICE'] <= 0) continue ?>
