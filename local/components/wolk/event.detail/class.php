@@ -572,7 +572,9 @@ class EventDetailComponent extends BaseListComponent
             $moneySurcharge = round($totalPrice * $surcharge / 100, 2);
             $totalPrice += $moneySurcharge;
         }
-
+		
+		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r([$totalPrice, $moneySurcharge], true) . PHP_EOL);
+		
         $totalPrice = $totalPrice ?: 1;
         $vat = ($totalPrice / 100 * VAT_DEFAULT);
 
@@ -590,6 +592,8 @@ class EventDetailComponent extends BaseListComponent
             "DELIVERY_ID"      => 1,
             "TAX_VALUE"        => $vat,
         ];
+		
+		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r($orderData, true), FILE_APPEND);
 
         if ($order) {
             $orderId = CSaleOrder::Update($order['ID'], $orderData);
@@ -1062,9 +1066,8 @@ class EventDetailComponent extends BaseListComponent
      */
     protected function orderBasket($orderId, $fuserId)
     {
-		return CSaleBasket::OrderBasket($orderId, $fuserId, SITE_ID);
+		// return CSaleBasket::OrderBasket($orderId, $fuserId, SITE_ID);
 		
-		/*
         $basketItems = BasketTable::getList([
             'filter' =>
                 [
@@ -1079,7 +1082,7 @@ class EventDetailComponent extends BaseListComponent
                 return false;
             }
         }
-		*/
+		/*  */
 		
         return true;
     }

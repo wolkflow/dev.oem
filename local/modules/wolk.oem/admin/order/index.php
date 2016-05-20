@@ -186,8 +186,13 @@ $customer = CUser::GetByID($order['USER_ID'])->Fetch();
 // Мероприятие.
 $element = CIBlockElement::getByID($order['PROPS']['eventId']['VALUE'])->GetNextElement();
 
-$event = $element->GetFields();
-$event['PROPS'] = $element->GetProperties();
+if ($element) {
+	$event = $element->GetFields();
+	$event['PROPS'] = $element->GetProperties();
+} else {
+	ShowError('Мероприятие не найдено.');
+    return;
+}
 
 $stand = array();
 
@@ -222,8 +227,6 @@ foreach ($baskets as &$basket) {
 }
 unset($basket);
 
-
-// echo '<pre>'; print_r($order['PROPS']); echo '</pre>'; die();
 
 
 // Статусы заказа.
