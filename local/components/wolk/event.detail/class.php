@@ -92,6 +92,8 @@ class EventDetailComponent extends BaseListComponent
             if (!$this->arResult['ORDER']) {
                 throw new \Bitrix\Main\ArgumentException('Order not found');
             }
+			$oemorder = new Wolk\OEM\Order($this->arParams['ORDER_ID']);
+			$this->arResult['INDIVIDUAL_STAND'] = $oemorder->isIndividual();
         }
         if ($this->arParams['ORDER_TYPE'] == 'individual') {
             $this->arResult['INDIVIDUAL_STAND'] = true;
@@ -708,7 +710,7 @@ class EventDetailComponent extends BaseListComponent
 				// Отправка письма о новом заказе клиенту.
 				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info', array('ID' => $arFields['ORDER_ID']));
 				$event = new \CEvent();
-				$event->Send('SALE_NEW_ORDER', SITE_DEFAULT, [
+				$event->Send('SALE_NEW_ORDER_CLIENT', SITE_DEFAULT, [
 					'EMAIL' => $arFields['EMAIL'], 
 					'HTML'  => $html,
 					'THEME' => Loc::getMessage('THEME_NEW_ORDER')

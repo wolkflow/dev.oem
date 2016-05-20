@@ -51,6 +51,9 @@ if ($arResult['INDIVIDUAL_STAND']) {
     }
 }
 
+if (is_null($preselect)) {
+	$preselect = 'null';
+}
 
 $stands = array_map(function ($val) use ($curLang) {
     $item = ArrayHelper::only($val, [

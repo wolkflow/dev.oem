@@ -630,7 +630,8 @@ input[type="password"] {
   background: #999999;
 }
 .standspagetop {
-  margin-bottom: 98px;
+/* margin-bottom: 98px; */
+  margin-bottom: 78px;
 }
 .standspagetop .pagedescription {
   margin-bottom: 33px;
@@ -682,7 +683,7 @@ input[type="password"] {
   text-align: center;
   color: #fff;
   background: #7f7f7f;
-	margin-top: 26px;
+  margin-top: 26px;
 }
 .standspagetop__continuebutton:hover {
   background: #999999;

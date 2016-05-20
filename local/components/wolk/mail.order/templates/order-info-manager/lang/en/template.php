@@ -9,6 +9,7 @@ $MESS['company']  = 'Company and personal data';
 $MESS['title']	  = 'Title';
 $MESS['standnum'] = 'Stand number';
 $MESS['pavillion'] = 'Pavillion number';
+$MESS['companydata'] = 'Company data';
 $MESS['orderdate'] = 'Order date';
 $MESS['address']  = 'Address';
 $MESS['name']	  = 'Name';

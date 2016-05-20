@@ -41,7 +41,9 @@
 										<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0 0 115px 0;width: 100%;">
 											<tr>
 												<td>
-													<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">Данные компании</p>
+													<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+														<?= Loc::getMessage('companydata') ?>
+													</p>
 												</td>
 											</tr>
 											<tr>
