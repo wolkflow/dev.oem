@@ -13,6 +13,12 @@ if ($permission == 'D') {
 	$APPLICATION->AuthForm(Loc::getMessage('ACCESS_DENIED'));
 }
 
+$groups = $USER->GetUserGroupArray();
+
+$ismanager = false;
+if (in_array(GROUP_MANAGERS_ID, $groups)) {
+	$ismanager = true;
+}
 
 
 
@@ -38,6 +44,23 @@ if (!\Bitrix\Main\Loader::includeModule('iblock')) {
 if (!\Bitrix\Main\Loader::includeModule('sale')) {
     ShowError('Модуль sale не устанволен.');
     return;
+}
+
+
+
+if ($ismanager) {
+	$eids = array();
+	$result = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'ACTIVE' => 'Y', 'PROPERTY_MANAGER' => $USER->getID()], false, false, ['ID']);
+	while ($item = $result->Fetch()) {
+		$eids []= (int) $item['ID'];
+	}
+	unset($result, $item);
+	
+	$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'eventId', '@VALUE' => $eids, 'ORDER_ID' => $ID], false, false, ['ORDER_ID']);
+	if ($result->SelectedRowsCount() <= 0) {
+		ShowError('Вы не являетесь менеджером данного заказа.');
+		return;
+	}
 }
 
 

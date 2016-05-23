@@ -56,6 +56,13 @@ Loc::loadLanguageFile(__FILE__);
 			'PATH' => SITE_TEMPLATE_PATH.'/include/counters/yandex-metrica.php',
 		));
 	?>
+	
+	<?  // Google.Analytics.
+		$APPLICATION->IncludeComponent('bitrix:main.include', '', array(
+			'AREA_FILE_SHOW' => 'file',
+			'PATH' => SITE_TEMPLATE_PATH.'/include/counters/google-analitycs.php',
+		));
+	?>
 </head>
 <body>
 <? $APPLICATION->ShowPanel(); ?>

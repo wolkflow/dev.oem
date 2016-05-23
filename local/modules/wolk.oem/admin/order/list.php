@@ -17,7 +17,6 @@ if ($permission == 'D') {
 	$APPLICATION->AuthForm(Loc::getMessage('ACCESS_DENIED'));
 }
 
-
 $groups = $USER->GetUserGroupArray();
 
 $ismanager = false;
@@ -155,7 +154,7 @@ if (CheckFilter()) {
 
 if ($ismanager) {
 	$eids = array();
-	$result = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'ACTIVE' => 'Y', 'PROPERTY_MANAGERS' => $USER->getID()], false, false, ['ID']);
+	$result = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'ACTIVE' => 'Y', 'PROPERTY_MANAGER' => $USER->getID()], false, false, ['ID']);
 	while ($item = $result->Fetch()) {
 		$eids []= (int) $item['ID'];
 	}
