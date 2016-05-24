@@ -21,3 +21,7 @@ $MESS['HEADER_STATUS']  = 'Статус';
 $MESS['HEADER_DATE']    = 'Дата заказа';
 
 $MESS['SELECT_ANY'] = '- любой -';
+
+$MESS['action-view'] = 'Посмотреть';
+$MESS['action-delete'] = 'Удалить';
+$MESS['confirm-delete'] = 'Удалить заказ?';

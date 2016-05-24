@@ -74,6 +74,41 @@ $statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
 
 
 
+// Действия с заказами
+$action = (string) $_REQUEST['action_button'];
+
+switch ($action) {
+	
+	// Удаление.
+	case 'delete':
+		$order = CSaleOrder::GetByID($ID);
+		if (!empty($order)) {
+			set_time_limit(0);
+			
+			if (CSaleOrder::CanUserDeleteOrder($ID, $groups, $USER->GetID())) {
+				$DB->StartTransaction();
+
+				if (!CSaleOrder::Delete($ID)) {
+					$DB->Rollback();
+
+					if ($ex = $APPLICATION->GetException()) {
+						$ladmin->AddGroupError($ex->GetString(), $ID);
+					} else {
+						$ldmin->AddGroupError('Ошибка удаления заказа');
+					}
+				} else {
+					$DB->Commit();
+				}
+			} else {
+				$ladmin->AddGroupError('Нет прав для удаления заказа №' . $ID);
+			}
+		}
+		break;
+}
+
+
+
+
 // Фильтр.
 $filter = array();
 
@@ -265,13 +300,24 @@ while ($item = $result->NavNext(true, "f_")) {
 	// Сформируем контекстное меню.
 	$actions = array();
 
-	// редактирование элемента
+	// Редактирование элемента.
 	$actions []= array(
 		"ICON"		=> 'view',
 		"DEFAULT"	=> true,
-		"TEXT"		=> 'Просмотр',
-		"ACTION"	=> $ladmin->ActionRedirect("/bitrix/admin/wolk_oem_order_index.php?ID=".$f_ID)
+		"TEXT"		=> Loc::getMessage('action-view'),// 'Просмотр',
+		"ACTION"	=> $ladmin->ActionRedirect("/bitrix/admin/wolk_oem_order_index.php?ID=".$item['ID'])
 	);
+  
+	// Удаление элемента.
+	$actions []= array(
+		"ICON"		=> 'delete',
+		"DEFAULT"	=> true,
+		"TEXT"		=> Loc::getMessage('action-delete'),
+		"ACTION"	=> 'if (confirm("'.Loc::getMessage('confirm-delete').'")) '.$ladmin->ActionDoGroup($item['ID'], 'delete')
+		// $ladmin->ActionRedirect("/bitrix/admin/wolk_oem_order_list.php?ID=".$f_ID.'&action=delete')
+	);
+	
+	// $arActions[] = array("ICON"=>"delete", "TEXT"=>GetMessage("SALE_DELETE_DESCR"), "ACTION"=>"if(confirm('".GetMessage('SALE_CONFIRM_DEL_MESSAGE')."')) ".$lAdmin->ActionDoGroup($f_ID, "delete"));
   
 	$row->AddActions($actions);
 }

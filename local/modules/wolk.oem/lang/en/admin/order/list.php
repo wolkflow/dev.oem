@@ -21,3 +21,7 @@ $MESS['HEADER_STATUS']  = 'Status';
 $MESS['HEADER_DATE']  	= 'Date order';
 
 $MESS['SELECT_ANY'] = '- any -';
+
+$MESS['action-view'] = 'View';
+$MESS['action-delete'] = 'Delete';
+$MESS['confirm-delete'] = 'Delete order?';

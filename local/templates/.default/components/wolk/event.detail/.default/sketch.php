@@ -1,6 +1,7 @@
 <? use Bitrix\Main\Localization\Loc; ?>
 
-<div class="pagetitle"><?= ucfirst(Loc::getMessage('sketch')) ?>
+<div class="pagetitle">
+	<?= ucfirst(Loc::getMessage('sketch')) ?>
     <div class="active pagetitle__button customizable">
 		<?= Loc::getMessage('help') ?>
 	</div>

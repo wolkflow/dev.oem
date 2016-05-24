@@ -95,18 +95,24 @@
                                 break;
                             }
                             this.sketch = ru.octasoft.oem.designer.Main.getScene();
-                            var equipmentCount;
+                            var equipmentCount = 0;
                             equipmentCount = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
-                                return sum += parseInt(eq.QUANTITY);
+								// console.log(eq.ID + ' ' + eq.QUANTITY + ' : ' + eq.SKETCH_TYPE);
+								if (eq.SKETCH_TYPE == 'nouse') {
+									return sum;
+								}
+								return sum += parseInt(eq.QUANTITY);
                             }, 0);
 
                             var optionsCount = 0;
                             $.each(this.optionsForSketch, function (id, option) {
-                                if (typeof option == 'object' && option.hasOwnProperty('QUANTITY')) {
+								// console.log(option.ID + ' ' + option.QUANTITY + ' : ' + option.SKETCH_TYPE);
+                                if (typeof option == 'object' && option.hasOwnProperty('QUANTITY') && option.SKETCH_TYPE != 'nouse') {
                                     optionsCount += option.QUANTITY;
                                 }
                             });
-
+							//console.log(equipmentCount, optionsCount, this.sketch.objects.length);
+							//console.log(this.sketch.objects);
                             if (
                                 this.sketch.hasOwnProperty('objects')
                                 &&
@@ -271,7 +277,7 @@
                     var result = [];
 
                     this.selectedStand.EQUIPMENT.forEach(function (eq) {
-                        if (eq.WIDTH && eq.HEIGHT) {
+                        if (eq.WIDTH && eq.HEIGHT && eq.SKETCH_TYPE != 'nouse') {
                             result.push({
                                 title: eq.NAME,
                                 quantity: parseInt(eq.QUANTITY),
@@ -304,7 +310,7 @@
                             }
                         });
 
-                        if (!exists && newItem.w && newItem.h) {
+                        if (!exists && newItem.w && newItem.h && newItem.type != 'nouse') {
                             result.push(newItem);
                         }
                     });
@@ -566,6 +572,9 @@
                     if (typeof itemsForSketch === 'undefined') {
                         // $('head').append('<script src="/local/templates/.default/javascripts/designer.js"></script>');
                         itemsForSketch = self.itemsForSketch;
+						
+						console.log(itemsForSketch);
+						
                         window.addEventListener("touchmove", function (event) {
                             event.preventDefault();
                         }, false);

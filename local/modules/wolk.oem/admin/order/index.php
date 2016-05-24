@@ -270,6 +270,11 @@ foreach ($baskets as $basket) {
         if (array_key_exists($basket['ITEM']['ID'], $sketch['items'])) {
             $sketch['items'][$basket['ITEM']['ID']]['quantity'] += $basket['QUANTITY'];
         } else {
+			
+			if ($basket['ITEM']['PROPS']['SKETCH_TYPE']['VALUE'] == 'nouse') {
+				continue;
+			}
+			
             $sketch['items'][$basket['ITEM']['ID']] = [
                 'id'        => $basket['ITEM']['ID'],
                 'imagePath' => CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], [
