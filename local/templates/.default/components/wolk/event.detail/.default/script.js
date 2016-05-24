@@ -97,7 +97,6 @@
                             this.sketch = ru.octasoft.oem.designer.Main.getScene();
                             var equipmentCount = 0;
                             equipmentCount = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
-								// console.log(eq.ID + ' ' + eq.QUANTITY + ' : ' + eq.SKETCH_TYPE);
 								if (eq.SKETCH_TYPE == 'nouse') {
 									return sum;
 								}
@@ -106,13 +105,10 @@
 
                             var optionsCount = 0;
                             $.each(this.optionsForSketch, function (id, option) {
-								// console.log(option.ID + ' ' + option.QUANTITY + ' : ' + option.SKETCH_TYPE);
                                 if (typeof option == 'object' && option.hasOwnProperty('QUANTITY') && option.SKETCH_TYPE != 'nouse') {
                                     optionsCount += option.QUANTITY;
                                 }
                             });
-							//console.log(equipmentCount, optionsCount, this.sketch.objects.length);
-							//console.log(this.sketch.objects);
                             if (
                                 this.sketch.hasOwnProperty('objects')
                                 &&
@@ -351,15 +347,12 @@
             },
             summaryPrice: function () {
                 if (this.selectedStand) {
-                    var price = 0.0;
-                    var self  = this;
+                    var price = 0,
+                        self = this;
 
-					// Стоимость стенда.
-                    if (this.selectedStand.PRICE !== null && this.selectedStand.PRICE.hasOwnProperty('PRICE')) {
+                    if(this.selectedStand.PRICE !== null && this.selectedStand.PRICE.hasOwnProperty('PRICE')) {
                         price = this.selectedStand.PRICE.PRICE;
                     }
-					
-					// Стоимость оборудования.
                     if (this.selectedStand.EQUIPMENT.length > 0) {
                         price = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
                             if (eq.QUANTITY > eq.COUNT) {
@@ -369,31 +362,23 @@
                             }
                         }, price);
                     }
-					
-					// Стоимость услуг.
                     if (!$.isEmptyObject(this.selectedStand.SERVICES)) {
                         $.each(this.selectedServices, function (serviceId, service) {
                             if (service.PRICE && parseFloat(service.PRICE) > 0 && service.QUANTITY) {
-                                console.log(price, service.PRICE, service.NAME, service.QUANTITY, service.MULTIPLIER);
-								if (service.MULTIPLIER > 0) {
-									price += parseFloat(self.allServices[service.ID].PRICE * service.QUANTITY * service.MULTIPLIER);
-                                } else {
-									price += parseFloat(self.allServices[service.ID].PRICE * service.QUANTITY);
-								}
+                                if (service.MULTIPLIER) {
+                                    service.PRICE *= service.MULTIPLIER;
+                                }
+                                price += parseFloat(self.allServices[service.ID].PRICE * service.QUANTITY);
                             }
                         });
                     }
-					
-					// Стоимость опций.
                     if (!$.isEmptyObject(this.selectedStand.OPTIONS)) {
                         $.each(this.selectedStand.OPTIONS, function (groupId, options) {
                             $.each(options, function (optionId, option) {
                                 price += parseFloat(self.allServices[option.ID].PRICE * option.QUANTITY);
-                            });
+                            })
                         });
                     }
-					console.log(price);
-					
                     return parseFloat(price.toFixed(2)) || 0;
                 }
                 return null;
@@ -2220,8 +2205,8 @@ Vue.component('stand-security', {
                     dates: [],
                     datesType: 'multiple'
                 },
-                timeStart: '08:00',
-                timeEnd: '20:00'
+                timeStart: '09:00',
+                timeEnd: '23:00'
             });
         },
         addToCart: function () {
