@@ -2200,8 +2200,8 @@ Vue.component('stand-security', {
                     dates: [],
                     datesType: 'multiple'
                 },
-                timeStart: '09:00',
-                timeEnd: '23:00'
+                timeStart: '08:00',
+                timeEnd: '20:00'
             });
         },
         addToCart: function () {
