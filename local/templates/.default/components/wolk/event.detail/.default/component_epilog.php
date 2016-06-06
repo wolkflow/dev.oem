@@ -67,7 +67,6 @@ $stands = array_map(function ($val) use ($curLang) {
     $item['BASE_PRICE'] = ArrayHelper::only($val['BASE_PRICE'], ['PRICE', 'CURRENCY']);
 
     $item['EQUIPMENT'] = array_map(function ($eq) use ($val, $curLang) {
-        #dump($eq);die;
         return ArrayHelper::only($eq,
             [
                 'ID',
@@ -87,7 +86,7 @@ $stands = array_map(function ($val) use ($curLang) {
     }, $val['OFFER']['EQUIPMENT']) ?: [];
 
     $item['SERVICES'] = new ArrayObject;
-    $item['OPTIONS'] = new ArrayObject;
+    $item['OPTIONS']  = new ArrayObject;
 
     return $item;
 }, $arResult['ITEMS']);
@@ -174,16 +173,6 @@ unset($color);
 $extents = ArrayHelper::index($arResult['EVENT']['EXTENTS'], 'UF_XML_ID');
 
 
-// TODO: Передалть на символьныне коды.
-/*
-foreach ($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID]['SECTIONS'] as &$section) {
-	foreach ($section['ITEMS'] as $i => $item) {
-		$section['ITEMS'][$i]['PROPERTY_60']['TEXT'] = nl2br($item['PROPERTY_60']['TEXT']);
-		$section['ITEMS'][$i]['PROPERTY_61']['TEXT'] = nl2br($item['PROPERTY_61']['TEXT']); 
-	}
-}
-*/
-
 $colors      = Json::encode($colors);
 $extents     = Json::encode($extents);
 $options     = Json::encode($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID]);
@@ -235,7 +224,7 @@ $am->addString(<<<JS
 		langMessages = $langMessages
 	</script>
 JS
-    , true, AssetLocation::AFTER_JS_KERNEL);
+, true, AssetLocation::AFTER_JS_KERNEL);
 
 $am->addString('<script src="/local/templates/.default/javascripts/vue.js"></script>');
 $am->addJs('/local/templates/.default/javascripts/jquery-ui.min.js');

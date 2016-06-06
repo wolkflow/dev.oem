@@ -28,7 +28,7 @@
                     {{ service.MULTIPLIER ? allServices[service.ID].PRICE * service.QUANTITY * service.MULTIPLIER : allServices[service.ID].PRICE * service.QUANTITY | format_currency ' ' currency_format}}
                 </div>
                 <div class="basketcontainer__itemprice">
-                    {{ service.MULTIPLIER ? allServices[service.ID].PRICE * service.MULTIPLIER : allServices[service.ID].PRICE | format_currency ' ' currency_format}} 
+                    {{ service.MULTIPLIER ? allServices[service.ID].PRICE : allServices[service.ID].PRICE | format_currency ' ' currency_format}} 
                     &times;
                     {{ service.QUANTITY * (service.MULTIPLIER ? service.MULTIPLIER : 1) }}
                 </div>

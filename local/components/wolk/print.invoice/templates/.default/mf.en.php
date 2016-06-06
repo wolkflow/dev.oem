@@ -19,7 +19,9 @@
 
 	<div class="invoiceText">
 		<p><?= $arResult['USER']['WORK_COMPANY'] ?></p>
-		<p><?= $arResult['USER']['WORK_STREET'] ?></p>
+		<p>
+			<?= implode('<br/>', [$arResult['USER']['WORK_STREET'], $arResult['USER']['UF_REQUISITES']]) ?>
+		</p>
 	</div>
 	<? if (!empty($arResult['USER']['UF_VAT'])) { ?>
 		<div class="invoiceText">

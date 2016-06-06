@@ -191,6 +191,25 @@ class EventDetailComponent extends BaseListComponent
                     $sections[$arSection['ID']] = &$arSections[$arSection['ID']];
                 }
             }
+			
+			global $USER;
+			if ($USER->getID() == 1) {
+				// echo '<pre>'; print_r($arSections); echo '</pre>';
+			}
+			
+			foreach ($arSections as &$section) {
+				foreach ($section['SECTIONS'] as &$subsection) {
+					if (isset($subsection['SECTIONS'])) {
+						uasort($subsection['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
+					}
+				}
+				uasort($section['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
+			}
+			
+			global $USER;
+			if ($USER->getID() == 1) {
+				// echo '<pre>'; print_r($arSections); echo '</pre>';
+			}
         }
 
         return $arSections;
@@ -595,7 +614,7 @@ class EventDetailComponent extends BaseListComponent
             "TAX_VALUE"        => $vat,
         ];
 		
-		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r($orderData, true), FILE_APPEND);
+		// file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r($orderData, true), FILE_APPEND);
 
         if ($order) {
             $orderId = CSaleOrder::Update($order['ID'], $orderData);
@@ -640,7 +659,7 @@ class EventDetailComponent extends BaseListComponent
 					'content'     => base64_decode($params['SKETCH_IMAGE'])
 				);
 				$params['SKETCH_FILE'] = CFile::SaveFile($file, 'sketchs');
-				unlink($filename);			
+				unlink($filename);
 				
 				// Не сохраняем base64.
 				unset($params['SKETCH_IMAGE']);
@@ -648,7 +667,7 @@ class EventDetailComponent extends BaseListComponent
                 // Наценка.
                 $params['SURCHARGE'] = (float)$surcharge;
                 $params['SURCHARGE_PRICE'] = (float)$moneySurcharge;
-				
+				//file_put_contents($_SERVER['DOCUMENT_ROOT'].'/../log.txt', print_r($params, 1));
                 foreach ($params as $code => $value) {
                     $res = OrderPropsValueTable::add([
                         'ORDER_ID'       => $orderId,
@@ -1068,7 +1087,7 @@ class EventDetailComponent extends BaseListComponent
      */
     protected function orderBasket($orderId, $fuserId)
     {
-		// return CSaleBasket::OrderBasket($orderId, $fuserId, SITE_ID);
+		//return CSaleBasket::OrderBasket($orderId, $fuserId, SITE_ID);
 		
         $basketItems = BasketTable::getList([
             'filter' =>

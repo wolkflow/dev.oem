@@ -71,6 +71,7 @@ $message = null;
  * Заказ.
  */ 
 $oemorder = new Wolk\OEM\Order($ID);
+$bxorder  = Bitrix\Sale\Order::load($ID);
 
 /*
  * Сохранение данных заказа.
@@ -87,8 +88,16 @@ if (!empty($_POST)) {
             $bill   = (string) $_POST['BILL'];
 			
 			$result = true;
+			
 			if ($status != $oemorder->getStatus()) {
-				$result = CSaleOrder::StatusOrder($oemorder->getID(), $status);
+				$result = $bxorder->setField('STATUS_ID', $status)->isSuccess();
+				
+				if ($result) {
+					$result = $bxorder->save()->isSuccess();
+				}
+				$bxorder = Bitrix\Sale\Order::load($ID);
+				
+				// $result = CSaleOrder::StatusOrder($oemorder->getID(), $status);
 			}
 			
             if (!$result) {
@@ -200,8 +209,6 @@ if (!empty($_POST)) {
 // Заказ.
 $order = CSaleOrder::getByID($ID);
 $order['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($ID);
-
-$bxorder = Bitrix\Sale\Order::load($ID);
 
 // Заказчик.
 $customer = CUser::GetByID($order['USER_ID'])->Fetch();

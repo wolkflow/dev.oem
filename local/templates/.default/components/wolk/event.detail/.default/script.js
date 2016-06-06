@@ -366,9 +366,10 @@
                         $.each(this.selectedServices, function (serviceId, service) {
                             if (service.PRICE && parseFloat(service.PRICE) > 0 && service.QUANTITY) {
                                 if (service.MULTIPLIER) {
-                                    service.PRICE *= service.MULTIPLIER;
-                                }
-                                price += parseFloat(self.allServices[service.ID].PRICE * service.QUANTITY);
+									price += parseFloat(self.allServices[service.ID].PRICE * service.QUANTITY * service.MULTIPLIER);
+                                } else {
+									price += parseFloat(self.allServices[service.ID].PRICE * service.QUANTITY);
+								}
                             }
                         });
                     }
@@ -568,8 +569,6 @@
                     if (typeof itemsForSketch === 'undefined') {
                         // $('head').append('<script src="/local/templates/.default/javascripts/designer.js"></script>');
                         itemsForSketch = self.itemsForSketch;
-						
-						console.log(itemsForSketch);
 						
                         window.addEventListener("touchmove", function (event) {
                             event.preventDefault();
@@ -2205,8 +2204,8 @@ Vue.component('stand-security', {
                     dates: [],
                     datesType: 'multiple'
                 },
-                timeStart: '09:00',
-                timeEnd: '23:00'
+                timeStart: '08:00',
+                timeEnd: '20:00'
             });
         },
         addToCart: function () {
@@ -2234,11 +2233,16 @@ Vue.component('stand-security', {
                     }
 					
 					// Часы работы охраны.
-					hoursCount = Date.getHoursBetween(new Date('01.01.1970 ' + item.timeStart), new Date('01.01.1970 ' + item.timeEnd));
+					hoursCount = Date.getHoursBetween(new Date('2000-01-01 ' + item.timeStart), new Date('2000-01-01 ' + item.timeEnd));
+					
+					if (hoursCount < 0) {
+						hoursCount = Date.getHoursBetween(new Date('2000-01-01 ' + item.timeStart), new Date('2000-01-02 ' + item.timeEnd));
+					}
 					
 					if (hoursCount < 1) {
 						hoursCount = 1;
 					}
+					
 					var multiplier = daysCount * hoursCount;
 					
 					
@@ -3015,7 +3019,6 @@ function array_combine(keys, values) {
 
     // number of elements does not match
     if (keycount != values.length) {
-        // console.log('number of elements does not match');
         return false;
     }
 
@@ -3031,9 +3034,9 @@ Date.getHoursBetween = function (date1, date2) {
 
     var date1_ms = date1.getTime();
     var date2_ms = date2.getTime();
-
-    var difference_ms = date2_ms - date1_ms;
-
+	
+    var difference_ms = parseInt(date2_ms - date1_ms);
+	
     return Math.round(difference_ms / one_hour);
 };
 
@@ -3043,7 +3046,7 @@ Date.getDaysBetween = function (date1, date2, including) {
     var date1_ms = date1.getTime();
     var date2_ms = date2.getTime();
 
-    var difference_ms = date2_ms - date1_ms;
+    var difference_ms = parseInt(date2_ms - date1_ms);
 
     if (including) {
         return Math.round(difference_ms / one_day) + 1;

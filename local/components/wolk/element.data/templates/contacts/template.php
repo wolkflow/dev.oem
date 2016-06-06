@@ -16,6 +16,16 @@
 			<li>
 				P: <?= $contact['PHONE'] ?>
 			</li>
+			<? if (!empty($contact['MOBILE'])) { ?>
+				<li>
+					M: <?= $contact['MOBILE'] ?>
+				</li>
+			<? } ?>
+			<? if (!empty($contact['WHATSUP'])) { ?>
+				<li>
+					W: <?= $contact['WHATSUP'] ?>
+				</li>
+			<? } ?>
 			<li>
 				E: <a href="mailto:<?= $contact['EMAIL'] ?>"><?= $contact['EMAIL'] ?></a>
 			</li>

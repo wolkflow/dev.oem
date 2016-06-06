@@ -19,7 +19,9 @@
 
 	<div class="invoiceText">
 		<p><?= $arResult['USER']['WORK_COMPANY'] ?></p>
-		<p><?= $arResult['USER']['WORK_STREET'] ?></p>
+		<p>
+			<?= implode('<br/>', [$arResult['USER']['WORK_STREET'], $arResult['USER']['UF_REQUISITES']]) ?>
+		</p>
 	</div>
 	<div class="invoiceTextRight">
 		<p class="invoiceTb"><b>В платежном документе<br> обязательна ссылка на <br>№ и дату счета, № клиента</b></p>

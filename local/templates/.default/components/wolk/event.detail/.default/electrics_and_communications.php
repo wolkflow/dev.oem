@@ -1,17 +1,12 @@
 <? use Bitrix\Main\Localization\Loc; ?>
 
-<!-- <pre>{{ selectedItems | json }}</pre> -->
-
 <script type="x/template" id="electrics-and-communications">
     <div class="servicescontainer serviceContainer" v-if="sections">
         <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle customizable_border open":class="{'open': visible == false}">
 			{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">
-            <electrics-and-communications-item v-for="section in sections | orderBy SORT" :section="section"></electrics-and-communications-item>
-            <? /*
-			<input @click.prevent="save" type="button" class="styler saveButton" value="<?= Loc::getMessage('save') ?>" />
-			*/ ?>
+            <electrics-and-communications-item v-for="section in sections" :section="section"></electrics-and-communications-item>
         </div>
     </div>
 </script>
