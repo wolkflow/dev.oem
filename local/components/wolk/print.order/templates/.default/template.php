@@ -1,8 +1,45 @@
 <? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die() ?>
 
 <div class="order-print">
-	<h1>Заказ №<?= $arResult['ORDER']['ID'] ?> от <?= date('d.m.Y', strtotime($arResult['ORDER']['DATE_INSERT'])) ?></h1>
+	
+	<div>
+		<h1><?= $arResult['EVENT']['NAME'] ?></h1>
+		<img src="<?= $arResult['EVENT']['LOGO'] ?>" />
+	</div>
+	<hr/>
+	
+	<div>
+		<h2>Заказ №<?= $arResult['ORDER']['ID'] ?> от <?= date('d.m.Y', strtotime($arResult['ORDER']['DATE_INSERT'])) ?></h2>
+	</div>
+	<hr/>
+	
 	<div class="order">
+		<h3>Компания</h3>
+		<table width="300px">
+			<tbody>
+				<tr>
+					<td>Название</td>
+					<td><?= $arResult['USER']['WORK_COMPANY'] ?></td>
+				</tr>
+				<tr>
+					<td>Контактное лицо</td>
+					<td><?= implode(' ', [$arResult['USER']['NAME'], $arResult['USER']['LAST_NAME']]) ?></td>
+				</tr>
+				<tr>
+					<td>Телефон</td>
+					<td><?= $arResult['USER']['PERSONAL_PHONE'] ?></td>
+				</tr>
+				<tr>
+					<td>E-mail</td>
+					<td><?= $arResult['USER']['EMAIL'] ?></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<hr/>
+	
+	<div class="order">
+		<h3>Параметры стенда</h3>
 		<table width="300px">
 			<tbody>
 				<tr>
@@ -38,6 +75,7 @@
 			</thead>
 			<tbody>
 				<? foreach ($arResult['BASKETS'] as $basket) { ?>
+					<? if ($basket['PRICE'] <= 0) continue ?>
 					<tr>
 						<td>
 							 <? if (!empty($basket['ITEM']['PREVIEW_PICTURE'])) { ?>
@@ -59,18 +97,18 @@
 				<tr class="invoiceItems__table-amount">
 					<td colspan="3"></td>
 					<td class="text-left">Всего без НДС:</td>
-					<td><?= number_format($arResult['ORDER']['BASKET_TOTAL_PRICE'], 2, ',', ' ') ?></td>
+					<td><?= number_format($arResult['PRICES']['BASKET'], 2, ',', ' ') ?></td>
 				</tr>
 				<tr class="invoiceItems__table-amount">
 					<td colspan="3"></td>
 					<td class="text-left">НДС (18%):</td>
-					<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+					<td><?= number_format($arResult['PRICES']['VAT'], 2, ',', ' ') ?></td>
 				</tr>
 				<tr class="invoiceItems__table-total">
 					<td colspan="3"></td>
 					<td class="text-left">ВСЕГО С НДС:</td>
 					<td>
-						<?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?>
+						<?= number_format($arResult['PRICES']['FINAL'], 2, ',', ' ') ?>
 					</td>
 				</tr>
 			</tfoot>
@@ -79,54 +117,12 @@
 	
 	<div class="sketch">
 		<h2>Расположение элементов на стенде</h2>
-		<div id="designer" style="margin-top: 40px; width: 940px; height: 680px;" onmouseout="ru.octasoft.oem.designer.Main.stopDragging()"></div>
+		<img src="<?= CFile::GetPath($arResult['PROPS']['SKETCH_FILE']['VALUE_ORIG']) ?>" />
 	</div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-
-        var sketchitems = <?= json_encode(array_values($arResult['SKETCH']['items'])) ?>;
-		
-		
-		/*
-         * Обработчики скетча.
-         */
-		var loadsketch = function() 
-		{
-			window.addEventListener('touchmove', function (event) {
-				event.preventDefault();
-			}, false);
-
-			if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
-				var meta = document.getElementById('viewport');
-				meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
-			}
-			
-			var gridX   = <?= (int) ($arResult['PROPS']['width']['VALUE']) ?: 5 ?>;
-			var gridY   = <?= (int) ($arResult['PROPS']['depth']['VALUE']) ?: 5 ?>;
-			
-			// compute initial editor's height
-			(window.resizeEditor = function(items) {
-				var editorH = Math.max(120 + (items.length * 135), 675);
-				$('#designer').height(editorH);
-			})(sketchitems);
-
-			window.onEditorReady = function() {
-				ru.octasoft.oem.designer.Main.init({
-					w: gridX,
-					h: gridY,
-					hideControls: true,
-					type: '<?= (!empty($order['PROPS']['standType']['VALUE'])) ? ($order['PROPS']['standType']['VALUE']) : ('row') ?>',
-					items: sketchitems,
-					placedItems: <?= (!empty($arResult['SKETCH']['objects'])) ? (json_encode($arResult['SKETCH']['objects'])) : ('{}') ?>
-				});
-			};
-			lime.embed('designer', 0, 0, '', '/');
-		}
-		
-		$.when(loadsketch()).done(function() {
-			setTimeout(function() {window.print();}, 1000);
-		}); 
+		// setTimeout(function() {window.print();}, 1000);
     });
 </script>

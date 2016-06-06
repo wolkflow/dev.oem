@@ -116,6 +116,13 @@ class EventDetailComponent extends BaseListComponent
         $this->arResult['EVENT']['ALL_PRICES'] = $this->equipmentPrices;
         $this->arResult['ITEMS'] = $this->event['STANDS'];
         $this->arResult['SERVICES'] = $this->getServices($this->event['ID']);
+		
+		/*
+		global $USER;
+		if ($USER->GetID() == 1) {
+			echo '<pre>'; print_r($this->arResult['SERVICES']); echo '</pre>';
+		}
+		*/
     }
 	
 
@@ -179,7 +186,7 @@ class EventDetailComponent extends BaseListComponent
             while ($arSection = $obSections->Fetch()) {
                 $arSection['NAME'] = $arSection['UF_NAME_' . $this->curLang] ?: $arSection['NAME'];
                 $arSection['SUBTITLE'] = $arSection['UF_SUBTITLE_' . $this->curLang] ?: $arSection['UF_SUBTITLE'];
-
+				
                 if ($arSection['IBLOCK_SECTION_ID']) {
                     if (array_key_exists($arSection['ID'], $arServices)) {
                         $arSection['ITEMS'] = $arServices[$arSection['ID']];
@@ -192,11 +199,6 @@ class EventDetailComponent extends BaseListComponent
                 }
             }
 			
-			global $USER;
-			if ($USER->getID() == 1) {
-				// echo '<pre>'; print_r($arSections); echo '</pre>';
-			}
-			
 			foreach ($arSections as &$section) {
 				foreach ($section['SECTIONS'] as &$subsection) {
 					if (isset($subsection['SECTIONS'])) {
@@ -204,11 +206,6 @@ class EventDetailComponent extends BaseListComponent
 					}
 				}
 				uasort($section['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
-			}
-			
-			global $USER;
-			if ($USER->getID() == 1) {
-				// echo '<pre>'; print_r($arSections); echo '</pre>';
 			}
         }
 

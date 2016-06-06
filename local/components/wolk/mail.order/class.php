@@ -24,7 +24,7 @@ class MailOrderComponent extends \CBitrixComponent
 		if (empty($arParams['LANG'])) {
 			$arParams['LANG'] = \Bitrix\Main\Application::getInstance()->getContext()->getLanguage();
 		}
-				
+		
         return $arParams;
     }
 	

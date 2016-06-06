@@ -6,7 +6,7 @@
 			{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">
-            <telecommunications-item v-for="section in sections | orderBy SORT" :section="section"></telecommunications-item>
+            <telecommunications-item v-for="section in sections | orderBy 'SORT'" :section="section"></telecommunications-item>
             <? /*
 			<input @click.prevent="save" type="button" class="styler saveButton" value="<?= Loc::getMessage('save') ?>" />
 			*/ ?>

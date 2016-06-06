@@ -773,7 +773,7 @@ Vue.component('electrics-and-communications', {
     },
     computed: {
         section: function () {
-            return this.$parent.services.SECTIONS[this.sectionId];
+            return this.$parent.services.SECTIONS[this.sectionId]; // .sort(function (x1, x2) { return (x1.SORT - x2.SORT); });
         },
         sections: function () {
             return this.section.SECTIONS;

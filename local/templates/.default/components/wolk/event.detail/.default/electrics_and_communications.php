@@ -6,7 +6,7 @@
 			{{ section.NAME }}
         </div>
         <div class="pagesubtitleopencontainer">
-            <electrics-and-communications-item v-for="section in sections" :section="section"></electrics-and-communications-item>
+            <electrics-and-communications-item v-for="section in sections | orderBy 'SORT'" :section="section"></electrics-and-communications-item>
         </div>
     </div>
 </script>

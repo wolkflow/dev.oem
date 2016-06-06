@@ -180,6 +180,8 @@ $services    = Json::encode($arResult['SERVICES'][ADDITIONAL_SERVICES_SECTION_ID
 $allServices = Json::encode($arResult['EVENT']['ALL_SERVICES']);
 $vat         = VAT_DEFAULT;
 
+
+
 $langs = Json::encode([
 	'filePlaceholder' => Loc::getMessage('file_placeholder'),
 	'fileNumber' => Loc::getMessage('file_number'),
@@ -205,23 +207,24 @@ $selectedParams = Json::encode($selectedParams);
 
 $am = Asset::getInstance();
 
+
 $am->addString(<<<JS
 	<script>
 	    var curEvent = $event,
-	    selected = $preselect,
-	    steps = $steps,
-	    stands = $stands,
-	    order = $order,
-	    selectedParams = $selectedParams,
-	    curLang = "$curLang",
-	    colors = $colors,
-	    services = $services,
-	    options = $options,
-	    allServices = $allServices,
-	    extents = $extents,
-		vat = $vat,
-		langs = $langs,
-		langMessages = $langMessages
+	        selected = $preselect,
+			steps = $steps,
+			stands = $stands,
+			order = $order,
+			selectedParams = $selectedParams,
+			curLang = "$curLang",
+			colors = $colors,
+			services = $services,
+			options = $options,
+			allServices = $allServices,
+			extents = $extents,
+			vat = $vat,
+			langs = $langs,
+			langMessages = $langMessages;
 	</script>
 JS
 , true, AssetLocation::AFTER_JS_KERNEL);
