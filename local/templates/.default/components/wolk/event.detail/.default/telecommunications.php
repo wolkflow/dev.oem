@@ -1,4 +1,4 @@
-﻿<? use Bitrix\Main\Localization\Loc; ?>
+<? use Bitrix\Main\Localization\Loc; ?>
 
 <script type="x/template" id="telecommunications">
     <div class="servicescontainer serviceContainer" v-if="sections">

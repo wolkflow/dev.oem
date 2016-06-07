@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 $MESS['dear']	  = '';
 $MESS['goodday']  = ', добрый день';

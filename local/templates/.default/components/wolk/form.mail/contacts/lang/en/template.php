@@ -1,4 +1,4 @@
-﻿<?
+<?
 
 $MESS['NAME'] = 'Name';
 $MESS['PHONE'] = 'Phone';

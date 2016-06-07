@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 $MESS['ERROR_CHANGE_DATA']   = 'An error occurred while changing the order data';
 $MESS['ERROR_CHANGE_SKETCH'] = 'An error occurred while changing the sketch data';

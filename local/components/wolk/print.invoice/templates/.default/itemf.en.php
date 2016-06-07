@@ -1,4 +1,4 @@
-﻿<? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\Core\Helpers\Text as TextHelper ?>
 
 <script>
 	$(document).ready(function(){

@@ -1,4 +1,4 @@
-﻿<? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\Core\Helpers\Text as TextHelper ?>
 
 <div class="invoice">
 	<div class="invoiceMessage invoiceHead">

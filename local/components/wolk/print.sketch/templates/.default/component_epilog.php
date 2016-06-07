@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 $am = \Bitrix\Main\Page\Asset::getInstance();
 
