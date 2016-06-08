@@ -1,4 +1,6 @@
-<?use Bitrix\Main\Localization\Loc;?>
+<? use Bitrix\Main\Localization\Loc; ?>
+
+
 <script type="x/template" id="graphics">
     <div class="servicescontainer serviceContainer">
         <div @click="toggleVisible" data-module="pagesubtitle-dropdown" class="pagesubtitle customizable_border open"
@@ -6,14 +8,17 @@
         </div>
         <div class="pagesubtitleopencontainer">
             <fascia-name></fascia-name>
-            <logo></logo>
+            <logo-fascia-mono></logo-fascia-mono>
+			<logo-fascia-poly></logo-fascia-poly>
+			<logo-wall-mono></logo-wall-mono>
+			<logo-wall-poly></logo-wall-poly>
             <laminating></laminating>
             <full-color-printing></full-color-printing>
             <input type="button" class="styler saveButton" value="<?=Loc::getMessage('save')?>" @click.prevent="save">
         </div>
     </div>
-    <!--// Секция: graphics -->
 </script>
+
 
 <script type="x/template" id="fascia-name">
     <div class="serviceItem" v-if="item">
@@ -22,13 +27,17 @@
             <div class="serviceItem__block">
                 <div class="serviceItem__row">
                     <div class="serviceItem__left">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('text')?></div>
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('text') ?>
+						</div>
                         <div class="itemText_custom">
-                            <input v-model="text" type="text" class="styler">
+                            <input v-model="text" type="text" class="styler" />
                         </div>
                     </div>
                     <div class="serviceItem__right">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('color')?></div>
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('color') ?>
+						</div>
                         <input type="hidden" v-model="selectedColor">
                         <button :style="{ background: selectedColor ? 'rgb('+ allColors[selectedColor].UF_CODE +')' : '#7f7f7f' }" class="styler itemColor__custom"
                                 data-modal="#color"
@@ -53,17 +62,22 @@
                             <div class="colorTitle">{{ color.UF_NUM }}</div>
                         </li>
                     </ul>
-                    <div class="colorsNote"><?=Loc::getMessage('colors_note')?></div>
+                    <div class="colorsNote">
+						<?= Loc::getMessage('colors_note') ?>
+					</div>
                 </div>
             </div>
         </div>
     </div>
 </script>
 
-<script type="x/template" id="logo">
+
+<? // Логотипы // ?>
+
+<script type="x/template" id="logo-fascia-mono">
     <div class="serviceItem" v-if="item">
         <div class="serviceItem__title">
-			<?= Loc::getMessage('logotype') ?>
+			<?= Loc::getMessage('logotype_fascia_mono') ?>
 		</div>
         <div class="serviceItem__block" v-for="logo in logotypes">
             <div class="serviceItem__row">
@@ -82,29 +96,27 @@
                 </div>
                 <div class="serviceItem__right">
                     <div class="itemCount">
-                        <div class="serviceItem__subtitle"><?=Loc::getMessage('quantity')?></div>
+                        <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
                         <div class="itemCount__button itemCount__down justcnt" @click="decQty(logo)"></div>
                         <div class="itemCount__button itemCount__up justcnt" @click="incQty(logo)"></div>
-                        <input v-model="logo.QUANTITY" type="text" class="itemCount__input styler" number>
+                        <input v-model="logo.QUANTITY" type="text" class="itemCount__input styler" number />
                     </div>
                 </div>
             </div>
             <div class="serviceItem__row">
                 <div class="serviceItem__left-short" v-if="logo.EXTENT">
-                    <div class="serviceItem__subtitle"><?=Loc::getMessage('price')?></div>
+                    <div class="serviceItem__subtitle"><?= Loc::getMessage('price') ?></div>
                     <div class="serviceItem__cost-value">{{ price | format_currency ' ' currency_format }}</div>
                 </div>
                 <div class="serviceItem__right-large">
                     <div class="serviceItem__subtitle"><?=Loc::getMessage('file_and_formats')?></div>
-                    <input v-fileupload="logo.FILE" type="file" class="styler">
+                    <input v-fileupload="logo.FILE" type="file" class="styler" />
                 </div>
             </div>
 
-            <div class="serviceItem__bottom-inputs">
+            <div class="serviceItem__bottom-inputs"></div>
 
-            </div>
-
-            <div class="serviceItem__subtitle"><?=Loc::getMessage('comments')?></div>
+            <div class="serviceItem__subtitle"><?= Loc::getMessage('comments') ?></div>
 			<textarea v-model="logo.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('logoCommentPlaceholder') ?>"></textarea>
         </div>
 
@@ -114,6 +126,168 @@
         </a>
     </div>
 </script>
+
+<script type="x/template" id="logo-fascia-poly">
+    <div class="serviceItem" v-if="item">
+        <div class="serviceItem__title">
+			<?= Loc::getMessage('logotype_fascia_poly') ?>
+		</div>
+        <div class="serviceItem__block" v-for="logo in logotypes">
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('extent') ?>
+					</div>
+                    <div class="itemText_custom">
+                        <select v-styler="logo.EXTENT" class="styler" class="styler">
+                            <option value=""><?= Loc::getMessage('not selected') ?></option>
+                            <option value="{{ extentCode }}" v-for="(extentCode, extent) in extents">
+								{{ extent }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(logo)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(logo)"></div>
+                        <input v-model="logo.QUANTITY" type="text" class="itemCount__input styler" number />
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__left-short" v-if="logo.EXTENT">
+                    <div class="serviceItem__subtitle"><?= Loc::getMessage('price') ?></div>
+                    <div class="serviceItem__cost-value">{{ price | format_currency ' ' currency_format }}</div>
+                </div>
+                <div class="serviceItem__right-large">
+                    <div class="serviceItem__subtitle"><?=Loc::getMessage('file_and_formats')?></div>
+                    <input v-fileupload="logo.FILE" type="file" class="styler" />
+                </div>
+            </div>
+
+            <div class="serviceItem__bottom-inputs"></div>
+
+            <div class="serviceItem__subtitle"><?= Loc::getMessage('comments') ?></div>
+			<textarea v-model="logo.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('logoCommentPlaceholder') ?>"></textarea>
+        </div>
+
+        <a href="javascript:void(0)" @click.prevent="addLogo" class="itemAdd_field itemAdd__filed-left">
+            <i></i>
+            <span><?=Loc::getMessage('one_more_logo')?></span>
+        </a>
+    </div>
+</script>
+
+<script type="x/template" id="logo-wall-mono">
+    <div class="serviceItem" v-if="item">
+        <div class="serviceItem__title">
+			<?= Loc::getMessage('logotype_wall_mono') ?>
+		</div>
+        <div class="serviceItem__block" v-for="logo in logotypes">
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('extent') ?>
+					</div>
+                    <div class="itemText_custom">
+                        <select v-styler="logo.EXTENT" class="styler" class="styler">
+                            <option value=""><?= Loc::getMessage('not selected') ?></option>
+                            <option value="{{ extentCode }}" v-for="(extentCode, extent) in extents">
+								{{ extent }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(logo)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(logo)"></div>
+                        <input v-model="logo.QUANTITY" type="text" class="itemCount__input styler" number />
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__left-short" v-if="logo.EXTENT">
+                    <div class="serviceItem__subtitle"><?= Loc::getMessage('price') ?></div>
+                    <div class="serviceItem__cost-value">{{ price | format_currency ' ' currency_format }}</div>
+                </div>
+                <div class="serviceItem__right-large">
+                    <div class="serviceItem__subtitle"><?=Loc::getMessage('file_and_formats')?></div>
+                    <input v-fileupload="logo.FILE" type="file" class="styler" />
+                </div>
+            </div>
+
+            <div class="serviceItem__bottom-inputs"></div>
+
+            <div class="serviceItem__subtitle"><?= Loc::getMessage('comments') ?></div>
+			<textarea v-model="logo.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('logoCommentPlaceholder') ?>"></textarea>
+        </div>
+
+        <a href="javascript:void(0)" @click.prevent="addLogo" class="itemAdd_field itemAdd__filed-left">
+            <i></i>
+            <span><?=Loc::getMessage('one_more_logo')?></span>
+        </a>
+    </div>
+</script>
+
+<script type="x/template" id="logo-wall-poly">
+    <div class="serviceItem" v-if="item">
+        <div class="serviceItem__title">
+			<?= Loc::getMessage('logotype_wall_poly') ?>
+		</div>
+        <div class="serviceItem__block" v-for="logo in logotypes">
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('extent') ?>
+					</div>
+                    <div class="itemText_custom">
+                        <select v-styler="logo.EXTENT" class="styler" class="styler">
+                            <option value=""><?= Loc::getMessage('not selected') ?></option>
+                            <option value="{{ extentCode }}" v-for="(extentCode, extent) in extents">
+								{{ extent }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(logo)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(logo)"></div>
+                        <input v-model="logo.QUANTITY" type="text" class="itemCount__input styler" number />
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__left-short" v-if="logo.EXTENT">
+                    <div class="serviceItem__subtitle"><?= Loc::getMessage('price') ?></div>
+                    <div class="serviceItem__cost-value">{{ price | format_currency ' ' currency_format }}</div>
+                </div>
+                <div class="serviceItem__right-large">
+                    <div class="serviceItem__subtitle"><?=Loc::getMessage('file_and_formats')?></div>
+                    <input v-fileupload="logo.FILE" type="file" class="styler" />
+                </div>
+            </div>
+
+            <div class="serviceItem__bottom-inputs"></div>
+
+            <div class="serviceItem__subtitle"><?= Loc::getMessage('comments') ?></div>
+			<textarea v-model="logo.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('logoCommentPlaceholder') ?>"></textarea>
+        </div>
+
+        <a href="javascript:void(0)" @click.prevent="addLogo" class="itemAdd_field itemAdd__filed-left">
+            <i></i>
+            <span><?=Loc::getMessage('one_more_logo')?></span>
+        </a>
+    </div>
+</script>
+
+
+
 
 <script type="x/template" id="laminating">
     <div class="serviceItem" v-if="item">
