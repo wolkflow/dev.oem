@@ -11,7 +11,9 @@ $obEq = CIBlockElement::GetList([], [
     'IBLOCK_ID'           => STANDS_IBLOCK_ID,
     'INCLUDE_SUBSECTIONS' => 'Y',
 ]);
+
 $allStands = [];
+
 while ($arStand = $obEq->Fetch()) {
     $allStands[$arStand['ID']] = [
         'ID'       => $arStand['ID'],
@@ -26,6 +28,7 @@ $obEq = CIBlockElement::GetList([], [
     'IBLOCK_ID'           => OPTIONS_IBLOCK_ID,
     "INCLUDE_SUBSECTIONS" => "Y",
 ]);
+
 $allEquipment = [];
 while ($arEq = $obEq->Fetch()) {
     $allEquipment[$arEq['ID']] = [
@@ -914,7 +917,7 @@ $tabControl->BeginCustomField("EQUIPMENT_PRICES", "Цены на доп обор
                         {{ allEquipment[eqId].NAME }}
                     </td>
                     <td>
-                        <input v-model="PRICE_RU[eqId]" name="eq[{{index}}][PRICE_RU]" type="text" size="10" :value=" allEquipment[eqId].PRICE_RU" />
+                        <input v-model="PRICE_RU[eqId]" name="eq[{{index}}][PRICE_RU]" type="text" size="10" :value="allEquipment[eqId].PRICE_RU" />
                     </td>
                     <td>
                         <input v-model="PRICE_EN[eqId]" name="eq[{{index}}][PRICE_EN]" type="text" size="10" :value="allEquipment[eqId].PRICE_EN" />

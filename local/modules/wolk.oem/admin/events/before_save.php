@@ -15,6 +15,53 @@ function BXIBlockAfterSave(&$arFields)
         ]);
     }
 
+	// Формирование цен стендов.
+	if (isset($_REQUEST['stand']) && !empty($_REQUEST['stand'])) {
+		$stands = \Wolk\Core\Helpers\ArrayHelper::index($_REQUEST['stand'], 'ID');
+		
+		// Удаление текущих цен на стенды.
+		$current_stand_prices = \Wolk\OEM\EventEquipmentPricesTable::getList(['filter' =>['EVENT_ID' => $arFields['ID']]])->fetchAll();
+        foreach ($current_stand_prices as $current_stand_price) {
+            \Wolk\OEM\EventEquipmentPricesTable::delete($current_stand_price['ID']);
+        }
+		
+		foreach ($stands as $stand) {
+			$data = [
+				'EVENT_ID' => $arFields['ID'],
+				'STAND_ID' => $stand['ID'],
+				'PRICE'    => $_REQUEST['useStandOnRU'] == 'EN' ? $stand['PRICE_EN'] : $stand['PRICE_RU'],
+                'SITE_ID'  => 'RU'
+			];
+			if (!$data['PRICE']) {
+                $arRuPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
+                if ($arRuPrice['CURRENCY'] != $currencyRu) {
+                    $arRuPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arRuPrice['PRICE'] ?: 0, $arRuPrice['CURRENCY'], $currencyRu);
+                }
+                $data['PRICE'] = $arRuPrice['PRICE'] ?: 0;
+            }
+			\Wolk\OEM\EventStandPricesTable::add($data);
+			
+			
+			$data = [
+				'EVENT_ID' => $arFields['ID'],
+				'STAND_ID' => $stand['ID'],
+				'PRICE'    => $_REQUEST['useStandOnEN'] == 'RU' ? $stand['PRICE_RU'] : $stand['PRICE_EN'],
+                'SITE_ID'  => 'EN'
+			];
+			if (!$data['PRICE']) {
+                $arRuPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
+                if ($arRuPrice['CURRENCY'] != $currencyRu) {
+                    $arRuPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arRuPrice['PRICE'] ?: 0, $arRuPrice['CURRENCY'], $currencyRu);
+                }
+                $data['PRICE'] = $arRuPrice['PRICE'] ?: 0;
+            }
+			\Wolk\OEM\EventStandPricesTable::add($data);
+		}
+	}
+	
+	
+	
+	
     if (isset($_REQUEST['eq']) && !empty($_REQUEST['eq'])) {
         \Bitrix\Main\Loader::includeModule('catalog');
         $eq = \Wolk\Core\Helpers\ArrayHelper::index($_REQUEST['eq'], 'ID');
