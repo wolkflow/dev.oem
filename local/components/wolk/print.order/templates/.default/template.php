@@ -115,6 +115,19 @@
 		</table>
 	</div>
 	
+	<div>
+		<h2>Данные заказа</h2>
+		<? foreach ($arResult['BASKETS'] as $basket) { ?>
+			<? if ($basket['ITEM']['CODE'] == 'FASCIA_NAME') { ?>
+				<li>
+					Надпись на фриз
+					(<i><?= $basket['PROPS']['FASCIA_COLOR']['VALUE'] ?> &ndash; <?= $arResult['COLORS'][$basket['PROPS']['FASCIA_COLOR']['VALUE']]['UF_NUM'] ?></i>):
+					&laquo;<b><?= $basket['PROPS']['FASCIA_TEXT']['VALUE'] ?></b>&raquo;
+				</li>
+			<? } ?>
+		<? } ?>
+	</div>
+	
 	<div class="sketch">
 		<h2>Расположение элементов на стенде</h2>
 		<img src="<?= CFile::GetPath($arResult['PROPS']['SKETCH_FILE']['VALUE_ORIG']) ?>" />

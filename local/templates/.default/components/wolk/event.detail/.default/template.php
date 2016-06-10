@@ -346,12 +346,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 </div>
                 <div class="ordercontainer__itemscontainer" v-for="(sectionName, items) in groupedSelectedServices">
                     <div class="pagesubsubtitle">{{ sectionName }}</div>
-                    <div class="ordercontainer__item" v-for="item in items" v-show="allServices[item.ID].PRICE > 0">
+                    <div class="ordercontainer__item" v-for="item in items" v-show="allServices[item.ID].PRICE > 0 || allServices[item.ID].CODE == 'FASCIA_NAME'">
 						<div class="ordercontainer__itemtotalprice">
 							{{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.QUANTITY * item.MULTIPLIER : allServices[item.ID].PRICE * item.QUANTITY | format_currency ' ' currency_format }}
 						</div>
 						<div class="ordercontainer__itemname">
-							{{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ' - ' + item.FASCIA_COLOR +')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
+							{{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ' - ' + item.FASCIA_COLOR + ')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
 						</div>
 						<div class="ordercontainer__changebutton">
 							<a @click.prevent="setStep(3)" href="javascript:void(0)">
