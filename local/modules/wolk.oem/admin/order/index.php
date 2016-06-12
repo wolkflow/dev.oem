@@ -3,6 +3,7 @@
 use Bitrix\Sale\Helpers\Admin\OrderEdit;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Helpers\Admin\Blocks;
+use Bitrix\Highloadblock\HighloadBlockTable;
 
 // подключим все необходимые файлы:
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
@@ -63,6 +64,20 @@ if ($ismanager) {
 	}
 }
 
+
+$colors = [];
+if (\Bitrix\Main\Loader::includeModule('highloadblock')) {
+	$hlblock = HighloadBlockTable::getById(COLORS_ENTITY_ID)->fetch();
+	$entity  = HighloadBlockTable::compileEntity($hlblock);
+	$class   = $entity->getDataClass();
+	$result  = $class::getList(['order' => ['UF_NUM' => 'ASC']]);
+	
+	while ($color = $result->fetch()) {
+		$colors[$color['UF_XML_ID']] = $color;
+	}
+}
+
+// if ($USER->getID() == 1) { echo '<pre>'; print_r($colors); echo '</pre>'; }
 
 $message = null;
 
@@ -460,6 +475,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 		color: #909090;
 		margin-top: 5px;
 	}
+	.fascia-text {
+		color: #606060;
+		font-size: 18px;
+		font-weight: 600;
+	}
 </style>
 
 <? if (!empty($message)) { ?>
@@ -834,6 +854,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
 								<ul>
+									
 									<? foreach ($baskets as $basket) { ?>
 										<? if ($basket['ITEM']['CODE'] == 'logo') { ?>
 											<li>
@@ -841,6 +862,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 												<? if (!empty($basket['PROPS']['LOGO_COMMENTS']['VALUE'])) { ?>
 													<p class="note"><?= $basket['PROPS']['LOGO_COMMENTS']['VALUE'] ?></p>
 												<? } ?>
+											</li>
+										<? } ?>
+										
+										<? if ($basket['ITEM']['CODE'] == 'FASCIA_NAME') { ?>
+											<li>
+												Надпись на фриз (<i><?= $basket['PROPS']['FASCIA_COLOR']['VALUE'] ?> - <?= $colors[$basket['PROPS']['FASCIA_COLOR']['VALUE']]['UF_NUM'] ?></i>):
+												<div class="fascia-text"><?= $basket['PROPS']['FASCIA_TEXT']['VALUE'] ?></div>
 											</li>
 										<? } ?>
 										
@@ -861,8 +889,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 												<? } ?>
 											</li>
 										<? } ?>
-										
-										
 									<? } ?>
 								</ul>
 							</div>

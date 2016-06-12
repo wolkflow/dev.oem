@@ -1,7 +1,7 @@
 <?
 $MESS["AUTH_LOGIN_BUTTON"] = "Войти";
 $MESS["AUTH_LOGIN"] = "Логин";
-$MESS["AUTH_EMAIL"] = "Електронный адрес";
+$MESS["AUTH_EMAIL"] = "Электронный адрес";
 $MESS["AUTH_PASSWORD"] = "Пароль";
 $MESS["AUTH_REMEMBER_ME"] = "Запомнить меня на этом компьютере";
 $MESS["AUTH_FORGOT_PASSWORD_2"] = "Забыли свой пароль?";
@@ -22,4 +22,3 @@ $MESS["auth_form_comp_otp"] = "Одноразовый пароль:";
 $MESS["auth_form_comp_otp_remember_title"] = "Запомнить код на этом компьютере";
 $MESS["auth_form_comp_otp_remember"] = "Запомнить код";
 $MESS["auth_form_comp_auth"] = "Авторизация";
-?>
