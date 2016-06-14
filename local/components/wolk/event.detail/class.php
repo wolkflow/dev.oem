@@ -896,15 +896,17 @@ class EventDetailComponent extends BaseListComponent
                 if (is_array($arStandOffer['PROPS']['EQUIPMENT']['VALUE'])) {
                     $equipmentIds = array_merge($equipmentIds, $arStandOffer['PROPS']['EQUIPMENT']['VALUE']);
                 }
-				$standsOfferIds []= $arStandOffer['ID'];
+				$standsOfferIds[$arStandOffer['ID']] = $arStandOffer['PROPS']['CML2_LINK']['VALUE'];
             }
 			
-			// Дополнение незагруженных стендов 9по площади).
+			
+			// Дополнение незагруженных стендов (по площади).
             if ($obStandOffers->SelectedRowsCount() < count($props['STANDS']['VALUE'])) {
                 $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC'], [
                     'IBLOCK_ID'          => STANDS_OFFERS_IBLOCK_ID,
                     'ACTIVE'             => 'Y',
                     'PROPERTY_CML2_LINK' => $props['STANDS']['VALUE'],
+					'!PROPERTY_CML2_LINK' => $standsOfferIds, // $props['STANDS']['VALUE'],
 					// '!ID'				 => $standsOfferIds // WHY?!
                 ]);
 				
@@ -922,18 +924,17 @@ class EventDetailComponent extends BaseListComponent
 					);
 					
 					//if (!in_array($arStandOffer['PROPS']['CML2_LINK']['VALUE'], $standsIds)) {
-					if (!in_array($arStandOffer['ID'], $standsOfferIds)) {
+					if (!array_key_exists($arStandOffer['ID'], $standsOfferIds)) {
 						$arStandOffers[$arStandOffer['PROPS']['CML2_LINK']['VALUE']] = $arStandOffer;
 						$standsIds []= $arStandOffer['PROPS']['CML2_LINK']['VALUE'];
 						if (is_array($arStandOffer['PROPS']['EQUIPMENT']['VALUE'])) {
 							$equipmentIds = array_merge($equipmentIds, $arStandOffer['PROPS']['EQUIPMENT']['VALUE']);
 						}
-						$standsOfferIds []= $arStandOffer['ID'];
+						$standsOfferIds[$arStandOffer['ID']] = $arStandOffer['PROPS']['CML2_LINK']['VALUE'];
 					}
 				}
             }
 			
-
             if (!empty($standsIds)) {
                 $obEquipment = CIBlockElement::GetList(
 					[],
@@ -985,9 +986,8 @@ class EventDetailComponent extends BaseListComponent
 
                     $arEquipment[$equipmentItem['ID']] = $equipmentItem;
                 }
-
-                #dump($arEquipment);die;
-
+				
+				
                 foreach ($arStandOffers as &$arStandOffer) {
                     foreach ($arStandOffer['PROPS']['EQUIPMENT']['VALUE'] as $num => $val) {
                         if (array_key_exists($val, $arEquipment)) {
