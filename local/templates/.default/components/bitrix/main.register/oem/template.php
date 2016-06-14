@@ -32,7 +32,7 @@ endif;
     </div>
     <?if($USER->IsAuthorized()):?>
 
-        <p><?echo GetMessage("MAIN_REGISTER_AUTH")?></p>
+        <p><?= GetMessage("MAIN_REGISTER_AUTH") ?></p>
 
     <?else:?>
     <?
@@ -45,7 +45,7 @@ endif;
 
     elseif($arResult["USE_EMAIL_CONFIRMATION"] === "Y"):
         ?>
-        <p><?echo GetMessage("REGISTER_EMAIL_WILL_BE_SENT")?></p>
+        <p><?= GetMessage("REGISTER_EMAIL_WILL_BE_SENT") ?></p>
     <?endif?>
     <div rel="personal" class="profilecontainer active">
         <div class="pagesubtitle customizable_border"></div>
