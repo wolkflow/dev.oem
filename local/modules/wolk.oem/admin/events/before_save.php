@@ -14,18 +14,38 @@ function BXIBlockAfterSave(&$arFields)
             'LANG_CURRENCY_EN' => $currencyEn
         ]);
     }
+	
+	
+	if (isset($_REQUEST['CURRENCY_STAND_RU'])) {
+        $currencyStandRu = $_REQUEST['useStandOnRU'] == 'EN' ? $_REQUEST['CURRENCY_STAND_EN'] : $_REQUEST['CURRENCY_STAND_RU'];
+        CIblockElement::SetPropertyValuesEx($arFields['ID'], false, [
+            'LANG_CURRENCY_RU' => $currencyRu
+        ]);
+    }
+
+    if (isset($_REQUEST['CURRENCY_STAND_EN'])) {
+        $currencyStandEn = $_REQUEST['useStandOnEN'] == 'RU' ? $_REQUEST['CURRENCY_STAND_RU'] : $_REQUEST['CURRENCY_STAND_EN'];
+        CIblockElement::SetPropertyValuesEx($arFields['ID'], false, [
+            'LANG_CURRENCY_EN' => $currencyEn
+        ]);
+    }
+	
+	
 
 	// Формирование цен стендов.
 	if (isset($_REQUEST['stand']) && !empty($_REQUEST['stand'])) {
+		\Bitrix\Main\Loader::includeModule('catalog');
+		
 		$stands = \Wolk\Core\Helpers\ArrayHelper::index($_REQUEST['stand'], 'ID');
 		
 		// Удаление текущих цен на стенды.
-		$current_stand_prices = \Wolk\OEM\EventEquipmentPricesTable::getList(['filter' =>['EVENT_ID' => $arFields['ID']]])->fetchAll();
+		$current_stand_prices = \Wolk\OEM\EventStandPricesTable::getList(['filter' =>['EVENT_ID' => $arFields['ID']]])->fetchAll();
         foreach ($current_stand_prices as $current_stand_price) {
-            \Wolk\OEM\EventEquipmentPricesTable::delete($current_stand_price['ID']);
+            \Wolk\OEM\EventStandPricesTable::delete($current_stand_price['ID']);
         }
 		
 		foreach ($stands as $stand) {
+			
 			$data = [
 				'EVENT_ID' => $arFields['ID'],
 				'STAND_ID' => $stand['ID'],
@@ -33,11 +53,11 @@ function BXIBlockAfterSave(&$arFields)
                 'SITE_ID'  => 'RU'
 			];
 			if (!$data['PRICE']) {
-                $arRuPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
-                if ($arRuPrice['CURRENCY'] != $currencyRu) {
-                    $arRuPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arRuPrice['PRICE'] ?: 0, $arRuPrice['CURRENCY'], $currencyRu);
+                $arPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
+                if ($arPrice['CURRENCY'] != $currencyStandRu) {
+                    $arPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arPrice['PRICE'] ?: 0, $arPrice['CURRENCY'], $currencyStandRu);
                 }
-                $data['PRICE'] = $arRuPrice['PRICE'] ?: 0;
+                $data['PRICE'] = $arPrice['PRICE'] ?: 0;
             }
 			\Wolk\OEM\EventStandPricesTable::add($data);
 			
@@ -49,11 +69,11 @@ function BXIBlockAfterSave(&$arFields)
                 'SITE_ID'  => 'EN'
 			];
 			if (!$data['PRICE']) {
-                $arRuPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
-                if ($arRuPrice['CURRENCY'] != $currencyRu) {
-                    $arRuPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arRuPrice['PRICE'] ?: 0, $arRuPrice['CURRENCY'], $currencyRu);
+                $arPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
+                if ($arPrice['CURRENCY'] != $currencyStandEn) {
+                    $arPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arPrice['PRICE'] ?: 0, $arPrice['CURRENCY'], $currencyStandEn);
                 }
-                $data['PRICE'] = $arRuPrice['PRICE'] ?: 0;
+                $data['PRICE'] = $arPrice['PRICE'] ?: 0;
             }
 			\Wolk\OEM\EventStandPricesTable::add($data);
 		}
