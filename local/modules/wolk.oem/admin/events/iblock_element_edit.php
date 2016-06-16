@@ -835,8 +835,8 @@ $currentCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' =
 
 $currentStandCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' => $ID], false, [
     'ID' => [
-        84,
-        85
+        86,
+        87
     ]
 ])->Fetch();
 
@@ -875,7 +875,7 @@ $tabControl->BeginCustomField("STANDS_PRICES", "Цены на стенды");
 							<select name="CURRENCY_STAND_RU">
 								<option value="">Не выбрано</option>
 								<? foreach ($currencyList as $id => $currency) { ?>
-									<option<? if ($id == $currentStandCurrencies[84]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
+									<option<? if ($id == $currentStandCurrencies[86]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
 								<? } ?>
 							</select>
 						</td>
@@ -883,7 +883,7 @@ $tabControl->BeginCustomField("STANDS_PRICES", "Цены на стенды");
 							<select name="CURRENCY_STAND_EN">
 								<option value="">Не выбрано</option>
 								<? foreach ($currencyList as $id => $currency) { ?>
-									<option<? if ($id == $currentStandCurrencies[85]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
+									<option<? if ($id == $currentStandCurrencies[87]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
 								<? } ?>
 							</select>
 						</td>
