@@ -13,7 +13,6 @@ $obEq = CIBlockElement::GetList([], [
 ]);
 
 $allStands = [];
-
 while ($arStand = $obEq->Fetch()) {
     $allStands[$arStand['ID']] = [
         'ID'       => $arStand['ID'],
@@ -42,11 +41,17 @@ while ($arEq = $obEq->Fetch()) {
 \Bitrix\Main\Loader::includeModule('wolk.oem');
 \Bitrix\Main\Loader::includeModule('wolk.core');
 
+
+$standPrices = \Wolk\OEM\EventStandPricesTable::getList([
+    'filter' => ['EVENT_ID' => $ID]
+])->fetchAll();
+
+foreach ($standPrices as $standPrice) {
+    $allStands[$standPrice['STAND_ID']]['PRICE_' . $standPrice['SITE_ID']] = $standPrice['PRICE'];
+}
+
 $eqPrices = \Wolk\OEM\EventEquipmentPricesTable::getList([
-    'filter' =>
-        [
-            'EVENT_ID' => $ID
-        ]
+    'filter' =>['EVENT_ID' => $ID]
 ])->fetchAll();
 
 foreach ($eqPrices as $eqPrice) {
@@ -828,6 +833,13 @@ $currentCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' =
     ]
 ])->Fetch();
 
+$currentStandCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' => $ID], false, [
+    'ID' => [
+        84,
+        85
+    ]
+])->Fetch();
+
 $currencyList = \Bitrix\Currency\CurrencyManager::getCurrencyList();
 
 $tabControl->BeginCustomField("STANDS_PRICES", "Цены на стенды");
@@ -863,7 +875,7 @@ $tabControl->BeginCustomField("STANDS_PRICES", "Цены на стенды");
 							<select name="CURRENCY_STAND_RU">
 								<option value="">Не выбрано</option>
 								<? foreach ($currencyList as $id => $currency) { ?>
-									<option<? if ($id == $currentCurrencies[63]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
+									<option<? if ($id == $currentStandCurrencies[84]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
 								<? } ?>
 							</select>
 						</td>
@@ -871,7 +883,7 @@ $tabControl->BeginCustomField("STANDS_PRICES", "Цены на стенды");
 							<select name="CURRENCY_STAND_EN">
 								<option value="">Не выбрано</option>
 								<? foreach ($currencyList as $id => $currency) { ?>
-									<option<? if ($id == $currentCurrencies[64]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
+									<option<? if ($id == $currentStandCurrencies[85]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
 								<? } ?>
 							</select>
 						</td>

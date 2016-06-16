@@ -28,6 +28,7 @@ class EventDetailComponent extends BaseListComponent
     protected $event = null;
 
     /** @var array */
+	protected $standPrices = null;
     protected $equipmentPrices = null;
 
     protected $equipmentColors = [];
@@ -833,7 +834,24 @@ class EventDetailComponent extends BaseListComponent
 
         return $eventResult->GetNextElement(false, false);
     }
+	
+	
+	protected function loadStandPrices(_CIBElement $event)
+    {
+        $prices = \Wolk\OEM\EventStandPricesTable::getList([
+            'filter' =>
+                [
+                    'EVENT_ID' => $event->GetFields()['ID'],
+                    'SITE_ID'  => $this->curLang
+                ]
+        ])->fetchAll();
 
+        foreach ($prices as $price) {
+            $this->standPrices[$price['STAND_ID']] = $price['PRICE'];
+        }
+    }
+
+	
     protected function loadEquipmentPrices(_CIBElement $event)
     {
         $prices = \Wolk\OEM\EventEquipmentPricesTable::getList([
@@ -848,6 +866,7 @@ class EventDetailComponent extends BaseListComponent
             $this->equipmentPrices[$price['EQUIPMENT_ID']] = $price['PRICE'];
         }
     }
+	
 
     /**
      * @param _CIBElement $event
@@ -861,6 +880,7 @@ class EventDetailComponent extends BaseListComponent
         $props = $event->GetProperties();
         $arEvent['PROPS'] = ArrayHelper::except($props, ['STANDS']);
 
+		$this->loadStandPrices($event);
         $this->loadEquipmentPrices($event);
 
         if (!empty($props['STANDS']['VALUE'])) {
@@ -996,13 +1016,14 @@ class EventDetailComponent extends BaseListComponent
                     }
                 }
                 unset($arStandOffer);
-
+				
                 $obStands = CIBlockElement::GetList([], [
                     'IBLOCK_ID'     => STANDS_IBLOCK_ID,
                     'ACTIVE'        => 'Y',
                     'PROPERTY_TYPE' => $this->arParams['TYPE'],
                     'ID'            => $standsIds
                 ]);
+				
                 while ($obStand = $obStands->GetNextElement(false, false)) {
                     $arStand = $obStand->GetFields();
                     $arStand['PROPS'] = $obStand->GetProperties();
@@ -1010,26 +1031,34 @@ class EventDetailComponent extends BaseListComponent
                     $arStand['PREVIEW_PICTURE'] = CFile::ResizeImageGet(
                         $arStand['PREVIEW_PICTURE'], ['width' => 420, 'height' => 270], BX_RESIZE_IMAGE_EXACT
                     )['src'];
-                    $arStand['PRICE'] = $arStand['BASE_PRICE'] = CPrice::GetBasePrice($arStand['ID']);
-
-                    $arStand['PRICE']['PRICE'] = (
+					
+					$arStand['PRICE'] = $arStand['BASE_PRICE'] = ['PRICE' => 0];
+					
+                    $arStand['PRICE']['PRICE'] = $arStand['BASE_PRICE']['PRICE'] = isset($this->standPrices[$arStand['ID']])
+                        ? $this->standPrices[$arStand['ID']]
+                        : 0;
+					
+					// $arStand['BASE_PRICE'] = CPrice::GetBasePrice($arStand['ID']);
+					
+                    $arStand['PRICE']['PRICE'] = (float) (
 						($arEvent['PROPS']['PRESELECT']['VALUE'] == $arStand['ID'])
 						? 0 
 						: $this->calcStandPrice(
-							$arStand['BASE_PRICE']['PRICE'],
+							floatval($arStand['BASE_PRICE']['PRICE']),
 							$this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
 							$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
 						  )
 					);
-                    $arStand['PROPS'] = $obStand->GetProperties();
+					
                     $arStand['OFFER'] = $arStandOffers[$arStand['ID']];
                     $arStand['NAME']  = $arStand['PROPS']['LANG_NAME_'.$this->curLang]['VALUE'] ?: $arStand['NAME'];
-                    $arStands[$arStand['ID']] = $arStand;
+                    
+					$arStands[$arStand['ID']] = $arStand;
                 }
             }
         }
         $arEvent['STANDS'] = $arStands;
-
+		
 		if (isset($_GET['dbg'])) {
 			echo (count($arStands));
 		}
@@ -1045,7 +1074,6 @@ class EventDetailComponent extends BaseListComponent
                 'FORMAT' => $currencyFormat['FORMAT_STRING']
             ];
         }
-		
         return $arEvent;
     }
 

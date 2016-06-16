@@ -52,33 +52,37 @@ function BXIBlockAfterSave(&$arFields)
 				'PRICE'    => $_REQUEST['useStandOnRU'] == 'EN' ? $stand['PRICE_EN'] : $stand['PRICE_RU'],
                 'SITE_ID'  => 'RU'
 			];
-			if (!$data['PRICE']) {
+			
+			if (!is_numeric($data['PRICE'])) {
                 $arPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
                 if ($arPrice['CURRENCY'] != $currencyStandRu) {
                     $arPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arPrice['PRICE'] ?: 0, $arPrice['CURRENCY'], $currencyStandRu);
                 }
                 $data['PRICE'] = $arPrice['PRICE'] ?: 0;
             }
+			$data['PRICE'] = (float) $data['PRICE'];
+			
+			
 			\Wolk\OEM\EventStandPricesTable::add($data);
-			
-			
+						
 			$data = [
 				'EVENT_ID' => $arFields['ID'],
 				'STAND_ID' => $stand['ID'],
 				'PRICE'    => $_REQUEST['useStandOnEN'] == 'RU' ? $stand['PRICE_RU'] : $stand['PRICE_EN'],
                 'SITE_ID'  => 'EN'
 			];
-			if (!$data['PRICE']) {
+			if (!is_numeric($data['PRICE'])) {
                 $arPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
                 if ($arPrice['CURRENCY'] != $currencyStandEn) {
                     $arPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arPrice['PRICE'] ?: 0, $arPrice['CURRENCY'], $currencyStandEn);
                 }
                 $data['PRICE'] = $arPrice['PRICE'] ?: 0;
             }
+			$data['PRICE'] = (float) $data['PRICE'];
+			
 			\Wolk\OEM\EventStandPricesTable::add($data);
 		}
 	}
-	
 	
 	
 	
