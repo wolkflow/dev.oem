@@ -191,6 +191,7 @@ $langs = Json::encode([
 	'equipment' => Loc::getMessage('equipment'),
 	'ordered' => Loc::getMessage('ordered'),
 	'placed' => Loc::getMessage('placed'),
+	'shelfPopupLabel' => Loc::getMessage('shelf_popup_label'),
 ]);
 
 $standTypes = ['row', 'head', 'corner', 'island'];
