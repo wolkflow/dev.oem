@@ -156,4 +156,5 @@ $MESS['placeholder_list_equipment'] = 'Please indicate weight of each item (ligh
 $MESS['equipment'] = 'Equipment';
 $MESS['ordered'] = 'Ordered';
 $MESS['placed'] = 'Placed';
+$MESS['shelf_popup_label'] = 'Please, set height (cm) for the shelf to be mounted. Switch shelves by pressing arrow buttons on your keyboard.';
 $MESS['popuplabel'] = '';

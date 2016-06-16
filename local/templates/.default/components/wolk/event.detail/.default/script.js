@@ -587,7 +587,7 @@
 										rightColumnLabel: langs.equipment,
 										ordered: langs.ordered,
 										placed: langs.placed,
-										shelfPopupLabel: ""
+										shelfPopupLabel: langs.shelfPopupLabel
 									},
                                     w: parseInt(self.selectedParams.WIDTH),
                                     h: parseInt(self.selectedParams.DEPTH),
@@ -614,7 +614,7 @@
 											rightColumnLabel: langs.equipment,
 											ordered: langs.ordered,
 											placed: langs.placed,
-											shelfPopupLabel: ""
+											shelfPopupLabel: langs.shelfPopupLabel
 										},
 										w: parseInt(self.selectedParams.WIDTH),
 										h: parseInt(self.selectedParams.DEPTH),
