@@ -543,7 +543,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Стоимость стенда</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($stand['BASKET']['PRICE'], $order['CURRENCY']) ?>
+							<?= CurrencyFormat($stand['BASKET']['PRICE'] * $stand['BASKET']['QUANTITY'], $order['CURRENCY']) ?>
 						</span>
                     </li>
                     <li>
