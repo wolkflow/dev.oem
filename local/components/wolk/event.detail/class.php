@@ -1011,7 +1011,7 @@ class EventDetailComponent extends BaseListComponent
                         $arStand['PREVIEW_PICTURE'], ['width' => 420, 'height' => 270], BX_RESIZE_IMAGE_EXACT
                     )['src'];
                     $arStand['PRICE'] = $arStand['BASE_PRICE'] = CPrice::GetBasePrice($arStand['ID']);
-
+					/*
                     $arStand['PRICE']['PRICE'] = (
 						($arEvent['PROPS']['PRESELECT']['VALUE'] == $arStand['ID'])
 						? 0 
@@ -1021,6 +1021,13 @@ class EventDetailComponent extends BaseListComponent
 							$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
 						  )
 					);
+					*/
+					$arStand['PRICE']['PRICE'] = $this->calcStandPrice(
+						$arStand['BASE_PRICE']['PRICE'],
+						$this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
+						$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
+					);
+					
                     $arStand['PROPS'] = $obStand->GetProperties();
                     $arStand['OFFER'] = $arStandOffers[$arStand['ID']];
                     $arStand['NAME']  = $arStand['PROPS']['LANG_NAME_'.$this->curLang]['VALUE'] ?: $arStand['NAME'];
