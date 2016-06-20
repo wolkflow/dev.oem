@@ -41,8 +41,8 @@ class Iblock
             }
             $arSets = \CCatalogProductSet::getAllSetsByProduct($arFields['ID'], \CCatalogProductSet::TYPE_SET);
             if (!empty($arSets)) {
-                foreach($arSets as $id => $arSet) {
-                    if(!\CCatalogProductSet::update($id, $setParams)) {
+                foreach ($arSets as $id => $arSet) {
+                    if (!\CCatalogProductSet::update($id, $setParams)) {
                         global $APPLICATION;
                         echo $APPLICATION->GetException()->GetString();
                         die;

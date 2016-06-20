@@ -6,10 +6,28 @@
 //We have to explicitly call calendar and editor functions because
 //first output may be discarded by form settings
 
+
+$obEq = CIBlockElement::GetList([], [
+    'IBLOCK_ID'           => STANDS_IBLOCK_ID,
+    'INCLUDE_SUBSECTIONS' => 'Y',
+]);
+
+$allStands = [];
+while ($arStand = $obEq->Fetch()) {
+    $allStands[$arStand['ID']] = [
+        'ID'       => $arStand['ID'],
+        'NAME'     => $arStand['NAME'],
+        'PRICE_RU' => '',
+        'PRICE_EN' => '',
+    ];
+}
+
+
 $obEq = CIBlockElement::GetList([], [
     'IBLOCK_ID'           => OPTIONS_IBLOCK_ID,
     "INCLUDE_SUBSECTIONS" => "Y",
 ]);
+
 $allEquipment = [];
 while ($arEq = $obEq->Fetch()) {
     $allEquipment[$arEq['ID']] = [
@@ -22,17 +40,49 @@ while ($arEq = $obEq->Fetch()) {
 
 \Bitrix\Main\Loader::includeModule('wolk.oem');
 \Bitrix\Main\Loader::includeModule('wolk.core');
+\Bitrix\Main\Loader::includeModule('sale');
+
+
+$standPrices = \Wolk\OEM\EventStandPricesTable::getList([
+    'filter' => ['EVENT_ID' => $ID]
+])->fetchAll();
+
+foreach ($standPrices as $standPrice) {
+    $allStands[$standPrice['STAND_ID']]['PRICE_' . $standPrice['SITE_ID']] = $standPrice['PRICE'];
+}
+/*
+echo '<pre>';
+print_r($standPrices);
+echo '</pre><hr/>';
+echo '<pre>';
+print_r($allStands);
+echo '</pre>';
+foreach ($allStands as &$arStand) {
+	if ($arStand['PRICE_EN']) {
+		$arStand['PRICE_EN'] = CPrice::GetBasePrice($arStand['ID']);
+	}
+	if ($arStand['PRICE_RU']) {
+		$arStand['PRICE_RU'] = CPrice::GetBasePrice($arStand['ID']);
+	}
+}
+echo '<pre>';
+print_r($allStands);
+echo '</pre>';
+*/
 
 $eqPrices = \Wolk\OEM\EventEquipmentPricesTable::getList([
-    'filter' =>
-        [
-            'EVENT_ID' => $ID
-        ]
+    'filter' =>['EVENT_ID' => $ID]
 ])->fetchAll();
 
 foreach ($eqPrices as $eqPrice) {
     $allEquipment[$eqPrice['EQUIPMENT_ID']]['PRICE_' . $eqPrice['SITE_ID']] = $eqPrice['PRICE'];
 }
+
+
+
+$selectedStands = CIBlockElement::GetPropertyValues(EVENTS_IBLOCK_ID, [
+    'ID' => $ID
+], false, ['ID' => SELECTED_STANDS_PROPERTY_ID])->Fetch()[SELECTED_STANDS_PROPERTY_ID];
 
 $selectedEquipment = CIBlockElement::GetPropertyValues(EVENTS_IBLOCK_ID, [
     'ID' => $ID
@@ -54,15 +104,20 @@ while($arStandsOffer = $obStandsOffers->Fetch()) {
     $standartEquipment = array_merge($arStandsOffer['PROPERTY_EQUIPMENT_VALUE'], $standartEquipment);
 }
 
-$allEquipment = \Bitrix\Main\Web\Json::encode($allEquipment);
+$allStands         = \Bitrix\Main\Web\Json::encode($allStands);
+$allEquipment      = \Bitrix\Main\Web\Json::encode($allEquipment);
+$selectedStands    = \Bitrix\Main\Web\Json::encode($selectedStands);
 $selectedEquipment = \Bitrix\Main\Web\Json::encode($selectedEquipment);
 $standartEquipment = \Bitrix\Main\Web\Json::encode(array_unique($standartEquipment));
+
 
 $am = \Bitrix\Main\Page\Asset::getInstance();
 $am->addJs('/local/templates/.default/javascripts/vue.min.js');
 $am->addString(<<<JS
 <script>
-var selectedEquipment = $selectedEquipment,
+var allStands = $allStands,
+	selectedStands = $selectedStands,
+	selectedEquipment = $selectedEquipment,
     allEquipment = $allEquipment,
     standartEquipment = $standartEquipment;
     $(function() {
@@ -70,24 +125,25 @@ var selectedEquipment = $selectedEquipment,
         var vm = new Vue({
             el: '#form_element_1_form',
             data: {
-                    selectedEquipment: selectedEquipment,
-                    allEquipment: allEquipment,
-                    standartEquipment: standartEquipment,
-                    useOnRu: 'DEFAULT',
-                    useOnEn: 'DEFAULT'
-                  }
+				allStands: allStands,
+				selectedStands: selectedStands,
+				selectedEquipment: selectedEquipment,
+				allEquipment: allEquipment,
+				standartEquipment: standartEquipment,
+				useOnRu: 'DEFAULT',
+				useOnEn: 'DEFAULT'
+			}
         });
 
         Vue.filter('isEquipment', function (arr) {
             var res = {};
             if (!$.isEmptyObject(arr)) {
                 $.each(arr, function (key, val) {
-                    if(allEquipment.hasOwnProperty(val)) {
+                    if (allEquipment.hasOwnProperty(val)) {
                         res[key] = val;
                     }
                 });
             }
-
             return res;
         });
     });
@@ -446,14 +502,14 @@ echo GetFilterHiddens("find_"); ?>
         echo 'N';
     } ?>">
     <input type="hidden" name="Update" value="Y">
-    <input type="hidden" name="from" value="<? echo htmlspecialcharsbx($from) ?>">
-    <input type="hidden" name="WF" value="<? echo htmlspecialcharsbx($WF) ?>">
-    <input type="hidden" name="return_url" value="<? echo htmlspecialcharsbx($return_url) ?>">
+    <input type="hidden" name="from" value="<?= htmlspecialcharsbx($from) ?>">
+    <input type="hidden" name="WF" value="<?= htmlspecialcharsbx($WF) ?>">
+    <input type="hidden" name="return_url" value="<?= htmlspecialcharsbx($return_url) ?>">
 <? if ($ID > 0 && !$bCopy) {
-    ?><input type="hidden" name="ID" value="<? echo $ID ?>"><?
+    ?><input type="hidden" name="ID" value="<?= $ID ?>"><?
 }
 if ($bCopy) {
-    ?><input type="hidden" name="copyID" value="<? echo $ID; ?>"><?
+    ?><input type="hidden" name="copyID" value="<?= $ID; ?>"><?
 }
 if ($bCatalog) {
     CCatalogAdminTools::showFormParams();
@@ -491,8 +547,8 @@ $tabControl->BeginCustomField("ACTIVE_FROM", GetMessage("IBLOCK_FIELD_ACTIVE_PER
     $arIBlock["FIELDS"]["ACTIVE_FROM"]["IS_REQUIRED"] === "Y");
 ?>
     <tr id="tr_ACTIVE_FROM">
-        <td><? echo $tabControl->GetCustomLabelHTML() ?>:</td>
-        <td><? echo CAdminCalendar::CalendarDate("ACTIVE_FROM", $str_ACTIVE_FROM, 19, true) ?></td>
+        <td><?= $tabControl->GetCustomLabelHTML() ?>:</td>
+        <td><?= CAdminCalendar::CalendarDate("ACTIVE_FROM", $str_ACTIVE_FROM, 19, true) ?></td>
     </tr>
 <?
 $tabControl->EndCustomField("ACTIVE_FROM",
@@ -501,8 +557,8 @@ $tabControl->BeginCustomField("ACTIVE_TO", GetMessage("IBLOCK_FIELD_ACTIVE_PERIO
     $arIBlock["FIELDS"]["ACTIVE_TO"]["IS_REQUIRED"] === "Y");
 ?>
     <tr id="tr_ACTIVE_TO">
-        <td><? echo $tabControl->GetCustomLabelHTML() ?>:</td>
-        <td><? echo CAdminCalendar::CalendarDate("ACTIVE_TO", $str_ACTIVE_TO, 19, true) ?></td>
+        <td><?= $tabControl->GetCustomLabelHTML() ?>:</td>
+        <td><?= CAdminCalendar::CalendarDate("ACTIVE_TO", $str_ACTIVE_TO, 19, true) ?></td>
     </tr>
 
 <?
@@ -513,7 +569,7 @@ if ($arTranslit["TRANSLITERATION"] == "Y") {
     $tabControl->BeginCustomField("NAME", GetMessage("IBLOCK_FIELD_NAME") . ":", true);
     ?>
     <tr id="tr_NAME">
-        <td><? echo $tabControl->GetCustomLabelHTML() ?></td>
+        <td><?= $tabControl->GetCustomLabelHTML() ?></td>
         <td style="white-space: nowrap;">
             <input type="text" size="50" name="NAME" id="NAME" maxlength="255" value="<? echo $str_NAME ?>">
             <image id="name_link" title="<? echo GetMessage("IBEL_E_LINK_TIP") ?>" class="linked"
@@ -667,7 +723,7 @@ if (!empty($PROP)):
         if ($prop_code == 'OPTIONS') { ?>
             <tr id="tr_PROPERTY_<? echo $prop_fields["ID"]; ?>">
                 <td class="adm-detail-valign-top" width="40%">
-                    <? echo $tabControl->GetCustomLabelHTML(); ?>:
+                    <?= $tabControl->GetCustomLabelHTML(); ?>:
                 </td>
                 <td width="60%">
                     <? showEquipmentField('PROP[' . $prop_fields["ID"] . ']', $prop_fields, $prop_fields["VALUE"],
@@ -797,7 +853,83 @@ $currentCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' =
     ]
 ])->Fetch();
 
+$currentStandCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' => $ID], false, [
+    'ID' => [
+        86,
+        87
+    ]
+])->Fetch();
+
 $currencyList = \Bitrix\Currency\CurrencyManager::getCurrencyList();
+
+$tabControl->BeginCustomField("STANDS_PRICES", "Цены на стенды");
+?>
+    <tr>
+        <td>
+            <table id="event-prices-table">
+                <thead>
+					<tr>
+						<th>Название</th>
+						<th>Цена RU</th>
+						<th>Цена EN</th>
+					</tr>
+                </thead>
+                <tbody>
+					<tr v-for="(index, sid) in selectedStands">
+						<td>
+							<input type="hidden" name="stand[{{index}}][ID]" :value="sid" />
+							{{ allStands[sid].NAME }}
+						</td>
+						<td>
+							<input v-model="PRICE_STAND_RU[sid]" name="stand[{{index}}][PRICE_RU]" type="text" size="10" :value="allStands[sid].PRICE_RU" />
+						</td>
+						<td>
+							<input v-model="PRICE_STAND_EN[sid]" name="stand[{{index}}][PRICE_EN]" type="text" size="10" :value="allStands[sid].PRICE_EN" />
+						</td>
+					</tr>
+                </tbody>
+                <tfoot>
+					<tr>
+						<td>Используемая валюта</td>
+						<td>
+							<select name="CURRENCY_STAND_RU">
+								<option value="">Не выбрано</option>
+								<? foreach ($currencyList as $id => $currency) { ?>
+									<option<? if ($id == $currentStandCurrencies[86]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
+								<? } ?>
+							</select>
+						</td>
+						<td>
+							<select name="CURRENCY_STAND_EN">
+								<option value="">Не выбрано</option>
+								<? foreach ($currencyList as $id => $currency) { ?>
+									<option<? if ($id == $currentStandCurrencies[87]) { ?> selected<? } ?> value="<?= $id ?>"><?= $currency ?></option>
+								<? } ?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Использовать цены другого языка</td>
+						<td>
+							<select name="useStandOnRU" v-model="useStandOnRU">
+								<option value=""></option>
+								<option value="EN">EN</option>
+							</select>
+						</td>
+						<td>
+							<select name="useStandOnEN" v-model="useStandOnEN">
+								<option value=""></option>
+								<option value="RU">RU</option>
+							</select>
+						</td>
+					</tr>
+                </tfoot>
+            </table>
+        </td>
+    </tr>
+<?
+$tabControl->EndCustomField("STANDS_PRICES", '');
+
 $tabControl->BeginCustomField("EQUIPMENT_PRICES", "Цены на доп оборудование и услуги");
 ?>
     <tr>
@@ -813,16 +945,14 @@ $tabControl->BeginCustomField("EQUIPMENT_PRICES", "Цены на доп обор
                 <tbody>
                 <tr v-for="(index, eqId) in selectedEquipment">
                     <td>
-                        <input type="hidden" name="eq[{{index}}][ID]" :value="eqId">
+                        <input type="hidden" name="eq[{{index}}][ID]" :value="eqId" />
                         {{ allEquipment[eqId].NAME }}
                     </td>
                     <td>
-                        <input v-model="PRICE_RU[eqId]" name="eq[{{index}}][PRICE_RU]" type="text" size="10"
-                               :value=" allEquipment[eqId].PRICE_RU">
+                        <input v-model="PRICE_RU[eqId]" name="eq[{{index}}][PRICE_RU]" type="text" size="10" :value="allEquipment[eqId].PRICE_RU" />
                     </td>
                     <td>
-                        <input v-model="PRICE_EN[eqId]" name="eq[{{index}}][PRICE_EN]" type="text" size="10"
-                               :value="allEquipment[eqId].PRICE_EN">
+                        <input v-model="PRICE_EN[eqId]" name="eq[{{index}}][PRICE_EN]" type="text" size="10" :value="allEquipment[eqId].PRICE_EN" />
                     </td>
                 </tr>
                 </tbody>
@@ -832,19 +962,17 @@ $tabControl->BeginCustomField("EQUIPMENT_PRICES", "Цены на доп обор
                     <td>
                         <select name="CURRENCY_RU">
                             <option value="">Не выбрано</option>
-                            <? foreach ($currencyList as $id => $currency): ?>
-                                <option<? if ($id == $currentCurrencies[63]): ?> selected<? endif; ?>
-                                    value="<?= $id ?>"><?= $currency ?></option>
-                            <? endforeach; ?>
+                            <? foreach ($currencyList as $id => $currency) { ?>
+                                <option<? if ($id == $currentCurrencies[63]): ?> selected<? endif; ?> value="<?= $id ?>"><?= $currency ?></option>
+                            <? } ?>
                         </select>
                     </td>
                     <td>
                         <select name="CURRENCY_EN">
                             <option value="">Не выбрано</option>
-                            <? foreach ($currencyList as $id => $currency): ?>
-                                <option<? if ($id == $currentCurrencies[64]): ?> selected<? endif; ?>
-                                    value="<?= $id ?>"><?= $currency ?></option>
-                            <? endforeach; ?>
+                            <? foreach ($currencyList as $id => $currency) { ?>
+                                <option<? if ($id == $currentCurrencies[64]): ?> selected<? endif; ?> value="<?= $id ?>"><?= $currency ?></option>
+                            <? } ?>
                         </select>
                     </td>
                 </tr>
