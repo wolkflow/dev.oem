@@ -1031,25 +1031,22 @@ class EventDetailComponent extends BaseListComponent
                     $arStand['PREVIEW_PICTURE'] = CFile::ResizeImageGet(
                         $arStand['PREVIEW_PICTURE'], ['width' => 420, 'height' => 270], BX_RESIZE_IMAGE_EXACT
                     )['src'];
-					
+	
 					$arStand['PRICE'] = $arStand['BASE_PRICE'] = ['PRICE' => 0];
 					
-                    $arStand['PRICE']['PRICE'] = $arStand['BASE_PRICE']['PRICE'] = isset($this->standPrices[$arStand['ID']])
-                        ? $this->standPrices[$arStand['ID']]
-                        : 0;
+                    $arStand['PRICE'] = $arStand['BASE_PRICE'] = isset($this->standPrices[$arStand['ID']])
+                        ? ['PRICE' => $this->standPrices[$arStand['ID']]]
+                        : CPrice::GetBasePrice($arStand['ID']);
 					
-					// $arStand['BASE_PRICE'] = CPrice::GetBasePrice($arStand['ID']);
-					
-                    $arStand['PRICE']['PRICE'] = (float) (
-						($arEvent['PROPS']['PRESELECT']['VALUE'] == $arStand['ID'])
-						? 0 
-						: $this->calcStandPrice(
-							floatval($arStand['BASE_PRICE']['PRICE']),
-							$this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
-							$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
-						  )
+					$arStand['PRICE']['PRICE'] = $this->calcStandPrice(
+						$arStand['BASE_PRICE']['PRICE'],
+						$this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
+						$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
 					);
 					
+					$arStand['PRICE']['PRICE'] = (float) $arStand['PRICE']['PRICE'];
+					
+                    $arStand['PROPS'] = $obStand->GetProperties();
                     $arStand['OFFER'] = $arStandOffers[$arStand['ID']];
                     $arStand['NAME']  = $arStand['PROPS']['LANG_NAME_'.$this->curLang]['VALUE'] ?: $arStand['NAME'];
                     

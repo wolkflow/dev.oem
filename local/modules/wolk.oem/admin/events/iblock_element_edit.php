@@ -17,8 +17,8 @@ while ($arStand = $obEq->Fetch()) {
     $allStands[$arStand['ID']] = [
         'ID'       => $arStand['ID'],
         'NAME'     => $arStand['NAME'],
-        'PRICE_RU' => 0,
-        'PRICE_EN' => 0
+        'PRICE_RU' => '',
+        'PRICE_EN' => '',
     ];
 }
 
@@ -40,6 +40,7 @@ while ($arEq = $obEq->Fetch()) {
 
 \Bitrix\Main\Loader::includeModule('wolk.oem');
 \Bitrix\Main\Loader::includeModule('wolk.core');
+\Bitrix\Main\Loader::includeModule('sale');
 
 
 $standPrices = \Wolk\OEM\EventStandPricesTable::getList([
@@ -49,6 +50,25 @@ $standPrices = \Wolk\OEM\EventStandPricesTable::getList([
 foreach ($standPrices as $standPrice) {
     $allStands[$standPrice['STAND_ID']]['PRICE_' . $standPrice['SITE_ID']] = $standPrice['PRICE'];
 }
+/*
+echo '<pre>';
+print_r($standPrices);
+echo '</pre><hr/>';
+echo '<pre>';
+print_r($allStands);
+echo '</pre>';
+foreach ($allStands as &$arStand) {
+	if ($arStand['PRICE_EN']) {
+		$arStand['PRICE_EN'] = CPrice::GetBasePrice($arStand['ID']);
+	}
+	if ($arStand['PRICE_RU']) {
+		$arStand['PRICE_RU'] = CPrice::GetBasePrice($arStand['ID']);
+	}
+}
+echo '<pre>';
+print_r($allStands);
+echo '</pre>';
+*/
 
 $eqPrices = \Wolk\OEM\EventEquipmentPricesTable::getList([
     'filter' =>['EVENT_ID' => $ID]
