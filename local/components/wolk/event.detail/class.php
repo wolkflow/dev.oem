@@ -1,4 +1,4 @@
-<?
+﻿<?
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
@@ -1034,15 +1034,20 @@ class EventDetailComponent extends BaseListComponent
 	
 					$arStand['PRICE'] = $arStand['BASE_PRICE'] = ['PRICE' => 0];
 					
-                    $arStand['PRICE'] = $arStand['BASE_PRICE'] = isset($this->standPrices[$arStand['ID']])
-                        ? ['PRICE' => $this->standPrices[$arStand['ID']]]
-                        : CPrice::GetBasePrice($arStand['ID']);
-					
-					$arStand['PRICE']['PRICE'] = $this->calcStandPrice(
-						$arStand['BASE_PRICE']['PRICE'],
-						$this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
-						$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
-					);
+					// Базовый стенд считается по нулевой цене.
+					if ($arEvent['PROPS']['PRESELECT']['VALUE'] == $arStand['ID']) {
+						$arStand['PRICE']['PRICE'] = 0;
+					} else {
+						$arStand['PRICE'] = $arStand['BASE_PRICE'] = isset($this->standPrices[$arStand['ID']])
+							? ['PRICE' => $this->standPrices[$arStand['ID']]]
+							: CPrice::GetBasePrice($arStand['ID']);
+						
+						$arStand['PRICE']['PRICE'] = $this->calcStandPrice(
+							$arStand['BASE_PRICE']['PRICE'],
+							$this->arParams['WIDTH'] ?: $this->arResult['ORDER']['PROPS']['width']['VALUE'],
+							$this->arParams['DEPTH'] ?: $this->arResult['ORDER']['PROPS']['depth']['VALUE']
+						);
+					}
 					
 					$arStand['PRICE']['PRICE'] = (float) $arStand['PRICE']['PRICE'];
 					
