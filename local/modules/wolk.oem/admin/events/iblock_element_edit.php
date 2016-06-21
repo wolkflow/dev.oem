@@ -50,25 +50,7 @@ $standPrices = \Wolk\OEM\EventStandPricesTable::getList([
 foreach ($standPrices as $standPrice) {
     $allStands[$standPrice['STAND_ID']]['PRICE_' . $standPrice['SITE_ID']] = $standPrice['PRICE'];
 }
-/*
-echo '<pre>';
-print_r($standPrices);
-echo '</pre><hr/>';
-echo '<pre>';
-print_r($allStands);
-echo '</pre>';
-foreach ($allStands as &$arStand) {
-	if ($arStand['PRICE_EN']) {
-		$arStand['PRICE_EN'] = CPrice::GetBasePrice($arStand['ID']);
-	}
-	if ($arStand['PRICE_RU']) {
-		$arStand['PRICE_RU'] = CPrice::GetBasePrice($arStand['ID']);
-	}
-}
-echo '<pre>';
-print_r($allStands);
-echo '</pre>';
-*/
+
 
 $eqPrices = \Wolk\OEM\EventEquipmentPricesTable::getList([
     'filter' =>['EVENT_ID' => $ID]
@@ -846,19 +828,20 @@ if (!$bAutocomplete) {
     }
 }
 
-$currentCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' => $ID], false, [
+$currentCurrencies = CIBlockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' => $ID], false, [
     'ID' => [
         63,
         64
     ]
 ])->Fetch();
 
-$currentStandCurrencies = CIblockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' => $ID], false, [
+$currentStandCurrencies = CIBlockElement::GetPropertyValues(EVENTS_IBLOCK_ID, ['ID' => $ID], false, [
     'ID' => [
         86,
         87
     ]
 ])->Fetch();
+
 
 $currencyList = \Bitrix\Currency\CurrencyManager::getCurrencyList();
 

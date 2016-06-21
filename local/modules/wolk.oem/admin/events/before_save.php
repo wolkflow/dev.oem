@@ -3,33 +3,31 @@ function BXIBlockAfterSave(&$arFields)
 {
     if (isset($_REQUEST['CURRENCY_RU'])) {
         $currencyRu = $_REQUEST['useOnRU'] == 'EN' ? $_REQUEST['CURRENCY_EN'] : $_REQUEST['CURRENCY_RU'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], false, [
+        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
             'LANG_CURRENCY_RU' => $currencyRu
         ]);
     }
 
     if (isset($_REQUEST['CURRENCY_EN'])) {
         $currencyEn = $_REQUEST['useOnEN'] == 'RU' ? $_REQUEST['CURRENCY_RU'] : $_REQUEST['CURRENCY_EN'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], false, [
+        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
             'LANG_CURRENCY_EN' => $currencyEn
         ]);
     }
 	
-	
 	if (isset($_REQUEST['CURRENCY_STAND_RU'])) {
         $currencyStandRu = $_REQUEST['useStandOnRU'] == 'EN' ? $_REQUEST['CURRENCY_STAND_EN'] : $_REQUEST['CURRENCY_STAND_RU'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], false, [
-            'LANG_CURRENCY_RU' => $currencyRu
+        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
+            'LANG_STAND_CURRENCY_RU' => (string) $currencyStandRu
         ]);
     }
 
     if (isset($_REQUEST['CURRENCY_STAND_EN'])) {
         $currencyStandEn = $_REQUEST['useStandOnEN'] == 'RU' ? $_REQUEST['CURRENCY_STAND_RU'] : $_REQUEST['CURRENCY_STAND_EN'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], false, [
-            'LANG_CURRENCY_EN' => $currencyEn
+        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
+            'LANG_STAND_CURRENCY_EN' => (string) $currencyStandEn
         ]);
     }
-	
 	
 
 	// Формирование цен стендов.

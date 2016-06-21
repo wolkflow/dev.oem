@@ -27,10 +27,10 @@
 				<td>
 					<p><b>Joint Stock Company “ITEMF EXPO”</b></p>
 					<p>
-						Leningradsky Prosp. 39, Build. 80, 125167, Moscow Russia <br>
+						3, bldg.2, Floor 2A, ap. I, Room 1, Verkhnyaya Krasnoselskay, 107140, Moscow Russia <br>
 						Raiffeisenbank AO, Moscow<br>
 						SWIFT RZBMRUMM<br>
-						Acc.: 40702978200000001177
+						Acc.: 40702978200000001177						
 					</p>
 				</td>
 				<td>
