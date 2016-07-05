@@ -36,3 +36,22 @@ Loader::registerAutoLoadClasses(
 );
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
+
+// Исправление добавления товара.
+// https://dev.1c-bitrix.ru/community/forums/forum6/topic84667/#message430619
+/*
+AddEventHandler('sale', 'OnBeforeSaleOrderSetField', 'OnBeforeBasketUpdateAfterCheckHandle');
+function OnBeforeBasketUpdateAfterCheckHandle($id, $item)
+{
+	file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r(func_get_args(), true));
+	/*
+	$discountMode = \Bitrix\Sale\Compatible\DiscountCompatibility::MODE_CLIENT;
+	$discountConfig = array(
+	   'SITE_ID'  => SITE_DEFAULT,
+	   'CURRENCY' => $fields['CURRENCY']
+	);
+	\Bitrix\Sale\Compatible\DiscountCompatibility::reInit($discountMode, $discountConfig);
+	* /
+}
+*/

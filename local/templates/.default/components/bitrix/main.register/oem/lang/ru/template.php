@@ -57,5 +57,4 @@ $MESS["main_profile_time_zones_auto_no"] = "Нет, выбрать из спис
 $MESS["main_profile_time_zones_zones"] = "Часовой пояс:";
 $MESS["AUTH_SECURE_NOTE"] = "Перед отправкой формы пароль будет зашифрован в браузере. Это позволит избежать передачи пароля в открытом виде.";
 $MESS["AUTH_NONSECURE_NOTE"] = "Пароль будет отправлен в открытом виде. Включите JavaScript в браузере, чтобы зашифровать пароль перед отправкой.";
-$MESS["REGISTER_FIELD_EMAIL_CONFIRM"] = 'Confirm E-mail';
-?>
+$MESS["REGISTER_FIELD_EMAIL_CONFIRM"] = 'Подтверждение E-mail';

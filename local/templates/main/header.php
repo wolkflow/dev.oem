@@ -89,15 +89,17 @@ Loc::loadLanguageFile(__FILE__);
                         
                         CModule::IncludeModule('iblock');
                         $event = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'CODE' => strval($arVariables['ELEMENT_CODE'])])->GetNextElement();
-                        $props = $event->getProperties();
-                        foreach ($props as $code => $prop) { 
-                            if (strpos($code, 'LANG_ACTIVE_') !== false) {
-                                if ($prop['VALUE'] == 'Y') {
-                                    $key = strtolower(str_replace('LANG_ACTIVE_', '', $code));
-                                    $langs[$key] = $APPLICATION->availableLang[$key];
-                                }
-                            }
-                        }
+						if ($event) {
+							$props = $event->getProperties();
+							foreach ($props as $code => $prop) { 
+								if (strpos($code, 'LANG_ACTIVE_') !== false) {
+									if ($prop['VALUE'] == 'Y') {
+										$key = strtolower(str_replace('LANG_ACTIVE_', '', $code));
+										$langs[$key] = $APPLICATION->availableLang[$key];
+									}
+								}
+							}
+						}
                     ?>
                 <? } ?>
                 

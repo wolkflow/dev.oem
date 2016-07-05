@@ -58,4 +58,3 @@ $MESS["AUTH_SECURE_NOTE"] = "The password will be encrypted before it is sent. T
 $MESS["AUTH_NONSECURE_NOTE"] = "The password will be sent in open form. Enable JavaScript in your web browser to enable password encryption.";
 $MESS["REGISTER_FIELD_TITLE"] = "Salutation";
 $MESS["REGISTER_FIELD_EMAIL_CONFIRM"] = 'Confirm E-mail';
-?>

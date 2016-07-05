@@ -1,7 +1,7 @@
 <?
 $MESS['Including'] = 'Включает';
 $MESS['choose'] = 'выбрать';
-$MESS['m2'] = 'м2';
+$MESS['m2'] = 'м<sup>2</sup>';
 $MESS['Configure standard equipment'] = 'Сконфигурирйте стандартное оборудование';
 $MESS['basket'] = 'Корзина';
 $MESS['Your current stand type'] = 'Ваш текущий стенд';
@@ -115,7 +115,7 @@ $MESS['stand type'] = 'тип стенда';
 $MESS['standard equipment'] = 'стандартное оборудование';
 $MESS['equipment'] = 'оборудование';
 $MESS['services'] = 'услуги';
-$MESS['sketch'] = 'скетч';
+$MESS['sketch'] = 'Схема стенда';
 $MESS['choose color'] = 'Выбрать цвет';
 $MESS['change color'] = 'Сменить цвет';
 $MESS['row'] = 'Линейный';
