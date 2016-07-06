@@ -19,6 +19,8 @@ $MESS['HEADER_PRICE']   = 'Cost';
 $MESS['HEADER_BILL']  	= 'Invoice number';
 $MESS['HEADER_STATUS']  = 'Status';
 $MESS['HEADER_DATE']  	= 'Date order';
+$MESS['ORIGINAL_PRICE'] = 'Original price';
+$MESS['CONVERT_PRICE'] 	= 'Convert price';
 
 $MESS['SELECT_ANY'] = '- any -';
 

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Bitrix\Sale\Helpers\Admin\OrderEdit;
 use Bitrix\Main\Localization\Loc;
@@ -47,6 +47,10 @@ if (!\Bitrix\Main\Loader::includeModule('sale')) {
     return;
 }
 
+if (!\Bitrix\Main\Loader::includeModule('currency')) {
+    ShowError('Модуль currency не устанволен.');
+    return;
+}
 
 
 if ($ismanager) {
@@ -88,6 +92,7 @@ $message = null;
 $oemorder = new Wolk\OEM\Order($ID);
 $bxorder  = Bitrix\Sale\Order::load($ID);
 
+
 /*
  * Сохранение данных заказа.
  */
@@ -96,6 +101,23 @@ if (!empty($_POST)) {
 
 	
     switch ($action) {
+		
+		// Пересчет заказа по курсу.
+		case 'convert':
+			$rate     = (float) $_POST['RATE'];
+			$currency = (string) $_POST['RATE_CURRENCY'];
+			
+			$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'RATE', $rate);
+			$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'RATE_CURRENCY', $currency) && $result;
+			
+			if (!$result) {
+				$message = new CAdminMessage([
+					'MESSAGE' => Loc::getMessage('ERROR_CHANGE_RATE'),
+					'TYPE'    => 'ERROR'
+				]);
+			}
+			break;
+		
 
         // Сохранение данных заказа.
         case 'data':
@@ -221,6 +243,8 @@ if (!empty($_POST)) {
 }
 
 
+
+
 // Заказ.
 $order = CSaleOrder::getByID($ID);
 $order['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($ID);
@@ -238,6 +262,37 @@ if ($element) {
 	ShowError('Мероприятие не найдено.');
     return;
 }
+
+
+$rate = (!empty($order['PROPS']['RATE']['VALUE'])) 
+		? ((float) $order['PROPS']['RATE']['VALUE']) 
+		: (1);
+$rate_currency = (!empty($order['PROPS']['RATE_CURRENCY']['VALUE'])) 
+				? ((string) $order['PROPS']['RATE_CURRENCY']['VALUE']) 
+				: ($order['CURRENCY']);
+
+
+
+$result = CCurrencyRates::GetList();
+$rates  = array();
+while ($irate = $result->fetch()) {
+	$rates[$rate['CURRENCY']] = $irate['RATE'];
+}
+unset($result, $irate);
+
+$result = CCurrency::GetList();
+$currencies = array();
+while ($currency = $result->fetch()) {
+	if ($order['CURRENCY'] == $currency['CURRENCY']) {
+		$currency['ORDER_RATE'] = 1;
+	} else {
+		$currency['ORDER_RATE'] = round(CCurrencyRates::ConvertCurrency(1, $order['CURRENCY'], $currency['CURRENCY']), 6);
+	}
+	$currencies[$currency['CURRENCY']] = $currency;
+}
+unset($result, $currency);
+
+
 
 $stand = array();
 
@@ -425,6 +480,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 			});
 		});
 
+		
+		// Смена валюты пересчета.
+		$('#js-convert-select-id').on('change', function() {
+			$('#js-convert-rate-id').val($(this).find('option:selected').data('rate'));
+		});
+		
 
         /*
          * Обработчики скетча.
@@ -543,25 +604,25 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Стоимость стенда</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($stand['BASKET']['PRICE'] * $stand['BASKET']['QUANTITY'], $order['CURRENCY']) ?>
+							<?= CurrencyFormat($stand['BASKET']['PRICE'] * $stand['BASKET']['QUANTITY'] * $rate, $rate_currency) ?>
 						</span>
                     </li>
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Общая стоимость товаров</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($goodprice, $order['CURRENCY']) ?>
+							<?= CurrencyFormat($goodprice * $rate, $rate_currency) ?>
 						</span>
                     </li>
 					<li class="adm-bus-orderinfoblock-content-redtext">
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Наценки</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'], $order['CURRENCY']) ?>
+							<?= CurrencyFormat($order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'] * $rate, $rate_currency) ?>
 						</span>
                     </li>
 					<li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param">НДС</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($order['TAX_VALUE'], $order['CURRENCY']) ?>
+							<?= CurrencyFormat($order['TAX_VALUE'] * $rate, $rate_currency) ?>
 						</span>
                     </li>
                 </ul>
@@ -569,10 +630,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Итого</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($order['PRICE'], $order['CURRENCY']) ?>
+							<?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?>
+							<? if (!empty($order['PROPS']['RATE']['VALUE'])) { ?>
+								/ <?= CurrencyFormat($order['PRICE'], $order['CURRENCY']) ?>
+							<? } ?>
 						</span>
                     </li>
-                </ul>
+                </ul>				
             </div>
         </div>
     </div>
@@ -636,6 +700,40 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                         <hr width="96%" color="e7f2f2"/>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container js-invoices-wrapper">
+							
+								<form method="post">
+									<input type="hidden" name="action" value="convert" />
+									<table cellpadding="5">
+										<tr>
+											<td class="adm-detail-content-cell-l" width="235">Курс пересчета:</td>
+											<td width="200">
+												<?= $order['CURRENCY'] ?>
+												&rarr;
+												<? // Счета // ?>
+												<select name="RATE_CURRENCY" id="js-convert-select-id" style="width: 65px;">
+													<? foreach ($currencies as $code => $currency) { ?>
+														<option value="<?= $code ?>" data-rate="<?= $currency['ORDER_RATE'] ?>" <?= ($code == $order['CURRENCY']) ? ('selected') : ('') ?>>
+															<?= $code ?>
+														</option>
+													<? } ?>
+												</select>
+												<input type="text" name="RATE" id="js-convert-rate-id" value="1" style="width: 75px;" />
+											</td>
+											<td>
+												<input type="submit" class="amd-btn-save" value="Пересчитать" />
+											</td>
+											<td>
+												<? if (!empty($order['PROPS']['RATE']['VALUE'])) { ?>
+													Пересчитан по курсу 
+													<b><?= $order['PROPS']['RATE']['VALUE'] ?> <?= $order['PROPS']['RATE_CURRENCY']['VALUE'] ?></b>
+												<? } ?>
+											</td>
+										</tr>
+									</table>
+								</form>
+								
+								<hr/>
+							
                                 <table cellpadding="5">
                                     <tr>
                                         <td class="adm-detail-content-cell-l" width="235">Генерация счета:</td>
@@ -806,10 +904,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 												</td>
                                                 <td align="center"><?= $basket['QUANTITY'] ?></td>
                                                 <td align="left">
-                                                    <?= CurrencyFormat($basket['PRICE'], $basket['CURRENCY']) ?>
+                                                    <?= CurrencyFormat($basket['PRICE'] * $rate, $rate_currency) ?>
                                                 </td>
                                                 <td align="left">
-                                                    <?= CurrencyFormat($basket['PRICE'] * $basket['QUANTITY'], $basket['CURRENCY']) ?>
+                                                    <?= CurrencyFormat($basket['PRICE'] * $basket['QUANTITY'] * $rate, $rate_currency) ?>
                                                 </td>
 												<td>
 													&nbsp;
@@ -824,13 +922,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                                 <b style="margin-left: 30px;">Всего товаров <?= $cnt ?></b>.
                                             </td>
                                             <td colspan="2" align="right">
-                                                <h2 style="3px 20px 0 0">Итого: <?= CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'], $order['CURRENCY']) ?></h2>
+                                                <h2 style="3px 20px 0 0">Итого: <?= CurrencyFormat(($order['PRICE'] - $order['TAX_VALUE']) * $rate, $rate_currency) ?></h2>
                                             </td>
                                         <tr>
                                         </tr>
                                             <td colspan="4"></td>
                                             <td colspan="2" align="right">
-                                                <h2 style="3px 20px 0 0">Итого с НДС: <?= CurrencyFormat($order['PRICE'], $order['CURRENCY']) ?></h2>
+                                                <h2 style="3px 20px 0 0">Итого с НДС: <?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?></h2>
                                             </td>
                                         </tr>
                                     </tfoot>

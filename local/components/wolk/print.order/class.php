@@ -67,6 +67,16 @@ class PrintOrderComponent extends \CBitrixComponent
 		$this->arResult['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($this->arParams['ORDER_ID']);
 		$this->arResult['USER']    = CUser::getByID($this->arResult['ORDER']['USER_ID'])->Fetch();
 		
+		
+		// Курс пересчета заказа.
+		$rate     = (!empty($this->arResult['PROPS']['RATE']['VALUE'])) 
+					? (floatval($this->arResult['PROPS']['RATE']['VALUE'])) 
+					: (1);
+		$currency = (!empty($this->arResult['PROPS']['RATE_CURRENCY']['VALUE'])) 
+					? (strval($this->arResult['PROPS']['RATE_CURRENCY']['VALUE'])) 
+					: ($this->arResult['ORDER']['CURRENCY']);
+		
+		
 		$event = CIBlockElement::getByID($this->arResult['PROPS']['eventId']['VALUE'])->GetNextElement();
 		
 		$this->arResult['EVENT'] = $event->getFields();
@@ -79,7 +89,7 @@ class PrintOrderComponent extends \CBitrixComponent
 		$summary = 0;
 		foreach ($this->arResult['BASKETS'] as &$basket) {
 			
-			$basket['SUMMARY_PRICE'] = $basket['PRICE'] * $basket['QUANTITY'];
+			$basket['SUMMARY_PRICE'] = $basket['PRICE'] * $basket['QUANTITY'] * $rate;
 			
 			if ($basket['PRICE'] > 0) {
 				$count++;
@@ -112,85 +122,21 @@ class PrintOrderComponent extends \CBitrixComponent
 			'TOTAL_WITH_SURCHARGE' => $this->arResult['ORDER']['PRICE'],
 			'FINAL'                => $this->arResult['ORDER']['PRICE'],
 		];
-
+		
 		if ($surcharge > 0) {
-			$this->arResult['PRICES']['SURCHARGE']       = $this->arResult['PROPS']['SURCHARGE']['VALUE_ORIG'];
+			$this->arResult['PRICES']['SURCHARGE'] = $this->arResult['PROPS']['SURCHARGE']['VALUE_ORIG'];
 			$this->arResult['PRICES']['SURCHARGE_PRICE'] = $surcharge;
 		}
 		
-		/*
-		foreach ($this->arResult['BASKETS'] as &$basket) {
-			
-			if ($basket['PRODUCT_ID'] > 0) {
-				$item = CIBlockElement::getByID($basket['PRODUCT_ID'])->GetNextElement();
-				
-				$basket['ITEM'] = $item->getFields();
-				$basket['ITEM']['PROPS'] = $item->getProperties();
-				$basket['ITEM']['IMAGE'] = CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], ['width' => 78, 'height' => 78])['src']; // CFile::getPath($basket['ITEM']['PREVIEW_PICTURE']);
-			}
-			
-			// Является ли товар стендом.
-			$basket['IS_STAND'] = ($basket['TYPE'] == 0);
-		}
-		unset($item, $basket);
 		
-		// Данные для скетча.
-		$this->arResult['SKETCH'] = json_decode($this->arResult['PROPS']['sketch']['VALUE'], true);
-
-		$this->arResult['SKETCH']['items'] = [];
-		foreach ($this->arResult['BASKETS'] as $basket) {
-			if ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] && $basket['ITEM']['PROPS']['HEIGHT']['VALUE']) {
-				if (array_key_exists($basket['ITEM']['ID'], $this->arResult['SKETCH']['items'])) {
-					$this->arResult['SKETCH']['items'] [$basket['ITEM']['ID']]['quantity'] += $basket['QUANTITY'];
-				} else {
-					$this->arResult['SKETCH']['items'] [$basket['ITEM']['ID']] = [
-						'id'        => $basket['ITEM']['ID'],
-						'imagePath' => CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], [
-							'width' => ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10 < 30) ? 30 : $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10,
-							'height' => ($basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10 < 30) ? 30 : $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10,
-						])['src'],
-						'quantity'  => $basket['QUANTITY'],
-						'title'     => $basket['ITEM']['NAME'],
-						'type'      => $basket['ITEM']['PROPS']['SKETCH_TYPE']['VALUE'] ?: 'droppable',
-						'w'         => (float) $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 1000,
-						'h'         => (float) $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 1000
-					];
-				}
-
-			}
-		}
-		unset($item, $basket);
-		
-		
-		
-		// Количество позиций с ненулевой стоимостью.
-		$count   = 0;
-		$summary = 0;
-		foreach ($this->arResult['BASKETS'] as $basket) {
-			if ($basket['SUMMARY_PRICE'] > 0) {
-				$count++;
-				$summary += $basket['SUMMARY_PRICE'];
-			}
+		// Конвертирование цены.
+		foreach ($this->arResult['PRICES'] as &$price) {
+			$price *= $rate;
 		}
 		
+		// Конвертирование валюты.
+		$this->arResult['ORDER']['CURRENCY'] = $currency;
 		
-		// Стоимость товаров в корзине (без наценок).
-		$this->arResult['ORDER']['BASKET_PRICE'] = $summary;
-		
-		// Стоимость заказа без налогов и с наценками.
-		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] = $this->arResult['ORDER']['PRICE'] - $this->arResult['ORDER']['TAX_VALUE'];
-		
-		
-		if ($count > 0) {
-			$overprice = ($this->arResult['ORDER']['BASKET_TOTAL_PRICE'] - $this->arResult['ORDER']['BASKET_PRICE']) / $count;
-			
-			foreach ($this->arResult['BASKETS'] as &$basket) {
-				if ($basket['SUMMARY_PRICE'] > 0) {
-					$basket['TOTAL_PRICE'] = $basket['SUMMARY_PRICE'] + $overprice;
-				}
-			}
-		}
-		*/
 		
 		// Подключение шаблона.
 		$this->includeComponentTemplate();

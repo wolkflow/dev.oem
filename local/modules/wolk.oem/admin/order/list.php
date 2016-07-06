@@ -275,6 +275,12 @@ $ladmin->AddHeaders(array(
 		"sort"      => 'DATE',
 		"default"   => true,
 	),
+	array( 
+		"id"    	=> 'ORIGINAL_PRICE',
+		"content"   => Loc::getMessage('ORIGINAL_PRICE'),
+		"sort"      => 'ORIGINAL_PRICE',
+		"default"   => false,
+	),
 ));
 
 
@@ -292,10 +298,18 @@ while ($item = $result->NavNext(true, "f_")) {
 	
 	$row->AddViewField('EVENT', $event['NAME']);
 	$row->AddViewField('COMPANY', $user['WORK_COMPANY']);
-	$row->AddViewField('PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
+	// $row->AddViewField('PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
 	$row->AddViewField('BILL', ((!empty($props['BILL']['VALUE'])) ? ($props['BILL']['VALUE']) : ('&mdash;')));
 	$row->AddViewField('STATUS', $statuses[$item['STATUS_ID']]['NAME']);
 	$row->AddViewField('DATE', $item['DATE_INSERT']);
+	
+	$rate     = (!empty($props['RATE']['VALUE'])) ? (floatval($props['RATE']['VALUE'])) : (1);
+	$currency = (!empty($props['RATE_CURRENCY']['VALUE'])) ? (strval($props['RATE_CURRENCY']['VALUE'])) : ($item['CURRENCY']);
+	
+	// $row->AddViewField('CONVERT_PRICE', CurrencyFormat($item['PRICE'] * $rate, $currency));
+	$row->AddViewField('PRICE', CurrencyFormat($item['PRICE'] * $rate, $currency));
+    $row->AddViewField('ORIGINAL_PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
+	
   
 	// Сформируем контекстное меню.
 	$actions = array();
