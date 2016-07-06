@@ -136,6 +136,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-		// setTimeout(function() {window.print();}, 1000);
+		setTimeout(function() {window.print();}, 1000);
     });
 </script>
