@@ -158,3 +158,5 @@ $MESS['ordered'] = 'Ordered';
 $MESS['placed'] = 'Placed';
 $MESS['shelf_popup_label'] = 'Please, set height (cm) for the shelf to be mounted. Switch shelves by pressing arrow buttons on your keyboard.';
 $MESS['popuplabel'] = '';
+
+$MESS['extent'] = 'Choose logo';

@@ -157,4 +157,4 @@ $MESS['ordered'] = 'Заказано';
 $MESS['placed'] = 'Размещено';
 $MESS['popuplabel'] = '';
 
-
+$MESS['extent'] = 'Выберите логотип';
