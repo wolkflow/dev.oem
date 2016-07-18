@@ -428,7 +428,7 @@ class EventDetailComponent extends BaseListComponent
                     $r = BasketTable::add([
                         'PRODUCT_ID'    => $eq['ID'],
                         'PRICE'         => 0,
-                        'QUANTITY'      => $eq['COUNT'],
+                        'QUANTITY'      => ($eq['COUNT']) ?: 1,
                         'CURRENCY'      => $this->event['CURRENCY']['NAME'],
                         'LID'           => SITE_ID,
                         'NAME'          => $this->event['ALL_SERVICES'][$eq['ID']]['NAME'],
@@ -455,7 +455,7 @@ class EventDetailComponent extends BaseListComponent
                         $r = BasketTable::add([
                             'PRODUCT_ID' => $eq['ID'],
                             'PRICE'      => $this->equipmentPrices[$eq['ID']],
-                            'QUANTITY'   => $eq['QUANTITY'] - $eq['COUNT'],
+                            'QUANTITY'   => ($diff) ?: 1,
                             'CURRENCY'   => $this->event['CURRENCY']['NAME'],
                             'LID'        => SITE_ID,
                             'NAME'       => $this->event['ALL_SERVICES'][$eq['ID']]['NAME'],
@@ -556,7 +556,6 @@ class EventDetailComponent extends BaseListComponent
                 throw new Exception(join("<br>", $addToCartErrors));
             }
         }
-
         throw new Exception('Error');
     }
 

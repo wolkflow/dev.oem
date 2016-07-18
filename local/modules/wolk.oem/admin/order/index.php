@@ -104,7 +104,7 @@ if (!empty($_POST)) {
 		
 		// Пересчет заказа по курсу.
 		case 'convert':
-			$rate     = (float) $_POST['RATE'];
+			$rate     = (float) str_replace(',', '.', (string) $_POST['RATE']);
 			$currency = (string) $_POST['RATE_CURRENCY'];
 			
 			$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'RATE', $rate);

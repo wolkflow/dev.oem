@@ -39,14 +39,13 @@ try {
 			
         case 'placeOrder':
             Loader::includeModule('sale');
-			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r($_POST, true));
             $params = [];
             if (array_key_exists('selectedParams', $_POST)) {
                 $params = \Bitrix\Main\Web\Json::decode($_POST['selectedParams']);
                 $params['EVENT_ID'] = $_POST['orderParams']['eventId'];
             }
             $component->arParams = $params;
-            $component->addToCart();
+            $result = $component->addToCart();
             break;
 			
         case 'upload':
