@@ -116,11 +116,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
 			
 			foreach ($this->arResult['BASKETS'] as &$basket) {
 				if ($basket['SUMMARY_PRICE'] > 0) {
-					$basket['SURCHARGE_PRICE']  = $basket['PRICE'] + $overprice;
-					$basket['SURCHARGE_PRICE'] *= $rate;
-					
-					$basket['SURCHARGE_SUMMARY_PRICE']  = $basket['SURCHARGE_PRICE'] * $basket['QUANTITY'];
-					$basket['SURCHARGE_SUMMARY_PRICE'] *= $rate;
+					$basket['SURCHARGE_PRICE'] = $basket['PRICE'] + $overprice;
+					$basket['SURCHARGE_SUMMARY_PRICE'] = $basket['SURCHARGE_PRICE'] * $basket['QUANTITY'];
 				}
 			}
 		}
