@@ -592,7 +592,7 @@ class EventDetailComponent extends BaseListComponent
             $totalPrice += $moneySurcharge;
         }
 		
-		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r([$totalPrice, $moneySurcharge], true) . PHP_EOL);
+		// file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r([$totalPrice, $moneySurcharge], true) . PHP_EOL);
 		
         $totalPrice = $totalPrice ?: 1;
         $vat = ($totalPrice / 100 * VAT_DEFAULT);

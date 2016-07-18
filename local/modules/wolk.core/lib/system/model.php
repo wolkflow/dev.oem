@@ -26,7 +26,7 @@ abstract class Model
      * @param int $id
      * @param array $data
      */
-    public function __construct($id = false, $data = [])
+    public function __construct($id = null, $data = [])
     {
         $this->id   = (int) $id;
         $this->data = (array) $data;
