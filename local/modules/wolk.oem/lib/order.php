@@ -10,13 +10,14 @@ use \Bitrix\Main\Application;
 
 class Order
 {
-	const PROP_SKETCH       = 'sketch';
-	const PROP_SKETCH_IMAGE = 'SKETCH_IMAGE';
-	const PROP_PAVILLION    = 'pavillion';
-	const PROP_STANDNUM		= 'standNum';
-	const PROP_LANGUAGE     = 'LANGUAGE';
-	const PROP_INVOICE		= 'INVOICE';
-	const PROP_INVOICE_DATE = 'INVOICE_DATE';
+	const PROP_SKETCH          = 'sketch';
+	const PROP_SKETCH_IMAGE    = 'SKETCH_IMAGE';
+	const PROP_PAVILLION       = 'pavillion';
+	const PROP_STANDNUM		   = 'standNum';
+	const PROP_LANGUAGE        = 'LANGUAGE';
+	const PROP_INVOICE		   = 'INVOICE';
+	const PROP_INVOICE_DATE    = 'INVOICE_DATE';
+	const PROP_SURCHARGE_PRICE = 'SURCHARGE_PRICE';
 	
 	protected $id;
 	protected $data;
@@ -120,6 +121,14 @@ class Order
 		$this->load();
 		
 		return $this->data['PROPS'][self::PROP_LANGUAGE]['VALUE_ORIG'];
+	}
+	
+	
+	public function getSurchargePrice()
+	{
+		$this->load();
+		
+		return $this->data['PROPS'][self::PROP_SURCHARGE_PRICE]['VALUE_ORIG'];
 	}
 	
 	
@@ -249,7 +258,32 @@ class Order
 		$data['BASKETS'] = $this->getBaskets();
 		$data['USER']    = $this->getUser();
 		$data['EVENT']   = $this->getEvent();
+		$data['PRICES']  = $this->getPriceInfo();
 		
 		return $data;
+	}
+	
+	
+	/**
+	 * Получение информации о цене заказа.
+	 */
+	public function getPriceInfo()
+	{
+		$summary = 0;
+		foreach ($this->getBaskets() as $basket) {
+			$summary += (float) $basket['SUMMARY_PRICE'];
+		}
+		
+		$surcharge = (float) $this->getSurchargePrice();
+		
+		$prices = [
+			'BASKET'         => (float) $summary,
+			'TAX'            => (float) $this->data['TAX_VALUE'],
+			'SURCHARGE'      => (float) $surcharge,
+			'TOTAL_WITH_VAT' => (float) $this->data['PRICE'] - $surcharge,
+			'TOTAL'          => (float) $this->data['PRICE'],
+		];
+		
+		return $prices;
 	}
 }

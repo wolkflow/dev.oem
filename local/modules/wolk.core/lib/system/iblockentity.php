@@ -2,6 +2,10 @@
 
 namespace Wolk\Core\System;
 
+
+\Bitrix\Main\Loader::includeModule('iblock');
+
+
 class IBlockEntity extends Model
 {
 	
@@ -97,9 +101,8 @@ class IBlockEntity extends Model
         }
         $items = [];
         while ($item = $result->Fetch()) {
-            $items[$key] = new static($item['ID']);
+            $items[$item[$key]] = new static($item['ID']);
         }
-
         return $items;
 	}
 	

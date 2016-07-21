@@ -22,7 +22,7 @@
         </div>
         <div v-for="(groupId, services) in selectedStand.SERVICES">
             <div class="basketcontainer__itemcontainer customizable_border" v-for="service in services | visibleInCart">
-                <div v-if="service.ID == 5" class="basketcontainer__itemname">{{ allServices[service.ID].NAME + ' ('+service.FASCIA_TEXT+' - '+service.FASCIA_COLOR+') ' }}</div>
+                <div v-if="service.ID == 5" class="basketcontainer__itemname">{{ allServices[service.ID].NAME + ' ('+service.FASCIA_TEXT + ' - ' + service.FASCIA_COLOR + ') ' }}</div>
                 <div v-else class="basketcontainer__itemname">{{ allServices[service.ID].NAME }}</div>
                 <div class="basketcontainer__itemtotalprice">
                     {{ service.MULTIPLIER ? allServices[service.ID].PRICE * service.QUANTITY * service.MULTIPLIER : allServices[service.ID].PRICE * service.QUANTITY | format_currency ' ' currency_format}}

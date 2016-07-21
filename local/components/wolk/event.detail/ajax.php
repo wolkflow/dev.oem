@@ -1,4 +1,5 @@
-<?
+<?php
+
 define('PUBLIC_AJAX_MODE', true);
 require($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
 
@@ -6,7 +7,9 @@ use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Web\Json;
 use Bitrix\Main\ArgumentException;
+
 global $APPLICATION;
+
 Loader::includeModule('iblock');
 
 CBitrixComponent::includeComponentClass('wolk:event.detail');
@@ -22,12 +25,10 @@ $actions = [
 try {
     if (!Context::getCurrent()->getRequest()->isPost()) {
         throw new Exception('wrong request');
-        #die('wrong request');
     }
 
     if (!array_key_exists('action', $_POST) || !in_array($_POST['action'], $actions)) {
         throw new Exception('wrong action');
-        #die('wrong action');
     }
 
     switch ($_POST['action']) {

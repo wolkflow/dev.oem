@@ -17,6 +17,8 @@
 
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)
 	die();
+
+$curlang = strtolower(\Bitrix\Main\Context::getCurrent()->getLanguage());
 ?>
 <div class="profilepage">
 <form method="post" action="<?=POST_FORM_ACTION_URI?>" name="regform" enctype="multipart/form-data">
@@ -71,16 +73,18 @@ endif;
                         </div>
                     </div>
                 </div>
-                <div class="pagesubsubtitle">
-                    <?=$arResult["USER_PROPERTIES"]["DATA"]['UF_VAT']['EDIT_FORM_LABEL']?>
-                </div>
-                <div class="profilecontainer__itemscontainer">
-                    <div class="profilecontainer__item">
-                        <div class="profilecontainer__itemname">
-                            <input type="text" name="UF_VAT" value="<?=$arResult['VALUES']["UF_VAT"]?>"/>
+                <? if ($curlang != LANG_RU) { ?>
+                    <div class="pagesubsubtitle">
+                        <?=$arResult["USER_PROPERTIES"]["DATA"]['UF_VAT']['EDIT_FORM_LABEL']?>
+                    </div>
+                    <div class="profilecontainer__itemscontainer">
+                        <div class="profilecontainer__item">
+                            <div class="profilecontainer__itemname">
+                                <input type="text" name="UF_VAT" value="<?=$arResult['VALUES']["UF_VAT"]?>"/>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <? } ?>
                 <div class="pagesubsubtitle">
                     <?=GetMessage("REGISTER_FIELD_PASSWORD")?>
                 </div>

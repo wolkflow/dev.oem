@@ -954,7 +954,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 								<ul>
 									
 									<? foreach ($baskets as $basket) { ?>
-										<? if ($basket['ITEM']['CODE'] == 'logo') { ?>
+										<? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_LOGOTYPES_ID) { ?>
 											<li>
 												<a href="<?= CFile::getPath($basket['PROPS']['LOGO_FILE']['VALUE']) ?>" target="_blank">Логотип</a>
 												<? if (!empty($basket['PROPS']['LOGO_COMMENTS']['VALUE'])) { ?>

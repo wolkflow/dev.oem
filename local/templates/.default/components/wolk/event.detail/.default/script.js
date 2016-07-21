@@ -973,6 +973,7 @@ Vue.component('graphics', {
             return this.$parent.services.SECTIONS[this.sectionId];
         },
         sections: function () {
+			console.log(this.section.SECTIONS);
             return this.section.SECTIONS;
         },
         components: function () {
@@ -1083,6 +1084,8 @@ Vue.component('graphics', {
             },
             mixins: [currencyMixin]
         },
+		
+		
         'logo-fascia-mono': {
             template: '#logo-fascia-mono',
             data: function () {
@@ -1616,12 +1619,7 @@ Vue.component('graphics', {
                                         NAME: 'Коммент',
                                         CODE: 'COMMENTS',
                                         VALUE: item.COMMENTS
-                                    }//,
-                                    //{
-                                    //    NAME: 'ITEM_ID',
-                                    //    CODE: 'ITEM_ID',
-                                    //    VALUE: item.ITEM_ID
-                                    //}
+                                    }
                                 ]
                             });
                         }
@@ -1630,6 +1628,91 @@ Vue.component('graphics', {
             },
             mixins: [currencyMixin]
         },
+		
+		'posting': {
+            template: '#posting',
+            data: function () {
+                return {
+                    sectionId: 48,
+                    itemId: 339,
+                    items: [
+                        {
+                            QUANTITY: 0,
+                            COMMENTS: ''
+                        }
+                    ]
+                }
+            },
+            ready: function () {
+                if (
+                    this.$root.order
+                    &&
+                    this.$root.order.selectedStand.hasOwnProperty('SERVICES')
+                    &&
+                    this.$root.order.selectedStand.SERVICES
+                    &&
+                    this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
+                ) {
+                    this.items = this.$root.order.selectedStand.SERVICES[this.sectionId];
+                }
+            },
+            computed: {
+                section: function () {
+                    return this.$parent.sections[this.sectionId]
+                },
+                item: function () {
+                    return this.section.ITEMS[this.itemId];
+                },
+                price: function () {
+                    return this.item.PRICE;
+                },
+            },
+            methods: {
+                incQty: function (item) {
+                    item.QUANTITY++;
+                },
+                decQty: function (item) {
+                    if (item.QUANTITY > 0) {
+                        item.QUANTITY--;
+                    }
+                },
+                addItem: function () {
+                    this.items.push({
+                        QUANTITY: 0,
+                        COMMENTS: ''
+                    })
+                },
+                getTotalPrice: function () {
+                    var self = this;
+                    return this.items.reduce(function (sum, item) {
+                        return sum + parseInt(self.price * item.QUANTITY);
+                    }, 0)
+                },
+                addToCart: function () {
+                    var self = this;
+                    this.items.forEach(function (item, index) {
+                        if (item.QUANTITY > 0) {
+                            self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
+                                ID: self.item.ID,
+                                NAME: self.item.NAME,
+                                CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
+                                QUANTITY: parseFloat(item.QUANTITY).toFixed(2),
+                                PRICE: parseFloat(self.price).toFixed(2),
+                                PROPS: [
+                                    {
+                                        NAME: 'Коммент',
+                                        CODE: 'COMMENTS',
+                                        VALUE: item.COMMENTS
+                                    }
+                                ]
+                            });
+                        }
+                    })
+                }
+            },
+            mixins: [currencyMixin]
+        },
+		
         'full-color-printing': {
             template: '#full-color-printing',
             data: function () {
@@ -1685,8 +1768,8 @@ Vue.component('graphics', {
                 },
                 addItem: function () {
                     this.items.push({
-                        WIDTH: '',
-                        HEIGHT: '',
+                        WIDTH: 0,
+                        HEIGHT: 0,
                         QUANTITY: 0,
                         LINK: '',
                         COMMENTS: ''
@@ -1694,20 +1777,20 @@ Vue.component('graphics', {
                 },
                 getTotalPrice: function () {
                     var self = this;
-                    return this.items.reduce(function (sum, item) {
+					return this.items.reduce(function(sum, item) {
                         return sum + parseInt(self.price * item.QUANTITY);
-                    }, 0)
+                    }, 0);
                 },
                 addToCart: function () {
                     var self = this;
-                    this.items.forEach(function (item, index) {
+                    this.items.forEach(function (item, index) {						
                         if (parseInt(item.HEIGHT) > 0 && parseInt(item.WIDTH) > 0 && item.QUANTITY > 0) {
-                            self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
+							self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
                                 ID: self.item.ID,
                                 NAME: self.item.NAME,
                                 CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
-                                QUANTITY: item.QUANTITY,
-                                PRICE: self.price * (item.WIDTH * item.HEIGHT) / 1000000,
+                                QUANTITY: item.QUANTITY * parseInt(item.WIDTH) * parseInt(item.HEIGHT) / 1000000,
+                                PRICE: self.price,
                                 PROPS: [
                                     {
                                         NAME: 'WIDTH',
@@ -1740,6 +1823,96 @@ Vue.component('graphics', {
     },
     mixins: [toggleableMixin]
 });
+
+
+
+// Компонент: "Логотип".
+Vue.component('logotype', {
+    template: '#logotype',
+    data: function () {
+        return {
+            sectionId: 13,
+            selectedItems: [
+                {
+                    ID: '',
+                    QUANTITY: 0,
+                    FILE: null,
+					COMMENTS: ''
+                }
+            ]
+        }
+    },
+	ready: function () {
+        if (
+            this.$root.order
+            &&
+            this.$root.order.selectedStand.hasOwnProperty('SERVICES')
+            &&
+            this.$root.order.selectedStand.SERVICES
+            &&
+            this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
+        ) {
+            this.selectedItems = this.$root.order.selectedStand.SERVICES[this.sectionId];
+        }
+    },
+    computed: {
+        section: function () {
+            return this.$parent.sections[this.sectionId];
+        },
+        items: function () {
+            return this.section.ITEMS;
+        }
+    },
+    methods: {
+        addItem: function () {
+            this.selectedItems.push({
+                ID: '',
+                QUANTITY: 0,
+                FILE: null,
+				COMMENTS: ''
+            });
+        },
+        addToCart: function () {
+            var self = this;
+            this.selectedItems.forEach(function (item, index) {
+                if (item.ID && item.FILE && item.QUANTITY > 0) {
+                    self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
+                        ID: item.ID,
+                        NAME: self.items[item.ID].NAME,
+                        CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
+                        QUANTITY: item.QUANTITY,
+                        PRICE: self.items[item.ID].PRICE,
+                        PROPS: [
+							{
+								NAME: 'COMMENTS',
+								CODE: 'LOGO_COMMENTS',
+								VALUE: item.COMMENTS
+							},
+							{
+								NAME: 'FILE',
+								CODE: 'LOGO_FILE',
+								VALUE: item.FILE
+							}
+						]
+                    });
+                } else {
+                    if (
+                        self.$root.selectedStand.SERVICES.hasOwnProperty(self.section.ID)
+                        &&
+                        self.$root.selectedStand.SERVICES[self.section.ID].hasOwnProperty(index)
+                    ) {
+                        Vue.delete(self.$root.selectedStand.SERVICES[self.section.ID], index);
+                    }
+                }
+            })
+        }
+    },
+    mixins: [
+        quantityMixin,
+		currencyMixin
+    ]
+});
+
 
 
 // Компонент: "Дополнительное оборудование".
@@ -2261,6 +2434,8 @@ Vue.component('hanging-structure-details', {
         }
     }
 });
+
+
 
 
 
@@ -3079,14 +3254,13 @@ Vue.filter('overIncluded', function (arr) {
 // Фильтр видимости в корзине.
 Vue.filter('visibleInCart', function (arr) {
     var res = [];
-    if (!$.isEmptyObject(arr)) {
+	if (!$.isEmptyObject(arr)) {
         $.each(arr, function (key, val) {
             if (val && (val.PRICE && parseInt(val.PRICE) > 0) || val.ID == 5) {
                 res.push(val);
             }
         });
     }
-
     return res;
 });
 

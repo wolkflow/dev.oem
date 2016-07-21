@@ -6,26 +6,336 @@ class Event extends \Wolk\Core\System\IBlockEntity
 {
     const IBLOCK_ID = 1;
 
-    public function __construct($id = null, $data = [])
+	protected $id    = null;
+	protected $data  = [];
+	protected $lang  = 'EN';
+	protected $prces = ['stands' => [], 'equipments' => []];
+	
+	
+    public function __construct($id = null, $data = [], $lang = 'EN')
     {
-
+		$this->id   = (int) $id;
+		$this->data = (array) $data;
+		$this->lang = mb_strtoupper((string) $lang);
     }
+	
 
-
-    public function getTitle($lang = 'en')
+	public function getLang()
+	{
+		return $this->lang;
+	}
+	
+	
+	/**
+	 * Локализованное название мероприятия.
+	 */
+    public function getTitle()
     {
-
+		$this->load();
+		
+		return ($this->data['PROPS']['LANG_TITLE_' . $this->getLang()]['VALUE']);
     }
+	
+	
+	/**
+	 * Получение расписания мероприятия.
+	 */
+	public function getShedule()
+    {
+		$this->load();
+		
+		return ($this->data['PROPS']['LANG_SCHEDULE_' . $this->getLang()]['VALUE']);
+    }
+	
+	
+	public function getContacts()
+    {
+		$this->load();
+		
+		return ($this->data['PROPS']['LANG_CONTACTS_' . $this->getLang()]['VALUE']);
+    }
+	
+	
+	public function getMarginDates()
+	{
+		$this->load();
+		
+		return ['DATES' => $this->data['PROPS']['MARGIN_DATES']['VALUE'], 'NOTES' => $this->event['PROPS']['MARGIN_DATES']['DESCRIPTION']];
+	}
 
 
     public function getDefaultStand()
     {
         return [];
     }
-
-
+	
+	
     public function getAvailableStands()
     {
         return [];
+    }
+	
+	
+	public function getStandIDs()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['STANDS']['VALUE'];
+	}
+	
+	
+	/**
+	 * Получение списка возможных стендов мероприятия.
+	 */
+	public function getStands()
+	{
+		$ids    = $this->getStandIDs();
+		$stands = [];
+		foreach ($ids as $id) {
+			$stands[$id] = new Stand($id);
+		}
+		return $stands;
+	}
+	
+	
+	/**
+	 * Получение списка ID менеджеров мероприятия.
+	 */
+	public function getManagerIDs()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['MANAGERS']['VALUE'];
+	}
+	
+	
+	/**
+	 * Получение списка ID услуг и оборудования мероприятия.
+	 */
+	public function getOwnServiceIDs()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['OPTIONS']['VALUE'];
+	}
+	
+	
+	/**
+	 * Получение списка стендовых предложений в зависимости от размеров.
+	 */
+	public function getStandOffers($width, $depth)
+	{
+		$width = (float) $width;
+		$depth = (float) $depth;
+		$area  = $width * $depth;
+		
+		$offers = StandOffer::getList([
+			'order'  => ['PROPERTY_AREA_MAX' => 'DESC'],
+			'filter' => [
+				'ACTIVE'              => 'Y',
+				'PROPERTY_CML2_LINK'  => $this->getStandIDs(),
+				'<=PROPERTY_AREA_MIN' => $area,
+				'>=PROPERTY_AREA_MAX' => $area,
+			]
+		]);
+		$items = [];
+		foreach ($offers as $offer) {
+			$item = [
+				'MIN'   => $offer->getAreaMin(),
+				'MAX'   => $offer->getAreaMax(),
+				'STAND' => $offer->getStand()->getTitle(),
+			];
+			
+			$items []= $item;
+		}
+		return $items;
+	}
+	
+	
+	/**
+	 * Получение списка сервисов мероприятия.
+	 */
+	public function getServices()
+	{
+		$services = Service::getList(['filter' => ['ID' => $this->getOwnServiceIDs(), 'ACTIVE' => 'Y']]);
+		$prices   = $this->getEquipmentsPrices();
+		
+		// Установка ценовой политики мероприятия.
+		foreach ($services as &$service) {
+			$service->setPrice($prices[$service->getID()]);
+		}
+		return $services;
+	}
+	
+	
+	/**
+	 * Получение списка цен на стенды мероприятия.
+	 */
+	public function getStandPrices()
+    {
+		if (empty($this->prices['stands'])) {
+			$prices = \Wolk\OEM\EventStandPricesTable::getList([
+				'filter' =>
+					[
+						'EVENT_ID' => $this->getID(),
+						'SITE_ID'  => $this->getLang()
+					]
+			])->fetchAll();
+
+			foreach ($prices as $price) {
+				$this->prices['stands'][$price['STAND_ID']] = (float) $price['PRICE'];
+			}
+		}
+		return $this->prices['stands'];
+    }
+
+	
+	/**
+	 * Получение списка цен на обррудование и услуги мероприятия.
+	 */
+    public function getEquipmentsPrices()
+    {
+		if (empty($this->prices['equipments'])) {
+			$prices = \Wolk\OEM\EventEquipmentPricesTable::getList([
+				'filter' =>
+					[
+						'EVENT_ID' => $this->getID(),
+						'SITE_ID'  => $this->getLang()
+					]
+			])->fetchAll();
+
+			foreach ($prices as $price) {
+				$this->prices['equipments'][$price['EQUIPMENT_ID']] = (float) $price['PRICE'];
+			}
+		}
+		return $this->prices['equipments'];
+    }
+	
+	
+	/*
+	public function getServices()
+	{
+		$sections = [];
+
+		$services = $this->getEventServices($event);
+
+
+		$this->arResult['EVENT']['ALL_SERVICES'] += $services;
+
+
+		$arServices = [];
+		foreach ($services as $arService) {
+			$arServices[$arService['IBLOCK_SECTION_ID']][$arService['ID']] = $arService;
+		}
+
+		$servicesSections = \Bitrix\Iblock\SectionTable::getList([
+			'order' => ['SORT' => 'ASC', 'ID' => 'ASC'],
+			'filter' =>
+				[
+					'ID' => array_keys($arServices)
+				]
+		])->fetchAll();
+
+		$filter = [
+			['LOGIC' => 'OR'],
+			[
+				'ID' => array_keys($arServices)
+			]
+		];
+
+		foreach ($servicesSections as $serviceSection) {
+			$filter[] = [
+				'<LEFT_MARGIN'  => $serviceSection['LEFT_MARGIN'],
+				'>RIGHT_MARGIN' => $serviceSection['RIGHT_MARGIN'],
+			];
+		}
+
+		$obSections = CIBlockSection::GetTreeList([
+				'IBLOCK_ID' => OPTIONS_IBLOCK_ID,
+				'ACTIVE'    => 'Y',
+			] + $filter, [
+			'ID',
+			'NAME',
+			'CODE',
+			'SORT',
+			'DEPTH_LEVEL',
+			'IBLOCK_SECTION_ID',
+			'UF_SUBTITLE_' . $this->curLang,
+			'UF_NAME_' . $this->curLang,
+			'UF_SORT'
+		]);
+
+		while ($arSection = $obSections->Fetch()) {
+			$arSection['NAME'] = $arSection['UF_NAME_' . $this->curLang] ?: $arSection['NAME'];
+			$arSection['SUBTITLE'] = $arSection['UF_SUBTITLE_' . $this->curLang] ?: $arSection['UF_SUBTITLE'];
+			
+			if ($arSection['IBLOCK_SECTION_ID']) {
+				if (array_key_exists($arSection['ID'], $arServices)) {
+					$arSection['ITEMS'] = $arServices[$arSection['ID']];
+				}
+				$sections[$arSection['IBLOCK_SECTION_ID']]['SECTIONS'][$arSection['ID']] = $arSection;
+				$sections[$arSection['ID']] = &$sections[$arSection['IBLOCK_SECTION_ID']]['SECTIONS'][$arSection['ID']];
+			} else {
+				$arSections[$arSection['ID']] = $arSection;
+				$sections[$arSection['ID']] = &$arSections[$arSection['ID']];
+			}
+		}
+		
+		foreach ($arSections as &$section) {
+			foreach ($section['SECTIONS'] as &$subsection) {
+				if (isset($subsection['SECTIONS'])) {
+					uasort($subsection['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
+				}
+			}
+			uasort($section['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
+		}
+
+        return $arSections;
+	}
+	*/
+	
+	
+	/**
+	 * Получение ID предвыбранного стенда.
+	 */
+	public function getPreselectedStandID()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['PRESELECT']['VALUE'];
+	}
+	
+	
+	/**
+	 * Получение предвыбранного стенда.
+	 */
+	public function getPreselectedStand()
+	{
+		return (new Stand($this->getPreselectedStandID()));
+	}
+	
+	
+	
+	/**
+	 * Получение наценки на мероприятие по дате.
+	 */
+	public function getSurcharge($time = null)
+    {
+        if (is_null($time)) {
+            $time = time();
+        }
+		$dates = $this->getMarginDates()['DATES'];
+		$notes = $this->getMarginDates()['NOTES'];
+	
+        if (!empty($dates) && is_array($dates)) {
+            $index = null;
+            foreach ($dates as $i => $date) {
+                if (strtotime($date) <= $time && (is_null($index) || strtotime($date) > $dates[$index])) {
+                    $index = $i;
+                }
+            }
+            return $notes[$index];
+        }
+        return 0;
     }
 }
