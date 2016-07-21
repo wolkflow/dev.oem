@@ -9,6 +9,13 @@ define('TIME_YEAR', 31536000);
 
 
 /*
+ * Языки.
+ */
+define('LANG_RU', 'ru');
+define('LANG_EN', 'en');
+
+
+/*
  * Шаблон по умолчанию.
  */
 define('DEFAULT_TEMPLATE_PATH', '/local/templates/.default');
@@ -52,6 +59,10 @@ define('EQUIPMENT_PROPERTY_ID', 30);
 define('COLORS_ENTITY_ID', 3);
 define('EXTENTS_ENTITY_ID', 4);
 define('EQUIPMENT_COLORS_ENTITY_ID', 5);
+
+
+// Разделы.
+define('SECTION_LOGOTYPES_ID', 13);
 
 
 define('VAT_DEFAULT', 18);
