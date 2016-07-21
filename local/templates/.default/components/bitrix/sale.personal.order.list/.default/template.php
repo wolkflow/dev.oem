@@ -85,7 +85,8 @@ JS
                             </div>
                         </div>
 						*/ ?>
-                        <div class="pagesubtitle"><?=Loc::getMessage('additional equipment')?>
+                        <div class="pagesubtitle">
+							<?= Loc::getMessage('additional equipment') ?>
                             <div class="pagesubtitle__addbutton" v-show="status == 'N'">
                                 <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'"></a>
                             </div>
@@ -110,9 +111,13 @@ JS
                         </div>
                     </div>
                     <div class="ordercontainer__column">
-                        <div class="pagesubtitle"><?=Loc::getMessage('stand type')?></div>
+                        <div class="pagesubtitle">
+							<?= Loc::getMessage('stand type') ?>
+						</div>
                         <div class="ordercontainer__itemscontainer">
-                            <div class="pagesubsubtitle"><?=Loc::getMessage('system stand')?></div>
+                            <div class="pagesubsubtitle">
+								<?= Loc::getMessage('system stand') ?>
+							</div>
                             <div class="last ordercontainer__item">
                                 <div class="ordercontainer__itemtotalprice">
                                     {{ selectedStand.COST_FORMATTED }}
@@ -125,7 +130,8 @@ JS
                                 </div>
                             </div>
                         </div>
-                        <div class="pagesubtitle"><?=Loc::getMessage('services')?>
+                        <div class="pagesubtitle">
+							<?= Loc::getMessage('services') ?>
                             <div class="pagesubtitle__addbutton"  v-show="status == 'N'">
                                 <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=3'"></a>
                             </div>
@@ -148,9 +154,6 @@ JS
                         </div>
                     </div>
                 </div>
-				<? /*
-                <div class="ordercontainer__changeorderbutton" v-show="status == 'N'">
-				*/ ?>
 				<div class="ordercontainer__changebutton changeallorder" v-show="status == 'N'">
 					<a class="changebutton" :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'"><?= Loc::getMessage('change_order') ?></a>
 					<? /*
@@ -214,14 +217,6 @@ JS
 						</div>
 					</div>
 				</div>
-				<? /*
-				<div class="ordertotalcontainer__total">
-                    <?= Loc::getMessage('total') ?>: {{ TOTAL_PRICE_FORMATTED }}
-                </div>
-                <div class="ordertotalcontainer__total">
-                    <?= Loc::getMessage('totaltax') ?>: {{ TOTAL_PRICE_TAX_FORMATTED }}
-                </div>
-				*/ ?>
             </div>
         </div>
     </div>

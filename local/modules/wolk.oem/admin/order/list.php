@@ -257,6 +257,12 @@ $ladmin->AddHeaders(array(
 		"sort"      => false,
 		"default"   => true,
 	),
+    array( 
+		"id"    	=> 'CURRENCY',
+		"content"   => Loc::getMessage('HEADER_CURRENCY'),
+		"sort"      => false,
+		"default"   => true,
+	),
 	array( 
 		"id"    	=> 'BILL',
 		"content"   => Loc::getMessage('HEADER_BILL'),
@@ -307,7 +313,8 @@ while ($item = $result->NavNext(true, "f_")) {
 	$currency = (!empty($props['RATE_CURRENCY']['VALUE'])) ? (strval($props['RATE_CURRENCY']['VALUE'])) : ($item['CURRENCY']);
 	
 	// $row->AddViewField('CONVERT_PRICE', CurrencyFormat($item['PRICE'] * $rate, $currency));
-	$row->AddViewField('PRICE', CurrencyFormat($item['PRICE'] * $rate, $currency));
+	$row->AddViewField('PRICE', number_format($item['PRICE'] * $rate, 2, ',', ''));
+    $row->AddViewField('CURRENCY', $currency);
     $row->AddViewField('ORIGINAL_PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
 	
   

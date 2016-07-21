@@ -269,7 +269,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
     <div class="ordercontainer">
         <div class="ordercontainer__columnscontainer">
-            <div class="ordercontainer__column right">
+            <div class="ordercontainer__column right" v-show="selectedStand.ID > 0">
 				<? /*
                 <div class="pagesubtitle">
 					<?= Loc::getMessage('standart_equipment') ?>

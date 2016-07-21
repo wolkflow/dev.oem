@@ -2,7 +2,7 @@
 
 $MESS['welcome'] = 'Welcome to the';
 $MESS['General information'] = 'General information';
-$MESS['System stand'] = 'System stand';
+$MESS['System stand'] = 'Standard stand';
 $MESS['individual stand'] = 'individual stand';
 $MESS['Stand width'] = 'Stand width';
 $MESS['Stand length'] = 'Stand length';
