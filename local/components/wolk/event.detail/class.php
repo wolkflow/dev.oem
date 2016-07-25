@@ -595,6 +595,12 @@ class EventDetailComponent extends BaseListComponent
 		
         $totalPrice = $totalPrice ?: 1;
         $vat = ($totalPrice / 100 * VAT_DEFAULT);
+        
+        // НДС уже включен в стоимость.
+        if ($this->event['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') {
+            $vat = 0;
+        }
+        
 
         $orderData = [
             "LID"              => SITE_ID,

@@ -81,7 +81,6 @@ if (\Bitrix\Main\Loader::includeModule('highloadblock')) {
 	}
 }
 
-// if ($USER->getID() == 1) { echo '<pre>'; print_r($colors); echo '</pre>'; }
 
 $message = null;
 
@@ -264,6 +263,7 @@ if ($element) {
 }
 
 
+
 $rate = (!empty($order['PROPS']['RATE']['VALUE'])) 
 		? ((float) $order['PROPS']['RATE']['VALUE']) 
 		: (1);
@@ -301,6 +301,12 @@ unset($element);
 // Состав заказа.
 $baskets = Wolk\Core\Helpers\SaleOrder::getBaskets($ID);
 
+
+if ($USER->getID() == 1) {
+    var_dump($rate, $rate_currency, $rates);
+    
+    echo '<pre>'; print_r($baskets); echo '</pre>'; 
+}
 
 
 foreach ($baskets as &$basket) {
