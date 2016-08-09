@@ -14,8 +14,13 @@ $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 			<a href="javascript:void(0)" data-modal="#contact-us" class="footersection__contact" id="js-contacts-link-id">
 				<?= Loc::getMessage('Contact Us') ?>
 			</a>
-			<a href="javascript:void(0)" data-modal="#general-info" class="footersection__information">
+			
+            <a href="javascript:void(0)" data-modal="#general-info" class="footersection__information">
 				<?= Loc::getMessage('General Information') ?>
+			</a>
+            &nbsp;
+            <a href="javascript:void(0)" data-modal="#rules" class="footersection__information">
+				<?= Loc::getMessage('rules') ?>
 			</a>
 		</div>
 		<? /*
@@ -87,6 +92,24 @@ $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 	</div>
 	*/ ?>
 	
+    
+    <!-- Окно: правила -->
+	<div class="modal modalContact" id="rules">
+		<div class="modalClose arcticmodal-close"></div>
+		<div class="modalTitle">
+			<?= Loc::getMessage('rules') ?>
+		</div>
+		<div class="modalContent">
+            <div class="generalInfoContent">
+                <? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
+                    'AREA_FILE_SHOW' => 'file',
+                    'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/rules.php',
+                    'EDIT_TEMPLATE' => 'html'
+                ]); ?>
+            </div>
+        </div>
+	</div>
+    
 
 	<!-- Окно: контакты -->
 	<div class="modal modalContact" id="contact-us">

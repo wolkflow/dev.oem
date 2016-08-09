@@ -5,7 +5,7 @@
 		<div class="invoiceHeader__left">
 			<div class="invoiceHeaderTitle">Счет</div>
 			<div class="invoiceHeaderDetail">
-				<p>ООО "Мессе Франкфург РУС",</p>
+				<p>ООО "Мессе Франкфурт РУС",</p>
 				<p>125167, Москва, Ленинградский пр-т, 39, стр. 80</p>
 				<p>Адрес для корреспонденции</p>
 				<p>Тел. 649-87-75, факс 649-87-85</p>
@@ -66,22 +66,35 @@
 					<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
-
-			<tr class="invoiceItems__table-amount">
-				<td colspan="2"></td>
-				<td class="text-left">Всего без НДС:</td>
-				<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
-			</tr>
-			<tr class="invoiceItems__table-amount">
-				<td colspan="2"></td>
-				<td class="text-left">НДС (18%):</td>
-				<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
-			</tr>
-			<tr class="invoiceItems__table-total">
-				<td colspan="2"></td>
-				<td class="text-left">ВСЕГО С НДС:</td>
-				<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
-			</tr>
+			
+			<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+				<tr class="invoiceItems__table-amount">
+					<td colspan="2"></td>
+					<td class="text-left">Всего без НДС:</td>
+					<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr class="invoiceItems__table-amount">
+					<td colspan="2"></td>
+					<td class="text-left">НДС (18%):</td>
+					<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr class="invoiceItems__table-total">
+					<td colspan="2"></td>
+					<td class="text-left">ВСЕГО С НДС:</td>
+					<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
+				</tr>
+			<? } else { ?>
+				<tr class="invoiceItems__table-amount">
+					<td colspan="2"></td>
+					<td class="text-left">НДС (18%):</td>
+					<td><?= number_format($arResult['ORDER']['UNTAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr class="invoiceItems__table-total">
+					<td colspan="2"></td>
+					<td class="text-left">ВСЕГО С НДС:</td>
+					<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
+				</tr>
+			<? } ?>
 		</tbody>
 	</table>
 	

@@ -74,16 +74,27 @@
 				</tr>
 			<? } ?>
 			<tr class="invoiceTotal">
-				<td colspan="4">
-					<p>Всего без НДС:</p>
-					<p>НДС (18%):</p>
-					<p>ВСЕГО С НДС (18%):</p>
-				</td>
-				<td colspan="2">
-					<p><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></p>
-					<p><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></p>
-					<p><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></p>
-				</td>
+				<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+					<td colspan="4">
+						<p>Всего без НДС:</p>
+						<p>НДС (18%):</p>
+						<p>ВСЕГО С НДС (18%):</p>
+					</td>
+					<td colspan="2">
+						<p><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></p>
+						<p><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></p>
+						<p><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></p>
+					</td>
+				<? } else { ?>
+					<td colspan="4">
+						<p>НДС (18%):</p>
+						<p>ВСЕГО С НДС (18%):</p>
+					</td>
+					<td colspan="2">
+						<p><?= number_format($arResult['ORDER']['UNTAX_VALUE'], 2, ',', ' ') ?></p>
+						<p><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></p>
+					</td>
+				<? } ?>
 			</tr>
 			<tr>
 				<td colspan="6">

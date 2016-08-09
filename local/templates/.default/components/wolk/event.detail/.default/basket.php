@@ -56,7 +56,13 @@
             <div class="basketcontainer__totalpricecontainercount">
 				{{ totalPrice | format_currency ' ' currency_format}}
 			</div>
-            <small><?=Loc::getMessage('tax_not_included')?></small>
+            <small>
+				<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+					<?= Loc::getMessage('tax_is_excluded') ?>
+				<? } else { ?>
+					<?= Loc::getMessage('tax_is_included') ?>
+				<? } ?>
+			</small>
         </div>
         <div class="navButtons">
             <a href="#" class="button styler prev" @click.prevent="prevStep">

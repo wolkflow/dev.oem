@@ -66,6 +66,8 @@ define('SECTION_LOGOTYPES_ID', 13);
 
 
 define('VAT_DEFAULT', 18);
+define('UNVAT_DEFAULT', 0.152542372881356);
+
 
 // IP боевого сервера.
 define('PRODUCTION_IP', '89.253.254.58');

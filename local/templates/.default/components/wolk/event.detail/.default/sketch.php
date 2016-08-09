@@ -27,7 +27,7 @@
             <div class="commentsForm__title">
 				<?= Loc::getMessage('comments') ?>
 			</div>
-            <textarea v-model="orderDesc" placeholder="<?= Loc::getMessage('additional_info') ?>"></textarea>
+            <textarea v-model="orderDesc" placeholder="<?= Loc::getMessage('additional_info') ?>"><?= strip_tags($arResult['ORDER']['ORDER_DATA']['USER_DESCRIPTION']) ?></textarea>
         </div>
     </div>
     <div class="sketchAfterRight">

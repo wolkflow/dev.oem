@@ -42,7 +42,7 @@
                         <button :style="{ background: selectedColor ? 'rgb('+ allColors[selectedColor].UF_CODE +')' : '#7f7f7f' }" class="styler itemColor__custom"
                                 data-modal="#color"
                                 id="colorTriger1">
-                            {{ selectedColor ? '<?=Loc::getMessage('change color')?>' : '<?=Loc::getMessage('choose color')?>' }}
+                            {{ selectedColor ? '<?= Loc::getMessage('change color') ?>' : '<?= Loc::getMessage('choose color') ?>' }}
                         </button>
                         <div v-show="selectedColor" class="itemColor__custom-name">{{ selectedColor ? allColors[selectedColor].UF_NUM : '' }} {{ selectedColor }}</div>
                     </div>
@@ -53,7 +53,7 @@
         <div class="hide">
             <div class="modal" id="color">
                 <div class="modalClose arcticmodal-close"></div>
-                <div class="modalTitle"><?=Loc::getMessage('choose_color_fascia')?></div>
+                <div class="modalTitle"><?= Loc::getMessage('choose_color_fascia') ?></div>
                 <div class="colorsArray">
                     <ul>
                         <li v-for="color in colors | orderBy 'UF_SORT'" @click="selectColor(color.UF_XML_ID)" :class="{'active': color.UF_XML_ID == selectedColor}">

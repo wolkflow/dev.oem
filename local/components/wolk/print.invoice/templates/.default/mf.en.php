@@ -79,21 +79,35 @@
 					<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 				</tr>
 			<? } ?>
-			<tr class="invoiceItems__table-amount">
-				<td colspan="2"></td>
-				<td>Net amount:</td>
-				<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
-			</tr>
-			<tr class="invoiceItems__table-amount">
-				<td colspan="2"></td>
-				<td>VAT (18%):</td>
-				<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
-			</tr>
-			<tr class="invoiceItems__table-total">
-				<td colspan="2"></td>
-				<td>Total:</td>
-				<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
-			</tr>
+			
+			<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+				<tr class="invoiceItems__table-amount">
+					<td colspan="2"></td>
+					<td>Net amount:</td>
+					<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr class="invoiceItems__table-amount">
+					<td colspan="2"></td>
+					<td>VAT (18%):</td>
+					<td><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr class="invoiceItems__table-total">
+					<td colspan="2"></td>
+					<td>Total:</td>
+					<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
+				</tr>
+			<? } else { ?>
+				<tr class="invoiceItems__table-amount">
+					<td colspan="2"></td>
+					<td>VAT (18%):</td>
+					<td><?= number_format($arResult['ORDER']['UNTAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr class="invoiceItems__table-total">
+					<td colspan="2"></td>
+					<td>Total:</td>
+					<td><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
+				</tr>
+			<? } ?>
 		</tbody>
 	</table>
 	<div class="invoiceMessage">

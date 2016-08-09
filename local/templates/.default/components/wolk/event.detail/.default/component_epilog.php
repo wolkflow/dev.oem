@@ -24,6 +24,7 @@ $event['MARGIN_DATES'] = array_combine(
     $arResult['EVENT']['PROPS']["MARGIN_DATES"]['VALUE'],
     $arResult['EVENT']['PROPS']["MARGIN_DATES"]['DESCRIPTION']
 );
+
 $event['LOCATION'] = $arResult['EVENT']['PROPS']["LANG_LOCATION_{$curLang}"]['VALUE'];
 
 
@@ -72,6 +73,7 @@ $stands = array_map(function ($val) use ($curLang) {
                 'ID',
                 'COUNT',
                 'NAME',
+                'SORT',
                 'PREVIEW_PICTURE',
                 'PREVIEW_PICTURE_SMALL',
                 'PREVIEW_TEXT',
@@ -173,13 +175,14 @@ unset($color);
 $extents = ArrayHelper::index($arResult['EVENT']['EXTENTS'], 'UF_XML_ID');
 
 
+// file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID], true));
+
 $colors      = Json::encode($colors);
 $extents     = Json::encode($extents);
 $options     = Json::encode($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID]);
 $services    = Json::encode($arResult['SERVICES'][ADDITIONAL_SERVICES_SECTION_ID]);
 $allServices = Json::encode($arResult['EVENT']['ALL_SERVICES']);
 $vat         = VAT_DEFAULT;
-
 
 
 $langs = Json::encode([
@@ -204,6 +207,8 @@ $langMessages = Json::encode([
     )
 ]);
 
+//$orderDesc = str_replace(['"', "\n"], ['\"', " "], $arResult['ORDER']['ORDER_DATA']['USER_DESCRIPTION']);
+
 $selectedParams = Json::encode($selectedParams);
 
 $am = Asset::getInstance();
@@ -226,6 +231,8 @@ $am->addString(<<<JS
 			vat = $vat,
 			langs = $langs,
 			langMessages = $langMessages;
+         
+        curEvent.LOCATION = curEvent.LOCATION.replace(/&quot;/g, '"');
 	</script>
 JS
 , true, AssetLocation::AFTER_JS_KERNEL);

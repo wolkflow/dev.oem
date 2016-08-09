@@ -302,14 +302,7 @@ unset($element);
 $baskets = Wolk\Core\Helpers\SaleOrder::getBaskets($ID);
 
 
-if ($USER->getID() == 1) {
-    var_dump($rate, $rate_currency, $rates);
-    
-    echo '<pre>'; print_r($baskets); echo '</pre>'; 
-}
-
-
-foreach ($baskets as &$basket) {
+foreach ($baskets as $i => $basket) {
 	if ($basket['PRODUCT_ID'] > 0) {
 		
 		$element = CIBlockElement::getByID($basket['PRODUCT_ID'])->GetNextElement();
@@ -323,26 +316,38 @@ foreach ($baskets as &$basket) {
 		$item['PROPS'] = $element->getProperties();
 		$item['IMAGE'] = CFile::getPath($item['PREVIEW_PICTURE']);
 
-		$basket['ITEM'] = $item;
+		$baskets[$i]['ITEM'] = $item;
 	
 		if ($basket['SET_PARENT_ID'] == 0 && $basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
 			$stand['BASKET'] = $basket;
 			$stand['ITEM']   = $item;
 		}
+        $baskets[$i]['SURCHARGE_PRICE'] = $basket['PRICE'];
 	}
 }
-unset($basket);
+unset($item);
 
 
+// if ($USER->getID() == 1) { echo '<hr/><pre>'; print_r($baskets); echo '</pre>'; }
+
+$surcharge       = (float) $order['PROPS']['SURCHARGE']['VALUE_ORIG'];
+$surcharge_price = (float) $order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
+
+// Добавление наценки на товары.
+if ($surcharge > 0) {
+    foreach ($baskets as $i => $basket) {
+        $baskets[$i]['SURCHARGE_PRICE'] = $basket['SURCHARGE_PRICE'] * (1 + $surcharge / 100);
+    }
+}
 
 // Статусы заказа.
 $statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
-
 
 $goodprice = 0;
 foreach ($baskets as $basket) {
     $goodprice += $basket['PRICE'] * $basket['QUANTITY'];
 }
+
 
 // Данные для скетча.
 $sketch = json_decode($order['PROPS']['sketch']['VALUE_ORIG'], true);
@@ -373,7 +378,7 @@ foreach ($baskets as $basket) {
         }
     }
 }
-
+unset($basket);
 
 
 
@@ -884,6 +889,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                             <td align="left">Изображение</td>
                                             <td align="left">Название</td>
                                             <td align="left">Количество</td>
+                                            <td align="left">Цена в каталоге</td>
                                             <td align="left">Цена</td>
                                             <td align="left">Стоимость</td>
 											<td align="left">Дополнительные данные</td>
@@ -913,7 +919,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                                     <?= CurrencyFormat($basket['PRICE'] * $rate, $rate_currency) ?>
                                                 </td>
                                                 <td align="left">
-                                                    <?= CurrencyFormat($basket['PRICE'] * $basket['QUANTITY'] * $rate, $rate_currency) ?>
+                                                    <?= CurrencyFormat($basket['SURCHARGE_PRICE'] * $rate, $rate_currency) ?>
+                                                </td>
+                                                <td align="left">
+                                                    <?= CurrencyFormat($basket['SURCHARGE_PRICE'] * $basket['QUANTITY'] * $rate, $rate_currency) ?>
                                                 </td>
 												<td>
 													&nbsp;
@@ -927,13 +936,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                             <td colspan="4" align="left" style="height: 50px; margin-left: 15px;">
                                                 <b style="margin-left: 30px;">Всего товаров <?= $cnt ?></b>.
                                             </td>
-                                            <td colspan="2" align="right">
+                                            <td colspan="3" align="right">
                                                 <h2 style="3px 20px 0 0">Итого: <?= CurrencyFormat(($order['PRICE'] - $order['TAX_VALUE']) * $rate, $rate_currency) ?></h2>
                                             </td>
                                         <tr>
                                         </tr>
                                             <td colspan="4"></td>
-                                            <td colspan="2" align="right">
+                                            <td colspan="3" align="right">
                                                 <h2 style="3px 20px 0 0">Итого с НДС: <?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?></h2>
                                             </td>
                                         </tr>

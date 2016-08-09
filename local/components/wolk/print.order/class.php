@@ -76,7 +76,10 @@ class PrintOrderComponent extends \CBitrixComponent
 					? (strval($this->arResult['PROPS']['RATE_CURRENCY']['VALUE'])) 
 					: ($this->arResult['ORDER']['CURRENCY']);
 		
-		
+        // Наценка.
+        $surcharge       = (float) $this->arResult['PROPS']['SURCHARGE']['VALUE_ORIG'];
+        $surcharge_price = (float) $this->arResult['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
+        
 		$event = CIBlockElement::getByID($this->arResult['PROPS']['eventId']['VALUE'])->GetNextElement();
 		
 		$this->arResult['EVENT'] = $event->getFields();
@@ -112,9 +115,7 @@ class PrintOrderComponent extends \CBitrixComponent
 		}
 		unset($element, $basket);
 		
-		
-		$surcharge = (float) $this->arResult['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
-
+        
 		$this->arResult['PRICES'] = [
 			'BASKET'               => $summary,
 			'VAT'                  => $this->arResult['ORDER']['TAX_VALUE'],

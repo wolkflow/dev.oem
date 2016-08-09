@@ -13,7 +13,7 @@ IncludeModuleLangFile(__FILE__);
 class Text
 {	
 	const DEFAULT_ENCODING = 'UTF-8';
-
+	
 
 
 	/**
@@ -102,37 +102,39 @@ class Text
 	 * @param bool $nominative
 	 * @return string
 	 */
-	function i18nmonth($index, $nominative = true)
+	function i18nmonth($index, $nominative = true, $lang = false)
 	{
+		$langs = IncludeModuleLangFile(__FILE__, $lang, true);
+		
 		if ($nominative) {
 			$months = array(
-				1  => Loc::getMessage('MONTH_JAN'),
-				2  => Loc::getMessage('MONTH_FEB'),
-				3  => Loc::getMessage('MONTH_MAR'),
-				4  => Loc::getMessage('MONTH_APR'),
-				5  => Loc::getMessage('MONTH_MAY'),
-				6  => Loc::getMessage('MONTH_JUN'),
-				7  => Loc::getMessage('MONTH_JUL'),
-				8  => Loc::getMessage('MONTH_AUG'),
-				9  => Loc::getMessage('MONTH_SEP'),
-				10 => Loc::getMessage('MONTH_OCT'),
-				11 => Loc::getMessage('MONTH_NOV'),
-				12 => Loc::getMessage('MONTH_DEC'),
+				1  => $langs['MONTH_JAN'],
+				2  => $langs['MONTH_FEB'],
+				3  => $langs['MONTH_MAR'],
+				4  => $langs['MONTH_APR'],
+				5  => $langs['MONTH_MAY'],
+				6  => $langs['MONTH_JUN'],
+				7  => $langs['MONTH_JUL'],
+				8  => $langs['MONTH_AUG'],
+				9  => $langs['MONTH_SEP'],
+				10 => $langs['MONTH_OCT'],
+				11 => $langs['MONTH_NOV'],
+				12 => $langs['MONTH_DEC'],
 			);
 		} else {
 			$months = array(
-				1  => Loc::getMessage('MONTHS_JAN'),
-				2  => Loc::getMessage('MONTHS_FEB'),
-				3  => Loc::getMessage('MONTHS_MAR'),
-				4  => Loc::getMessage('MONTHS_APR'),
-				5  => Loc::getMessage('MONTHS_MAY'),
-				6  => Loc::getMessage('MONTHS_JUN'),
-				7  => Loc::getMessage('MONTHS_JUL'),
-				8  => Loc::getMessage('MONTHS_AUG'),
-				9  => Loc::getMessage('MONTHS_SEP'),
-				10 => Loc::getMessage('MONTHS_OCT'),
-				11 => Loc::getMessage('MONTHS_NOV'),
-				12 => Loc::getMessage('MONTHS_DEC'),
+				1  => $langs['MONTHS_JAN'],
+				2  => $langs['MONTHS_FEB'],
+				3  => $langs['MONTHS_MAR'],
+				4  => $langs['MONTHS_APR'],
+				5  => $langs['MONTHS_MAY'],
+				6  => $langs['MONTHS_JUN'],
+				7  => $langs['MONTHS_JUL'],
+				8  => $langs['MONTHS_AUG'],
+				9  => $langs['MONTHS_SEP'],
+				10 => $langs['MONTHS_OCT'],
+				11 => $langs['MONTHS_NOV'],
+				12 => $langs['MONTHS_DEC'],
 			);
 		}
 		

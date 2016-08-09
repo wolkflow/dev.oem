@@ -58,6 +58,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
 			'mf.en' 	=> 'MF (en)',
 			'itemf.ru'  => 'ITEMF (ru)',
 			'itemf.en'  => 'ITEMF (en)',
+			'bmr.ru'  => 'BMR (ru)',
+			'bmr.en'  => 'BMR (en)',
 		];
 		
 		if (!array_key_exists($this->arParams['TEMPLATE'], $invoices)) {
@@ -79,7 +81,11 @@ class PrintInvoiceComponent extends \CBitrixComponent
 					? (strval($this->arResult['PROPS']['RATE_CURRENCY']['VALUE'])) 
 					: ($this->arResult['ORDER']['CURRENCY']);
 		
-		
+		// Наценка.
+        $surcharge       = (float) $this->arResult['PROPS']['SURCHARGE']['VALUE_ORIG'];
+        $surcharge_price = (float) $this->arResult['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
+        
+        
 		$event = CIBlockElement::getByID($this->arResult['PROPS']['eventId']['VALUE'])->GetNextElement();
 		
 		if ($event) {
@@ -108,23 +114,31 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		$this->arResult['ORDER']['BASKET_PRICE'] *= $rate;
 		
 		// Стоимость заказа без налогов и с наценками.
-		$this->arResult['ORDER']['BASKET_TOTAL_PRICE']  = $this->arResult['ORDER']['PRICE'] - $this->arResult['ORDER']['TAX_VALUE'];
-		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] *= $rate;
+		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] = $this->arResult['ORDER']['PRICE'] - $this->arResult['ORDER']['TAX_VALUE'];
 		
+		// НДС включенный в цену.
+		$this->arResult['ORDER']['UNTAX_VALUE'] = $this->arResult['ORDER']['BASKET_TOTAL_PRICE'] * UNVAT_DEFAULT;
+		
+		
+        // Конвертирование цены.
+		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] *= $rate;
+		$this->arResult['ORDER']['PRICE']              *= $rate;
+		$this->arResult['ORDER']['TAX_VALUE']          *= $rate;
+		$this->arResult['ORDER']['UNTAX_VALUE']        *= $rate;
+        
 		if ($count > 0) {
 			$overprice = ($this->arResult['ORDER']['BASKET_TOTAL_PRICE'] - $this->arResult['ORDER']['BASKET_PRICE']) / $count;
 			
 			foreach ($this->arResult['BASKETS'] as &$basket) {
 				if ($basket['SUMMARY_PRICE'] > 0) {
-					$basket['SURCHARGE_PRICE'] = $basket['PRICE'] + $overprice;
+                    $basket['SURCHARGE_PRICE'] = $basket['PRICE'];
+                    if ($surcharge > 0) {
+                        $basket['SURCHARGE_PRICE'] *= (1 + $surcharge / 100);
+                    }
 					$basket['SURCHARGE_SUMMARY_PRICE'] = $basket['SURCHARGE_PRICE'] * $basket['QUANTITY'];
 				}
 			}
 		}
-		
-		// Конвертирование цены.
-		$this->arResult['ORDER']['PRICE']     *= $rate;
-		$this->arResult['ORDER']['TAX_VALUE'] *= $rate;
 		
 		
 		// Конвертирование валюты.

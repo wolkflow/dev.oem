@@ -200,16 +200,29 @@ class EventDetailComponent extends BaseListComponent
                 }
             }
 			
+            
+            // Сортировка.
 			foreach ($arSections as &$section) {
 				foreach ($section['SECTIONS'] as &$subsection) {
 					if (isset($subsection['SECTIONS'])) {
 						uasort($subsection['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
+						foreach ($subsection['SECTIONS'] as &$subsect) {
+							//usort($subsect['ITEMS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
+						}
 					}
 				}
 				uasort($section['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
 			}
-        }
-
+            
+             // Сортировка.
+            foreach ($arSections as &$arSection) {
+                foreach ($arSection['SECTIONS'] as &$section) {
+                    if (!empty($section['ITEMS'])) {
+                        usort($section['ITEMS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); });
+                    }
+                }
+            }
+        } 
         return $arSections;
     }
 	
@@ -670,7 +683,7 @@ class EventDetailComponent extends BaseListComponent
                 // Наценка.
                 $params['SURCHARGE'] = (float)$surcharge;
                 $params['SURCHARGE_PRICE'] = (float)$moneySurcharge;
-				//file_put_contents($_SERVER['DOCUMENT_ROOT'].'/../log.txt', print_r($params, 1));
+				
                 foreach ($params as $code => $value) {
                     $res = OrderPropsValueTable::add([
                         'ORDER_ID'       => $orderId,
@@ -692,9 +705,25 @@ class EventDetailComponent extends BaseListComponent
                 $obEvent = $obElement->GetNextElement();
                 $arEvent = $obEvent->GetFields();
                 $arEvent['PROPS'] = $obEvent->GetProperties();
-                $manager = CUser::GetByID($arEvent['PROPS']['MANAGER']['VALUE'] ?: 1)->Fetch();
-                $managerEmail = $manager['EMAIL'];
-            }
+				
+				$manager = CUser::getByID((int) $arEvent['PROPS']['MANAGER']['VALUE'])->Fetch();
+				
+				if ($manager) {
+					$managerEmail = $manager['EMAIL'];
+				}
+				
+				/*
+				$managerIDs = array_filter((array) $arEvent['PROPS']['MANAGER']['VALUE']);
+				if (!empty($managerIDs)) {
+					$userres = CUser::getList(($b = 'ID'), ($o = 'ASC'), array('ID' => $managerIDs));
+					$manageremails = array();
+					while ($manager = $userres->Fetch()) {
+						$manageremails []= $manager['EMAIL'];
+					}
+					$managerEmail = implode(', ', $manageremails);
+				}
+				*/
+			}
 
 
             $arFields = [
@@ -738,16 +767,18 @@ class EventDetailComponent extends BaseListComponent
 					'THEME' => Loc::getMessage('THEME_NEW_ORDER')
 				]);
 				
-				// Отправка письма о новом заказе менеджеру.
-				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info-manager', array('ID' => $arFields['ORDER_ID']));
-				$event = new \CEvent();
-				$event->Send('SALE_NEW_ORDER_MANAGER', SITE_DEFAULT, [
-					'EMAIL' => $arFields['MANAGER_EMAIL'],
-					'HTML'  => $html,
-					'THEME' => Loc::getMessage('THEME_NEW_ORDER_MANAGER')
-				]);
+				// Отправка письма о новом закази менеджеру.
+				if (!empty($managerEmail)) {
+					$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info-manager', array('ID' => $arFields['ORDER_ID']));
+					$event = new \CEvent();
+					$event->Send('SALE_NEW_ORDER_MANAGER', SITE_DEFAULT, [
+						'EMAIL' => $arFields['MANAGER_EMAIL'],
+						'HTML'  => $html,
+						'THEME' => Loc::getMessage('THEME_NEW_ORDER_MANAGER')
+					]);
+				}
 			} else {
-				// Отправка письма об изменение заказа клиенту.
+				// Отправка письма об изменении заказа клиенту.
 				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change', array('ID' => $arFields['ORDER_ID']));
 				$event = new \CEvent();
 				$event->Send('SALE_UPDATE_ORDER', SITE_DEFAULT, [
@@ -756,14 +787,16 @@ class EventDetailComponent extends BaseListComponent
 					'THEME' => Loc::getMessage('THEME_UPDATE_ORDER')
 				]);
 				
-				// Отправка письма об изменение заказа менеджеру.
-				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change-manager', array('ID' => $arFields['ORDER_ID']));
-				$event = new \CEvent();
-				$event->Send('SALE_UPDATE_ORDER_MANAGER', SITE_DEFAULT, [
-					'EMAIL' => $arFields['MANAGER_EMAIL'],
-					'HTML'  => $html,
-					'THEME' => Loc::getMessage('THEME_UPDATE_ORDER_MANAGER')
-				]);
+				// Отправка письма об изменении заказа менеджеру.
+				if (!empty($managerEmail)) {
+					$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change-manager', array('ID' => $arFields['ORDER_ID']));
+					$event = new \CEvent();
+					$event->Send('SALE_UPDATE_ORDER_MANAGER', SITE_DEFAULT, [
+						'EMAIL' => $arFields['MANAGER_EMAIL'],
+						'HTML'  => $html,
+						'THEME' => Loc::getMessage('THEME_UPDATE_ORDER_MANAGER')
+					]);
+				}
             }
 			
             return $result;
@@ -970,7 +1003,7 @@ class EventDetailComponent extends BaseListComponent
 					],
 					false,
 					false,
-					['ID', 'IBLOCK_ID', 'NAME', 'PREVIEW_PICTURE', 'CATALOG_GROUP_1']
+					['ID', 'IBLOCK_ID', 'NAME', 'PREVIEW_PICTURE', 'CATALOG_GROUP_1', 'SORT']
 				);
 				
                 while ($obEquipmentItem = $obEquipment->GetNextElement()) {
@@ -1089,23 +1122,19 @@ class EventDetailComponent extends BaseListComponent
     protected function getSurcharge($time = null)
     {
         if (is_null($time)) {
-            $time = time();
+			// Наценка за подний заказ должна считаться со дня следующим за крайней датой.
+            $time = strtotime('-1 day'); // time();
         }
-
-        if (
-			!empty($this->event['PROPS']['MARGIN_DATES']['VALUE'])
-            && is_array($this->event['PROPS']['MARGIN_DATES']['VALUE'])
-        ) {
+		$dates = $this->event['PROPS']['MARGIN_DATES']['VALUE'];
+		
+        if (!empty($dates) && is_array($dates)) {
             $activeIndex = null;
-            foreach ($this->event['PROPS']['MARGIN_DATES']['VALUE'] as $n => $date) {
-                if (
-                    strtotime($date) <= $time
-                    && (is_null($activeIndex) || strtotime($date) > $this->event['PROPS']["MARGIN_DATES"]['VALUE'][$activeIndex])
-                ) {
+            foreach ($dates as $n => $date) {
+                if (strtotime($date) <= $time && (is_null($activeIndex) || strtotime($date) > $dates[$activeIndex])) {
                     $activeIndex = $n;
                 }
             }
-            return $this->event['PROPS']["MARGIN_DATES"]['DESCRIPTION'][$activeIndex];
+            return $this->event['PROPS']['MARGIN_DATES']['DESCRIPTION'][$activeIndex];
         }
         return 0;
     }
@@ -1255,8 +1284,7 @@ class EventDetailComponent extends BaseListComponent
             $result['totalPrice'] = $order['PRICE'] - $order['TAX_VALUE'];
             $result['totalTaxPrice'] = $order['PRICE'];
             $result['status'] = $order['STATUS_ID'];
-            $result['TOTAL_PRICE_FORMATTED'] = CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'],
-                $order['CURRENCY']);
+            $result['TOTAL_PRICE_FORMATTED'] = CurrencyFormat($order['PRICE'] - $order['TAX_VALUE'], $order['CURRENCY']);
             $result['TOTAL_PRICE_TAX_FORMATTED'] = CurrencyFormat($order['PRICE'], $order['CURRENCY']);
             if (isset($event)) {
                 $result['curEvent'] = $event;
@@ -1267,6 +1295,8 @@ class EventDetailComponent extends BaseListComponent
             $data['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($id);
             $data['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($id);
 
+			$result['ORDER_DATA'] = $data['ORDER'];
+			
             $basket_price = 0;
             foreach ($data['BASKETS'] as $basket) {
                 if ($basket['SUMMARY_PRICE'] > 0) {
@@ -1274,7 +1304,7 @@ class EventDetailComponent extends BaseListComponent
                 }
             }
 
-            $surcharge = (float)$data['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
+            $surcharge = (float) $data['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
 
             $result['PRICES'] = [
                 'BASKET'               => CurrencyFormat($basket_price, $order['CURRENCY']),
@@ -1287,10 +1317,8 @@ class EventDetailComponent extends BaseListComponent
                 $result['PRICES']['SURCHARGE'] = $data['PROPS']['SURCHARGE']['VALUE_ORIG'];
                 $result['PRICES']['SURCHARGE_PRICE'] = CurrencyFormat($surcharge, $order['CURRENCY']);
             }
-
             return $result;
         }
-
         return false;
     }
 

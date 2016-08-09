@@ -71,7 +71,7 @@
 						<?= $basket['NAME'] ?>
 					</td>
 					<td class="fiSumm">
-						<?= number_format($basket['PRICE'], 2, ',', ' ') ?>
+						<?= number_format($basket['SURCHARGE_PRICE'], 2, ',', ' ') ?>
 					</td>
 					<td class="fiSumm">
 						<?= $basket['QUANTITY'] ?>
@@ -81,30 +81,51 @@
 					</td>
 				</tr>
 			<? } ?>
-			<tr>
-				<td class="unborder">&nbsp;</td>
-				<td class="unborder">&nbsp;</td>
-				<td colspan="2" class="finvoiceDetail-2 no-right-border">Итого без НДС:</td>
-				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
-			</tr>			
-			<tr>
-				<td class="unborder">&nbsp;</td>
-				<td class="unborder">&nbsp;</td>
-				<td colspan="2" class="finvoiceDetail-2 no-right-border">Ставка НДС:</td>
-				<td class="finvoiceDetail-3">18%</td>
-			</tr>
-			<tr>
-				<td class="unborder">&nbsp;</td>
-				<td class="unborder">&nbsp;</td>
-				<td colspan="2" class="finvoiceDetail-2 no-right-border">Сумма НДС:</td>
-				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
-			</tr>
-			<tr>
-				<td class="unborder">&nbsp;</td>
-				<td class="unborder">&nbsp;</td>
-				<td colspan="2" class="finvoiceDetail-2 no-right-border">Всего с НДС:</td>
-				<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
-			</tr>
+			<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+				<tr>
+					<td class="unborder">&nbsp;</td>
+					<td class="unborder">&nbsp;</td>
+					<td colspan="2" class="finvoiceDetail-2 no-right-border">Итого без НДС:</td>
+					<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>			
+				<tr>
+					<td class="unborder">&nbsp;</td>
+					<td class="unborder">&nbsp;</td>
+					<td colspan="2" class="finvoiceDetail-2 no-right-border">Ставка НДС:</td>
+					<td class="finvoiceDetail-3">18%</td>
+				</tr>
+				<tr>
+					<td class="unborder">&nbsp;</td>
+					<td class="unborder">&nbsp;</td>
+					<td colspan="2" class="finvoiceDetail-2 no-right-border">Сумма НДС:</td>
+					<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr>
+					<td class="unborder">&nbsp;</td>
+					<td class="unborder">&nbsp;</td>
+					<td colspan="2" class="finvoiceDetail-2 no-right-border">Всего с НДС:</td>
+					<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
+				</tr>
+			<? } else { ?>		
+				<tr>
+					<td class="unborder">&nbsp;</td>
+					<td class="unborder">&nbsp;</td>
+					<td colspan="2" class="finvoiceDetail-2 no-right-border">Ставка НДС:</td>
+					<td class="finvoiceDetail-3">18%</td>
+				</tr>
+				<tr>
+					<td class="unborder">&nbsp;</td>
+					<td class="unborder">&nbsp;</td>
+					<td colspan="2" class="finvoiceDetail-2 no-right-border">Сумма НДС:</td>
+					<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['UNTAX_VALUE'], 2, ',', ' ') ?></td>
+				</tr>
+				<tr>
+					<td class="unborder">&nbsp;</td>
+					<td class="unborder">&nbsp;</td>
+					<td colspan="2" class="finvoiceDetail-2 no-right-border">Всего с НДС:</td>
+					<td class="finvoiceDetail-3"><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></td>
+				</tr>
+			<? } ?>
 	</table>
 
 	<div class="finvoiceDetailSum">

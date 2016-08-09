@@ -30,7 +30,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <? if (\Bitrix\Main\Context::getCurrent()->getLanguage() == 'ru') { ?>
                     <? $date = strtotime(reset($arResult['EVENT']['PROPS']['MARGIN_DATES']['VALUE'])) ?>
                     <?= date('j', $date) ?>
-                    <?= TextHelper::i18nmonth(date('n', $date), false) ?>,
+                    <?= TextHelper::i18nmonth(date('n', $date), false, \Bitrix\Main\Context::getCurrent()->getLanguage()) ?>,
                     <?= date('Y', $date) ?>
                 <? } else { ?>
                     <? $date = strtotime(reset($arResult['EVENT']['PROPS']['MARGIN_DATES']['VALUE'])) ?>
@@ -85,7 +85,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 
     <div class="standstypescontainer">
-        <div class="pagetitle"><?= Loc::getMessage('Another system stand types') ?></div>
+        <div class="pagetitle">
+			<?= Loc::getMessage('Another system stand types') ?>
+			<div class="pagetitle-note">
+				<?= Loc::getMessage('another_standart_note') ?>
+			</div>
+		</div>
         <div class="standstypescontainer__standscontainer standsTypesRow">
             <? $s_id = 0;
             foreach ($arResult['ITEMS'] as $stand) { ?>
@@ -228,7 +233,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 					{{ section.NAME }}
                 </div>
                 <div class="pagesubtitleopencontainer">
-                    <additional-equipment v-for="item in section.ITEMS | orderBy 'SORT'" :item="item" :section="section"></additional-equipment>
+                    <additional-equipment v-for="item in section.ITEMS" :item="item" :section="section"></additional-equipment>
                 </div>
             </div>
         </div>

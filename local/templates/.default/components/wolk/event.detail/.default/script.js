@@ -164,7 +164,7 @@
                         $('.styler').trigger('refresh');
                     });
                     if (typeof successCallback == 'function') {
-                        successCallback()
+                        successCallback();
                     }
                 });
             },
@@ -692,6 +692,7 @@ var quantityMixin = {
     }
 };
 
+
 // Добавление в корзину.
 var addToCartMixin = {
     methods: {
@@ -739,6 +740,18 @@ var toggleableMixin = {
         }
     }
 };
+
+
+// Сортировка
+var orderSortMixin = {
+    methods: {
+        orderSort: function (a, b) {
+            console.log(parseInt(a.SORT), parseInt(b.SORT));
+            return (parseInt(a.SORT) - parseInt(b.SORT));
+        }
+    }
+}
+
 
 // Формат валюты.
 var currencyMixin = {
@@ -973,7 +986,6 @@ Vue.component('graphics', {
             return this.$parent.services.SECTIONS[this.sectionId];
         },
         sections: function () {
-			console.log(this.section.SECTIONS);
             return this.section.SECTIONS;
         },
         components: function () {
@@ -984,7 +996,7 @@ Vue.component('graphics', {
         save: function () {
             this.components.forEach(function (component) {
                 component.addToCart();
-            })
+            });
         },
         incQty: function (section) {
             section.qty++;
@@ -1084,435 +1096,7 @@ Vue.component('graphics', {
             },
             mixins: [currencyMixin]
         },
-		
-		
-        'logo-fascia-mono': {
-            template: '#logo-fascia-mono',
-            data: function () {
-                return {
-                    sectionId: 13,
-                    itemId: 10,
-                    logotypes: [
-                        {
-                            EXTENT: '',
-                            QUANTITY: 0,
-                            FILE: null,
-                            COMMENTS: ''
-                        }
-                    ]
-                }
-            },
-            ready: function () {
-                if (
-                    this.$root.order
-                    &&
-                    this.$root.order.selectedStand.hasOwnProperty('SERVICES')
-                    &&
-                    this.$root.order.selectedStand.SERVICES
-                    &&
-                    this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
-                ) {
-                    this.logotypes = this.$root.order.selectedStand.SERVICES[this.sectionId];
-                }
-            },
-            computed: {
-                section: function () {
-                    return this.$parent.sections[this.sectionId];
-                },
-                item: function () {
-                    return this.section.ITEMS[this.itemId];
-                },
-                price: function () {
-                    return this.item.PRICE;
-                },
-                extents: function () {
-                	var res = {};
-                	for(extentIndex in this.item.PROPERTY_39) {
-                		if(this.$root.extents.hasOwnProperty(this.item.PROPERTY_39[extentIndex])) {
-                			res[this.item.PROPERTY_39[extentIndex]] = this.$root.extents[this.item.PROPERTY_39[extentIndex]].NAME;
-                		}
-                	}
-                
-                    return res;
-                }
-            },
-            methods: {
-                incQty: function (logotype) {
-                    logotype.QUANTITY++;
-                },
-                decQty: function (logotype) {
-                    if (logotype.QUANTITY > 0) {
-                        logotype.QUANTITY--;
-                    }
-                },
-                addLogo: function () {
-                    this.logotypes.push({
-                        EXTENT: '',
-                        QUANTITY: 0,
-                        FILE: null,
-                        COMMENTS: ''
-                    })
-                },
-                getTotalPrice: function () {
-                    var self = this;
-                    return this.logotypes.reduce(function (sum, item) {
-                        return sum + parseInt(self.price * item.QUANTITY);
-                    }, 0)
-                },
-                addToCart: function () {
-                    var self = this;
-                    this.logotypes.forEach(function (item, index) {
-                        if (item.QUANTITY > 0) {
-                            self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
-                                ID: self.item.ID,
-                                NAME: self.item.NAME,
-                                CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
-                                QUANTITY: item.QUANTITY,
-                                PRICE: self.price,
-                                PROPS: [
-                                    {
-                                        NAME: 'EXTENT',
-                                        CODE: 'LOGO_EXTENT',
-                                        VALUE: item.EXTENT
-                                    },
-                                    {
-                                        NAME: 'COMMENTS',
-                                        CODE: 'LOGO_COMMENTS',
-                                        VALUE: item.COMMENTS
-                                    },
-                                    {
-                                        NAME: 'FILE',
-                                        CODE: 'LOGO_FILE',
-                                        VALUE: item.FILE
-                                    }
-                                ]
-                            });
-                        }
-                    })
-                }
-            },
-            mixins: [currencyMixin]
-        },
-		'logo-fascia-poly': {
-            template: '#logo-fascia-poly',
-            data: function () {
-                return {
-                    sectionId: 13,
-                    itemId: 266,
-                    logotypes: [
-                        {
-                            EXTENT: '',
-                            QUANTITY: 0,
-                            FILE: null,
-                            COMMENTS: ''
-                        }
-                    ]
-                }
-            },
-            ready: function () {
-                if (
-                    this.$root.order
-                    &&
-                    this.$root.order.selectedStand.hasOwnProperty('SERVICES')
-                    &&
-                    this.$root.order.selectedStand.SERVICES
-                    &&
-                    this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
-                ) {
-                    this.logotypes = this.$root.order.selectedStand.SERVICES[this.sectionId];
-                }
-            },
-            computed: {
-                section: function () {
-                    return this.$parent.sections[this.sectionId];
-                },
-                item: function () {
-                    return this.section.ITEMS[this.itemId];
-                },
-                price: function () {
-                    return this.item.PRICE;
-                },
-                extents: function () {
-                	var res = {};
-                	for(extentIndex in this.item.PROPERTY_39) {
-                		if(this.$root.extents.hasOwnProperty(this.item.PROPERTY_39[extentIndex])) {
-                			res[this.item.PROPERTY_39[extentIndex]] = this.$root.extents[this.item.PROPERTY_39[extentIndex]].NAME;
-                		}
-                	}
-                
-                    return res;
-                }
-            },
-            methods: {
-                incQty: function (logotype) {
-                    logotype.QUANTITY++;
-                },
-                decQty: function (logotype) {
-                    if (logotype.QUANTITY > 0) {
-                        logotype.QUANTITY--;
-                    }
-                },
-                addLogo: function () {
-                    this.logotypes.push({
-                        EXTENT: '',
-                        QUANTITY: 0,
-                        FILE: null,
-                        COMMENTS: ''
-                    })
-                },
-                getTotalPrice: function () {
-                    var self = this;
-                    return this.logotypes.reduce(function (sum, item) {
-                        return sum + parseInt(self.price * item.QUANTITY);
-                    }, 0)
-                },
-                addToCart: function () {
-                    var self = this;
-                    this.logotypes.forEach(function (item, index) {
-                        if (item.QUANTITY > 0) {
-                            self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
-                                ID: self.item.ID,
-                                NAME: self.item.NAME,
-                                CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
-                                QUANTITY: item.QUANTITY,
-                                PRICE: self.price,
-                                PROPS: [
-                                    {
-                                        NAME: 'EXTENT',
-                                        CODE: 'LOGO_EXTENT',
-                                        VALUE: item.EXTENT
-                                    },
-                                    {
-                                        NAME: 'COMMENTS',
-                                        CODE: 'LOGO_COMMENTS',
-                                        VALUE: item.COMMENTS
-                                    },
-                                    {
-                                        NAME: 'FILE',
-                                        CODE: 'LOGO_FILE',
-                                        VALUE: item.FILE
-                                    }
-                                ]
-                            });
-                        }
-                    })
-                }
-            },
-            mixins: [currencyMixin]
-        },
-		'logo-wall-mono': {
-            template: '#logo-wall-mono',
-            data: function () {
-                return {
-                    sectionId: 13,
-                    itemId: 265,
-                    logotypes: [
-                        {
-                            EXTENT: '',
-                            QUANTITY: 0,
-                            FILE: null,
-                            COMMENTS: ''
-                        }
-                    ]
-                }
-            },
-            ready: function () {
-                if (
-                    this.$root.order
-                    &&
-                    this.$root.order.selectedStand.hasOwnProperty('SERVICES')
-                    &&
-                    this.$root.order.selectedStand.SERVICES
-                    &&
-                    this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
-                ) {
-                    this.logotypes = this.$root.order.selectedStand.SERVICES[this.sectionId];
-                }
-            },
-            computed: {
-                section: function () {
-                    return this.$parent.sections[this.sectionId];
-                },
-                item: function () {
-                    return this.section.ITEMS[this.itemId];
-                },
-                price: function () {
-                    return this.item.PRICE;
-                },
-                extents: function () {
-                	var res = {};
-                	for (extentIndex in this.item.PROPERTY_39) {
-                		if (this.$root.extents.hasOwnProperty(this.item.PROPERTY_39[extentIndex])) {
-                			res[this.item.PROPERTY_39[extentIndex]] = this.$root.extents[this.item.PROPERTY_39[extentIndex]].NAME;
-                		}
-                	}
-                    return res;
-                }
-            },
-            methods: {
-                incQty: function (logotype) {
-                    logotype.QUANTITY++;
-                },
-                decQty: function (logotype) {
-                    if (logotype.QUANTITY > 0) {
-                        logotype.QUANTITY--;
-                    }
-                },
-                addLogo: function () {
-                    this.logotypes.push({
-                        EXTENT: '',
-                        QUANTITY: 0,
-                        FILE: null,
-                        COMMENTS: ''
-                    })
-                },
-                getTotalPrice: function () {
-                    var self = this;
-                    return this.logotypes.reduce(function (sum, item) {
-                        return sum + parseInt(self.price * item.QUANTITY);
-                    }, 0)
-                },
-                addToCart: function () {
-                    var self = this;
-                    this.logotypes.forEach(function (item, index) {
-                        if (item.QUANTITY > 0) {
-                            self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
-                                ID: self.item.ID,
-                                NAME: self.item.NAME,
-                                CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
-                                QUANTITY: item.QUANTITY,
-                                PRICE: self.price,
-                                PROPS: [
-                                    {
-                                        NAME: 'EXTENT',
-                                        CODE: 'LOGO_EXTENT',
-                                        VALUE: item.EXTENT
-                                    },
-                                    {
-                                        NAME: 'COMMENTS',
-                                        CODE: 'LOGO_COMMENTS',
-                                        VALUE: item.COMMENTS
-                                    },
-                                    {
-                                        NAME: 'FILE',
-                                        CODE: 'LOGO_FILE',
-                                        VALUE: item.FILE
-                                    }
-                                ]
-                            });
-                        }
-                    })
-                }
-            },
-            mixins: [currencyMixin]
-        },
-		'logo-wall-poly': {
-            template: '#logo-wall-poly',
-            data: function () {
-                return {
-                    sectionId: 13,
-                    itemId: 267,
-                    logotypes: [
-                        {
-                            EXTENT: '',
-                            QUANTITY: 0,
-                            FILE: null,
-                            COMMENTS: ''
-                        }
-                    ]
-                }
-            },
-            ready: function () {
-                if (
-                    this.$root.order
-                    &&
-                    this.$root.order.selectedStand.hasOwnProperty('SERVICES')
-                    &&
-                    this.$root.order.selectedStand.SERVICES
-                    &&
-                    this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
-                ) {
-                    this.logotypes = this.$root.order.selectedStand.SERVICES[this.sectionId];
-                }
-            },
-            computed: {
-                section: function () {
-                    return this.$parent.sections[this.sectionId];
-                },
-                item: function () {
-                    return this.section.ITEMS[this.itemId];
-                },
-                price: function () {
-                    return this.item.PRICE;
-                },
-                extents: function () {
-                	var res = {};
-                	for (extentIndex in this.item.PROPERTY_39) {
-                		if (this.$root.extents.hasOwnProperty(this.item.PROPERTY_39[extentIndex])) {
-                			res[this.item.PROPERTY_39[extentIndex]] = this.$root.extents[this.item.PROPERTY_39[extentIndex]].NAME;
-                		}
-                	}
-                    return res;
-                }
-            },
-            methods: {
-                incQty: function (logotype) {
-                    logotype.QUANTITY++;
-                },
-                decQty: function (logotype) {
-                    if (logotype.QUANTITY > 0) {
-                        logotype.QUANTITY--;
-                    }
-                },
-                addLogo: function () {
-                    this.logotypes.push({
-                        EXTENT: '',
-                        QUANTITY: 0,
-                        FILE: null,
-                        COMMENTS: ''
-                    })
-                },
-                getTotalPrice: function () {
-                    var self = this;
-                    return this.logotypes.reduce(function (sum, item) {
-                        return sum + parseInt(self.price * item.QUANTITY);
-                    }, 0)
-                },
-                addToCart: function () {
-                    var self = this;
-                    this.logotypes.forEach(function (item, index) {
-                        if (item.QUANTITY > 0) {
-                            self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
-                                ID: self.item.ID,
-                                NAME: self.item.NAME,
-                                CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
-                                QUANTITY: item.QUANTITY,
-                                PRICE: self.price,
-                                PROPS: [
-                                    {
-                                        NAME: 'EXTENT',
-                                        CODE: 'LOGO_EXTENT',
-                                        VALUE: item.EXTENT
-                                    },
-                                    {
-                                        NAME: 'COMMENTS',
-                                        CODE: 'LOGO_COMMENTS',
-                                        VALUE: item.COMMENTS
-                                    },
-                                    {
-                                        NAME: 'FILE',
-                                        CODE: 'LOGO_FILE',
-                                        VALUE: item.FILE
-                                    }
-                                ]
-                            });
-                        }
-                    })
-                }
-            },
-            mixins: [currencyMixin]
-        },
-		
+        
         'laminating': {
             template: '#laminating',
             data: function () {
@@ -1819,7 +1403,93 @@ Vue.component('graphics', {
                 }
             },
             mixins: [currencyMixin]
-        }
+        },
+		
+		'logotype': {
+			template: '#logotype',
+			data: function () {
+				return {
+					sectionId: 13,
+					selectedItems: [
+						{
+							ID: '',
+							QUANTITY: 0,
+							FILE: null,
+							COMMENTS: ''
+						}
+					]
+				}
+			},
+			ready: function () {
+				if (
+					this.$root.order
+					&&
+					this.$root.order.selectedStand.hasOwnProperty('SERVICES')
+					&&
+					this.$root.order.selectedStand.SERVICES
+					&&
+					this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
+				) {
+					this.selectedItems = this.$root.order.selectedStand.SERVICES[this.sectionId];
+				}
+			},
+			computed: {
+				section: function () {
+					return this.$parent.sections[this.sectionId];
+				},
+				items: function () {
+					return this.section.ITEMS;
+				}
+			},
+			methods: {
+				addItem: function () {
+					this.selectedItems.push({
+						ID: '',
+						QUANTITY: 0,
+						FILE: null,
+						COMMENTS: ''
+					});
+				},
+				addToCart: function () {
+					var self = this;
+					this.selectedItems.forEach(function (item, index) {
+						if (item.ID && item.QUANTITY > 0) {
+							self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
+								ID: item.ID,
+								NAME: self.items[item.ID].NAME,
+								CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
+								QUANTITY: item.QUANTITY,
+								PRICE: self.items[item.ID].PRICE,
+								PROPS: [
+									{
+										NAME: 'COMMENTS',
+										CODE: 'LOGO_COMMENTS',
+										VALUE: item.COMMENTS
+									},
+									{
+										NAME: 'FILE',
+										CODE: 'LOGO_FILE',
+										VALUE: item.FILE
+									}
+								]
+							});
+						} else {
+							if (
+								self.$root.selectedStand.SERVICES.hasOwnProperty(self.section.ID)
+								&&
+								self.$root.selectedStand.SERVICES[self.section.ID].hasOwnProperty(index)
+							) {
+								Vue.delete(self.$root.selectedStand.SERVICES[self.section.ID], index);
+							}
+						}
+					})
+				}
+			},
+			mixins: [
+				quantityMixin,
+				currencyMixin
+			]
+		}
     },
     mixins: [toggleableMixin]
 });
@@ -1827,6 +1497,7 @@ Vue.component('graphics', {
 
 
 // Компонент: "Логотип".
+/*
 Vue.component('logotype', {
     template: '#logotype',
     data: function () {
@@ -1912,7 +1583,7 @@ Vue.component('logotype', {
 		currencyMixin
     ]
 });
-
+*/
 
 
 // Компонент: "Дополнительное оборудование".
@@ -1987,33 +1658,32 @@ Vue.component('additional-equipment', {
     },
     computed: {
         price: function () {
-            return this.item.PRICE
+            return this.item.PRICE;
         },
         colors: function () {
             var colors = !$.isEmptyObject(this.item.EQ_COLORS) ? this.item.EQ_COLORS : false;
 			
             if (typeof colors == 'object') {
                 if (Object.keys(colors).length == 1) {
-                    return {ID: Object.keys(colors)[0], VALUE: colors[Object.keys(colors)[0]]}
+                    return {ID: Object.keys(colors)[0], VALUE: colors[Object.keys(colors)[0]]};
                 } else {
                     return colors;
                 }
             } else {
                 return colors;
             }
-
         },
         colorsLength: function () {
             return Object.keys(array_combine(this.item.PROPERTY_VALUE_ID_38, this.item.PROPERTY_38)).length;
         },
         ordered: function () {
-            return this.$root.selectedStand.OPTIONS[this.section.ID][this.item.ID].QUANTITY
+            return this.$root.selectedStand.OPTIONS[this.section.ID][this.item.ID].QUANTITY;
         },
         description: function () {
             return this.$root.curLang == 'EN' ? this.item.PROPERTY_61.TEXT : this.item.PROPERTY_60.TEXT;
         }
     },
-    mixins: [currencyMixin]
+    mixins: [currencyMixin, orderSortMixin]
 });
 
 
