@@ -28,10 +28,27 @@ if (IsModuleInstalled($module)) {
 		'items'			=> array(),
     );
 	*/
-	$aMenu []= array(
+    
+    $aMenu []= array(
         'parent_menu' 	=> 'global_menu_wolk.oem',
         'section' 		=> $module,
         'sort' 			=> '1000',
+        'url' 			=> 'wolk_oem_order_form.php',
+        'more_url' 		=> array('wolk_oem_order_form.php'),
+        'title' 		=> 'Форма заказа',
+        'text' 			=> 'Форма заказа',
+        'icon' 			=> 'wolk_oem_menu_icon_check_system',
+        'page_icon' 	=> 'wolk_oem_page_icon_check_system',
+        'module_id' 	=> $module,
+        'items_id' 		=> 'menu_wolk.oem_settings_item',
+        'dynamic' 		=> false,
+		'items'			=> array(),
+    );
+    
+	$aMenu []= array(
+        'parent_menu' 	=> 'global_menu_wolk.oem',
+        'section' 		=> $module,
+        'sort' 			=> '1100',
         'url' 			=> 'wolk_oem_order_list.php',
         'more_url' 		=> array('wolk_oem_order_index.php'),
         'title' 		=> 'Список заказов',

@@ -84,6 +84,30 @@ switch ($action) {
 				
 		jsonresponse(true, '', ['link' => $orderprint->getOrderPrint()]);
 		break;	
+        
+        
+    // Выбор пользователя.
+    case ('select-user'):
+        $query = (string) $_REQUEST['query'];
+        
+        $users = [];
+        
+        $result = CUser::getList(
+            ($b = 'ID'),
+            ($o = 'DESC'), 
+            ['WORK_COMPANY' => '%'.$query.'%'],
+            //[['LOGIC' => 'OR', ['NAME' => '%'.$query.'%'], ['LAST_NAME' => '%'.$query.'%'], ['WORK_COMPANY' => '%'.$query.'%']]],
+            ['FIELDS' => ['ID', 'EMAIL', 'NAME', 'LAST_NAME', 'WORK_COMPANY'], 'NAV_PARAMS' => ['nTopCount' => 15]]
+        );
+        while ($user = $result->fetch()) {
+            $user['FULLNAME'] = trim($user['WORK_COMPANY'] . ' | ' . $user['NAME'] . ' ' . $user['LAST_NAME']);
+            
+            $users[$user['ID']] = $user;
+        }
+        unset($result);
+        
+        jsonresponse(true, '', ['users' => $users]);
+        break;
 }
 
 

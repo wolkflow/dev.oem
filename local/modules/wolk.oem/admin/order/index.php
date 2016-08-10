@@ -1114,3 +1114,5 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 
 <? $oTabControl->EndTab() ?>
 <? $oTabControl->End() ?>
+
+<? require ($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/epilog_admin.php') ?>
