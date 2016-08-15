@@ -83,9 +83,12 @@ try {
 			
 		case 'getQuickOrder':
 			if ($order = $component->getOrder($_POST['orderId'])) {
-				print_r($order); die();
 				$order['PRODUCTS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($order['ID']);
 				
+                foreach ($order['PRODUCTS'] as &$product) {
+                    $product['PRICE_FORMATTED'] = CurrencyFormat($product['PRICE'], $product['CURRENCY']);
+                    $product['COST_FORMATTED']  = CurrencyFormat($product['PRICE'] * $product['QUANTITY'], $product['CURRENCY']);
+                }
                 $result = $order;
             } else {
                 $result = 'Order not found';

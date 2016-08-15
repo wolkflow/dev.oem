@@ -5,6 +5,7 @@ $MESS['empty_status'] = 'Created';
 $MESS['сhangeview_order'] = 'Change / View order';
 $MESS['standard equipment'] = 'standard equipment';
 $MESS['additional equipment'] = 'additional equipment';
+$MESS['products'] = 'Ordered items';
 $MESS['stand type'] = 'stand type';
 $MESS['system stand'] = 'system stand';
 $MESS['services'] = 'services';

@@ -45,10 +45,11 @@ $(function () {
 							
 							for (var i in data.PRODUCTS) {
 								var item = data.PRODUCTS[i];
-								if (parseFloat(item.COST) <= 0) {
+								if (parseFloat(item.PRICE) <= 0) {
 									delete data.PRODUCTS[i];
 								}
 							}
+                            self.PRODUCTS = data.PRODUCTS;
 							
 							Vue.nextTick(function() {
 							   self.showOrder('#order-detail-quick');

@@ -18,3 +18,11 @@
 	width: 245px;
 	float: right;
 }
+
+.ordercontainer__column.fullwidth {
+    width: auto;
+}
+
+.ordercontainer__column.fullwidth .ordercontainer__itemtotalprice {
+    position: initial;
+}
