@@ -34,17 +34,27 @@ JS
         <div class="profilecontainer__itemscontainer">
             <? foreach ($event['ORDERS'] as $order) { ?>
                 <div class="profilecontainer__item">
-                    <div class="profilecontainer__itemnumber"><?= $order['ORDER']['ID'] ?></div>
-                    <div class="profilecontainer__itemstatus"><?=Loc::getMessage('status')?>: <?= $arResult['STATUSES'][$order['ORDER']['STATUS_ID']] ?: Loc::getMessage('empty_status') ?></div>
+                    <div class="profilecontainer__itemnumber">
+						<?= $order['ORDER']['ID'] ?>
+					</div>
+                    <div class="profilecontainer__itemstatus">
+						<?= Loc::getMessage('status') ?>: <?= $arResult['STATUSES'][$order['ORDER']['STATUS_ID']] ?: Loc::getMessage('empty_status') ?>
+					</div>
                     
                     <div class="profilecontainer__changebutton">
-                        <a @click.prevent="loadOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?ORDER_ID=<?= $order['ORDER']['ID'] ?>">
-                            <? if ($order['ORDER']['STATUS_ID'] == 'N') { ?>
-                                <?= Loc::getMessage('сhangeview_order') ?>
-                            <? } else { ?>
-                                <?= Loc::getMessage('view_order') ?>
-                            <? } ?>
-                        </a>
+						<? if ($order['ORDER']['PROPS']['TYPE']['VALUE'] != 'QUICK') { ?>
+							<a @click.prevent="loadOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?ORDER_ID=<?= $order['ORDER']['ID'] ?>">
+								<? if ($order['ORDER']['STATUS_ID'] == 'N') { ?>
+									<?= Loc::getMessage('сhangeview_order') ?>
+								<? } else { ?>
+									<?= Loc::getMessage('view_order') ?>
+								<? } ?>
+							</a>
+						<? } else { ?>
+							<a @click.prevent="getQuickOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?ORDER_ID=<?= $order['ORDER']['ID'] ?>">
+								<?= Loc::getMessage('view_order') ?>
+							</a>
+						<? } ?>
                     </div>                    
                 </div>
             <? } ?>
@@ -176,13 +186,13 @@ JS
                     <div class="ordertotalcontainer__standcontainer">
                         <div class="ordertotalcontainer__title"><?= ucfirst(Loc::getMessage('stand')) ?> №</div>
                         <div class="ordertotalcontainer__number">
-                            <input disabled type="text" :value="orderProps.standNum.VALUE">
+                            <input disabled type="text" :value="orderProps.standNum.VALUE" />
                         </div>
                     </div>
                     <div class="ordertotalcontainer__pavillioncontainer">
                         <div class="ordertotalcontainer__title"><?=ucfirst(Loc::getMessage('pavillion'))?></div>
                         <div class="ordertotalcontainer__number">
-                            <input disabled type="text" :value="orderProps.pavillion.VALUE">
+                            <input disabled type="text" :value="orderProps.pavillion.VALUE" />
                         </div>
                     </div>
                 </div>

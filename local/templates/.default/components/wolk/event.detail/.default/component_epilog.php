@@ -47,7 +47,7 @@ if ($arResult['INDIVIDUAL_STAND']) {
         ) {
             $preselect = $arResult['EVENT']['PROPS']['PRESELECT']['VALUE'];
         } else {
-            $preselect = "null";
+            $preselect = 'null';
         }
     }
 }
@@ -55,6 +55,7 @@ if ($arResult['INDIVIDUAL_STAND']) {
 if (is_null($preselect)) {
 	$preselect = 'null';
 }
+$preselect = 0;//json_encode(['ID' => 0]);
 
 $stands = array_map(function ($val) use ($curLang) {
     $item = ArrayHelper::only($val, [
@@ -113,6 +114,9 @@ if ($arResult['ORDER']) {
     $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['OPTIONS'] = $arResult['ORDER']['selectedStand']['OPTIONS'];
     unset($eq);
 }
+
+// Добавление обработчика в случае отсутствия предвыбранного стенда.
+$stands[0] = ['ID' => 0];
  
 $stands = Json::encode($stands);
 
@@ -207,11 +211,14 @@ $langMessages = Json::encode([
     )
 ]);
 
+$individual = (int) $arResult['INDIVIDUAL_STAND'];
+
 //$orderDesc = str_replace(['"', "\n"], ['\"', " "], $arResult['ORDER']['ORDER_DATA']['USER_DESCRIPTION']);
 
 $selectedParams = Json::encode($selectedParams);
 
 $am = Asset::getInstance();
+
 
 
 $am->addString(<<<JS
@@ -230,8 +237,9 @@ $am->addString(<<<JS
 			extents = $extents,
 			vat = $vat,
 			langs = $langs,
-			langMessages = $langMessages;
-         
+			langMessages = $langMessages,
+            individual = $individual;
+        
         curEvent.LOCATION = curEvent.LOCATION.replace(/&quot;/g, '"');
 	</script>
 JS

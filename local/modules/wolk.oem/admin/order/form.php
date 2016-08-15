@@ -29,16 +29,6 @@ if (in_array(GROUP_MANAGERS_ID, $groups)) {
 Bitrix\Main\Loader::includeModule('wolk.oem');
 
 
-// Сообщение.
-$message = null;
-
-
-// Сохранение заказа.
-if (!empty($_POST)) {
-    
-}
-
-
 // Список выставок.
 $events = Wolk\OEM\Event::getList(['filter' => ['ACTIVE' => 'Y'], 'order' => ['NAME' => 'ASC']]);
 
@@ -86,23 +76,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 
 ?>
 
-
-<? if (!empty($message)) { ?>
-    <?= $message->show() ?>
-<? } ?>
-
-<style type="text/css">
-    #form-user-select-id {
-        cursor: pointer;
-    }
-</style>
-
 <script>
     var invoices = <?= json_encode($invoices) ?>;
     
     $(document).ready(function() {
         // bootstrap
         $('html').addClass('wolk_admin_pages_no_conflict');
+        
         
         // Выбор выставки.
         $('#form-event-id').on('change', function() {
@@ -113,7 +93,20 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             for (var code in eventinvoices) {
                 $forminvoice.append('<option value="' + code + '">' + eventinvoices[code] + '</option>');
             }
+			
+			if ($(this).val() > 0) {
+				$('#js-form-insert-position-id').prop('disabled', false);
+                if ($('.js-form-type-order:checked').val() != 'QUICK') {
+                    $('#js-form-stand-select-button-id').prop('disabled', false);
+                }
+			} else {
+				$('#js-form-insert-position-id').prop('disabled', 'disabled');
+                $('#js-form-stand-select-button-id').prop('disabled', 'disabled');
+			}
+            
+            $(this).find('option:first-child').remove();
         });
+        
         
         // Поиск участника выставки.
         $('#form-user-id').on('keyup', function() {  
@@ -158,6 +151,54 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         });
         
         
+        // Выбор типа заказа.
+        $('.js-form-type-order').on('change', function() {
+            console.log($('.js-form-type-order:checked').val());
+            if ($('.js-form-type-order:checked').val() == 'QUICK') {
+                $('#js-form-stand-select-button-id').prop('disabled', 'disabled');
+            } else {
+                $('#js-form-stand-select-button-id').prop('disabled', false);
+            }
+        });
+        
+        
+        // Добавление стенда.
+        $('#js-form-stand-select-button-id').on('click', function() {
+            var event    = $('#form-event-id').val();
+            var language = $('#form-language-id').val();
+            var currency = $('#form-currency-id').val();
+            
+            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=ru&IBLOCK_ID=<?= STANDS_IBLOCK_ID ?>&func=SetStandElement&event=' + event + '&language=' + language + '&currency=' + currency, 900, 700);
+        });
+        
+        
+        // Изменение цены стенда.
+        $('#js-stand-id').on('keyup', '#js-stand-price-id', function() {
+            $('#js-stand-cost-id').text(($(this).val() * $('#js-stand-width-id').val() * $('#js-stand-depth-id').val()).toFixed(2));
+            
+            // Пересчет цены.
+            CalcPrices();
+        });
+        
+        
+        // Изменение ширины стенда.
+        $('#js-stand-id').on('keyup', '#js-stand-width-id', function() {
+            $('#js-stand-cost-id').text(($('#js-stand-price-id').val() * $(this).val() * $('#js-stand-depth-id').val()).toFixed(2));
+            
+            // Пересчет цены.
+            CalcPrices();
+        });
+        
+        
+         // Изменение шлубины стенда.
+        $('#js-stand-id').on('keyup', '#js-stand-depth-id', function() {
+            $('#js-stand-cost-id').text(($('#js-stand-price-id').val() * $('#js-stand-width-id').val() * $(this).val()).toFixed(2));
+            
+            // Пересчет цены.
+            CalcPrices();
+        });
+        
+        
         // Добавление товарной позиции.
         $('#js-form-insert-position-id').on('click', function() {
             var event    = $('#form-event-id').val();
@@ -173,16 +214,33 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             var $that = $(this);
             var position = $that.closest('.js-position');
             var quantity = parseFloat($that.val());
-            var price    = parseFloat(position.find('.js-price').text());
+            var price    = parseFloat(position.find('.js-price').val());
             
             if (quantity <= 0) {
                 quantity = 1;
             }
-            position.find('.js-cost').val((price * quantity).toFixed(2));
+            position.find('.js-cost').text((price * quantity).toFixed(2));
             
             // Пересчет цены.
             CalcPrices();
         });
+        
+        
+        // Изменение цены товара.
+        $('#js-positions-id').on('keyup', '.js-price', function() {
+            var $that = $(this);
+            var position = $that.closest('.js-position');
+            var quantity = parseFloat(position.find('.js-quantity').val());
+            
+            if (quantity <= 0) {
+                quantity = 1;
+            }
+            position.find('.js-cost').text(($that.val() * quantity).toFixed(2));
+        
+            // Пересчет цены.
+            CalcPrices();
+        });
+        
         
         // Удаление товарной позиции.
         $('#js-positions-id').on('click', '.js-remove', function() {
@@ -192,20 +250,56 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             CalcPrices();
         });
         
+        
         // Пересчет цен: изменение наценка.
         $('#form-surcharge-id').on('keyup', function() {
             CalcPrices();
         });
+        
         
         // Пересчет цен: изменение включения НДС.
         $('#form-vat-id').on('change', function() {
             CalcPrices();
         });
         
+        
         // Пересчет цен: изменение стоимости товарной позиции.
         $('#js-positions-id').on('keyup', '.js-cost', function() {
             CalcPrices();
         });
+		
+		
+        // Отправка формы заказа.
+		$('#js-submit-id').on('click', function() {
+			var $errmessage = $('#js-error-message-id');
+			
+			$.ajax({
+				url: '/bitrix/admin/wolk_oem_remote.php',
+                data: $('#js-order-make-form-id').serialize(),
+                dataType: 'json',
+				beforeSend: function () {
+					$errmessage.addClass('hidden');
+					
+					BX.closeWait('.js-invoices-wrapper');
+					BX.showWait('.js-invoices-wrapper');
+				},
+                success: function (response) {
+                    if (response.status) {
+						location.href = '/bitrix/admin/wolk_oem_order_index.php?ID=' + response.data['ID'];
+                    } else {
+                        $errmessage.html('<b>Ошибка при создании заказа:</b><br/>' + response.message).removeClass('hidden');
+						$('html, body').animate({
+							scrollTop: $errmessage.offset().top
+						}, 700);
+                    }
+					BX.closeWait('.js-invoices-wrapper');
+                },
+                error: function (response) {
+                    BX.closeWait('.js-invoices-wrapper');
+                    alert(response);
+                }
+			});
+		});
     });
     
     
@@ -217,8 +311,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         var surcharge  = parseFloat($('#form-surcharge-id').val());
         var includevat = $('#form-vat-id').is(':checked');
         
+        // Стоимость стенда.
+        summ += parseFloat($('#js-stand-cost-id').text());
+        
         $('#js-positions-id tbody .js-cost').each(function() {
-            summ += parseFloat($(this).val());
+            summ += parseFloat($(this).text());
         });
         
         // Наценка.
@@ -241,24 +338,23 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     }
     
     
-    // Сохранение элемента.
+    // Сохранение товарной позиции.
     function SetElement(element)
     {
-        var html;
-        
         element = JSON.parse(element);
         
-        html = '<tr id="position-' + element.ID + '" class="js-position row-position">';
+        var html = '<tr id="position-' + element.ID + '" class="js-position row-position">';
+        
         if (element.PICTURE) {
             html += '<td><img src="' + element.PICTURE + '" class="img-thumbnail position-image-preview" /></td>';
         } else {
             html += '<td><div class="no_foto">Нет картинки</div></td>';
         }
-        html += '<td>' + element.NAME + '</td>';
-        html += '<td><input type="text" class="js-quantity form-control input-text-small" value="1" /></td>';
-        html += '<td><span class="js-price">' + (element.PRICE).toFixed(2) + '</span></td>';
-        html += '<td><input type="text" class="js-cost form-control input-text-small" value="' + (element.PRICE).toFixed(2) + '" /></td>';
-        html += '<td><input type="text" class="js-comment form-control" value="" /></td>';
+        html += '<td>' + element.NAME + ' <input type="hidden" name="PRODUCTS[IDS][' + element.ID + ']" value="' + element.ID + '" /></td>';
+        html += '<td><input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[QUANTITY][' + element.ID + ']" value="1" /></td>';
+        html += '<td><input type="text" class="js-price form-control input-text-small" name="PRODUCTS[PRICE][' + element.ID + ']" value="' + (element.PRICE).toFixed(2) + '" /></td>';
+        html += '<td><span class="js-cost">' + (element.PRICE).toFixed(2) + '</span></td>';
+        html += '<td><input type="text" class="js-comment form-control" name="PRODUCTS[COMMENTS][' + element.ID + ']" value="" /></td>';
         html += '<td><a class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></a></td>';
         html += '</tr>';
         
@@ -268,7 +364,25 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         CalcPrices();
     }
     
+    
+    // Сохранение стенда.
+    function SetStandElement(element)
+    {
+        element = JSON.parse(element);
+        
+        $('#js-stand-title-id').html('<input type="hidden" value="' + element.ID + '" name="STAND" />' + element.NAME);
+        $('#js-stand-price-id').prop('disabled', false).val(element.PRICE.toFixed(2));
+        $('#js-stand-width-id').prop('disabled', false).val(1);
+        $('#js-stand-depth-id').prop('disabled', false).val(1);
+        $('#js-stand-cost-id').text(element.PRICE.toFixed(2));
+        
+        // Пересчет цены.
+        CalcPrices();
+    }
+    
 </script>
+
+<div id="js-error-message-id" class="alert alert-danger hidden" role="alert"></div>
 
 <div class="row" id="js-order-form-od">
     <div class="col-md-10">
@@ -278,7 +392,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                 <h3>Создание заказа</h3>
             </div>
             <div class="panel-body">
-                <form method="POST">
+                <form method="POST" id="js-order-make-form-id">
+					<input type="hidden" name="action" value="order-make" />
                     <div class="form-group">
                         <label class="control-label" for="form-event-id">Выставка:</label>
                         <select class="form-control" id="form-event-id" name="EVENT">
@@ -300,7 +415,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="form-user-id" placeholder="Введите и выберите название компании или ФИО" />
                                     <div class="input-group-btn">
-                                        <a class="btn btn-primary" href="/bitrix/admin/user_edit.php" target="_blank">Добавить участника</a>
+                                        <a class="btn btn-primary" href="/bitrix/admin/user_edit.php" target="_blank">Добавить нового участника</a>
                                     </div>
                                 </div>
                                 <select multiple class="form-control hidden" id="form-user-select-id" style="min-height: 200px; margin-top: 2px; z-index: 1000;"></select>
@@ -323,13 +438,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                     <div class="form-group">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="TYPE" id="form-type-common-id" value="COMMON" checked />
+                                <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-common-id" value="COMMON" checked="checked" />
                                 Обычный заказ
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="TYPE" id="form-type-quick-id" value="QUICK" />
+                                <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-quick-id" value="QUICK" />
                                 Быстрый заказ
                             </label>
                         </div>
@@ -364,6 +479,41 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                     
                     <hr/>
                     
+                     <div class="row">
+                        <div class="col-md-11">
+                            <h3>Стенд</h3>
+                            <table class="table table-bordered" id="js-stand-id">
+                                <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Цена</th>
+                                        <th>Ширина (м)</th>
+                                        <th>Шлубина (м)</th>
+                                        <th>Стоимость</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="js-stand-title-id">&mdash;</td>
+                                        <td>
+                                            <input id="js-stand-price-id" type="text" class="form-control" name="STANDPRICE" value="0.00" disabled="disabled" />
+                                        </td>
+                                        <td>
+                                            <input id="js-stand-width-id" type="text" class="form-control" name="STANDWIDTH" value="1" disabled="disabled" />
+                                        </td>
+                                        <td>
+                                            <input id="js-stand-depth-id" type="text" class="form-control" name="STANDDEPTH" value="1" disabled="disabled" />
+                                        </td>
+                                        <td id="js-stand-cost-id">0.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-primary" id="js-form-stand-select-button-id" disabled="disabled">
+                                Выбрать стенд
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div class="row">
                         <div class="col-md-11">
                             <h3>Товарные позиции</h3>
@@ -375,13 +525,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                         <th>Количество</th>
                                         <th>Цена</th>
                                         <th>Сумма</th>
-                                        <th>Комментарий</th>
-                                        <th></th>
+                                        <th colspan="2">Комментарий</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
-                            <button type="button" class="btn btn-primary" id="js-form-insert-position-id">
+                            <button type="button" class="btn btn-primary" id="js-form-insert-position-id" disabled="disabled">
                                 Добавить позицию
                             </button>
                         </div>
@@ -428,6 +577,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                     
                     <hr/>
                     
+					<? /*
                     <div class="row">
                         <div class="col-md-6">
                             <label class="control-label" for="form-invoice-id">Счет:</label>
@@ -446,11 +596,14 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                             </div>
                         </div>
                     </div>
-                    
+                    */ ?>
+					
                     <div class="row">
-                        <div class="form-group">
-                            <input class="adm-btn-save" type="submit" value="Создать" />
-                        </div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">Создать</a>
+							</div>
+						</div>
                     </div>
                 </form>
             </div>
@@ -459,6 +612,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 </div>
 
 <style>
+	#form-user-select-id {
+        cursor: pointer;
+    }
+
     .linemedia_carsale_dealer_list *,
     .linemedia_carsale_auction_admin *,
     .wolk_admin_pages_no_conflict *{
@@ -534,15 +691,3 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 
 
 <? require ($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/epilog_admin.php') ?>
-
-
-
-
-
-
-
-
-
-
-
-

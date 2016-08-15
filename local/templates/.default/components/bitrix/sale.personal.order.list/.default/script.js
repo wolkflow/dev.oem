@@ -12,9 +12,53 @@ $(function () {
             status: null,
             TOTAL_PRICE_FORMATTED: null,
 			TOTAL_PRICE_TAX_FORMATTED: null,
-			PRICES: null
+			PRICES: null,
+            PRODUCTS: null
         },
         methods: {
+			getQuickOrder: function(id) {
+				 var self = this;
+								
+					$.ajax({
+						'url': '/local/components/wolk/event.detail/ajax.php',
+						'method': 'post',
+						'data': {
+							'sessid': BX.bitrix_sessid(),
+							'action': 'getQuickOrder',
+							'orderId': id						
+						},
+						'dataType': 'json',
+						'success': function(data) {						
+							// self.selectedStand = data.selectedStand;
+							self.orderId = data.ID;
+							self.orderProps = data.PROPS;
+							self.taxPrice = data.taxPrice;
+							self.totalPrice = data.totalPrice;
+							self.totalTaxPrice = data.totalTaxPrice;
+							self.curEvent = data.curEvent;
+							self.status = data.status;
+							self.TOTAL_PRICE_FORMATTED = data.TOTAL_PRICE_FORMATTED;
+							self.TOTAL_PRICE_TAX_FORMATTED = data.TOTAL_PRICE_TAX_FORMATTED;
+							self.PRICES = data.PRICES;
+							
+							// Сокрытие позиций с нулевой стоимостью.
+							
+							for (var i in data.PRODUCTS) {
+								var item = data.PRODUCTS[i];
+								if (parseFloat(item.COST) <= 0) {
+									delete data.PRODUCTS[i];
+								}
+							}
+							
+							Vue.nextTick(function() {
+							   self.showOrder('#order-detail-quick');
+							});
+						},
+						'error': function(response) {
+							console.log(response);
+						}
+					});
+			},
             loadOrder: function(id) {
                 var self = this;
 								
@@ -64,7 +108,7 @@ $(function () {
 						}
 						
 						Vue.nextTick(function() {
-						   self.showOrder();
+						   self.showOrder('#order-detail');
 						});
 					},
 					'error': function(response) {
@@ -121,8 +165,8 @@ $(function () {
                 });
 				*/
             },
-            showOrder: function() {
-                $("#order-detail").arcticmodal();
+            showOrder: function(selector) {
+                $(selector).arcticmodal();
             }
         },
         computed: {

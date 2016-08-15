@@ -11,27 +11,27 @@ $reloadParams = array();
 $event = '';
 if (isset($_GET['event']))
 	$event = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['event']);
-if ($event != '')
-	$reloadParams['event'] = $event;
+//if ($event != '')
+	//$reloadParams['event'] = $event;
 
 $func = '';
 if (isset($_GET['func']))
 	$func = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['func']);
-if ($func != '')
-	$reloadParams['func'] = $func;
+//if ($func != '')
+	//$reloadParams['func'] = $func;
 
 $language = '';
 if (isset($_GET['language']))
 	$language = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['language']);
-if ($language != '')
-	$reloadParams['language'] = $language;
+//if ($language != '')
+	//$reloadParams['language'] = $language;
 
 
 $currency = '';
 if (isset($_GET['currency']))
 	$currency = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['currency']);
-if ($currency != '')
-	$reloadParams['currency'] = $currency;
+//if ($currency != '')
+	//$reloadParams['currency'] = $currency;
 
 
 
@@ -341,24 +341,38 @@ if ($IBLOCK_ID <= 0) {
 }
 
 
+$prices = [];
+switch ($IBLOCK_ID) {
+    case (EQUIPMENT_IBLOCK_ID):
+        $prices = \Wolk\OEM\EventEquipmentPricesTable::getList([
+            'filter' => ['EVENT_ID' => $event, 'SITE_ID'  => strtoupper($language)]
+        ])->fetchAll();
 
-$prices = \Wolk\OEM\EventEquipmentPricesTable::getList([
-    'filter' =>
-        [
-            'EVENT_ID' => $event,
-            'SITE_ID'  => $language
-        ]
-])->fetchAll();
+        $eventprices = [];
+        foreach ($prices as $price) {
+            $eventprices[$price['EQUIPMENT_ID']] = $price['PRICE'];
+        }
+        break;
+        
+        
+    case (STANDS_IBLOCK_ID):
+        $prices = \Wolk\OEM\EventStandPricesTable::getList([
+            'filter' => ['EVENT_ID' => $event, 'SITE_ID'  => strtoupper($language)]
+        ])->fetchAll();
 
-$eventprices = [];
-foreach ($prices as $price) {
-    $eventprices[$price['EQUIPMENT_ID']] = $price['PRICE'];
+        $eventprices = [];
+        foreach ($prices as $price) {
+            $eventprices[$price['STAND_ID']] = $price['PRICE'];
+        }
+        break;
 }
+
+// print_r($eventprices);
 
 
 while ($arRes = $rsData->GetNext()) {
 	foreach ($arSelectedProps as $aProp) {
-		if ($arRes["PROPERTY_".$aProp['ID'].'_ENUM_ID']>0)
+		if ($arRes["PROPERTY_".$aProp['ID'].'_ENUM_ID'] > 0)
 			$arRes["PROPERTY_".$aProp['ID']] = $arRes["PROPERTY_".$aProp['ID'].'_ENUM_ID'];
 		else
 			$arRes["PROPERTY_".$aProp['ID']] = $arRes["PROPERTY_".$aProp['ID'].'_VALUE'];
@@ -687,11 +701,18 @@ function reloadFilter(el)
 	}
 }
 </script>
+
+<input type="hidden" name="language" value="<?= $language; ?>" />
+<input type="hidden" name="currency" value="<?= $currency; ?>" />
+<input type="hidden" name="func" value="<?= $func; ?>" />
+<input type="hidden" name="event" value="<?= $event; ?>" />
+
 <?
-if ($iblockFix)
-{
-	?><input type="hidden" name="IBLOCK_ID" value="<? echo $IBLOCK_ID; ?>">
-	<input type="hidden" name="filter_iblock_id" value="<? echo $IBLOCK_ID; ?>"><?
+if ($iblockFix) {
+	?>
+    <input type="hidden" name="IBLOCK_ID" value="<?= $IBLOCK_ID; ?>" />
+	<input type="hidden" name="filter_iblock_id" value="<?= $IBLOCK_ID; ?>" />
+    <?
 }
 $oFilter->Begin();
 if (!$iblockFix)
