@@ -8,11 +8,11 @@ IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/iblock/admin/ib
 //Init variables
 $reloadParams = array();
 
-$event = '';
+$eventID = '';
 if (isset($_GET['event']))
-	$event = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['event']);
-//if ($event != '')
-	//$reloadParams['event'] = $event;
+	$eventID = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['event']);
+//if ($eventID != '')
+	//$reloadParams['event'] = $eventID;
 
 $func = '';
 if (isset($_GET['func']))
@@ -341,33 +341,73 @@ if ($IBLOCK_ID <= 0) {
 }
 
 
+
+
+$element = CIBlockElement::getByID($eventID)->getNextElement();
+
+$event = null;
+if ($element) {
+    $event = $element->getFields();
+    $event['PROPS'] = $element->getProperties();
+    
+    $currencies = ['EQUIPMENTS' => [], 'STANDS' => []];
+    foreach ($event['PROPS'] as $code => $prop) {
+        if (strpos($code, 'LANG_CURRENCY_') !== false) {
+            $currecny_lang = str_replace('LANG_CURRENCY_', '', $code);
+            
+            $currencies['EQUIPMENTS'][$prop['VALUE']][$currecny_lang] = $currecny_lang;
+        }
+        if (strpos($code, 'LANG_STAND_CURRENCY_') !== false) {
+            $currecny_lang = str_replace('LANG_STAND_CURRENCY_', '', $code);
+            
+            $currencies['STANDS'][$prop['VALUE']][$currecny_lang] = $currecny_lang;
+        }
+    }
+}
+
 $prices = [];
 switch ($IBLOCK_ID) {
     case (EQUIPMENT_IBLOCK_ID):
+        $currency_item = $currencies['EQUIPMENTS'][$currency];
+        
+        if (count($currency_item) > 1) {
+            $currency_item = $currency_item[strtoupper($language)];
+        } else {
+            $currency_item = reset($currency_item);
+        }
+    
         $prices = \Wolk\OEM\EventEquipmentPricesTable::getList([
-            'filter' => ['EVENT_ID' => $event, 'SITE_ID'  => strtoupper($language)]
+            'filter' => ['EVENT_ID' => $eventID, 'SITE_ID'  => strtoupper($currency_item)]
         ])->fetchAll();
 
-        $eventprices = [];
+        $eventIDprices = [];
         foreach ($prices as $price) {
-            $eventprices[$price['EQUIPMENT_ID']] = $price['PRICE'];
+            $eventIDprices[$price['EQUIPMENT_ID']] = $price['PRICE'];
         }
         break;
         
         
     case (STANDS_IBLOCK_ID):
+        $currency_item = $currencies['STANDS'][$currency];
+    
+        if (count($currency_item) > 1) {
+            $currency_item = $currency_item[strtoupper($language)];
+        } else {
+            $currency_item = reset($currency_item);
+        }
+    
         $prices = \Wolk\OEM\EventStandPricesTable::getList([
-            'filter' => ['EVENT_ID' => $event, 'SITE_ID'  => strtoupper($language)]
+            'filter' => ['EVENT_ID' => $eventID, 'SITE_ID'  => strtoupper($currency_item)]
         ])->fetchAll();
 
-        $eventprices = [];
+        $eventIDprices = [];
         foreach ($prices as $price) {
-            $eventprices[$price['STAND_ID']] = $price['PRICE'];
+            $eventIDprices[$price['STAND_ID']] = $price['PRICE'];
         }
         break;
 }
 
-// print_r($eventprices);
+// print_r($eventIDprices);
 
 
 while ($arRes = $rsData->GetNext()) {
@@ -498,7 +538,7 @@ while ($arRes = $rsData->GetNext()) {
     }
         
     $arRes['PICTURE'] = $picture;
-    $arRes['PRICE']   = (float) $eventprices[$arRes['ID']];
+    $arRes['PRICE']   = (float) $eventIDprices[$arRes['ID']];
     
 	$row->AddActions(array(
 		array(
@@ -705,7 +745,7 @@ function reloadFilter(el)
 <input type="hidden" name="language" value="<?= $language; ?>" />
 <input type="hidden" name="currency" value="<?= $currency; ?>" />
 <input type="hidden" name="func" value="<?= $func; ?>" />
-<input type="hidden" name="event" value="<?= $event; ?>" />
+<input type="hidden" name="event" value="<?= $eventID; ?>" />
 
 <?
 if ($iblockFix) {

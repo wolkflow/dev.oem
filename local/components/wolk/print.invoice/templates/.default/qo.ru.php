@@ -17,7 +17,7 @@
                     <ul>
                         <li><b>Павильон:</b> <?= $arResult['PROPS']['pavillion']['VALUE'] ?></li>
                         <li><b>Стенд:</b> <?= $arResult['PROPS']['standNum']['VALUE'] ?></li>
-                        <li><b>Метраж:</b> <?= round(floatval($arResult['PROPS']['width']['VALUE'] * $arResult['PROPS']['depth']['VALUE']), 2) ?> м<sup>2</sup></li>
+                        <? /* <li><b>Метраж:</b> <?= round(floatval($arResult['PROPS']['width']['VALUE'] * $arResult['PROPS']['depth']['VALUE']), 2) ?> м<sup>2</sup></li> */ ?>
                         <li><b>Компания:</b> <?= $arResult['USER']['WORK_COMPANY'] ?></li>
                         <li><b>Дата:</b> <?= date('d.m.Y', $arResult['DATE']) ?></li>
                     </ul>                    
@@ -27,7 +27,7 @@
             <table class="qo-table">
                 <thead>
                     <tr>
-                        <th>Название</th>
+                        <th class="go-item-name">Название</th>
                         <th>Стоимость</th>
                         <th>Количество</th>
                         <th>Цена</th>
@@ -40,9 +40,9 @@
                         <? $i++ ?>
                         <tr>
                             <td><?= $i ?>. <?= $basket['NAME'] ?>.</td>
-                            <td><?= CurrencyFormat($basket['SURCHARGE_SUMMARY_PRICE'], $basket['CURRENCY']) ?></td>
+                            <td><?= str_replace('₽', 'руб.', CurrencyFormat($basket['SURCHARGE_SUMMARY_PRICE'], $basket['CURRENCY'])) ?></td>
                             <td><?= $basket['QUANTITY'] ?></td>
-                            <td><?= CurrencyFormat($basket['SURCHARGE_PRICE'], $basket['CURRENCY']) ?></td>
+                            <td><?= str_replace('₽', 'руб.', CurrencyFormat($basket['SURCHARGE_PRICE'], $basket['CURRENCY'])) ?></td>
                         </tr>
                     <? } ?>
                     <tr class="qp-table-footer first-child">
@@ -51,49 +51,49 @@
                     
                     <? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
                         <tr class="qp-table-footer">
-                            <td>&nbsp;</td>
-                            <td colspan="2">
-                                Всего без ндс
+                            <td colspan="2">&nbsp;</td>
+                            <td>
+                                Итого без НДС
                             </td>
                             <td>
-                                <?= CurrencyFormat($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], $arResult['ORDER']['CURRENCY']) ?>
+                                <?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], $arResult['ORDER']['CURRENCY'])) ?>
                             </td>
                         </tr>
                         <tr class="qp-table-footer">
-                            <td>&nbsp;</td>
-                            <td colspan="2">
+                            <td colspan="2">&nbsp;</td>
+                            <td>
                                 НДС (18%)
                             </td>
                             <td>
-                                <?= CurrencyFormat($arResult['ORDER']['TAX_VALUE'], $arResult['ORDER']['CURRENCY']) ?>
+                                <?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['TAX_VALUE'], $arResult['ORDER']['CURRENCY'])) ?>
                             </td>
                         </tr>
                         <tr class="qp-table-footer">
-                            <td>&nbsp;</td>
-                            <td colspan="2">
-                                ВСЕГО С НДС
+                            <td colspan="2">&nbsp;</td>
+                            <td>
+                                ИТОГО С НДС
                             </td>
                             <td>
-                                <?= CurrencyFormat($arResult['ORDER']['PRICE'], $arResult['ORDER']['CURRENCY']) ?>
+                                <?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['PRICE'], $arResult['ORDER']['CURRENCY'])) ?>
                             </td>
                         </tr>
                     <? } else { ?>
                         <tr class="qp-table-footer">
-                            <td>&nbsp;</td>
-                            <td colspan="2">
+                            <td colspan="2">&nbsp;</td>
+                            <td>
                                 НДС (18%)
                             </td>
                             <td>
-                                <?= CurrencyFormat($arResult['ORDER']['UNTAX_VALUE'], $arResult['ORDER']['CURRENCY']) ?>
+                                <?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['UNTAX_VALUE'], $arResult['ORDER']['CURRENCY'])) ?>
                             </td>
                         </tr>
                         <tr class="qp-table-footer">
-                            <td>&nbsp;</td>
-                            <td colspan="2">
-                                ВСЕГО С НДС
+                            <td colspan="2">&nbsp;</td>
+                            <td>
+                                ИТОГО С НДС
                             </td>
                             <td>
-                                <?= CurrencyFormat($arResult['ORDER']['PRICE'], $arResult['ORDER']['CURRENCY']) ?>
+                                <?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['PRICE'], $arResult['ORDER']['CURRENCY'])) ?>
                             </td>
                         </tr>
                     <? } ?>
