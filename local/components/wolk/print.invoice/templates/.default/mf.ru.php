@@ -1,4 +1,5 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\Core\Helpers\Currency as CurrencyHelper ?>
 
 <div class="invoice invoice2">
 	<div class="invoiceHeader">
@@ -31,7 +32,7 @@
 	</div>
 
 	<div class="invoiceParams">
-		<p><span class="toleft">Выставка:</span> <?= $arResult['EVENT']['NAME'] ?></p>
+		<p><span class="toleft">Выставка:</span> <?= $arResult['EVENT']['PROPS']['LANG_TITLE_RU']['VALUE'] ?></p>
 		<p><span class="toleft">Место проведения:</span> <span class="red"><?= $arResult['EVENT']['PROPS']['LANG_LOCATION_RU']['VALUE'] ?></span></p>
 		<? /*
 		<p><span class="toleft">Дата:</span> <span class="red"><?= date('d.m.Y', strtotime($arResult['EVENT']['ACTIVE_FROM'])) ?> – <?= date('d.m.Y', strtotime($arResult['EVENT']['ACTIVE_TO'])) ?></span></p>
@@ -46,14 +47,15 @@
 		</div>
 		<div class="clear"></div>
 	</div>
-
+    
+    <? $currency_symbol = CurrencyHelper::getCurrencySymbol($arResult['ORDER']['CURRENCY'], 'ru', false) ?>
 	<table class="invoiceItems__table">
 		<thead>
 			<tr>
 				<th>Наименование</th>
-				<th>Цена</th>
+				<th>Цена (<?= $currency_symbol ?>) ₽</th>
 				<th>Кол-во</th>
-				<th>Сумма</th>
+				<th>Сумма (<?= $currency_symbol ?>)</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -105,13 +107,13 @@
 			<p class="attention"><b>Счет действительный в течении 5-ти банковских дней</b></p>
 			<p>100% настоящего счета подлежит оплате по получению</p>
 			<div class="regNum">
-				<p>№ регистрации в Московской Регистрационной<br> палате 130.022</p>
+                <? /* <p>№ регистрации в Московской Регистрационной<br> палате 130.022</p> */ ?>
 				<p>ИНН 7705365187 / КПП / 771401001</p>
 			</div>
-			<p>ООО "Мессе Франкфург РУС"</p>
+			<p>ООО "Мессе Франкфурт РУС"</p>
 		</div>
 		<div class="invoiceAfterRight">
-			<p class="comname">ООО "Мессе Франкфург РУС"</p>
+			<p class="comname">ООО "Мессе Франкфурт РУС"</p>
 			<p>40702-810-1-0000-1-401-484</p>
 			<p>АО "Райффайзенбанк" Москва</p>
 			<p>129090, Москва, ул. Троицкая, 17/1</p>

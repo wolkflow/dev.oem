@@ -91,6 +91,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		if ($event) {
 			$this->arResult['EVENT'] = $event->getFields();
 			$this->arResult['EVENT']['PROPS'] = $event->getProperties();
+            
+            $this->arResult['LOCATION'] = CIBlockElement::getByID($this->arResult['EVENT']['PROPS']['LOCATION']['VALUE'])->Fetch();
 		}
 		
 		$this->arResult['DATE'] = (!empty($this->arResult['PROPS']['INVOICE_DATE']['VALUE'])) 
