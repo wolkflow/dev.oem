@@ -65,6 +65,7 @@ class IBlockSection
 	}
 	
 	
+    
 	/**
 	 * Получение раздела по ID.
 	 *

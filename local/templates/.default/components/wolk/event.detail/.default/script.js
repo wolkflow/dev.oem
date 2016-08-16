@@ -52,9 +52,9 @@
                 $(".standsTypes__window").eq(index).hide();
             },
             nextStep: function () {
-                if (this.curStep == 1 && this.selectedStand.ID == 0) {
+                if (this.curStep == 1 && individual) {
                     this.setStep(3);
-                } else if (this.curStep == 3 && this.selectedStand.ID == 0) {
+                } else if (this.curStep == 3 && individual) {
                     this.setStep(5);
                 } else {
                     this.setStep(parseInt(this.curStep) + 1);
@@ -64,7 +64,7 @@
             },
             prevStep: function () {
                 if (this.curStep > 1) {
-                    if (this.curStep == 2 && this.selectedStand.ID == 0) {
+                    if (this.curStep == 2 && individual) {
                         this.setStep(1);
                     } else {
                         this.setStep(parseInt(this.curStep) - 1);
@@ -86,7 +86,7 @@
                         valid = true;
                         break;
                     case 4:
-                        if (this.selectedStand.ID == 0) {
+                        if (individual) {
                             valid = true;
                             break;
                         } else {
@@ -127,7 +127,7 @@
             },
             setStep: function (step) {
                 if (this.curStep > step || this.validateStep(step - 1)) {
-                    if (!(this.selectedStand.ID == 0 && (step == 2 || step == 4))) {
+                    if (!(individual && (step == 2 || step == 4))) {
                         top.BX.ajax.history.put({}, window.location.search.replace(/&*step=[\d]/, "") + '&step=' + step);
                         this.curStep = step;
 
@@ -317,7 +317,7 @@
             selectedStand: {
                 cache: false,
                 get: function () {
-                    return this.stands[this.selected]
+                    return this.stands[this.selected];
                 },
                 set: function (val) {
                     this.selected = val.ID;
@@ -1609,7 +1609,7 @@ Vue.component('additional-equipment', {
 								  || this.$parent.selectedStand.OPTIONS[this.section.ID][this.item.ID].PROPS.COLOR;
             }
         } else {
-            if (typeof this.item == 'object') {
+            if (this.$parent.selectedStand && typeof this.item == 'object') {
 				for (var i in this.$parent.selectedStand.EQUIPMENT) {
 					var eq = this.$parent.selectedStand.EQUIPMENT[i];
 					if (eq.ID == this.item.ID) {
@@ -2938,11 +2938,10 @@ Vue.filter('visibleInCart', function (arr) {
 Vue.filter('visibleSteps', function (arr, standId) {
     var res = {};
     $.each(arr, function (key, val) {
-        if ( !([2,4].indexOf(parseInt(val.NUM)) != -1 && standId == 0) ) {
+        if (!([2, 4].indexOf(parseInt(val.NUM)) != -1 && individual)) { // standId == 0) ) {
             res[key] = val;
         }
-    });
-    
+    });    
     return res;
 });
 

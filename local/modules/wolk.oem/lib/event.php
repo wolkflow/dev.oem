@@ -82,6 +82,14 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
 		return $this->data['PROPS']['STANDS']['VALUE'];
 	}
+    
+    
+    public function getInvoices($code = 'VALUE')
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['INVOICES'][$code];
+	}
 	
 	
 	/**

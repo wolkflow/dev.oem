@@ -317,8 +317,8 @@ foreach ($baskets as $i => $basket) {
 		$item['IMAGE'] = CFile::getPath($item['PREVIEW_PICTURE']);
 
 		$baskets[$i]['ITEM'] = $item;
-	
-		if ($basket['SET_PARENT_ID'] == 0 && $basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
+        
+		if ($basket['SET_PARENT_ID'] == 0 && $baskets[$i]['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
 			$stand['BASKET'] = $basket;
 			$stand['ITEM']   = $item;
 		}
@@ -925,7 +925,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                                     <?= CurrencyFormat($basket['SURCHARGE_PRICE'] * $basket['QUANTITY'] * $rate, $rate_currency) ?>
                                                 </td>
 												<td>
-													&nbsp;
+													<?= $basket['PROPS']['COMMENT']['VALUE'] ?>
 												</td>
                                             </tr>
                                             <? $cnt++ ?>
@@ -1114,3 +1114,5 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 
 <? $oTabControl->EndTab() ?>
 <? $oTabControl->End() ?>
+
+<? require ($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/epilog_admin.php') ?>

@@ -5,13 +5,13 @@ use Wolk\Core\Helpers\Text as TextHelper;
 $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 ?>
 <div class="breadcrumbs">
-    <div class="breadcrumbs__container" :class="{ 'indStand': selectedStand.ID == 0 }">
+    <div class="breadcrumbs__container" :class="{ 'indStand': individual }">
         <a
             @click="setStep(step.NUM)"
             v-for="step in steps | visibleSteps selectedStand.ID"
             href="javascript:void(0)" 
             class="breadcrumbs__button"
-           :class="{ 'active': step.NUM == curStep, 'hidden': ([2,4].indexOf(parseInt(step.NUM)) != -1) && selectedStand.ID == 0 }"
+           :class="{ 'active': step.NUM == curStep, 'hidden': ([2,4].indexOf(parseInt(step.NUM)) != -1) && individual }"
         > 
 			<span class="breadcrumbs__buttoncontainer">
 				{{ $index + 1 }}. {{ step.NAME }}
@@ -84,6 +84,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 		</a>        
     </div>
 
+    <? // Выбор стеднов // ?>
     <div class="standstypescontainer">
         <div class="pagetitle">
 			<?= Loc::getMessage('Another system stand types') ?>
@@ -103,44 +104,52 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 								<div class="chooseType__row">
 								
 									<label for="row_<?=$s_id?>" class="chooseType__label">
-										<input id="row_<?=$s_id?>" type="radio" value="row" name="standtype"><span><?=Loc::getMessage('row')?></span>
+										<input id="row_<?=$s_id?>" type="radio" value="row" name="standtype" />
+                                        <span><?= Loc::getMessage('row') ?></span>
 										<span class="chooseType__icon"></span>
 									</label>
 									<label for="head_<?=$s_id?>" class="chooseType__label">
-										<input id="head_<?=$s_id?>" type="radio" value="head" name="standtype"><span><?=Loc::getMessage('head')?></span>
+										<input id="head_<?=$s_id?>" type="radio" value="head" name="standtype" />
+                                        <span><?= Loc::getMessage('head') ?></span>
 										<span class="chooseType__icon"></span>
 									</label>
 								</div>
 								<div class="chooseType__row">
 									<label for="corner_<?=$s_id?>" class="chooseType__label">
-										<input id="corner_<?=$s_id?>" type="radio" value="corner" name="standtype"><span><?=Loc::getMessage('corner')?></span>
+										<input id="corner_<?=$s_id?>" type="radio" value="corner" name="standtype" />
+                                        <span><?= Loc::getMessage('corner') ?></span>
 										<span class="chooseType__icon"></span>
 									</label>
 									<label for="insel_<?=$s_id?>" class="chooseType__label">
-										<input id="insel_<?=$s_id?>" type="radio" value="insel" name="standtype"><span><?=Loc::getMessage('insel')?></span>
+										<input id="insel_<?=$s_id?>" type="radio" value="insel" name="standtype" />
+                                        <span><?= Loc::getMessage('insel') ?></span>
 										<span class="chooseType__icon"></span>
 									</label>
 								</div>
 								<div class="standsTypes__save">
-									<input @click.prevent="setType($event.target, <?=$s_id?>)" type="button" value="<?=Loc::getMessage('save')?>" class="styler">
+									<input @click.prevent="setType($event.target, <?= $s_id ?>)" type="button" value="<?= Loc::getMessage('save') ?>" class="styler" />
 								</div>
 							</form>
 						</div>
 					<? } ?>
 
-                    <div class="pagesubtitle customizable_border"><?= $stand['NAME'] ?></div>
+                    <div class="pagesubtitle customizable_border">
+                        <?= $stand['NAME'] ?>
+                    </div>
                     <div class="standstypescontainer__pricecontiner">
 						<?= FormatCurrency($stand['PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?>
                         <span>
 							<?= FormatCurrency($stand['BASE_PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?> / <?= Loc::getMessage('m2') ?>
                         </span>
-                        <div class="standstypescontainer__choosebutton customizable"
-                             :class="{'current': selectedStand.ID == <?= $stand['ID'] ?>}"
-                             @click="setSelected('<?= $stand['ID'] ?>', <?=$s_id?>);">
-                            {{selectedStand.ID == <?= $stand['ID'] ?> ? '<?= Loc::getMessage('chosen') ?>' :
-                            '<?= Loc::getMessage('choose') ?>'}}
+                        <div
+                            class="standstypescontainer__choosebutton customizable"
+                            :class="{'current': selectedStand.ID == <?= $stand['ID'] ?>}"
+                            @click="setSelected('<?= $stand['ID'] ?>', <?= $s_id ?>);"
+                        >
+                            {{selectedStand && selectedStand.ID == <?= $stand['ID'] ?> ? '<?= Loc::getMessage('chosen') ?>' : '<?= Loc::getMessage('choose') ?>'}}
                         </div>
                     </div>
+                    
                     <img height="138" src="<?= $stand['PREVIEW_PICTURE'] ?>" class="standstypescontainer__photo" />
 
                     <div class="standstypescontainer__description">

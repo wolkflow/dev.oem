@@ -19,7 +19,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
     public function onPrepareComponentParams($arParams)
     {
 		// Тип счета.
-		$arParams['TEMPLATE']  = (string) $arParams['TEMPLATE'];
+		$arParams['TEMPLATE'] = (string) $arParams['TEMPLATE'];
 		
 		// ID заказа.
 		$arParams['ORDER_ID'] = (int) $arParams['ORDER_ID'];
@@ -27,6 +27,15 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		// Путь к файлу.
 		$arParams['PATH'] = (string) $arParams['PATH'];
 		
+        
+        // Язык.
+		$arParams['LANG'] = (string) $arParams['LANG'];
+		
+		if (empty($arParams['LANG'])) {
+			$arParams['LANG'] = \Bitrix\Main\Application::getInstance()->getContext()->getLanguage();
+		}
+        
+        
         return $arParams;
     }
 	
@@ -53,25 +62,38 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		
 		// Список доступных счетов.
 		$invoices = [
-			'uaz' 		=> 'Uaz',
-			'mf.ru' 	=> 'MF (ru)',
-			'mf.en' 	=> 'MF (en)',
-			'itemf.ru'  => 'ITEMF (ru)',
-			'itemf.en'  => 'ITEMF (en)',
-			'bmr.ru'  => 'BMR (ru)',
-			'bmr.en'  => 'BMR (en)',
+			'uaz' 	   => 'Uaz',
+			'mf.ru'    => 'MF (ru)',
+			'mf.en'    => 'MF (en)',
+			'itemf.ru' => 'ITEMF (ru)',
+			'itemf.en' => 'ITEMF (en)',
+			'bmr.ru'   => 'BMR (ru)',
+			'bmr.en'   => 'BMR (en)',
+            'qo.ru'    => 'QO (ru)',
+            'qo.en'    => 'QO (en)',
 		];
 		
 		if (!array_key_exists($this->arParams['TEMPLATE'], $invoices)) {
 			return;
 		}
+        
+        $this->arResult['SERVER_NAME'] = $site['SERVER_NAME'];
+		$this->arResult['LANGUAGE']    = strtoupper($this->arParams['LANG']);
 		
+        if (!empty($this->arResult['PROPS']['LANGUAGE']['VALUE'])) {
+            $this->arResult['LANGUAGE'] = strtoupper($this->arResult['PROPS']['LANGUAGE']['VALUE']);
+        }
+        
+        
 		// Заказ.
 		$this->arResult['ORDER']   = CSaleOrder::getByID($this->arParams['ORDER_ID']);
 		$this->arResult['PROPS']   = Wolk\Core\Helpers\SaleOrder::getProperties($this->arParams['ORDER_ID']);
 		$this->arResult['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($this->arParams['ORDER_ID']);
 		$this->arResult['USER']    = CUser::getByID($this->arResult['ORDER']['USER_ID'])->Fetch();
 		
+        
+        
+        
 		
 		// Курс пересчета заказа.
 		$rate     = (!empty($this->arResult['PROPS']['RATE']['VALUE'])) 
@@ -91,7 +113,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		if ($event) {
 			$this->arResult['EVENT'] = $event->getFields();
 			$this->arResult['EVENT']['PROPS'] = $event->getProperties();
-            
+            $this->arResult['EVENT']['LOGO'] = CFile::GetPath($this->arResult['EVENT']['PROPS']['LANG_LOGO_'.$this->arResult['LANGUAGE']]['VALUE']);
+
             $this->arResult['LOCATION'] = CIBlockElement::getByID($this->arResult['EVENT']['PROPS']['LOCATION']['VALUE'])->Fetch();
 		}
 		

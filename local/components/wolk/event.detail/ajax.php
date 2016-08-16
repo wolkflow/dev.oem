@@ -19,6 +19,7 @@ $actions = [
     'getServices',
     'placeOrder',
     'getOrder',
+	'getQuickOrder',
     'upload'
 ];
 
@@ -79,6 +80,21 @@ try {
                 $result = 'Order not found';
                 CHTTP::SetStatus('422 Unprocessable Entity');
             }
+			
+		case 'getQuickOrder':
+			if ($order = $component->getOrder($_POST['orderId'])) {
+				$order['PRODUCTS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($order['ID']);
+				
+                foreach ($order['PRODUCTS'] as &$product) {
+                    $product['PRICE_FORMATTED'] = CurrencyFormat($product['PRICE'], $product['CURRENCY']);
+                    $product['COST_FORMATTED']  = CurrencyFormat($product['PRICE'] * $product['QUANTITY'], $product['CURRENCY']);
+                }
+                $result = $order;
+            } else {
+                $result = 'Order not found';
+                CHTTP::SetStatus('422 Unprocessable Entity');
+            }
+			break;
     }
 } catch (Exception $e) {
     $result = $e->getMessage();

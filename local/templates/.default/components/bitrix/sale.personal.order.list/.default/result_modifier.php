@@ -37,6 +37,7 @@ foreach ($propsValues as $propValue) {
 }
 
 foreach ($indexedOrders as $order) {
+	$order['ORDER']['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($order['ORDER']['ID']);
     $groupedOrders[$order['EVENT_ID']][] = $order;
 }
 

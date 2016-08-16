@@ -12,7 +12,7 @@
 
 <div class="ficontainer cur-ru">
 	<div class="filogo">
-		<img src="<?= $this->getFolder() ?>/images/itemf_logo.png" alt="">
+		<img src="<?= $this->getFolder() ?>/images/itemf_logo.png" alt="" />
 	</div>
 
 	<div class="finvoiceName">Акционерное Общество «АйТиИМФ Экспо»</div>

@@ -8,7 +8,7 @@ class IBlockElement
 	
 	public static function getByCode($iblockID, $code)
 	{
-		$resutl  = null;
+		$result  = null;
 		$element = \CIBlockElement::GetList(array(), array('IBLOCK_ID' => intval($iblockID), 'CODE' => strval($code)), false, array('nTopCount' => 1))->getNextElement();
 				
 		if ($element) {
@@ -33,6 +33,27 @@ class IBlockElement
 		return $props;
 	}
 	
+    
+     public static function getSectionTree($id, $sectionID = null)
+    {
+        if (!\Bitrix\Main\Loader::includeModule('iblock')) {
+			return;
+		}
+        $sections = array();
+        
+        if (is_null($sectionID)) {
+            $element   = \CIBlockElement::getByID($id)->fetch();
+            $sectionID = $element['IBLOCK_SECTION_ID'];
+        }
+        
+        $result = \CIBlockSection::GetNavChain(false, $sectionID);
+        while ($section = $result->fetch()) {
+            $sections[$section['ID']]= $section;
+        }
+        
+        return $sections;
+    }
+    
 	
 	/**
 	 * Получение ссылки.

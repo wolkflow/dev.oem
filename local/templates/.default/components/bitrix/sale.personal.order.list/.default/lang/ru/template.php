@@ -5,6 +5,7 @@ $MESS['empty_status'] = 'Создан';
 $MESS['ChangeView order'] = 'Изменить / Просмотреть заказ';
 $MESS['standard equipment'] = 'стандартное оборудование';
 $MESS['additional equipment'] = 'доп оборудование';
+$MESS['products'] = 'Товарные позиции';
 $MESS['stand type'] = 'тип стенда';
 $MESS['system stand'] = 'системный стенд';
 $MESS['services'] = 'услуги';
