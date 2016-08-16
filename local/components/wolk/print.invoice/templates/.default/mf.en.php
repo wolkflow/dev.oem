@@ -1,4 +1,5 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\Core\Helpers\Currency as CurrencyHelper ?>
 
 <div class="invoice invoice2">
 	<div class="invoiceHeader">
@@ -36,7 +37,7 @@
 	</div>
 	
 	<div class="invoiceParams">
-		<p><span class="toleft">Event:</span> <?= $arResult['EVENT']['NAME'] ?></p>
+		<p><span class="toleft">Event:</span> <?= $arResult['EVENT']['PROPS']['LANG_TITLE_EN']['VALUE'] ?></p>
 		<p><span class="toleft">Place:</span> <span class="red"><?= $arResult['EVENT']['PROPS']['LANG_LOCATION_EN']['VALUE'] ?></span></p>
 		<? /*
 		<p>
@@ -60,13 +61,14 @@
 		<div class="clear"></div>
 	</div>
 
+    <? $currency_symbol = CurrencyHelper::getCurrencySymbol($arResult['ORDER']['CURRENCY'], 'en', false) ?>
 	<table class="invoiceItems__table">
 		<thead>
 			<tr>
 				<th>Description</th>
-				<th>Price</th>
+				<th>Price (<?= $currency_symbol ?>)</th>
 				<th>Quantity</th>
-				<th>EUR <br>Amount</th>
+				<th>Amount  (<?= $currency_symbol ?>)</th>
 			</tr>
 		</thead>
 		<tbody>
