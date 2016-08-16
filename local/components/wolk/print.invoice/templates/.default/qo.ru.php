@@ -28,9 +28,9 @@
                 <thead>
                     <tr>
                         <th class="go-item-name">Название</th>
-                        <th>Стоимость</th>
-                        <th>Количество</th>
                         <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Стоимость</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,9 +40,9 @@
                         <? $i++ ?>
                         <tr>
                             <td><?= $i ?>. <?= $basket['NAME'] ?>.</td>
-                            <td><?= str_replace('₽', 'руб.', CurrencyFormat($basket['SURCHARGE_SUMMARY_PRICE'], $basket['CURRENCY'])) ?></td>
-                            <td><?= $basket['QUANTITY'] ?></td>
                             <td><?= str_replace('₽', 'руб.', CurrencyFormat($basket['SURCHARGE_PRICE'], $basket['CURRENCY'])) ?></td>
+                            <td><?= $basket['QUANTITY'] ?></td>
+                            <td><?= str_replace('₽', 'руб.', CurrencyFormat($basket['SURCHARGE_SUMMARY_PRICE'], $basket['CURRENCY'])) ?></td>
                         </tr>
                     <? } ?>
                     <tr class="qp-table-footer first-child">

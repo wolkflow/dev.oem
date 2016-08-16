@@ -28,9 +28,9 @@
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Cost</th>
-                        <th>Quantity</th>
                         <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Cost</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,9 +40,9 @@
                         <? $i++ ?>
                         <tr>
                             <td><?= $i ?>. <?= $basket['NAME'] ?>.</td>
-                            <td><?= CurrencyFormat($basket['SURCHARGE_SUMMARY_PRICE'], $basket['CURRENCY']) ?></td>
-                            <td><?= $basket['QUANTITY'] ?></td>
                             <td><?= CurrencyFormat($basket['SURCHARGE_PRICE'], $basket['CURRENCY']) ?></td>
+                            <td><?= $basket['QUANTITY'] ?></td>
+                            <td><?= CurrencyFormat($basket['SURCHARGE_SUMMARY_PRICE'], $basket['CURRENCY']) ?></td>
                         </tr>
                     <? } ?>
                     <tr class="qp-table-footer first-child">

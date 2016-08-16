@@ -291,6 +291,14 @@ $arSelectedFields[] = "XML_ID";
 $arSelectedFields[] = "PREVIEW_PICTURE";
 $arSelectedFields[] = "DETAIL_PICTURE";
 
+if ($IBLOCK_ID == EQUIPMENT_IBLOCK_ID) {
+    $arSelectedFields[] = 'PROPERTY_LANG_TITLE_'.strtoupper($language);
+}
+    
+if ($IBLOCK_ID == STANDS_IBLOCK_ID) {
+    $arSelectedFields[] = 'PROPERTY_LANG_NAME_'.strtoupper($language);
+}
+
 $rsData = CIBlockElement::GetList($arOrder, $arFilter, false, array("nPageSize"=>CAdminResult::GetNavSize($sTableID)), $arSelectedFields);
 $rsData = new CAdminResult($rsData, $sTableID);
 $rsData->NavStart();
@@ -300,8 +308,7 @@ function GetElementName($ID)
 {
 	$ID = IntVal($ID);
 	static $cache = array();
-	if(!array_key_exists($ID, $cache) && $ID > 0)
-	{
+	if (!array_key_exists($ID, $cache) && $ID > 0) {
 		$rsElement = CIBlockElement::GetList(array(), array("ID"=>$ID, "SHOW_HISTORY"=>"Y"), false, false, array("ID","IBLOCK_ID","NAME"));
 		$cache[$ID] = $rsElement->GetNext();
 	}
@@ -312,8 +319,7 @@ function GetSectionName($ID)
 {
 	$ID = IntVal($ID);
 	static $cache = array();
-	if(!array_key_exists($ID, $cache) && $ID > 0)
-	{
+	if (!array_key_exists($ID, $cache) && $ID > 0) {
 		$rsSection = CIBlockSection::GetList(array(), array("ID"=>$ID), false, array("ID","IBLOCK_ID","NAME"));
 		$cache[$ID] = $rsSection->GetNext();
 	}
@@ -324,11 +330,11 @@ function GetIBlockTypeID($IBLOCK_ID)
 {
 	$IBLOCK_ID = IntVal($IBLOCK_ID);
 	static $cache = array();
-	if(!array_key_exists($IBLOCK_ID, $cache))
-	{
+	if (!array_key_exists($IBLOCK_ID, $cache)) {
 		$rsIBlock = CIBlock::GetByID($IBLOCK_ID);
-		if(!($cache[$IBLOCK_ID] = $rsIBlock->GetNext()))
-			$cache[$IBLOCK_ID] = array("IBLOCK_TYPE_ID"=>"");
+		if (!($cache[$IBLOCK_ID] = $rsIBlock->GetNext())) {
+			$cache[$IBLOCK_ID] = array("IBLOCK_TYPE_ID" => "");
+        }
 	}
 	return $cache[$IBLOCK_ID]["IBLOCK_TYPE_ID"];
 }
@@ -408,7 +414,8 @@ switch ($IBLOCK_ID) {
 }
 
 // print_r($eventIDprices);
-
+// LANG_NAME_RU
+// LANG_TITLE_RU
 
 while ($arRes = $rsData->GetNext()) {
 	foreach ($arSelectedProps as $aProp) {
@@ -539,6 +546,21 @@ while ($arRes = $rsData->GetNext()) {
         
     $arRes['PICTURE'] = $picture;
     $arRes['PRICE']   = (float) $eventIDprices[$arRes['ID']];
+    // print_r($arRes);die();
+    switch ($IBLOCK_ID) {
+        case (EQUIPMENT_IBLOCK_ID):
+            $title = $arRes['PROPERTY_LANG_TITLE_'.strtoupper($language).'_VALUE'];
+            if (!empty($title)) {
+                $arRes['NAME'] = $title;
+            }
+            break;
+        case (STANDS_IBLOCK_ID):
+            $title = $arRes['PROPERTY_LANG_NAME_'.strtoupper($language).'_VALUE'];
+            if (!empty($title)) {
+                $arRes['NAME'] = $title;
+            }
+            break;
+    }
     
 	$row->AddActions(array(
 		array(
