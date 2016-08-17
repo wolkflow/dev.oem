@@ -27,7 +27,7 @@
             <table class="qo-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
+                        <th class="go-item-name">Title</th>
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Cost</th>

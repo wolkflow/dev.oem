@@ -135,6 +135,7 @@ switch ($action) {
         $standwidth = intval($_REQUEST['STANDWIDTH']);
         $standdepth = intval($_REQUEST['STANDDEPTH']);
 		
+        
 		\Bitrix\Main\Loader::includeModule('iblock');
 		\Bitrix\Main\Loader::includeModule('sale');
 		
@@ -203,7 +204,9 @@ switch ($action) {
                     
                     if (!$result->isSuccess()) {
                         $errors['BASKET'] [] = $result->getErrorMessages();
-                    }
+                    } else {
+						$summprice = $standprice;
+					}
                 } else {
                     // jsonresponse(false, 'Стенд не найден');
                 }
@@ -217,7 +220,7 @@ switch ($action) {
 				$quantity = (float)  $products['QUANTITY'][$productID];
 				$comment  = (string) $products['COMMENTS'][$productID];
 				
-				$summprice += $price;
+				$summprice += ($price * $quantity);
 				
 				// Товарная позиция.
 				$element = CIBlockElement::GetByID($productID)->getNextElement();
@@ -233,7 +236,7 @@ switch ($action) {
                 
 				$result = BasketTable::add([
 					'PRODUCT_ID'    => $productID,
-					'PRICE'         => $price,
+					'PRICE'         => ($price * $quantity),
 					'QUANTITY'      => ($quantity) ?: 1,
 					'CURRENCY'      => $currency,
 					'LID'           => SITE_DEFAULT,
@@ -278,6 +281,7 @@ switch ($action) {
 				$totalprice = $totalprice + $vatprice;
 			}
 			
+            
 			// Добавление заказа.
 			$orderID = CSaleOrder::Add([
 				'LID'              => SITE_DEFAULT,

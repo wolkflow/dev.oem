@@ -173,7 +173,7 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 
         <div class="indexpage__choosestand individual">
             <div class="indexpage__choosestandtitlecontainer">
-                <a href="#" class="indexpage__choosestandtitle"><?= Loc::getMessage('individual stand') ?></a>
+                <div class="indexpage__choosestandtitle"><?= Loc::getMessage('individual stand') ?></div>
 
                 <form class="indexpage__choosestandform">
                     <input type="hidden" name="ORDER_TYPE" value="individual" />
