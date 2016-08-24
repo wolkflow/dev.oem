@@ -17,6 +17,7 @@ class Order
 	const PROP_LANGUAGE        = 'LANGUAGE';
 	const PROP_INVOICE		   = 'INVOICE';
 	const PROP_INVOICE_DATE    = 'INVOICE_DATE';
+    const PROP_SURCHARGE       = 'SURCHARGE';
 	const PROP_SURCHARGE_PRICE = 'SURCHARGE_PRICE';
 	
 	protected $id;
@@ -124,6 +125,14 @@ class Order
 	}
 	
 	
+    public function getSurchargePercent()
+	{
+		$this->load();
+		
+		return $this->data['PROPS'][self::PROP_SURCHARGE]['VALUE_ORIG'];
+	}
+    
+    
 	public function getSurchargePrice()
 	{
 		$this->load();
@@ -132,17 +141,20 @@ class Order
 	}
 	
 	
-	public function getEvent()
+	public function getEvent($asobject = false)
 	{
 		$data = $this->getData();
 		
+        if ($asobject) {
+            return (new Event($data['PROPS']['eventId']['VALUE']));
+        }
+        
 		$event = \CIBlockElement::getByID($data['PROPS']['eventId']['VALUE'])->GetNextElement();
 		
 		if ($event) {
 			$result = $event->getFields();
 			$result['PROPS'] = $event->getProperties();
 		}
-		
 		return $result;
 	}
 	
@@ -286,4 +298,83 @@ class Order
 		
 		return $prices;
 	}
+    
+    
+    /**
+     * Пересчет цен заказа.
+     */ 
+    public function recalc($surcharge = null)
+    {
+        global $DB;
+        
+        $event  = $this->getEvent(true);
+        $prices = $this->getPriceInfo();
+        
+        // Цена товаров и НДС.
+        $vat   = 0;
+        $price = $prices['BASKET'];
+        
+        // Наценка.
+        if (is_null($surcharge)) {
+            $surcharge = $this->getSurchargePercent();
+        }
+        $surcharge = (float) $surcharge;
+        $surcprice = 0;
+        if ($surcharge > 0) {
+            $surcprice = $price * $surcharge / 100;
+            $price = $price + $surcprice;
+        }
+        
+        // НДС.
+        if (!$event->hasVAT()) {
+            $vat   = $price * VAT_DEFAULT / 100;
+            $price = $price + $vat;
+        }
+        
+        // Данные для обновления заказа.
+        $fields = [
+            'PRICE'     => $price,
+            'TAX_VALUE' => $vat
+        ];
+        
+        
+        // Свойства наценки.
+        $props = [
+            [
+                'ORDER_ID'       => $this->getID(),
+                'ORDER_PROPS_ID' => $this->data['PROPS'][self::PROP_SURCHARGE]['ORDER_PROPS_ID'],
+                'NAME'           => $this->data['PROPS'][self::PROP_SURCHARGE]['NAME'] ?: 'Наценка',
+                'CODE'           => self::PROP_SURCHARGE,
+                'VALUE'          => $surcharge
+            ],
+            [
+                'ORDER_ID'       => $this->getID(),
+                'ORDER_PROPS_ID' => $this->data['PROPS'][self::PROP_SURCHARGE_PRICE]['ORDER_PROPS_ID'],
+                'NAME'           => $this->data['PROPS'][self::PROP_SURCHARGE_PRICE]['NAME'] ?: 'Сумма наценки',
+                'CODE'           => self::PROP_SURCHARGE_PRICE,
+                'VALUE'          => $surcprice
+            ]
+        ];
+        
+        
+        $DB->StartTransaction();
+        
+        // Добавление свойств заказа.
+        foreach ($props as $prop) {
+            \Bitrix\Sale\Internals\OrderPropsValueTable::update($this->data['PROPS'][$prop['CODE']]['ID'], $prop);
+        }
+        unset($props, $prop);
+        
+        // Сохранение цен заказа.
+        $result = \Bitrix\Sale\Internals\OrderTable::update($this->getID(), $fields);
+        
+        if ($result && $result->isSuccess()) {
+            $DB->Commit();
+            return true;
+        } else {
+            $DB->Rollback();
+            return false;
+        }
+    }
+    
 }

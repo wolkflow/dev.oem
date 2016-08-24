@@ -681,8 +681,8 @@ class EventDetailComponent extends BaseListComponent
 				unset($params['SKETCH_IMAGE']);
 				
                 // Наценка.
-                $params['SURCHARGE'] = (float)$surcharge;
-                $params['SURCHARGE_PRICE'] = (float)$moneySurcharge;
+                $params['SURCHARGE'] = (float) $surcharge;
+                $params['SURCHARGE_PRICE'] = (float) $moneySurcharge;
 				
                 foreach ($params as $code => $value) {
                     $res = OrderPropsValueTable::add([
