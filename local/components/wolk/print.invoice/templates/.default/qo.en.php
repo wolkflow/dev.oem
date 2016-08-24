@@ -45,6 +45,69 @@
                             <td><?= CurrencyFormat($basket['SURCHARGE_SUMMARY_PRICE'], $basket['CURRENCY']) ?></td>
                         </tr>
                     <? } ?>
+					<tr class="qp-table-footer first-child">
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+			<br/>
+			<table style="width: 100%">
+				<tr>
+					<td align="right">
+						<table style="width: 60%">
+							<tbody>
+								<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+									<tr class="qp-table-footer">
+										<td align="right">
+											TOTAL WITHOUT VAT
+										</td>
+										<td>&nbsp;</td>
+										<td align="left">
+											<?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], $arResult['ORDER']['CURRENCY'])) ?>
+										</td>
+										<td align="right">
+											VAT (18%)
+										</td>
+										<td>&nbsp;</td>
+										<td align="left">
+											<?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['TAX_VALUE'], $arResult['ORDER']['CURRENCY'])) ?>
+										</td>
+										<td align="right">
+											TOTAL WITH VAT
+										</td>
+										<td>&nbsp;</td>
+										<td align="left">
+											<?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['PRICE'], $arResult['ORDER']['CURRENCY'])) ?>
+										</td>
+									</tr>
+								<? } else { ?>
+									<tr class="qp-table-footer">
+										<td align="right">
+											VAT (18%)
+										</td>
+										<td style="">&nbsp;</td>
+										<td align="left">
+											<?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['UNTAX_VALUE'], $arResult['ORDER']['CURRENCY'])) ?>
+										</td>
+										<td align="right">
+											TOTAL WITH VAT
+										</td>
+										<td style="">&nbsp;</td>
+										<td align="left">
+											<?= str_replace('₽', 'руб.', CurrencyFormat($arResult['ORDER']['PRICE'], $arResult['ORDER']['CURRENCY'])) ?>
+										</td>
+									</tr>
+								<? } ?>
+							</tbody>
+						</table>
+					</td>
+					<tr class="qp-table-footer last-child">
+						<td>&nbsp;</td>
+					</tr>
+				</tr>
+			</table>		
+					<? /*
+					
                     <tr class="qp-table-footer first-child">
                         <td colspan="4">&nbsp;</td>
                     </tr>
@@ -102,6 +165,7 @@
                     </tr>
                 </tbody>
             </table>
+			*/ ?>
         </td>
     </tr>
     <tr class="qo-wrapper-bottom">

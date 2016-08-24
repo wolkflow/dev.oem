@@ -236,7 +236,7 @@ switch ($action) {
                 
 				$result = BasketTable::add([
 					'PRODUCT_ID'    => $productID,
-					'PRICE'         => ($price * $quantity),
+					'PRICE'         => $price,
 					'QUANTITY'      => ($quantity) ?: 1,
 					'CURRENCY'      => $currency,
 					'LID'           => SITE_DEFAULT,

@@ -374,16 +374,17 @@ class EventDetailComponent extends BaseListComponent
         $this->getEvent();
 
         $strOrderList = '';
-
+        
         if (
             array_key_exists('stand', $_POST)
             && ($arStand = $this->getSelectedStand($_POST['stand']))
-            && (
-                in_array($arStand['ID'], array_keys($this->event['STANDS']))
-                ||
-                $arStand['ID'] == 0
-            )
+            && (in_array($arStand['ID'], array_keys($this->event['STANDS'])) || $arStand['ID'] == 0)
         ) {
+            
+            if (empty($arStand['NAME'])) {
+                $arStand['NAME'] = 'Индивидуальный стенд'; // TODO: перевести.
+            }
+            
             $fuserId = \Bitrix\Sale\Fuser::getId();
             $basket->DeleteAll($fuserId);
 
@@ -836,15 +837,15 @@ class EventDetailComponent extends BaseListComponent
     {
         try {
             $stand = \Bitrix\Main\Web\Json::decode($json);
-            if (isset($stand['ID'], $stand['NAME'])) {
+            if (isset($stand['ID'])) { // }, $stand['NAME'])) {
                 return $stand;
             }
         } catch (Exception $e) {
             return false;
         }
-
         return false;
     }
+    
 
     protected function getSelectedEquipment($json, $availableEquipment)
     {

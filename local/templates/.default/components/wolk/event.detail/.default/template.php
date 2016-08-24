@@ -20,9 +20,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 </div>
 
-<? /*
+<? /*  */ ?>
 <pre style="display: none;">{{selectedStand | json}}</pre>
-*/ ?>
+
 
 <div class="catalogdeadline" v-show="hasMargins">
 	<div class="catalogdeadline__deadlinecontainer">

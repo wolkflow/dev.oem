@@ -110,13 +110,13 @@ if ($arResult['ORDER']) {
             }
         }
     }
-    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['SERVICES'] = $arResult['ORDER']['selectedStand']['SERVICES'];
-    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['OPTIONS'] = $arResult['ORDER']['selectedStand']['OPTIONS'];
+    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['SERVICES'] = (array) $arResult['ORDER']['selectedStand']['SERVICES'];
+    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['OPTIONS']  = (array) $arResult['ORDER']['selectedStand']['OPTIONS'];
     unset($eq);
 }
 
 // Добавление обработчика в случае отсутствия предвыбранного стенда.
-$stands[0] = ['ID' => 0, 'PRICE' => ['PRICE' => 0], 'EQUIPMENT' => [], 'SERVICES' => []];
+$stands[0] = ['ID' => 0, 'PRICE' => ['PRICE' => 0], 'EQUIPMENT' => [], 'SERVICES' => new stdClass(), 'OPTIONS' => new stdClass()];
  
 $stands = Json::encode($stands);
 

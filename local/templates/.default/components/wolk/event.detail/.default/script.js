@@ -180,6 +180,7 @@
 				}
 				
 				$.when(getSketchImage()).done(function() {
+                    console.log(that.selectedStand.ID, that.selectedStand.NAME);
 					$.ajax({
 						url: '/local/components/wolk/event.detail/ajax.php',
 						type: 'post',
@@ -334,7 +335,7 @@
                 set: function (val) {
                     this.selected = val.ID;
                     this.stands[this.selected] = val;
-                    this.individual = false;
+                    // this.individual = false;
                 }
             },
 			totalPrice: function () {
@@ -366,14 +367,16 @@
                     if (this.selectedStand && this.selectedStand.PRICE !== null && this.selectedStand.PRICE.hasOwnProperty('PRICE')) {
                         price = this.selectedStand.PRICE.PRICE;
                     }
-                    if (this.selectedStand.EQUIPMENT.length > 0) {
-                        price = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
-                            if (eq.QUANTITY > eq.COUNT) {
-                                return parseFloat(sum + parseFloat(self.allServices[eq.ID].PRICE * (eq.QUANTITY - eq.COUNT)));
-                            } else {
-                                return sum;
-                            }
-                        }, price);
+                    if (!$.isEmptyObject(this.selectedStand.EQUIPMENT)) {
+                        if (this.selectedStand.EQUIPMENT.length > 0) {
+                            price = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
+                                if (eq.QUANTITY > eq.COUNT) {
+                                    return parseFloat(sum + parseFloat(self.allServices[eq.ID].PRICE * (eq.QUANTITY - eq.COUNT)));
+                                } else {
+                                    return sum;
+                                }
+                            }, price);
+                        }
                     }
                     if (!$.isEmptyObject(this.selectedStand.SERVICES)) {
                         $.each(this.selectedServices, function (serviceId, service) {
