@@ -132,8 +132,8 @@ switch ($action) {
 		$products   = (array) $_REQUEST['PRODUCTS'];
         $standID    = intval($_REQUEST['STAND']);
         $standprice = floatval($_REQUEST['STANDPRICE']);
-        $standwidth = intval($_REQUEST['STANDWIDTH']);
-        $standdepth = intval($_REQUEST['STANDDEPTH']);
+        $standwidth = floatval($_REQUEST['STANDWIDTH']);
+        $standdepth = floatval($_REQUEST['STANDDEPTH']);
 		
         
 		\Bitrix\Main\Loader::includeModule('iblock');
@@ -193,7 +193,7 @@ switch ($action) {
                     $result = BasketTable::add([
                         'PRODUCT_ID'    => $standID,
                         'PRICE'         => $standprice,
-                        'QUANTITY'      => 1,
+                        'QUANTITY'      => $standwidth * $standdepth,
                         'CURRENCY'      => $currency,
                         'LID'           => SITE_DEFAULT,
                         'NAME'          => $stand['NAME'],
@@ -205,7 +205,7 @@ switch ($action) {
                     if (!$result->isSuccess()) {
                         $errors['BASKET'] [] = $result->getErrorMessages();
                     } else {
-						$summprice = $standprice;
+						$summprice = $standprice * ($standwidth * $standdepth);
 					}
                 } else {
                     // jsonresponse(false, 'Стенд не найден');

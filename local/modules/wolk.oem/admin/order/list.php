@@ -88,7 +88,7 @@ switch ($action) {
 			if (CSaleOrder::CanUserDeleteOrder($ID, $groups, $USER->GetID())) {
 				$DB->StartTransaction();
 
-				if (!CSaleOrder::Delete($ID)) {
+				if (!Bitrix\Sale\Internals\OrderTable::Delete($ID)) {
 					$DB->Rollback();
 
 					if ($ex = $APPLICATION->GetException()) {
