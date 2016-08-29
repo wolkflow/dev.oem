@@ -117,6 +117,22 @@ if (!empty($_POST)) {
 			}
 			break;
 		
+        
+        // Пересчет наценки заказа.
+		case 'surcharge':
+			$surcharge = (float) $_REQUEST['SURCHARGE'];
+			
+            // Пересчет цен заказа.
+            if (!$oemorder->recalc($surcharge)) {
+                $message = new CAdminMessage([
+                    'MESSAGE' => Loc::getMessage('ERROR_CHANGE_SURCHARGE'),
+                    'TYPE'    => 'ERROR'
+                ]);
+            } else {
+                LocalRedirect('/bitrix/admin/wolk_oem_order_index.php?ID='.$ID.'lang=' . LANG);
+            }
+			break;
+        
 
         // Сохранение данных заказа.
         case 'data':
@@ -627,7 +643,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 					<li class="adm-bus-orderinfoblock-content-redtext">
                         <span class="adm-bus-orderinfoblock-content-order-info-param">Наценки</span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'] * $rate, $rate_currency) ?>
+							(<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>%)
+                            <?= CurrencyFormat($order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'] * $rate, $rate_currency) ?>
 						</span>
                     </li>
 					<li>
@@ -744,6 +761,23 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 								</form>
 								
 								<hr/>
+                                
+                                <form method="post">
+									<input type="hidden" name="action" value="surcharge" />
+									<table cellpadding="5">
+										<tr>
+											<td class="adm-detail-content-cell-l" width="235">Наценка (%):</td>
+											<td width="200">
+                                                <input type="text" name="SURCHARGE" value="<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>" />
+											</td>
+											<td>
+												<input type="submit" class="amd-btn-save" value="Пересчитать" />
+											</td>
+										</tr>
+									</table>
+								</form>
+                                
+                                <hr/>
 							
                                 <table cellpadding="5">
                                     <tr>

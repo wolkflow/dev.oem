@@ -91,6 +91,14 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return $this->data['PROPS']['INVOICES'][$code];
 	}
 	
+    
+    public function hasVAT()
+    {
+        $this->load();
+        
+        return ($this->data['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y');
+    }
+    
 	
 	/**
 	 * Получение списка возможных стендов мероприятия.
