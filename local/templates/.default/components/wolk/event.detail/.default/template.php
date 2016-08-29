@@ -8,7 +8,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <div class="breadcrumbs__container" :class="{ 'indStand': individual }">
         <a
             @click="setStep(step.NUM)"
-            v-for="step in steps | visibleSteps selectedStand.ID"
+            v-for="step in steps | visibleSteps selectedStand.ID individual"
             href="javascript:void(0)" 
             class="breadcrumbs__button"
            :class="{ 'active': step.NUM == curStep, 'hidden': ([2,4].indexOf(parseInt(step.NUM)) != -1) && individual }"
@@ -20,7 +20,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     </div>
 </div>
 
+<? /*  */ ?>
 <pre style="display: none;">{{selectedStand | json}}</pre>
+
 
 <div class="catalogdeadline" v-show="hasMargins">
 	<div class="catalogdeadline__deadlinecontainer">
@@ -55,12 +57,10 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 <div id="step1" v-show="curStep == 1">
     <div class="standspagetop" id="preselect" v-if="selected">
         <div class="pagedescription">
-            <? if ($arResult['INDIVIDUAL_STAND']) { ?>
-                <?= Loc::getMessage('selected_individual_stand') ?>
-            <? } else { ?>
-                <?= Loc::getMessage('prepaid_stand') ?>
-            <? } ?>
+            <?= Loc::getMessage('prepaid_stand') ?>
         </div>
+                
+        <? // Выбор стандартного стенда // ?>
         <div v-show="selectedStand.ID > 0">
             <div class="pagetitle"><?= Loc::getMessage('Your current stand type') ?></div>
             <div class="standspagetop__currentstandcontainer customizable_border">
@@ -78,12 +78,19 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                     <?= Loc::getMessage('continue') ?>
                 </a>
             </div>
-        </div>
-		<a v-show="selectedStand.ID == 0" href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton customizable">
-			<?= Loc::getMessage('continue') ?>
-		</a>        
+        </div>        
     </div>
-
+    
+    <? // Выбор индивидуального стенда // ?>
+    <div class="standspagetop" id="preselect" v-if="individual && !selected">
+        <div class="pagedescription">
+            <?= Loc::getMessage('selected_individual_stand') ?>
+        </div>
+        <a href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton customizable">
+            <?= Loc::getMessage('continue') ?>
+        </a>
+    </div>
+    
     <? // Выбор стеднов // ?>
     <div class="standstypescontainer">
         <div class="pagetitle">

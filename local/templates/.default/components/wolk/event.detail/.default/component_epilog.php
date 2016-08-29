@@ -31,7 +31,7 @@ $event['LOCATION'] = $arResult['EVENT']['PROPS']["LANG_LOCATION_{$curLang}"]['VA
 $event = Json::encode($event);
 
 if ($arResult['INDIVIDUAL_STAND']) {
-    $preselect = "'" . 'individual' . "'";
+    $preselect = 0; // "'" . 'individual' . "'";
     $arResult['ITEMS']['individual'] = [
         'ID'        => 0,
         'NAME'      => Loc::getMessage('Individual Stand'),
@@ -47,15 +47,15 @@ if ($arResult['INDIVIDUAL_STAND']) {
         ) {
             $preselect = $arResult['EVENT']['PROPS']['PRESELECT']['VALUE'];
         } else {
-            $preselect = 'null';
+            $preselect = 0; // 'null';
         }
     }
 }
 
-if (is_null($preselect)) {
-	$preselect = 'null';
+if (empty($preselect)) {
+	$preselect = 0; // 'null';
 }
-$preselect = 0;//json_encode(['ID' => 0]);
+// $preselect = 0; // json_encode(['ID' => 0]);
 
 $stands = array_map(function ($val) use ($curLang) {
     $item = ArrayHelper::only($val, [
@@ -110,13 +110,13 @@ if ($arResult['ORDER']) {
             }
         }
     }
-    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['SERVICES'] = $arResult['ORDER']['selectedStand']['SERVICES'];
-    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['OPTIONS'] = $arResult['ORDER']['selectedStand']['OPTIONS'];
+    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['SERVICES'] = (array) $arResult['ORDER']['selectedStand']['SERVICES'];
+    $stands[$arResult['ORDER']['selectedStand']['PRODUCT_ID']]['OPTIONS']  = (array) $arResult['ORDER']['selectedStand']['OPTIONS'];
     unset($eq);
 }
 
 // Добавление обработчика в случае отсутствия предвыбранного стенда.
-$stands[0] = ['ID' => 0];
+$stands[0] = ['ID' => 0, 'PRICE' => ['PRICE' => 0], 'EQUIPMENT' => [], 'SERVICES' => new stdClass(), 'OPTIONS' => new stdClass()];
  
 $stands = Json::encode($stands);
 

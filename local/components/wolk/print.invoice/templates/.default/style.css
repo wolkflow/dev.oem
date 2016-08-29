@@ -590,6 +590,7 @@ td.unborder					{border: 0 !important;}
   font-weight: 700;
   padding-bottom: 16px;
   text-align: left;
+  width: 16%;
 }
 .qo-table td {
   padding: 2px 0;
@@ -616,8 +617,13 @@ td.unborder					{border: 0 !important;}
   padding-top: 160px;
   vertical-align: bottom;
 }
+/*
 .go-item-name {
   width: 385px;
+}
+*/
+.go-item-name {
+  width: 52% !important;;
 }
 .qo-col {
   width: 31%;
@@ -636,4 +642,11 @@ td.unborder					{border: 0 !important;}
 }
 b {
   font-weight: 700;
+}
+
+.qo-table th {
+  font-weight: 700;
+  padding-bottom: 16px;
+  text-align: left;
+  width: 16%;
 }

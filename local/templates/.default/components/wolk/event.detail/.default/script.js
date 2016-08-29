@@ -1,6 +1,6 @@
 ﻿$(function () {
 	
-     //Vue.config.debug = true;
+    // Vue.config.debug = true;
 	
     var vm = new Vue({
         el: 'body',
@@ -34,7 +34,8 @@
             colors: colors,
             allServices: allServices,
             extents: extents,
-			vat: vat
+			vat: vat,
+            individual: individual
         },
 
         methods: {
@@ -52,19 +53,19 @@
                 $(".standsTypes__window").eq(index).hide();
             },
             nextStep: function () {
-                if (this.curStep == 1 && individual) {
+                if (this.curStep == 1 && this.individual) {
                     this.setStep(3);
-                } else if (this.curStep == 3 && individual) {
+                } else if (this.curStep == 3 && this.individual) {
                     this.setStep(5);
                 } else {
                     this.setStep(parseInt(this.curStep) + 1);
                 }
-                    destination = $('.main').offset().top -100;
-                    $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 700);
+                destination = $('.main').offset().top -100;
+                $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 700);
             },
             prevStep: function () {
                 if (this.curStep > 1) {
-                    if (this.curStep == 2 && individual) {
+                    if (this.curStep == 2 && this.individual) {
                         this.setStep(1);
                     } else {
                         this.setStep(parseInt(this.curStep) - 1);
@@ -86,7 +87,7 @@
                         valid = true;
                         break;
                     case 4:
-                        if (individual) {
+                        if (this.individual) {
                             valid = true;
                             break;
                         } else {
@@ -127,7 +128,7 @@
             },
             setStep: function (step) {
                 if (this.curStep > step || this.validateStep(step - 1)) {
-                    if (!(individual && (step == 2 || step == 4))) {
+                    if (!(this.individual && (step == 2 || step == 4))) {
                         top.BX.ajax.history.put({}, window.location.search.replace(/&*step=[\d]/, "") + '&step=' + step);
                         this.curStep = step;
 
@@ -179,6 +180,7 @@
 				}
 				
 				$.when(getSketchImage()).done(function() {
+                    console.log(that.selectedStand.ID, that.selectedStand.NAME);
 					$.ajax({
 						url: '/local/components/wolk/event.detail/ajax.php',
 						type: 'post',
@@ -314,6 +316,17 @@
                     return result;
                 }
             },
+            /*
+            individual: {
+                cache: false,
+                get: function () {
+                    return this.individual;
+                },
+                set: function (val) {
+                    this.individual = val;
+                }
+            },
+            */
             selectedStand: {
                 cache: false,
                 get: function () {
@@ -322,6 +335,7 @@
                 set: function (val) {
                     this.selected = val.ID;
                     this.stands[this.selected] = val;
+                    // this.individual = false;
                 }
             },
 			totalPrice: function () {
@@ -350,17 +364,19 @@
                     var price = 0,
                         self = this;
 
-                    if(this.selectedStand.PRICE !== null && this.selectedStand.PRICE.hasOwnProperty('PRICE')) {
+                    if (this.selectedStand && this.selectedStand.PRICE !== null && this.selectedStand.PRICE.hasOwnProperty('PRICE')) {
                         price = this.selectedStand.PRICE.PRICE;
                     }
-                    if (this.selectedStand.EQUIPMENT.length > 0) {
-                        price = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
-                            if (eq.QUANTITY > eq.COUNT) {
-                                return parseFloat(sum + parseFloat(self.allServices[eq.ID].PRICE * (eq.QUANTITY - eq.COUNT)));
-                            } else {
-                                return sum;
-                            }
-                        }, price);
+                    if (!$.isEmptyObject(this.selectedStand.EQUIPMENT)) {
+                        if (this.selectedStand.EQUIPMENT.length > 0) {
+                            price = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
+                                if (eq.QUANTITY > eq.COUNT) {
+                                    return parseFloat(sum + parseFloat(self.allServices[eq.ID].PRICE * (eq.QUANTITY - eq.COUNT)));
+                                } else {
+                                    return sum;
+                                }
+                            }, price);
+                        }
                     }
                     if (!$.isEmptyObject(this.selectedStand.SERVICES)) {
                         $.each(this.selectedServices, function (serviceId, service) {
@@ -1826,7 +1842,9 @@ Vue.component('advertising-materials-file', {
             return this.section.ITEMS;
         },
         item: function () {
-            return this.items[this.itemId];
+            if (this.items) {
+                return this.items[this.itemId];
+            }
         }
     },
     methods: {
@@ -2935,10 +2953,11 @@ Vue.filter('visibleInCart', function (arr) {
 });
 
 // Фильтр видимости шагов.
-Vue.filter('visibleSteps', function (arr, standId) {
+Vue.filter('visibleSteps', function (arr, standId, individual) {
     var res = {};
     $.each(arr, function (key, val) {
-        if (!([2, 4].indexOf(parseInt(val.NUM)) != -1 && individual)) { // standId == 0) ) {
+        if (!([2, 4].indexOf(parseInt(val.NUM)) != -1 && individual)) {
+        // if (!([2, 4].indexOf(parseInt(val.NUM)) != -1 && standId == 0)) {
             res[key] = val;
         }
     });    

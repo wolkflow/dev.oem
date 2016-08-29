@@ -132,9 +132,10 @@ switch ($action) {
 		$products   = (array) $_REQUEST['PRODUCTS'];
         $standID    = intval($_REQUEST['STAND']);
         $standprice = floatval($_REQUEST['STANDPRICE']);
-        $standwidth = intval($_REQUEST['STANDWIDTH']);
-        $standdepth = intval($_REQUEST['STANDDEPTH']);
+        $standwidth = floatval($_REQUEST['STANDWIDTH']);
+        $standdepth = floatval($_REQUEST['STANDDEPTH']);
 		
+        
 		\Bitrix\Main\Loader::includeModule('iblock');
 		\Bitrix\Main\Loader::includeModule('sale');
 		
@@ -188,25 +189,27 @@ switch ($action) {
             if ($type != 'QUICK') {
                 $stand = CIBlockElement::GetByID($standID)->fetch();
                 
-                if (!$stand) {
-                    jsonresponse(false, 'Стенд не найден');
+                if ($stand) {
+                    $result = BasketTable::add([
+                        'PRODUCT_ID'    => $standID,
+                        'PRICE'         => $standprice,
+                        'QUANTITY'      => $standwidth * $standdepth,
+                        'CURRENCY'      => $currency,
+                        'LID'           => SITE_DEFAULT,
+                        'NAME'          => $stand['NAME'],
+                        'SET_PARENT_ID' => 0,
+                        'TYPE'          => CSaleBasket::TYPE_SET,
+                        'FUSER_ID'      => $userID
+                    ]);
+                    
+                    if (!$result->isSuccess()) {
+                        $errors['BASKET'] [] = $result->getErrorMessages();
+                    } else {
+						$summprice = $standprice * ($standwidth * $standdepth);
+					}
+                } else {
+                    // jsonresponse(false, 'Стенд не найден');
                 }
-                
-                $result = BasketTable::add([
-					'PRODUCT_ID'    => $standID,
-					'PRICE'         => $standprice,
-					'QUANTITY'      => 1,
-					'CURRENCY'      => $currency,
-					'LID'           => SITE_DEFAULT,
-					'NAME'          => $stand['NAME'],
-					'SET_PARENT_ID' => 0,
-					'TYPE'          => CSaleBasket::TYPE_SET,
-					'FUSER_ID'      => $userID
-				]);
-                
-				if (!$result->isSuccess()) {
-					$errors['BASKET'] [] = $result->getErrorMessages();
-				}
             } else {
                 $standID = 0;
             }
@@ -217,14 +220,19 @@ switch ($action) {
 				$quantity = (float)  $products['QUANTITY'][$productID];
 				$comment  = (string) $products['COMMENTS'][$productID];
 				
-				$summprice += $price;
+				$summprice += ($price * $quantity);
 				
 				// Товарная позиция.
-				$product = CIBlockElement::GetByID($productID)->fetch();
-				
+				$element = CIBlockElement::GetByID($productID)->getNextElement();
+                $product = $element->getFields();
+                $product['PROPS'] = $element->getProperties();
+                
+				unset($element);
+                
                 // Родительские раздел.
                 $parent = reset(IBlockElementHelper::getSectionTree($product['ID'], $product['IBLOCK_SECTION_ID']));
                 
+                $title = $product['PROPS']['LANG_TITLE_'.strtoupper($language)]['VALUE'];
                 
 				$result = BasketTable::add([
 					'PRODUCT_ID'    => $productID,
@@ -232,7 +240,7 @@ switch ($action) {
 					'QUANTITY'      => ($quantity) ?: 1,
 					'CURRENCY'      => $currency,
 					'LID'           => SITE_DEFAULT,
-					'NAME'          => $product['NAME'],
+					'NAME'          => (!empty($title)) ? ($title) : ($product['NAME']),
 					'SET_PARENT_ID' => $standID,
 					'TYPE'          => ($parent['ID'] == ADDITIONAL_EQUIPMENT_SECTION_ID) ? (CSaleBasket::TYPE_SET) : (0),
 					'FUSER_ID'      => $userID
@@ -273,6 +281,7 @@ switch ($action) {
 				$totalprice = $totalprice + $vatprice;
 			}
 			
+            
 			// Добавление заказа.
 			$orderID = CSaleOrder::Add([
 				'LID'              => SITE_DEFAULT,
