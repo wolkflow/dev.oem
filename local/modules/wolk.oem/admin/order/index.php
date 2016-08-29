@@ -768,7 +768,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 										<tr>
 											<td class="adm-detail-content-cell-l" width="235">Наценка (%):</td>
 											<td width="200">
-                                                <input type="text" name="SURCHARGE" value="<?= $order['PROPS']['SURCHARGE']['VALUE'] ?>" />
+                                                <input type="text" name="SURCHARGE" value="<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>" />
 											</td>
 											<td>
 												<input type="submit" class="amd-btn-save" value="Пересчитать" />
