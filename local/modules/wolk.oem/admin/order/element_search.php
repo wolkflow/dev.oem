@@ -566,7 +566,7 @@ while ($arRes = $rsData->GetNext()) {
 		array(
 			"DEFAULT" => "Y",
 			"TEXT"    => GetMessage("IBLOCK_ELSEARCH_SELECT"),
-			"ACTION"  => "javascript:SelEl('".CUtil::JSEscape($get_xml_id? $arRes["XML_ID"]: $arRes["ID"])."', '".CUtil::JSEscape($arRes["NAME"])."', '".$picture."', '".json_encode($arRes)."')",
+			"ACTION"  => "javascript:SelEl('".CUtil::JSEscape($get_xml_id? $arRes["XML_ID"]: $arRes["ID"])."', '".CUtil::JSEscape($arRes["NAME"])."', '".$picture."', '".CUtil::JSEscape(json_encode($arRes))."')",
 		),
 	));
 }

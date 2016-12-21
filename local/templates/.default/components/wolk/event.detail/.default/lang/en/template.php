@@ -109,7 +109,7 @@ $MESS['space'] = 'Space';
 $MESS['price_one_p_one_d'] = 'Price for 1 person per 1 day';
 $MESS['cleaning_desc'] = 'The service is provided for all the fair period and includes carpet vacuum cleaning and taking away the trash. Cleaning will be made at open stands ONLY.';
 $MESS['vip_pass_desc'] = 'This type of pass does not allow entery to loading/unloading zone';
-$MESS['passes_desc'] = 'This type of pass does not allow entery to loading/unloading zone';
+$MESS['passes_desc'] = 'This pass entitles entry into the PRR zone'; // 'This type of pass does not allow entery to loading/unloading zone';
 $MESS['add_to_basket'] = 'add to basket';
 $MESS['Individual Stand'] = 'Individual Stand';
 $MESS['stand type'] = 'stand type';
@@ -162,3 +162,7 @@ $MESS['shelf_popup_label'] = 'Please, set height (cm) for the shelf to be mounte
 $MESS['popuplabel'] = '';
 
 $MESS['extent'] = 'Choose logo';
+
+$MESS['EXTERLAN_TEXT'] = 'For order the improved standard stands please use';
+
+$MESS['FASCIA_NOTE'] = 'The fee included fascia panel up to 9 characters. Each subsequent sign an additional cost.';

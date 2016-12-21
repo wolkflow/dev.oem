@@ -16,7 +16,7 @@ class Main
     /**
      * ���������� �������� ����.
      */
-    public function OnBuildGlobal_AddMainMenu()
+    public function OnBuildGlobal_AddMainMenu(&$global, &$modules)
     {
         $menu = [
             'global_menu_wolk.oem' => [
@@ -33,6 +33,17 @@ class Main
                 'items'        => []
             ]
         ];
+        
+        global $USER;
+        
+        if (!$USER->IsAdmin()) {
+            $exclude = ['GENERAL', 'MAIN', 'TOOLS', 'perfmon'];
+            foreach ($modules as $i => $module) {
+                if ($module['parent_menu'] == 'global_menu_settings' && in_array($module['section'], $exclude)) {
+                    unset($modules[$i]);
+                }
+            }
+        }
 
         return $menu;
     }

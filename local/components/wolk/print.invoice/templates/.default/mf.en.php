@@ -125,11 +125,13 @@
 			OOO Messe Frankfurt RUS<br>
 			INN 7705365187<br>
 			Account number 40702-978-7-0000-0-401484<br>
-			Raiffeisenbank ZAO, Moscow 17/1 Troitskaya, Moscow, 129090, Russia<br>
+			Raiffeisenbank AO, Moscow 17/1 Troitskaya, Moscow, 129090, Russia<br>
 			SWIFT: RZBMRUMM<br>
+            <? /*
 			Intermediary bank:<br>
 			via Reiffeisen Zentralbank Osterreich AG<br>
 			SWIFT: RZBAATWW
+            */ ?>
 		</div>
 		<div class="invoiceAfterRight">
 			<div class="invoiceAfterSignature">

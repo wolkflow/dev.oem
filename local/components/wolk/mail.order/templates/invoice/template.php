@@ -39,7 +39,7 @@
 									№<?= $arResult['PROPS']['NUMBER']['VALUE'] ?> 
 									<?= Loc::getMessage('from') ?>
 										<?= date('d', strtotime($arResult['ORDER']['DATE_INSERT'])) ?>
-										<?= TextHelper::i18nmonth(date('n', strtotime($arResult['ORDER']['DATE_INSERT'])), false) ?>
+										<?= TextHelper::i18nmonth(date('n', strtotime($arResult['ORDER']['DATE_INSERT'])), false, $arParams['LANG']) ?>
 										<?= date('Y', strtotime($arResult['ORDER']['DATE_INSERT'])) ?>
 									<?= Loc::getMessage('additional') ?>
 									<?= $arResult['EVENT']['NAME'] ?>. 

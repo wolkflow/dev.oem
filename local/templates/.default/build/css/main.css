@@ -57,9 +57,10 @@ input[type="password"] {
   display: block;
   background-position: 0 50%;
   background-repeat: no-repeat;
-  background-image: url('../images/header-logo.png?1446649774');
-  width: 220px;
-	height: 100%;
+  /*background-image: url('../images/header-logo.png?1446649774');*/
+  background-image: url('../images/logo-md.png');
+  width: 300px; /*220px;*/
+  height: 100%;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
   .headersection__logo {

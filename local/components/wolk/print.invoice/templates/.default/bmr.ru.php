@@ -85,6 +85,28 @@
                     </tr>
                 </thead>
                 <tbody>
+					<tr>
+						<td>1</td>
+						<td>За технический сервис на выставке "<?= $arResult['EVENT']['NAME'] ?>"</td>
+						<td>1</td>
+						<td></td>
+						<td>
+							<? if ($arResult['ORDER']['TAX_VALUE'] > 0) { ?>
+								<?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?>
+							<? } else { ?>
+								<?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?>
+							<? } ?>
+						</td>
+						<td>
+							<? if ($arResult['ORDER']['TAX_VALUE'] > 0) { ?>
+								<?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?>
+							<? } else { ?>
+								<?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?>
+							<? } ?>
+						</td>
+					</tr>
+				
+					<? /*
 					<? $cnt = 0 ?>
 					<? foreach ($arResult['BASKETS'] as $basket) { ?>
 						<? if ($basket['SUMMARY_PRICE'] <= 0) continue; ?>
@@ -97,7 +119,9 @@
 							<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 						</tr>
 					<? } ?>
-					<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+					*/ ?>
+					
+					<? if ($arResult['ORDER']['TAX_VALUE'] > 0) { ?>
 						<tr class="tableFooter first-child">
 							<td colspan="5">Итого: </td>
 							<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>

@@ -46,6 +46,9 @@
                         </button>
                         <div v-show="selectedColor" class="itemColor__custom-name">{{ selectedColor ? allColors[selectedColor].UF_NUM : '' }} {{ selectedColor }}</div>
                     </div>
+                    <div class="equipmentcontainer__itemsize">
+                        <?= Loc::getMessage('FASCIA_NOTE') ?>
+                    </div>
                 </div>
             </div>
         </div>

@@ -17,7 +17,7 @@ if ($permission == 'D') {
 $groups = $USER->GetUserGroupArray();
 
 $ismanager = false;
-if (in_array(GROUP_MANAGERS_ID, $groups)) {
+if (in_array(GROUP_MANAGERS_ID, $groups) || in_array(GROUP_PARTNERS_ID, $groups)) {
 	$ismanager = true;
 }
 
@@ -368,6 +368,7 @@ foreach ($baskets as $basket) {
 // Данные для скетча.
 $sketch = json_decode($order['PROPS']['sketch']['VALUE_ORIG'], true);
 
+
 $sketch['items'] = [];
 foreach ($baskets as $basket) {
     if ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] && $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] && $basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE']) {
@@ -503,7 +504,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 			var $that = $(this);
 			
 			$.when(savesketch()).done(function() {
-				$that.closest('form').trigger('submit');
+                $that.closest('form').trigger('submit');
 			});
 		});
 

@@ -84,7 +84,7 @@ else
                 <div class="profilecontainer__itemscontainer password_confirm" id="password_confirm_input">
                     <div class="profilecontainer__item">
                         <div class="profilecontainer__itemname">
-                            <input type="password" name="NEW_PASSWORD" maxlength="50" value="" autocomplete="off"/>
+                            <input type="password" name="NEW_PASSWORD_CONFIRM" maxlength="50" value="" autocomplete="off"/>
                         </div>
                     </div>
                 </div>

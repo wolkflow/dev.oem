@@ -128,10 +128,19 @@ Loc::loadLanguageFile(__FILE__);
                 false
             ); ?>
         </div>
+        
         <div class="headersection__logocontainer">
-            <a href="<? $APPLICATION->ShowViewContent('EVENT_LINK') ?>" class="headersection__logo"
-               style="background-image:url('<? $APPLICATION->ShowViewContent('EVENT_LOGO') ?>')"></a>
+            <a 
+                href="<? $APPLICATION->ShowViewContent('EVENT_LINK') ?>" 
+                class="headersection__logo" 
+                style="background-image:url('<? $APPLICATION->ShowViewContent('EVENT_LOGO') ?>')"
+            ></a>
         </div>
+        <? /*
+        <div class="headersection__logocontainer">
+            <a href="<? $APPLICATION->ShowViewContent('EVENT_LINK') ?>" class="headersection__logo"></a>
+        </div>
+        */ ?>
     </div>
 </div>
 <div class="pagecontainer">

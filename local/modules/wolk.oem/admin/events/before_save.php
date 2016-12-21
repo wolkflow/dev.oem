@@ -99,7 +99,7 @@ function BXIBlockAfterSave(&$arFields)
             \Wolk\OEM\EventEquipmentPricesTable::delete($eq['ID']);
         }
         unset($eq);
-
+        
         foreach ($resultEq as $eq) {
             $ruItem = [
                 'EQUIPMENT_ID' => $eq['ID'],
@@ -114,6 +114,8 @@ function BXIBlockAfterSave(&$arFields)
                 }
                 $ruItem['PRICE'] = $arRuPrice['PRICE'] ?: 0;
             }
+            //file_put_contents($_SERVER['DOCUMENT_ROOT'].'/prru.log', print_r([$arRuPrice, $ruItem], true), FILE_APPEND);
+            
             \Wolk\OEM\EventEquipmentPricesTable::add($ruItem);
 
             $enItem = [
@@ -123,14 +125,18 @@ function BXIBlockAfterSave(&$arFields)
                 'SITE_ID'      => 'EN'
             ];
             if (!$enItem['PRICE']) {
-                $arPrice = GetCatalogProductPrice($enItem['EQUIPMENT_ID'], 1);
-                if ($arPrice['CURRENCY'] != $currencyEn) {
-                    $arPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arPrice['PRICE'] ?: 0, $arPrice['CURRENCY'], $currencyEn);
+                $arEnPrice = GetCatalogProductPrice($enItem['EQUIPMENT_ID'], 1);
+                if ($arEnPrice['CURRENCY'] != $currencyEn) {
+                    $arEnPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arEnPrice['PRICE'] ?: 0, $arEnPrice['CURRENCY'], $currencyEn);
                 }
-                $enItem['PRICE'] = $arPrice['PRICE'] ?: 0;
+                $enItem['PRICE'] = $arEnPrice['PRICE'] ?: 0;
             }
+            //file_put_contents($_SERVER['DOCUMENT_ROOT'].'/pren.log', print_r([$arEnPrice, $enItem], true), FILE_APPEND);
+            
             \Wolk\OEM\EventEquipmentPricesTable::add($enItem);
         }
+        
+        //file_put_contents($_SERVER['DOCUMENT_ROOT'].'/pr.log', print_r([$_REQUEST, $resultEq], true));
     }
 
     return $arFields;

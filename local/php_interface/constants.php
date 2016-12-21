@@ -36,6 +36,7 @@ define('PERSON_TYPE_DETAULT', 1);
  * Группы.
  */
 define('GROUP_MANAGERS_ID', 9);
+define('GROUP_PARTNERS_ID', 10);
  
  
 /*

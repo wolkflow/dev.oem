@@ -181,6 +181,26 @@ $extents = ArrayHelper::index($arResult['EVENT']['EXTENTS'], 'UF_XML_ID');
 
 // file_put_contents($_SERVER['DOCUMENT_ROOT'].'/log.txt', print_r($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID], true));
 
+/*
+$services = &$arResult['SERVICES'][ADDITIONAL_SERVICES_SECTION_ID];
+
+foreach ($services as &$subservice) {
+    if (empty($subservice['SECTIONS'])) {
+        continue;
+    }
+    foreach ($subservice['SECTIONS'] as &$subsubservice) {
+        if (empty($subsubservice['ITEMS'])) {
+            continue;
+        }
+        // uasort($subsubservice['ITEMS'], function($x1, $x2) { return (intval($x1['SORT']) - intval($x2['SORT'])); });
+        
+        foreach ($subsubservice['ITEMS'] as &$item) {
+            $item['SORT'] = (int) $item['SORT'];
+        }
+    }
+}
+*/
+
 $colors      = Json::encode($colors);
 $extents     = Json::encode($extents);
 $options     = Json::encode($arResult['SERVICES'][ADDITIONAL_EQUIPMENT_SECTION_ID]);
@@ -220,7 +240,6 @@ $selectedParams = Json::encode($selectedParams);
 $am = Asset::getInstance();
 
 
-
 $am->addString(<<<JS
 	<script>
 	    var curEvent = $event,
@@ -241,6 +260,16 @@ $am->addString(<<<JS
             individual = $individual;
         
         curEvent.LOCATION = curEvent.LOCATION.replace(/&quot;/g, '"');
+        
+        /*
+        for (var i in services['SECTIONS']) {
+            for (var j in services['SECTIONS'][i]['SECTIONS']) {
+                for (var k in services['SECTIONS'][i]['SECTIONS'][j]['ITEMS']) {
+                    services['SECTIONS'][i]['SECTIONS'][j]['ITEMS'][k]['SORT'] = Number(services['SECTIONS'][i]['SECTIONS'][j]['ITEMS'][k]['SORT']);
+                }
+            }
+        }
+        */
 	</script>
 JS
 , true, AssetLocation::AFTER_JS_KERNEL);

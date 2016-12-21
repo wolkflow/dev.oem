@@ -16,7 +16,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
 
 $this->setFrameMode(true);
-$curLang = strtoupper($this->getLanguageId());
+$curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 $eventId = \Bitrix\Iblock\ElementTable::getRow([
     'filter' =>
         [
@@ -29,12 +29,12 @@ $eventId = \Bitrix\Iblock\ElementTable::getRow([
         ]
 ])['ID'];
 $obElement = CIBlockElement::GetByID($eventId);
-if($obEvent = $obElement->GetNextElement()) {
+if ($obEvent = $obElement->GetNextElement()) {
     $event = $obEvent->GetFields();
     $event['PROPS'] = $obEvent->GetProperties();
 
     $logo = false;
-    if($event['PROPS']['LANG_LOGO_'.$curLang]['VALUE']) {
+    if ($event['PROPS']['LANG_LOGO_'.$curLang]['VALUE']) {
         $logo = CFile::ResizeImageGet($event['PROPS']['LANG_LOGO_'.$curLang]['VALUE'], ['width' => 220, 'height' => 65])['src'];
     }
     $APPLICATION->AddViewContent('EVENT_LINK', '/events/'.$event['CODE'].'/');

@@ -41,6 +41,20 @@
                 </tr>
             </thead>
             <tbody>
+				<tr>
+					<td>For technical service in the exhibition "<?= $arResult['EVENT']['NAME'] ?>"</td>
+					<td>1</td>
+					<td></td>
+					<td>
+						<? if ($arResult['ORDER']['TAX_VALUE'] > 0) { ?>
+							<?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?>
+						<? } else { ?>
+							<?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?>
+						<? } ?>
+					</td>
+				</tr>
+				
+				<? /*
 				<? $cnt = 0 ?>
 				<? foreach ($arResult['BASKETS'] as $basket) { ?>
 					<? if ($basket['SUMMARY_PRICE'] <= 0) continue; ?>
@@ -51,8 +65,9 @@
 						<td><?= number_format($basket['SURCHARGE_SUMMARY_PRICE'], 2, ',', ' ') ?></td>
 					</tr>
 				<? } ?>
+				*/ ?>
 				
-				<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+				<? if ($arResult['ORDER']['TAX_VALUE'] > 0) { ?>
 					<tr class="bmrenTableFooter first-child">
 						<td colspan="3">SUB TOTAL (СУММА БЕЗ НДС)</td>
 						<td><?= number_format($arResult['ORDER']['PRICE'] - $arResult['ORDER']['TAX_VALUE'], 2, ',', ' ') ?></td>

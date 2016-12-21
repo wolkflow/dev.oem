@@ -33,7 +33,7 @@ $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 		*/ ?>
 		
 		<div class="footerLogo">
-			<a href="/"><img src="/local/templates/.default/build/images/oem_logo.png"></a>
+			<a href="/"><img src="/local/templates/.default/build/images/logo-sm.png"></a>
 		</div>
 	</div>	
 </div>

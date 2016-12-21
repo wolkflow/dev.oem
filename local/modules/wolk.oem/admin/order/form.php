@@ -536,7 +536,18 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         </div>
                     </div>
                     
-                    <br/><hr/>
+                    <br/>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label" for="form-comments-id">Комментарий:</label>
+                                <textarea class="form-control" id="form-comments-id" name="COMMENT" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr/>
                     
                     <div class="row">
                         <div class="col-md-4">

@@ -650,3 +650,70 @@ b {
   text-align: left;
   width: 16%;
 }
+
+
+
+.tg-invoice {
+  width: 640px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+.tg-invoice p {
+  margin: 0 15px;
+}
+.tg-invoice-head {
+  font-weight: 700;
+  font-size: 16px;
+}
+.tg-invoice-head_name {
+  font-size: 20px;
+}
+.tg-invoice-head_pre {
+  text-align: center;
+}
+.tg-invoice-head_pre p {
+  margin-bottom: 20px;
+}
+.tg-invoice-num {
+  margin-top: 60px !important;
+}
+.tg-invoice-date {
+  text-align: right;
+}
+.tg-invoice-table {
+  margin: 20px 0;
+}
+.tg-invoice-table table {
+  width: 100%;
+}
+.tg-invoice-table table th,
+.tg-invoice-table table td {
+  border: 1px solid #000;
+  padding: 4px;
+}
+.tg-invoice-table table th {
+  font-weight: 700;
+}
+.tg-invoice-sum {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+.tg-invoice-footer-copy {
+  position: relative;
+  z-index: 1;
+  float: left;
+  width: 50%;
+  font-size: 18px;
+}
+.tg-invoice-footer-stamp {
+  width: 50%;
+  float: right;
+  position: relative;
+  top: -40px;
+}
+.tg-invoice-footer-stamp img {
+  width: 100%;
+}

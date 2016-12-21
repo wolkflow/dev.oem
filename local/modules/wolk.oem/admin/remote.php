@@ -134,6 +134,7 @@ switch ($action) {
         $standprice = floatval($_REQUEST['STANDPRICE']);
         $standwidth = floatval($_REQUEST['STANDWIDTH']);
         $standdepth = floatval($_REQUEST['STANDDEPTH']);
+        $comments   = strval($_REQUEST['COMMENT']);
 		
         
 		\Bitrix\Main\Loader::includeModule('iblock');
@@ -174,46 +175,47 @@ switch ($action) {
 			jsonresponse(false, 'Выставка не найдена');
 		}
 		
+	
+		
+		// Корзина.
+		$basket = new CSaleBasket();
+		
+		// Удаление старых корзин.
+		$basket->DeleteAll($userID);
+		
+		// Общая цена товаров.
+		$summprice = 0;
+		
+		// Стенд.
+		if ($type != 'QUICK') {
+			$stand = CIBlockElement::GetByID($standID)->fetch();
+			
+			if ($stand) {
+				$result = BasketTable::add([
+					'PRODUCT_ID'    => $standID,
+					'PRICE'         => $standprice,
+					'QUANTITY'      => $standwidth * $standdepth,
+					'CURRENCY'      => $currency,
+					'LID'           => SITE_DEFAULT,
+					'NAME'          => $stand['NAME'],
+					'SET_PARENT_ID' => 0,
+					'TYPE'          => CSaleBasket::TYPE_SET,
+					'FUSER_ID'      => $userID
+				]);
+				
+				if (!$result->isSuccess()) {
+					$errors['BASKET'] [] = $result->getErrorMessages();
+				} else {
+					$summprice = $standprice * ($standwidth * $standdepth);
+				}
+			} else {
+				// jsonresponse(false, 'Стенд не найден');
+			}
+		} else {
+			$standID = 0;
+		}
+		
 		if (!empty($products['IDS'])) {
-			
-			// Корзина.
-			$basket = new CSaleBasket();
-			
-			// Удаление старых корзин.
-            $basket->DeleteAll($userID);
-			
-			// Общая цена товаров.
-			$summprice = 0;
-            
-            // Стенд.
-            if ($type != 'QUICK') {
-                $stand = CIBlockElement::GetByID($standID)->fetch();
-                
-                if ($stand) {
-                    $result = BasketTable::add([
-                        'PRODUCT_ID'    => $standID,
-                        'PRICE'         => $standprice,
-                        'QUANTITY'      => $standwidth * $standdepth,
-                        'CURRENCY'      => $currency,
-                        'LID'           => SITE_DEFAULT,
-                        'NAME'          => $stand['NAME'],
-                        'SET_PARENT_ID' => 0,
-                        'TYPE'          => CSaleBasket::TYPE_SET,
-                        'FUSER_ID'      => $userID
-                    ]);
-                    
-                    if (!$result->isSuccess()) {
-                        $errors['BASKET'] [] = $result->getErrorMessages();
-                    } else {
-						$summprice = $standprice * ($standwidth * $standdepth);
-					}
-                } else {
-                    // jsonresponse(false, 'Стенд не найден');
-                }
-            } else {
-                $standID = 0;
-            }
-            
 			foreach ($products['IDS'] as $productID) {
 				$title    = (string) $products['TITLE'][$productID];
 				$price    = (float)  $products['PRICE'][$productID];
@@ -224,16 +226,16 @@ switch ($action) {
 				
 				// Товарная позиция.
 				$element = CIBlockElement::GetByID($productID)->getNextElement();
-                $product = $element->getFields();
-                $product['PROPS'] = $element->getProperties();
-                
+				$product = $element->getFields();
+				$product['PROPS'] = $element->getProperties();
+				
 				unset($element);
-                
-                // Родительские раздел.
-                $parent = reset(IBlockElementHelper::getSectionTree($product['ID'], $product['IBLOCK_SECTION_ID']));
-                
-                $title = $product['PROPS']['LANG_TITLE_'.strtoupper($language)]['VALUE'];
-                
+				
+				// Родительские раздел.
+				$parent = reset(IBlockElementHelper::getSectionTree($product['ID'], $product['IBLOCK_SECTION_ID']));
+				
+				$title = $product['PROPS']['LANG_TITLE_'.strtoupper($language)]['VALUE'];
+				
 				$result = BasketTable::add([
 					'PRODUCT_ID'    => $productID,
 					'PRICE'         => $price,
@@ -251,183 +253,184 @@ switch ($action) {
 				} else {
 					if (!empty($comment)) {
 						BasketPropertyTable::add([
-                            'BASKET_ID' => $result->getID(),
-                            'NAME'      => 'Комментарий',
-                            'CODE'      => 'COMMENT',
-                            'VALUE'     => $comment
-                        ]);
+							'BASKET_ID' => $result->getID(),
+							'NAME'      => 'Комментарий',
+							'CODE'      => 'COMMENT',
+							'VALUE'     => $comment
+						]);
 					}
 				}
 			}
-			
-			if (!empty($errors)) {
-				jsonresponse(false, implode('<br/>', $errors), ['errors' => $errors]);
-			}
-			
-			$totalprice = $summprice;
-			$surchprice = 0;
-			
-			// Наценка.
-			if ($surcharge > 0) {
-				$surchprice = $totalprice * $surcharge / 100;
-				$totalprice = $totalprice + $surchprice;
-			}
-			
-			// Налоги.
-			if ($vat) {
-				$vatprice = 0;
-			} else {
-				$vatprice   = $totalprice * VAT_DEFAULT / 100;
-				$totalprice = $totalprice + $vatprice;
-			}
-			
-            
-			// Добавление заказа.
-			$orderID = CSaleOrder::Add([
-				'LID'              => SITE_DEFAULT,
-				'PERSON_TYPE_ID'   => PERSON_TYPE_DETAULT,
-				'PAYED'            => 'N',
-				'CANCELED'         => 'N',
-				'STATUS_ID'        => 'N',
-				'DISCOUNT_VALUE'   => '',
-				'USER_DESCRIPTION' => '',
-				'PRICE'            => $totalprice,
-				'CURRENCY'         => $currency,
-				'USER_ID'          => $userID,
-				'DELIVERY_ID'      => DELIVERY_DETAULT,
-				'TAX_VALUE'        => $vatprice,
+		}
+		
+		if (!empty($errors)) {
+			jsonresponse(false, implode('<br/>', $errors), ['errors' => $errors]);
+		}
+		
+		$totalprice = $summprice;
+		$surchprice = 0;
+		
+		// Наценка.
+		if ($surcharge > 0) {
+			$surchprice = $totalprice * $surcharge / 100;
+			$totalprice = $totalprice + $surchprice;
+		}
+		
+		// Налоги.
+		if ($includevat) {
+			$vatprice = 0;
+		} else {
+			$vatprice   = $totalprice * VAT_DEFAULT / 100;
+			$totalprice = $totalprice + $vatprice;
+		}
+		
+		
+		// Добавление заказа.
+		$orderID = CSaleOrder::Add([
+			'LID'              => SITE_DEFAULT,
+			'PERSON_TYPE_ID'   => PERSON_TYPE_DETAULT,
+			'PAYED'            => 'N',
+			'CANCELED'         => 'N',
+			'STATUS_ID'        => 'N',
+			'DISCOUNT_VALUE'   => '',
+			'USER_DESCRIPTION' => '',
+			'PRICE'            => $totalprice,
+			'CURRENCY'         => $currency,
+			'USER_ID'          => $userID,
+			'DELIVERY_ID'      => DELIVERY_DETAULT,
+			'TAX_VALUE'        => $vatprice,
+			'COMMENTS'         => $comments,
+		]);
+		
+		if ($orderID > 0) {
+			 $res = CSaleOrderProps::GetList([], [
+				'CODE' => ['eventId', 'eventName', 'LANGUAGE', 'pavillion', 'standNum', 'width', 'depth', 'SURCHARGE', 'SURCHARGE_PRICE', 'TYPE']
 			]);
+			$orderprops = [];
+			while ($orderprop = $res->Fetch()) {
+				$orderprops[$orderprop['CODE']] = $orderprop;
+			}
+			unset($res, $orderprop);
 			
-			if ($orderID > 0) {
-				 $res = CSaleOrderProps::GetList([], [
-                    'CODE' => ['eventId', 'eventName', 'LANGUAGE', 'pavillion', 'standNum', 'width', 'depth', 'SURCHARGE', 'SURCHARGE_PRICE', 'TYPE']
-                ]);
-				$orderprops = [];
-                while ($orderprop = $res->Fetch()) {
-                    $orderprops[$orderprop['CODE']] = $orderprop;
-                }
-				unset($res, $orderprop);
-				
-				// Свойства заказа.
-				$props = [
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['TYPE']['ID'],
-                        'NAME'           => $orderprops['TYPE']['NAME'] ?: 'Типа заказа',
-                        'CODE'           => 'TYPE',
-                        'VALUE'          => $type
-					],
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['eventId']['ID'],
-                        'NAME'           => $orderprops['eventId']['NAME'] ?: 'ID выставки',
-                        'CODE'           => 'eventId',
-                        'VALUE'          => $event['ID']
-					],
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['eventName']['ID'],
-                        'NAME'           => $orderprops['eventName']['NAME'] ?: 'Название выставки',
-                        'CODE'           => 'eventName',
-                        'VALUE'          => $event['NAME']
-					],
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['LANGUAGE']['ID'],
-                        'NAME'           => $orderprops['LANGUAGE']['NAME'] ?: 'Язык',
-                        'CODE'           => 'LANGUAGE',
-                        'VALUE'          => $language
-					],
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['pavillion']['ID'],
-                        'NAME'           => $orderprops['pavillion']['NAME'] ?: 'Павильон',
-                        'CODE'           => 'pavillion',
-                        'VALUE'          => $pavilion
-					],
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['standNum']['ID'],
-                        'NAME'           => $orderprops['standNum']['NAME'] ?: 'Номер стенда',
-                        'CODE'           => 'standNum',
-                        'VALUE'          => $standnum
-					],
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['SURCHARGE']['ID'],
-                        'NAME'           => $orderprops['SURCHARGE']['NAME'] ?: 'Наценка',
-                        'CODE'           => 'SURCHARGE',
-                        'VALUE'          => $surcharge
-					],
-					[
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['SURCHARGE_PRICE']['ID'],
-                        'NAME'           => $orderprops['SURCHARGE_PRICE']['NAME'] ?: 'Сумма наценки',
-                        'CODE'           => 'SURCHARGE_PRICE',
-                        'VALUE'          => $surchprice
-					]
+			// Свойства заказа.
+			$props = [
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['TYPE']['ID'],
+					'NAME'           => $orderprops['TYPE']['NAME'] ?: 'Типа заказа',
+					'CODE'           => 'TYPE',
+					'VALUE'          => $type
+				],
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['eventId']['ID'],
+					'NAME'           => $orderprops['eventId']['NAME'] ?: 'ID выставки',
+					'CODE'           => 'eventId',
+					'VALUE'          => $event['ID']
+				],
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['eventName']['ID'],
+					'NAME'           => $orderprops['eventName']['NAME'] ?: 'Название выставки',
+					'CODE'           => 'eventName',
+					'VALUE'          => $event['NAME']
+				],
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['LANGUAGE']['ID'],
+					'NAME'           => $orderprops['LANGUAGE']['NAME'] ?: 'Язык',
+					'CODE'           => 'LANGUAGE',
+					'VALUE'          => $language
+				],
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['pavillion']['ID'],
+					'NAME'           => $orderprops['pavillion']['NAME'] ?: 'Павильон',
+					'CODE'           => 'pavillion',
+					'VALUE'          => $pavilion
+				],
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['standNum']['ID'],
+					'NAME'           => $orderprops['standNum']['NAME'] ?: 'Номер стенда',
+					'CODE'           => 'standNum',
+					'VALUE'          => $standnum
+				],
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['SURCHARGE']['ID'],
+					'NAME'           => $orderprops['SURCHARGE']['NAME'] ?: 'Наценка',
+					'CODE'           => 'SURCHARGE',
+					'VALUE'          => $surcharge
+				],
+				[
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['SURCHARGE_PRICE']['ID'],
+					'NAME'           => $orderprops['SURCHARGE_PRICE']['NAME'] ?: 'Сумма наценки',
+					'CODE'           => 'SURCHARGE_PRICE',
+					'VALUE'          => $surchprice
+				]
+			];
+			
+			// НДС включен в стоимость заказа.
+			if ($vat) {
+				$props [] = [
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['INCLUDE_VAT']['ID'],
+					'NAME'           => $orderprops['INCLUDE_VAT']['NAME'] ?: 'НДС включен',
+					'CODE'           => 'INCLUDE_VAT',
+					'VALUE'          => 'Y'
 				];
-                
-                // НДС включен в стоимость заказа.
-                if ($vat) {
-                    $props [] = [
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['INCLUDE_VAT']['ID'],
-                        'NAME'           => $orderprops['INCLUDE_VAT']['NAME'] ?: 'НДС включен',
-                        'CODE'           => 'INCLUDE_VAT',
-                        'VALUE'          => 'Y'
-					];
-                }
-                
-                
-                if (!empty($stand)) {
-                    $props [] = [
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['width']['ID'],
-                        'NAME'           => $orderprops['width']['NAME'] ?: 'Ширина',
-                        'CODE'           => 'width',
-                        'VALUE'          => $standwidth
-					];
-                    
-                    $props [] = [
-						'ORDER_ID'       => $orderID,
-                        'ORDER_PROPS_ID' => $orderprops['depth']['ID'],
-                        'NAME'           => $orderprops['depth']['NAME'] ?: 'Шлубина',
-                        'CODE'           => 'depth',
-                        'VALUE'          => $standdepth
-					];
-                }
-				
-				
-				// Добавление свойств заказа.
-				foreach ($props as $prop) {
-					OrderPropsValueTable::add($prop);
-				}
-				unset($props, $prop);
-				
-				
-				// Привязка корзин к заказу.
-				$baskets = BasketTable::getList([
-					'filter' =>
-						[
-							'FUSER_ID' => $userID,
-							'ORDER_ID' => null
-						]
-				])->fetchAll();
-				
-				foreach ($baskets as $basket) {
-					$result = BasketTable::update($basket['ID'], ['ORDER_ID' => $orderID]);
-					if (!$result->isSuccess()) {
-						$errors['ORDERBASKET'] []= 'не удалось привязать корзину к заказу';
-					}
-				}
-			} else {
-				jsonresponse(false, 'Не удалось создать заказ');
 			}
 			
-			if (!empty($errors)) {
-				jsonresponse(false, implode('<br/>', $errors), ['errors' => $errors]);
+			
+			if (!empty($stand)) {
+				$props [] = [
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['width']['ID'],
+					'NAME'           => $orderprops['width']['NAME'] ?: 'Ширина',
+					'CODE'           => 'width',
+					'VALUE'          => $standwidth
+				];
+				
+				$props [] = [
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['depth']['ID'],
+					'NAME'           => $orderprops['depth']['NAME'] ?: 'Шлубина',
+					'CODE'           => 'depth',
+					'VALUE'          => $standdepth
+				];
 			}
+			
+			
+			// Добавление свойств заказа.
+			foreach ($props as $prop) {
+				OrderPropsValueTable::add($prop);
+			}
+			unset($props, $prop);
+			
+			
+			// Привязка корзин к заказу.
+			$baskets = BasketTable::getList([
+				'filter' =>
+					[
+						'FUSER_ID' => $userID,
+						'ORDER_ID' => null
+					]
+			])->fetchAll();
+			
+			foreach ($baskets as $basket) {
+				$result = BasketTable::update($basket['ID'], ['ORDER_ID' => $orderID]);
+				if (!$result->isSuccess()) {
+					$errors['ORDERBASKET'] []= 'не удалось привязать корзину к заказу';
+				}
+			}
+		} else {
+			jsonresponse(false, 'Не удалось создать заказ');
+		}
+		
+		if (!empty($errors)) {
+			jsonresponse(false, implode('<br/>', $errors), ['errors' => $errors]);
 		}
 		
 		jsonresponse(true, '', ['ID' => $orderID]);

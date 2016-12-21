@@ -71,6 +71,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
 			'bmr.en'   => 'BMR (en)',
             'qo.ru'    => 'QO (ru)',
             'qo.en'    => 'QO (en)',
+            'kz.ru'    => 'KZ (ru)',
+            'kz.en'    => 'KZ (en)',
 		];
 		
 		if (!array_key_exists($this->arParams['TEMPLATE'], $invoices)) {

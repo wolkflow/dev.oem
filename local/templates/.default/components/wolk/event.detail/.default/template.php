@@ -93,87 +93,99 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     
     <? // Выбор стеднов // ?>
     <div class="standstypescontainer">
-        <div class="pagetitle">
-			<?= Loc::getMessage('Another system stand types') ?>
-			<div class="pagetitle-note">
-				<?= Loc::getMessage('another_standart_note') ?>
+		<? if ($arResult['EVENT']['PROPS']['SHOW_EXTERNAL_LINK']['VALUE'] != 'Y') { ?>
+			<div class="pagetitle">
+				<?= Loc::getMessage('Another system stand types') ?>
+				<div class="pagetitle-note">
+					<?= Loc::getMessage('another_standart_note') ?>
+				</div>
 			</div>
-		</div>
-        <div class="standstypescontainer__standscontainer standsTypesRow">
-            <? $s_id = 0;
-            foreach ($arResult['ITEMS'] as $stand) { ?>
-                <div
-                    class="standstypescontainer__standcontainer <? if ($s_id % 2 == 0) { ?>standsTypesLeft<? } else { ?>standsTypesRight<? } ?>">
-					<? if ($s_id < 2) { ?>
-						<div class="standsTypes__window">
-							<? Helper::includeFile('choose_wall_conf_'.$curLang) ?>
-							<form method="get" name="standsTypes__window_<?=$s_id?>" action="">
-								<div class="chooseType__row">
-								
-									<label for="row_<?=$s_id?>" class="chooseType__label">
-										<input id="row_<?=$s_id?>" type="radio" value="row" name="standtype" />
-                                        <span><?= Loc::getMessage('row') ?></span>
-										<span class="chooseType__icon"></span>
-									</label>
-									<label for="head_<?=$s_id?>" class="chooseType__label">
-										<input id="head_<?=$s_id?>" type="radio" value="head" name="standtype" />
-                                        <span><?= Loc::getMessage('head') ?></span>
-										<span class="chooseType__icon"></span>
-									</label>
-								</div>
-								<div class="chooseType__row">
-									<label for="corner_<?=$s_id?>" class="chooseType__label">
-										<input id="corner_<?=$s_id?>" type="radio" value="corner" name="standtype" />
-                                        <span><?= Loc::getMessage('corner') ?></span>
-										<span class="chooseType__icon"></span>
-									</label>
-									<label for="insel_<?=$s_id?>" class="chooseType__label">
-										<input id="insel_<?=$s_id?>" type="radio" value="insel" name="standtype" />
-                                        <span><?= Loc::getMessage('insel') ?></span>
-										<span class="chooseType__icon"></span>
-									</label>
-								</div>
-								<div class="standsTypes__save">
-									<input @click.prevent="setType($event.target, <?= $s_id ?>)" type="button" value="<?= Loc::getMessage('save') ?>" class="styler" />
-								</div>
-							</form>
+			<div class="standstypescontainer__standscontainer standsTypesRow">
+				<? $s_id = 0;
+				foreach ($arResult['ITEMS'] as $stand) { ?>
+					<div
+						class="standstypescontainer__standcontainer <? if ($s_id % 2 == 0) { ?>standsTypesLeft<? } else { ?>standsTypesRight<? } ?>">
+						<? if ($s_id < 2) { ?>
+							<div class="standsTypes__window">
+								<? Helper::includeFile('choose_wall_conf_'.$curLang) ?>
+								<form method="get" name="standsTypes__window_<?=$s_id?>" action="">
+									<div class="chooseType__row">
+									
+										<label for="row_<?=$s_id?>" class="chooseType__label">
+											<input id="row_<?=$s_id?>" type="radio" value="row" name="standtype" />
+											<span><?= Loc::getMessage('row') ?></span>
+											<span class="chooseType__icon"></span>
+										</label>
+										<label for="head_<?=$s_id?>" class="chooseType__label">
+											<input id="head_<?=$s_id?>" type="radio" value="head" name="standtype" />
+											<span><?= Loc::getMessage('head') ?></span>
+											<span class="chooseType__icon"></span>
+										</label>
+									</div>
+									<div class="chooseType__row">
+										<label for="corner_<?=$s_id?>" class="chooseType__label">
+											<input id="corner_<?=$s_id?>" type="radio" value="corner" name="standtype" />
+											<span><?= Loc::getMessage('corner') ?></span>
+											<span class="chooseType__icon"></span>
+										</label>
+										<label for="insel_<?=$s_id?>" class="chooseType__label">
+											<input id="insel_<?=$s_id?>" type="radio" value="insel" name="standtype" />
+											<span><?= Loc::getMessage('insel') ?></span>
+											<span class="chooseType__icon"></span>
+										</label>
+									</div>
+									<div class="standsTypes__save">
+										<input @click.prevent="setType($event.target, <?= $s_id ?>)" type="button" value="<?= Loc::getMessage('save') ?>" class="styler" />
+									</div>
+								</form>
+							</div>
+						<? } ?>
+
+						<div class="pagesubtitle customizable_border">
+							<?= $stand['NAME'] ?>
 						</div>
-					<? } ?>
+						<div class="standstypescontainer__pricecontiner">
+							<?= FormatCurrency($stand['PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?>
+							<span>
+								<?= FormatCurrency($stand['BASE_PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?> / <?= Loc::getMessage('m2') ?>
+							</span>
+							<div
+								class="standstypescontainer__choosebutton customizable"
+								:class="{'current': selectedStand.ID == <?= $stand['ID'] ?>}"
+								@click="setSelected('<?= $stand['ID'] ?>', <?= $s_id ?>);"
+							>
+								{{selectedStand && selectedStand.ID == <?= $stand['ID'] ?> ? '<?= Loc::getMessage('chosen') ?>' : '<?= Loc::getMessage('choose') ?>'}}
+							</div>
+						</div>
+						
+						<img height="138" src="<?= $stand['PREVIEW_PICTURE'] ?>" class="standstypescontainer__photo" />
 
-                    <div class="pagesubtitle customizable_border">
-                        <?= $stand['NAME'] ?>
-                    </div>
-                    <div class="standstypescontainer__pricecontiner">
-						<?= FormatCurrency($stand['PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?>
-                        <span>
-							<?= FormatCurrency($stand['BASE_PRICE']['PRICE'], $arResult['EVENT']['CURRENCY']['NAME']) ?> / <?= Loc::getMessage('m2') ?>
-                        </span>
-                        <div
-                            class="standstypescontainer__choosebutton customizable"
-                            :class="{'current': selectedStand.ID == <?= $stand['ID'] ?>}"
-                            @click="setSelected('<?= $stand['ID'] ?>', <?= $s_id ?>);"
-                        >
-                            {{selectedStand && selectedStand.ID == <?= $stand['ID'] ?> ? '<?= Loc::getMessage('chosen') ?>' : '<?= Loc::getMessage('choose') ?>'}}
-                        </div>
-                    </div>
-                    
-                    <img height="138" src="<?= $stand['PREVIEW_PICTURE'] ?>" class="standstypescontainer__photo" />
-
-                    <div class="standstypescontainer__description">
-                        <p><?= $stand['PROPS']["LANG_DESCRIPTION_{$curLang}"]['~VALUE']['TEXT'] ?></p>
-                        <ul>
-							<?= Loc::getMessage('Including') ?>:
-                            <? foreach ($stand['OFFER']['EQUIPMENT'] as $eq) { ?>
-                                <li>
-									<?= $eq['COUNT'] ?> &times; <?= $eq['NAME'] ?>
-								</li>
-                            <? } ?>
-                        </ul>
-                    </div>
-                </div>
-                <? $s_id++; ?>
-			<? } ?>
-        </div>
+						<div class="standstypescontainer__description">
+							<p><?= $stand['PROPS']["LANG_DESCRIPTION_{$curLang}"]['~VALUE']['TEXT'] ?></p>
+							<ul>
+								<?= Loc::getMessage('Including') ?>:
+								<? foreach ($stand['OFFER']['EQUIPMENT'] as $eq) { ?>
+									<li>
+										<?= $eq['COUNT'] ?> &times; <?= $eq['NAME'] ?>
+									</li>
+								<? } ?>
+							</ul>
+						</div>
+					</div>
+					<? $s_id++; ?>
+				<? } ?>
+			</div>
+		<? } else { ?>
+			<div class="pagedescription">
+				<p>
+					<? // $arResult['EVENT']['PROPS']['LANG_EXTERNAL_TEXT_' . $curLang]['VALUE'] ?>
+					<?= Loc::getMessage('EXTERLAN_TEXT') ?>
+					<a href="http://<?= $arResult['EVENT']['PROPS']['LANG_EXTERNAL_LINK_' . $curLang]['VALUE'] ?>" target="_blank">
+						<?= $arResult['EVENT']['PROPS']['LANG_EXTERNAL_LINK_' . $curLang]['VALUE'] ?>
+					</a>
+				</p>
+			</div>
+		<? } ?>
     </div>
 </div>
 
