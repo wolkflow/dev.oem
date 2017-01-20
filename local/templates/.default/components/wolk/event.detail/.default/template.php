@@ -274,6 +274,9 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 		<telecommunications></telecommunications>
         <graphics v-if="selectedStand.ID > 0"></graphics>
         <hanging-structure></hanging-structure>
+        <? if ($arResult['EVENT']['ID'] == 76) { ?>
+            <build-up-times></build-up-times>
+        <? } ?>
         <temporary-staff></temporary-staff>
         <car-passes></car-passes>
     </div>
@@ -671,6 +674,10 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 <? include 'graphics.php' ?>
 
 <? include 'hanging_structure.php' ?>
+
+<? if ($arResult['EVENT']['ID'] == 76) { ?>
+    <? include 'buildup_times.php' ?>
+<? } ?>
 
 <? include 'temporary_staff.php' ?>
 

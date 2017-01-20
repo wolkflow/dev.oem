@@ -2310,6 +2310,177 @@ Vue.component('car-passes-to-loading-unloading-zone', {
 
 
 
+
+// Компонент: "Дополнительное время монтажных работ".
+Vue.component('build-up-times', {
+    template: '#build-up-times',
+    data: function () {
+        return {
+            sectionId: 30,
+            visible: false
+        }
+    },
+    computed: {
+        section: function () {
+            return this.$parent.services.SECTIONS[this.sectionId];
+        },
+        sections: function () {
+            return this.section.SECTIONS;
+        },
+        components: function () {
+            return this.$children;
+        }
+    },
+    methods: {
+        save: function () {
+            this.components.forEach(function (component) {
+                component.addToCart();
+            });
+        }
+    },
+    mixins: [toggleableMixin]
+});
+
+
+
+// Компонент: "Дополнительное время монтажных работ".
+Vue.component('build-up-time', {
+    template: '#build-up-time',
+    data: function () {
+        return {
+            sectionId: 57,
+            selectedItems: [
+                {
+                    ID: '',
+                    QUANTITY: 0,
+                    calendar: {
+                        dates: [],
+                        datesType: 'multiple'
+                    },
+                    timeStart: '08:00',
+                    timeEnd: '20:00'
+                }
+            ]
+        }
+    },
+    computed: {
+        section: function () {
+            return this.$parent.sections[this.sectionId];
+        },
+        items: function () {
+            return this.section.ITEMS;
+        },
+        ordered: function () {
+            return this.$root.order.selectedStand.SERVICES[57];
+        }
+    },
+    ready: function () {
+        if (
+            this.$root.order
+            && this.$root.order.selectedStand.hasOwnProperty('SERVICES')
+            && this.$root.order.selectedStand.SERVICES
+            && this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
+        ) {
+            Vue.set(this, 'selectedItems', this.$root.order.selectedStand.SERVICES[this.sectionId]);
+        }
+    },
+    methods: {
+        addItem: function () {
+            this.selectedItems.push({
+                ID: '',
+                QUANTITY: 0,
+                calendar: {
+                    dates: [],
+                    datesType: 'multiple'
+                },
+                timeStart: '08:00',
+                timeEnd: '20:00'
+            });
+        },
+        addToCart: function () {
+            var self = this;
+            this.selectedItems.forEach(function (item, index) {
+                if (item.ID && item.QUANTITY > 0) {
+                    var hoursCount, daysCount;
+                    if (item.calendar.datesType == 'range') {
+                        try {
+                            var date1 = item.calendar.dates[0].split('-');
+                            var date2 = item.calendar.dates[1].split('-');
+                            
+                            date1 = date1[2] + '/' + date1[1] + '/' + date1[0];
+                            date2 = date2[2] + '/' + date2[1] + '/' + date2[0];
+                            
+                            daysCount = Date.getDaysBetween(new Date(date1), new Date(date2)) + 1;
+                        } catch (e) {
+                            daysCount = 0;
+                        }
+                        if (daysCount < 1) {
+                            daysCount = 1;
+                        }
+                    } else {
+                        daysCount = item.calendar.dates.length;
+                    }
+					
+					// Часы работы охраны.
+					hoursCount = Date.getHoursBetween(new Date('2000-01-01 ' + item.timeStart), new Date('2000-01-01 ' + item.timeEnd));
+					
+					if (hoursCount < 0) {
+						hoursCount = Date.getHoursBetween(new Date('2000-01-01 ' + item.timeStart), new Date('2000-01-02 ' + item.timeEnd));
+					}
+					
+					if (hoursCount < 1) {
+						hoursCount = 1;
+					}
+					
+					var multiplier = daysCount * hoursCount;
+					
+					
+                    self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
+                        ID: item.ID,
+                        NAME: self.items[item.ID].NAME,
+                        CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
+                        QUANTITY: item.QUANTITY,
+                        PRICE: self.items[item.ID].PRICE,
+                        MULTIPLIER: multiplier,
+                        PROPS: [
+                            {
+                                NAME: 'timeStart',
+                                CODE: 'timeStart',
+                                VALUE: item.timeStart
+                            },
+                            {
+                                NAME: 'timeEnd',
+                                CODE: 'timeEnd',
+                                VALUE: item.timeEnd
+                            },
+                            {
+                                NAME: 'calendar',
+                                CODE: 'calendar',
+                                VALUE: item.calendar
+                            }
+                        ]
+                    });
+
+                } else {
+                    if (
+                        self.$root.selectedStand.SERVICES.hasOwnProperty(self.section.ID)
+                        &&
+                        self.$root.selectedStand.SERVICES[self.section.ID].hasOwnProperty(index)
+                    ) {
+                        Vue.delete(self.$root.selectedStand.SERVICES[self.section.ID], index);
+                    }
+                }
+            })
+        }
+    },
+    mixins: [
+        quantityMixin, currencyMixin
+    ]
+});
+
+
+
+
 // Компонент: "Персонал".
 Vue.component('temporary-staff', {
     template: '#temporary-staff',
@@ -2339,7 +2510,6 @@ Vue.component('temporary-staff', {
     },
     mixins: [toggleableMixin]
 });
-
 
 
 // Компонент: "Охрана".
