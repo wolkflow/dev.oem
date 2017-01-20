@@ -97,8 +97,10 @@
                             }
                             this.sketch = ru.octasoft.oem.designer.Main.getScene();
                             var equipmentCount = 0;
+                            
                             equipmentCount = this.selectedStand.EQUIPMENT.reduce(function (sum, eq) {
-								if (eq.SKETCH_TYPE == 'nouse') {
+                                //console.log(eq.NAME, eq.QUANTITY, eq.HEIGHT, eq.SKETCH_TYPE);
+								if (eq.HEIGHT == 0 || eq.WIDTH == 0 || eq.SKETCH_TYPE == 'nouse') {
 									return sum;
 								}
 								return sum += parseInt(eq.QUANTITY);
@@ -110,6 +112,10 @@
                                     optionsCount += option.QUANTITY;
                                 }
                             });
+                            
+                            //console.log(this.selectedStand.EQUIPMENT);
+                            //console.log(this.sketch.objects.length, equipmentCount, optionsCount);
+                            
                             if (
                                 this.sketch.hasOwnProperty('objects')
                                 &&
@@ -180,7 +186,7 @@
 				}
 				
 				$.when(getSketchImage()).done(function() {
-                    console.log(that.selectedStand.ID, that.selectedStand.NAME);
+                    //console.log(that.selectedStand.ID, that.selectedStand.NAME);
 					$.ajax({
 						url: '/local/components/wolk/event.detail/ajax.php',
 						type: 'post',
@@ -273,7 +279,7 @@
                 cache: false,
                 get: function () {
                     var result = [];
-
+                    
                     this.selectedStand.EQUIPMENT.forEach(function (eq) {
                         if (eq.WIDTH && eq.HEIGHT && eq.SKETCH_TYPE != 'nouse') {
                             result.push({
@@ -762,7 +768,6 @@ var toggleableMixin = {
 var orderSortMixin = {
     methods: {
         orderSort: function (a, b) {
-            console.log(parseInt(a.SORT), parseInt(b.SORT));
             return (parseInt(a.SORT) - parseInt(b.SORT));
         }
     }

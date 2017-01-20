@@ -27,7 +27,7 @@
                         <option value="">
                             <?= Loc::getMessage('not selected') ?>
                         </option>
-                        <option value="{{ item.ID }}" v-for="item in items">
+                        <option value="{{ item.ID }}" v-for="item in items | orderBy SORT">
                             {{ item.NAME }} ({{ item.PRICE | format_currency ' ' currency_format }})
                         </option>
                     </select>

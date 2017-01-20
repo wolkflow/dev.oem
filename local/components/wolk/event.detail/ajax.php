@@ -40,6 +40,12 @@ try {
             break;
 			
         case 'placeOrder':
+            $log = array(
+                'time' => date('d.m.Y H:i:s'),
+                'post' => $_POST,
+            );
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/../ajax-order.log', print_r($log, true), FILE_APPEND);
+        
             Loader::includeModule('sale');
             $params = [];
             if (array_key_exists('selectedParams', $_POST)) {
