@@ -72,3 +72,6 @@ define('UNVAT_DEFAULT', 0.152542372881356);
 
 // IP боевого сервера.
 define('PRODUCTION_IP', '89.253.254.58');
+
+
+define('HLBLOCK_USERS_API_ID', 7);

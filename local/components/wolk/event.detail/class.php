@@ -1175,7 +1175,7 @@ class EventDetailComponent extends BaseListComponent
     {
         global $USER;
         $filter = [
-            'CREATED_BY' => $USER->GetID(),
+            'USER_ID' => $USER->GetID(),
             'ID'         => $id,
             // 'STATUS_ID'  => 'N'
         ];
