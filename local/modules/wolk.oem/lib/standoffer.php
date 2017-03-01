@@ -2,21 +2,16 @@
 
 namespace Wolk\OEM;
 
+
 class StandOffer extends \Wolk\Core\System\IBlockEntity
 {
-	const IBLOCK_ID = 6;
+	const IBLOCK_ID = IBLOCK_STAND_OFFERS_ID;
 
 	protected $id   = null;
 	protected $data = [];
 	
 	
-    public function __construct($id = null, $data = [])
-    {
-		$this->id   = (int) $id;
-		$this->data = (array) $data;
-    }
-	
-	
+    
 	public function getStand()
 	{
 		$this->load();
@@ -38,5 +33,32 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
 		$this->load();
 		
 		return $this->data['PROPS']['AREA_MAX']['VALUE'];
+	}
+    
+    
+    /**
+     * Список базового оборудования.
+     */
+	public function getBaseEquipments()
+	{
+		
+	}	
+	
+	
+    /**
+     * Список базовых услуг.
+     */
+	public function getBaseServices()
+	{
+		
+	}
+    
+    
+    /**
+     * Список базовых услуг маркетинга.
+     */
+    public function getBaseMarketings()
+	{
+		
 	}
 }

@@ -4,18 +4,18 @@ namespace Wolk\OEM;
 
 class Event extends \Wolk\Core\System\IBlockEntity
 {
-    const IBLOCK_ID = 1;
+    const IBLOCK_ID = IBLOCK_EVENTS_ID;
 
-	protected $id    = null;
-	protected $data  = [];
-	protected $lang  = 'EN';
-	protected $prces = ['stands' => [], 'equipments' => []];
+	protected $id     = null;
+	protected $data   = [];
+	protected $lang   = LANG_EN_UP;
+	protected $prices = ['stands' => [], 'equipments' => [], 'services' => [], 'marketings' => []];
 	
 	
-    public function __construct($id = null, $data = [], $lang = 'EN')
+    public function __construct($id = null, $data = [], $lang = LANG_EN_UP)
     {
-		$this->id   = (int) $id;
-		$this->data = (array) $data;
+		parent::__construct($id, $data);
+        
 		$this->lang = mb_strtoupper((string) $lang);
     }
 	
@@ -84,6 +84,20 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	}
     
     
+    /**
+	 * Получение списка возможных стендов мероприятия.
+	 */
+	public function getStands()
+	{
+		$ids    = $this->getStandIDs();
+		$stands = [];
+		foreach ($ids as $id) {
+			$stands[$id] = new Stand($id);
+		}
+		return $stands;
+	}
+    
+    
     public function getInvoices($code = 'VALUE')
 	{
 		$this->load();
@@ -99,20 +113,6 @@ class Event extends \Wolk\Core\System\IBlockEntity
         return ($this->data['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y');
     }
     
-	
-	/**
-	 * Получение списка возможных стендов мероприятия.
-	 */
-	public function getStands()
-	{
-		$ids    = $this->getStandIDs();
-		$stands = [];
-		foreach ($ids as $id) {
-			$stands[$id] = new Stand($id);
-		}
-		return $stands;
-	}
-	
 	
 	/**
 	 * Получение списка ID менеджеров мероприятия.
@@ -139,11 +139,13 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	/**
 	 * Получение списка стендовых предложений в зависимости от размеров.
 	 */
-	public function getStandOffers($width, $depth)
+	public function getStandOffers($width, $depth, $isobject = false)
 	{
 		$width = (float) $width;
 		$depth = (float) $depth;
-		$area  = $width * $depth;
+        
+        // Площадь стенда.
+		$area = $width * $depth;
 		
 		$offers = StandOffer::getList([
 			'order'  => ['PROPERTY_AREA_MAX' => 'DESC'],
@@ -154,14 +156,18 @@ class Event extends \Wolk\Core\System\IBlockEntity
 				'>=PROPERTY_AREA_MAX' => $area,
 			]
 		]);
+        
+        if ($isobject) {
+            return $offers;
+        }
+        
 		$items = [];
 		foreach ($offers as $offer) {
-			$item = [
-				'MIN'   => $offer->getAreaMin(),
-				'MAX'   => $offer->getAreaMax(),
-				'STAND' => $offer->getStand()->getTitle(),
-			];
-			
+            $item = [
+                'MIN'   => $offer->getAreaMin(),
+                'MAX'   => $offer->getAreaMax(),
+                'STAND' => $offer->getStand()->getTitle(),
+            ];
 			$items []= $item;
 		}
 		return $items;

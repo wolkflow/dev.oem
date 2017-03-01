@@ -4,18 +4,18 @@ namespace Wolk\OEM;
 
 class Stand extends \Wolk\Core\System\IBlockEntity
 {
-	const IBLOCK_ID = 2;
+	const IBLOCK_ID = IBLOCK_STANDS_ID;
 
 	protected $id    = null;
 	protected $data  = [];
 	protected $price = null;
-	protected $lang  = 'EN';
+	protected $lang  = LANG_EN_UP;
 	
 	
-    public function __construct($id = null, $data = [], $lang = 'EN')
+    public function __construct($id = null, $data = [], $lang = LANG_EN_UP)
     {
-		$this->id   = (int) $id;
-		$this->data = (array) $data;
+		parent::__construct($id, $data);
+        
 		$this->lang = mb_strtoupper((string) $lang);
     }
 	
@@ -26,7 +26,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 	}
 	
 	
-	public function getLangTitle($lang = 'EN')
+	public function getLangTitle($lang = LANG_EN_UP)
 	{
 		if (empty($lang)) {
 			$lang = $this->getLang();
@@ -47,14 +47,30 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 		return $this->data['PROPS']['LANG_NAME_' . $this->getLang()]['VALUE'];
 	}
 	
-	
-	public function getEquipment()
+    
+    
+    /**
+     * Список оборудования.
+     */
+	public function getEquipments()
 	{
 		
 	}	
 	
 	
+    /**
+     * Список услуг.
+     */
 	public function getServices()
+	{
+		
+	}
+    
+    
+    /**
+     * Список услуг маркетинга.
+     */
+    public function getMarketings()
 	{
 		
 	}

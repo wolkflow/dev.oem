@@ -14,6 +14,9 @@ define('TIME_YEAR', 31536000);
 define('LANG_RU', 'ru');
 define('LANG_EN', 'en');
 
+define('LANG_RU_UP', 'RU');
+define('LANG_EN_UP', 'EN');
+
 
 /*
  * Шаблон по умолчанию.
@@ -60,6 +63,13 @@ define('EQUIPMENT_PROPERTY_ID', 30);
 define('COLORS_ENTITY_ID', 3);
 define('EXTENTS_ENTITY_ID', 4);
 define('EQUIPMENT_COLORS_ENTITY_ID', 5);
+
+
+// Инфоблоки.
+define('IBLOCK_EVENTS_ID',       1);
+define('IBLOCK_STANDS_ID',       2);
+define('IBLOCK_STAND_OFFERS_ID', 6);
+define('IBLOCK_PRODUCTS_ID',     8);
 
 
 // Разделы.
