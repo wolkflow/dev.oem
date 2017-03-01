@@ -2,6 +2,8 @@
 
 namespace Wolk\OEM;
 
+use \Wolk\OEM\Products\Base as Product;
+
 class Event extends \Wolk\Core\System\IBlockEntity
 {
     const IBLOCK_ID = IBLOCK_EVENTS_ID;
@@ -167,6 +169,17 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
 		return $this->data['PROPS']['OPTIONS']['VALUE'];
 	}
+    
+    
+    /**
+	 * Получение списка ID услуг и оборудования мероприятия.
+	 */
+	public function getProductIDs()
+	{
+		$this->load();
+		// TODO: PRODUCTS.
+		return array_map('intval', $this->data['PROPS']['OPTIONS']['VALUE']);
+	}
 	
 	
 	/**
@@ -205,6 +218,32 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		}
 		return $items;
 	}
+    
+    
+    /**
+     * Получение списка оборудования и услуг с ценами.
+     */
+    public function getProducts()
+    {
+        $ids = $this->getProductIDs();
+        
+        if (empty($ids)) {
+            return [];
+        }
+        
+        // Цены для мероприятия.
+        $prices = $this->getProductPrices();
+        
+        // Установка ценовой политики мероприятия.
+        $products = Product::getList([
+            'filter' => ['ID' => $ids, 'ACTIVE' => 'Y']
+        ]);
+        
+		foreach ($products as &$product) {
+			$product->setPrice($prices[$product->getID()]);
+		}
+		return $products;
+    }
 	
 	
 	/**
@@ -244,6 +283,12 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return $this->prices['stands'];
     }
 
+    
+    public function getProductPrices()
+    {
+        return $this->getEquipmentsPrices();
+    }
+    
 	
 	/**
 	 * Получение списка цен на обррудование и услуги мероприятия.

@@ -4,7 +4,7 @@ namespace Wolk\OEM\Products;
 
 class Base extends \Wolk\Core\System\IBlockEntity
 {
-	const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
+	const IBLOCK_ID   = 5;//IBLOCK_PRODUCTS_ID;
     const LANG_PREFIX = 'LANG_';
     
 	protected $lang = LANG_EN_UP;
@@ -54,4 +54,25 @@ class Base extends \Wolk\Core\System\IBlockEntity
         
         return floatval($this->data['PROPS']['SKETCH_HEIGHT']['VALUE']);
     }
+    
+    
+    /**
+     * Получение цены.
+     */
+	public function getPrice($default = true)
+	{
+		if (!empty($this->price) && $default) {
+			$this->load();
+		}
+		return $this->price;
+	}
+	
+	
+    /**
+     * Установка цены.
+     */
+	public function setPrice($price)
+	{
+		$this->price = (float) $price;
+	}
 }
