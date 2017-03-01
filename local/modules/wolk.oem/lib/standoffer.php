@@ -41,7 +41,10 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
      */
 	public function getBaseEquipments()
 	{
-		
+        $this->load();
+        
+        $ids = $this->data['PROPS']['EQUIPMENT']['VALUE'];
+        print_r($ids);
 	}	
 	
 	
@@ -50,7 +53,7 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
      */
 	public function getBaseServices()
 	{
-		
+		// NO DATA...
 	}
     
     
@@ -59,6 +62,6 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
      */
     public function getBaseMarketings()
 	{
-		
+		// NO DATA...
 	}
 }

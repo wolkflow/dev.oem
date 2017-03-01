@@ -1,42 +1,50 @@
-<?php namespace Wolk\OEM\Properties;
+<?php
+
+namespace Wolk\OEM\Properties;
+
 
 class UsingEquipmentPropertyType extends \CIBlockPropertyElementList
 {
-	public static function GetUserTypeDescription() {
+    
+	public static function GetUserTypeDescription()
+    {
 		return [
 			'PROPERTY_TYPE'        => 'E',
 			'USER_TYPE'            => 'usingEquipment',
 			'DESCRIPTION'          => 'Используемое оборудование',
 			'GetPropertyFieldHtml' => [__CLASS__, 'GetPropertyFieldHtml'],
-
 		];
 	}
-
-	public function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
-        $settings = \CIBlockPropertyElementList::PrepareSettings($arProperty);
-        if($settings["size"] > 1)
+    
+    
+	public function GetPropertyFieldHtml($property, $value, $strHTMLControlName)
+    {
+        $settings = \CIBlockPropertyElementList::PrepareSettings($property);
+        
+        if ($settings['size'] > 1) {
             $size = ' size="'.$settings["size"].'"';
-        else
+        } else {
             $size = '';
-
-        if($settings["width"] > 0)
+        }
+        
+        if ($settings['width'] > 0) {
             $width = ' style="width:'.$settings["width"].'px"';
-        else
+        } else {
             $width = '';
+        }
+        
+        $selected = false;
+        
+        $options = \CIBlockPropertyElementList::GetOptionsHtml($property, array($value["VALUE"]), $selected);
 
-        $bWasSelect = false;
-        $options = \CIBlockPropertyElementList::GetOptionsHtml($arProperty, array($value["VALUE"]), $bWasSelect);
-
-        $html = '<select data-test="test" name="'.$strHTMLControlName["VALUE"].'"'.$size.$width.'>';
-        if($arProperty["IS_REQUIRED"] != "Y")
-            $html .= '<option value=""'.(!$bWasSelect? ' selected': '').'>'.GetMessage("IBLOCK_PROP_ELEMENT_LIST_NO_VALUE").'</option>';
+        $html = '<select style="margin: 15px 0 5px 0;" data-test="test" name="'.$strHTMLControlName["VALUE"].'"'. $size . $width . '>';
+        if ($property['IS_REQUIRED'] != 'Y') {
+            $html .= '<option value=""' . (!$selected? ' selected': '') . '>' . GetMessage("IBLOCK_PROP_ELEMENT_LIST_NO_VALUE") . '</option>';
+        }
         $html .= $options;
         $html .= '</select>';
-		ob_start(); ?>
-		<input type="text" value="<?=$value['DESCRIPTION']?>" name="<?=$strHTMLControlName['DESCRIPTION']?>">
-		<?
-		$html .= ob_get_clean();
-
+        $html .= '<input type="text" value="' . $value['DESCRIPTION'] . '" name="' . $strHTMLControlName['DESCRIPTION'] . '" /><br/>';
+        
 		return $html;
 	}
 }

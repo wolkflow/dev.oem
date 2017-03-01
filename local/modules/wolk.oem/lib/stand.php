@@ -40,11 +40,9 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 	}
 	
 	
-	public function getLangTitle()
+	public function getTitle()
 	{
-		$this->load();
-		
-		return $this->data['PROPS']['LANG_NAME_' . $this->getLang()]['VALUE'];
+		return $this->getLangTitle($this->getLang());
 	}
 	
     
@@ -101,7 +99,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 	
 	
 	/**
-	 * Расчет площади стенда.
+	 * Расчет цены стенда по площади.
 	 */
 	protected function calc($price, $width, $depth)
     {

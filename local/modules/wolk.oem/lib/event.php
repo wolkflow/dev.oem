@@ -11,6 +11,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	protected $lang   = LANG_EN_UP;
 	protected $prices = ['stands' => [], 'equipments' => [], 'services' => [], 'marketings' => []];
 	
+    protected $preselect;
 	
     public function __construct($id = null, $data = [], $lang = LANG_EN_UP)
     {
@@ -59,14 +60,45 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	public function getMarginDates()
 	{
 		$this->load();
-		
-		return ['DATES' => $this->data['PROPS']['MARGIN_DATES']['VALUE'], 'NOTES' => $this->event['PROPS']['MARGIN_DATES']['DESCRIPTION']];
+        
+        $dates = array();
+        foreach ($this->data['PROPS']['MARGIN_DATES']['VALUE'] as $i => $date) {
+            $dates[$date] = (float) $this->data['PROPS']['MARGIN_DATES']['DESCRIPTION'][$i];
+        }
+		return $dates;
 	}
-
-
-    public function getDefaultStand()
+    
+    
+    public function getSteps()
     {
-        return [];
+        $this->load();
+        
+        return ((array) $this->data['PROPS']['STEPS']['VALUE_XML_ID']);
+    }
+
+    
+    /**
+     * Получение ID предустановленного стенда.
+     */
+    public function getPreselectStandID()
+    {
+        $this->load();
+        
+        return ((int) $this->data['PROPS']['PRESELECT']['VALUE']);
+    }
+    
+    
+    /**
+     * Получение предустановленного стенда.
+     */
+    public function getPreselectStand($force = false)
+    {
+        if (!isset($this->preselect) || $force) {
+            if ($this->getPreselectStandID() > 0) {
+                $this->preselect = new Stand($this->getPreselectStandID());
+            }
+        }
+        return $this->preselect;
     }
 	
 	
@@ -89,10 +121,11 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	 */
 	public function getStands()
 	{
-		$ids    = $this->getStandIDs();
+		$ids = $this->getStandIDs();
+        
 		$stands = [];
 		foreach ($ids as $id) {
-			$stands[$id] = new Stand($id);
+			$stands[$id] = new Stand($id, [], $this->getLang());
 		}
 		return $stands;
 	}
