@@ -2,9 +2,9 @@
 
 namespace Wolk\OEM\Products;
 
-class Base extends \Wolk\Core\System\IBlockEntity
+class Base extends \Wolk\Core\System\IBlockModel
 {
-	const IBLOCK_ID   = 5;//IBLOCK_PRODUCTS_ID;
+	const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
     const LANG_PREFIX = 'LANG_';
     
 	protected $lang = LANG_EN_UP;

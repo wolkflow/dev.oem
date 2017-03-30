@@ -71,6 +71,10 @@ define('IBLOCK_STANDS_ID',       2);
 define('IBLOCK_STAND_OFFERS_ID', 6);
 define('IBLOCK_PRODUCTS_ID',     8);
 
+// HL-блоки.
+define('HLBLOCK_PRICES_PRODUCTS_ID', 9);
+define('HLBLOCK_PRICES_STANDS_ID',   10);
+
 
 // Разделы.
 define('SECTION_LOGOTYPES_ID', 13);
