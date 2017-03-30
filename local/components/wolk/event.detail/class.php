@@ -181,12 +181,14 @@ class EventDetailComponent extends BaseListComponent
                 'IBLOCK_SECTION_ID',
                 'UF_SUBTITLE_' . $this->curLang,
                 'UF_NAME_' . $this->curLang,
-                'UF_SORT'
+                'UF_SORT',
+                'UF_LANG_NOTE_' . $this->curLang
             ]);
 
             while ($arSection = $obSections->Fetch()) {
                 $arSection['NAME'] = $arSection['UF_NAME_' . $this->curLang] ?: $arSection['NAME'];
                 $arSection['SUBTITLE'] = $arSection['UF_SUBTITLE_' . $this->curLang] ?: $arSection['UF_SUBTITLE'];
+                $arSection['NOTE'] = $arSection['UF_LANG_NOTE_' . $this->curLang] ?: '';
 				
                 if ($arSection['IBLOCK_SECTION_ID']) {
                     if (array_key_exists($arSection['ID'], $arServices)) {

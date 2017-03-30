@@ -1012,6 +1012,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 												<? } ?>
 											</li>
 										<? } ?>
+                                        
+                                        <? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_BANNERS_ID) { ?>
+											<li>
+												<a href="<?= CFile::getPath($basket['PROPS']['BANNER_FILE']['VALUE']) ?>" target="_blank">Баннер</a>
+												<? if (!empty($basket['PROPS']['BANNER_COMMENTS']['VALUE'])) { ?>
+													<p class="note"><?= $basket['PROPS']['BANNER_COMMENTS']['VALUE'] ?></p>
+												<? } ?>
+											</li>
+										<? } ?>
 										
 										<? if ($basket['ITEM']['CODE'] == 'FASCIA_NAME') { ?>
 											<li>

@@ -78,6 +78,7 @@ define('HLBLOCK_PRICES_STANDS_ID',   10);
 
 // Разделы.
 define('SECTION_LOGOTYPES_ID', 13);
+define('SECTION_BANNERS_ID', 58);
 
 
 define('VAT_DEFAULT', 18);

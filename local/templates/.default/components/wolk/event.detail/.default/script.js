@@ -1510,6 +1510,93 @@ Vue.component('graphics', {
 				quantityMixin,
 				currencyMixin
 			]
+		},
+        
+        
+        'banner': {
+			template: '#banner',
+			data: function () {
+				return {
+					sectionId: 58,
+					selectedItems: [
+						{
+							ID: '',
+							QUANTITY: 0,
+							FILE: null,
+							COMMENTS: ''
+						}
+					]
+				}
+			},
+			ready: function () {
+				if (
+					this.$root.order
+					&&
+					this.$root.order.selectedStand.hasOwnProperty('SERVICES')
+					&&
+					this.$root.order.selectedStand.SERVICES
+					&&
+					this.$root.order.selectedStand.SERVICES.hasOwnProperty(this.sectionId)
+				) {
+					this.selectedItems = this.$root.order.selectedStand.SERVICES[this.sectionId];
+				}
+			},
+			computed: {
+				section: function () {
+					return this.$parent.sections[this.sectionId];
+				},
+				items: function () {
+					return this.section.ITEMS;
+				}
+			},
+			methods: {
+				addItem: function () {
+					this.selectedItems.push({
+						ID: '',
+						QUANTITY: 0,
+						FILE: null,
+						COMMENTS: ''
+					});
+				},
+				addToCart: function () {
+					var self = this;
+					this.selectedItems.forEach(function (item, index) {
+						if (item.ID && item.QUANTITY > 0) {
+							self.$root.$set('selectedStand.SERVICES[' + self.section.ID + '][' + index + ']', {
+								ID: item.ID,
+								NAME: self.items[item.ID].NAME,
+								CART_SECTION: {ID: self.$parent.section.ID, NAME: self.$parent.section.NAME},
+								QUANTITY: item.QUANTITY,
+								PRICE: self.items[item.ID].PRICE,
+								PROPS: [
+									{
+										NAME: 'COMMENTS',
+										CODE: 'BANNER_COMMENTS',
+										VALUE: item.COMMENTS
+									},
+									{
+										NAME: 'FILE',
+										CODE: 'BANNER_FILE',
+										VALUE: item.FILE
+									}
+								]
+							});
+						} else {
+							if (
+								self.$root.selectedStand.SERVICES.hasOwnProperty(self.section.ID)
+								&&
+								self.$root.selectedStand.SERVICES[self.section.ID].hasOwnProperty(index)
+							) {
+								Vue.delete(self.$root.selectedStand.SERVICES[self.section.ID], index);
+							}
+						}
+					})
+				}
+			},
+			mixins: [
+				quantityMixin,
+				currencyMixin
+			]
 		}
     },
     mixins: [toggleableMixin]

@@ -55,6 +55,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="equipmentcontainer__itemsize">
+                    {{ section.NOTE }}
+                </div>
             </div>
         </div>
 
