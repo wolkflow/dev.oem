@@ -8,6 +8,7 @@
         <div class="pagesubtitleopencontainer">
             <fascia-name></fascia-name>
 			<logotype></logotype>
+            <banner></banner>
             <laminating></laminating>
 			<posting></posting>
             <full-color-printing></full-color-printing>
@@ -139,6 +140,74 @@
         </a>
     </div>
 </script>
+
+
+
+<? // Баннеры // ?>
+<script type="x/template" id="banner">
+    <div class="serviceItem" v-if="items">
+        <div class="serviceItem__title">
+			<?= Loc::getMessage('banner') ?>
+		</div>
+        <div class="serviceItem__block" v-for="selectedItem in selectedItems">
+            <div class="serviceItem__row">
+                <div class="serviceItem__left">
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('extend_choose') ?>
+					</div>
+                    <div class="itemText_custom">
+                        <select v-styler="selectedItem.ID" class="styler">
+							<option value="">
+								<?= Loc::getMessage('not selected') ?>
+							</option>
+							<option :value="item.ID" v-for="item in items">
+								{{ item.NAME }} &nbsp;&nbsp;&nbsp; {{ item.PRICE | format_currency ' ' currency_format }}
+							</option>
+						</select>
+                    </div>
+                </div>
+                <div class="serviceItem__right">
+                    <div class="itemCount">
+                        <div class="serviceItem__subtitle">
+							<?= Loc::getMessage('quantity') ?>
+						</div>
+                        <div class="itemCount__button itemCount__down justcnt" @click="decQty(selectedItem)"></div>
+                        <div class="itemCount__button itemCount__up justcnt" @click="incQty(selectedItem)"></div>
+                        <input v-model="selectedItem.QUANTITY" type="text" class="itemCount__input styler" number />
+                    </div>
+                </div>
+            </div>
+            <div class="serviceItem__row">
+                <div class="serviceItem__left-short" v-if="selectedItem.ID">
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('price') ?>
+					</div>
+                    <div class="serviceItem__cost-value">
+						{{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
+					</div>
+                </div>
+                <div class="serviceItem__right-large">
+                    <div class="serviceItem__subtitle">
+						<?= Loc::getMessage('file_and_formats') ?>
+					</div>
+                    <input v-fileupload="selectedItem.FILE" type="file" class="styler" />
+                </div>
+            </div>
+            <div class="serviceItem__bottom-inputs"></div>
+
+            <div class="serviceItem__subtitle">
+				<?= Loc::getMessage('comments') ?>
+			</div>
+			<textarea v-model="selectedItem.COMMENTS" class="styler" placeholder="<?= Loc::getMessage('logoCommentPlaceholder') ?>"></textarea>
+        </div>
+
+        <a href="javascript:void(0)" @click.prevent="addItem" class="itemAdd_field itemAdd__filed-left">
+            <i></i>
+            <span><?= Loc::getMessage('one_more_logo') ?></span>
+        </a>
+    </div>
+</script>
+
 
 
 <? // Ламинирование цветной пленкой // ?>

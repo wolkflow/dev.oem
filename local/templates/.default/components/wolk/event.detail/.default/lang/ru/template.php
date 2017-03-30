@@ -74,6 +74,7 @@ $MESS['text'] = 'Текст';
 $MESS['choose_color_fascia'] = 'Выберите цвет для <br>надписи на фризовой панеле';
 $MESS['colors_note'] = 'Цвета могут не точно совпадать с фактическим материалом';
 $MESS['logotype'] = 'Логотип';
+$MESS['banner'] = 'Баннер';
 $MESS['logotype_fascia_mono'] = 'Логотип на фриз монохромный';
 $MESS['logotype_fascia_poly'] = 'Логотип на фриз полноцветный';
 $MESS['logotype_wall_mono'] = 'Логотип на стену монохромный';
@@ -160,6 +161,7 @@ $MESS['placed'] = 'Размещено';
 $MESS['popuplabel'] = '';
 
 $MESS['extent'] = 'Выберите логотип';
+$MESS['extend_choose'] = 'Выберите';
 
 $MESS['EXTERLAN_TEXT'] = 'Для заказа улучшенных стандартных стендов воспользуйтесь пожалуйста сайтом';
 

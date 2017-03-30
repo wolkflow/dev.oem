@@ -73,6 +73,7 @@ $MESS['text'] = 'Text';
 $MESS['choose_color_fascia'] = 'Choose colour for <br>your fascia name';
 $MESS['colors_note'] = 'Colors may not be a 100% colour match of actual material';
 $MESS['logotype'] = 'Logotype';
+$MESS['banner'] = 'Banner';
 $MESS['logotype_fascia_mono'] = 'Monochorme logotype on fascia';
 $MESS['logotype_fascia_poly'] = 'Polyhrome logo on fascia panel';
 $MESS['logotype_wall_mono'] = 'Monochorme logo on wall panel';
@@ -162,6 +163,7 @@ $MESS['shelf_popup_label'] = 'Please, set height (cm) for the shelf to be mounte
 $MESS['popuplabel'] = '';
 
 $MESS['extent'] = 'Choose logo';
+$MESS['extend_choose'] = 'Выберите';
 
 $MESS['EXTERLAN_TEXT'] = 'For order the improved standard stands please use';
 

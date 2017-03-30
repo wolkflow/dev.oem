@@ -64,6 +64,7 @@ define('EQUIPMENT_COLORS_ENTITY_ID', 5);
 
 // Разделы.
 define('SECTION_LOGOTYPES_ID', 13);
+define('SECTION_BANNERS_ID', 58);
 
 
 define('VAT_DEFAULT', 18);
