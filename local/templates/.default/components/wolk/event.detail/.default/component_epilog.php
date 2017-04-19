@@ -25,7 +25,8 @@ $event['MARGIN_DATES'] = array_combine(
     $arResult['EVENT']['PROPS']["MARGIN_DATES"]['DESCRIPTION']
 );
 
-$event['LOCATION'] = $arResult['EVENT']['PROPS']["LANG_LOCATION_{$curLang}"]['VALUE'];
+$event['INCLUDE_VAT'] = ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y');
+$event['LOCATION']    = $arResult['EVENT']['PROPS']["LANG_LOCATION_{$curLang}"]['VALUE'];
 
 
 $event = Json::encode($event);

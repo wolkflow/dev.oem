@@ -66,7 +66,7 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             <div class="standspagetop__currentstandcontainer customizable_border">
                 <div class="standspagetop__currentstanddescription">
                     <p>{{{ selectedStand.PROPS['LANG_DESCRIPTION_' + curLang]['~VALUE'].TEXT }}}</p>
-                    <ul v-show="selectedStand.EQUIPMENT">
+                    <ul v-show="selectedStand.EQUIPMENT.length > 0">
 						<?= Loc::getMessage('Including') ?>:
                         <li v-for="eq in selectedStand.EQUIPMENT">
 							{{ eq.COUNT }} &times; {{ eq.NAME }}
@@ -435,10 +435,12 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 		<div class="ordertotalcontainer__total" v-show="curEvent.SURCHARGE > 0 && totalSurchargePrice">
 			<?= Loc::getMessage('total_with_vat') ?>: <span>{{totalSurchargePrice | format_currency ' ' currency_format }}</span>
 		</div>
-		<div class="ordertaxcontainer__total" v-show="taxPrice">
-			<?= Loc::getMessage('tax') ?>:
-			<span>{{taxPrice | format_currency ' ' currency_format }}</span>
-		</div>
+        <? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
+            <div class="ordertaxcontainer__total" v-show="taxPrice">
+                <?= Loc::getMessage('tax') ?>:
+                <span>{{taxPrice | format_currency ' ' currency_format }}</span>
+            </div>
+        <? } ?>
         <div class="ordertotalcontainer__surchargetotal" v-show="totalPrice">
             <div class="ordertotalcontainer__surchargetotaltitle" v-show="curEvent.SURCHARGE > 0">
 				<?= Loc::getMessage('total_with_sur') ?>:

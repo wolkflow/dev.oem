@@ -346,13 +346,15 @@
             },
 			totalPrice: function () {
 				if (this.selectedStand) {
-					return parseFloat((this.totalSurchargePrice + this.taxPrice).toFixed(2));
+                    return parseFloat((this.totalSurchargePrice + this.taxPrice).toFixed(2));
 				}
 				return null;
 			},
 			taxPrice: function () {
 				if (this.selectedStand) {
-					return parseFloat((this.totalSurchargePrice / 100 * this.vat).toFixed(2));
+                    if (!this.curEvent.INCLUDE_VAT) {
+                        return parseFloat((this.totalSurchargePrice / 100 * this.vat).toFixed(2));
+                    }
 				}
 				return null;
 			},
