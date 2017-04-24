@@ -6,6 +6,7 @@ use \Bitrix\Main\Loader;
 use \Bitrix\Main\Localization\Loc;
 use \Bitrix\Main\Application;
 
+
 \Bitrix\Main\Loader::includeModule('sale');
 
 class Order
@@ -157,6 +158,17 @@ class Order
 		}
 		return $result;
 	}
+    
+    
+    /**
+     * Получение объекта скетча.
+     */
+    public function getSketch()
+    {
+        $sketch = new OrderSketch();
+        
+        return $sketch;
+    }
 	
 	
 	/**
