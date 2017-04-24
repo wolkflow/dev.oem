@@ -47,6 +47,8 @@ define('GROUP_PARTNERS_ID', 10);
  */
 define('DELIVERY_DETAULT', 1);
 
+
+// Инфоблоки.
 define('EVENTS_IBLOCK_ID', 1);
 define('STANDS_IBLOCK_ID', 2);
 define('STANDS_OFFERS_IBLOCK_ID', 6);
@@ -69,16 +71,21 @@ define('EQUIPMENT_COLORS_ENTITY_ID', 5);
 define('IBLOCK_EVENTS_ID',       1);
 define('IBLOCK_STANDS_ID',       2);
 define('IBLOCK_STAND_OFFERS_ID', 6);
+define('IBLOCK_LOCATIONS_ID',    7);
 define('IBLOCK_PRODUCTS_ID',     8);
 
 // HL-блоки.
+define('HLBLOCK_ORDER_SKETCHES_ID',  6);
 define('HLBLOCK_PRICES_PRODUCTS_ID', 9);
 define('HLBLOCK_PRICES_STANDS_ID',   10);
-
 
 // Разделы.
 define('SECTION_LOGOTYPES_ID', 13);
 define('SECTION_BANNERS_ID', 58);
+
+// Свойства.
+define('IBLOCK_PROPERTY_SELECTED_STANDS_ID',    32);
+define('IBLOCK_PROPERTY_SELECTED_PRODUCTS_ID', 108);
 
 
 define('VAT_DEFAULT', 18);

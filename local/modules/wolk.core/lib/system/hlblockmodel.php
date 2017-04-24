@@ -6,7 +6,6 @@ namespace Wolk\Core\System;
 
 class HLBlockModel extends Model
 {
-	static protected $hlblockID;
 	
 	/**
      * Возвращает имя класса.
@@ -15,7 +14,7 @@ class HLBlockModel extends Model
      */
     public static function getEntityClassName()
     {
-    	$hldata    = \Bitrix\Highloadblock\HighloadBlockTable::getById(static::$hlblockID)->Fetch();
+    	$hldata    = \Bitrix\Highloadblock\HighloadBlockTable::getById(static::HBLOCK_ID)->Fetch();
     	$hlentity  = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity($hldata);
     	$classname = $hlentity->getDataClass();
     	

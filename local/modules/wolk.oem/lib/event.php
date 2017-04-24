@@ -80,6 +80,28 @@ class Event extends \Wolk\Core\System\IBlockEntity
 
     
     /**
+     * Получение ID местоположения.
+     */
+    public function getLocationID()
+    {
+        $this->load();
+        
+        return ((int) $this->data['PROPS']['LOCATION']['VALUE']);
+    }
+    
+    
+    /**
+     * Получение местоположения.
+     */
+    public function getLocation()
+    {
+        $this->load();
+        
+        return (new Location($this->getLocationID()));
+    }
+    
+    
+    /**
      * Получение ID предустановленного стенда.
      */
     public function getPreselectStandID()

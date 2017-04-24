@@ -4,7 +4,7 @@ namespace Wolk\OEM\Prices;
 
 class Product extends \Wolk\Core\System\HLBlockModel
 {
-    const IBLOCK_ID = HLBLOCK_PRICES_PRODUCTS_ID;
+    const HBLOCK_ID = HLBLOCK_PRICES_PRODUCTS_ID;
     
     // Список полей.
     const FIELD_ID       = 'ID';

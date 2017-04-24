@@ -27,6 +27,12 @@ class IBlockEntity extends Model
 		}
 		return $this->data;
 	}
+    
+    
+    public function getName()
+    {
+        return $this->get('NAME');
+    }
 	
 	
 	/**

@@ -4,7 +4,7 @@ namespace Wolk\OEM\Prices;
 
 class Stand extends \Wolk\Core\System\HLBlockModel
 {
-    const IBLOCK_ID = HLBLOCK_PRICES_STANDS_ID;
+    const HBLOCK_ID = HLBLOCK_PRICES_STANDS_ID;
     
     // Список полей.
     const FIELD_ID       = 'ID';
@@ -18,7 +18,6 @@ class Stand extends \Wolk\Core\System\HLBlockModel
     // Типы.
     const TYPE_COMMON     = 'COMMON';
     const TYPE_INDIVIDUAL = 'INDIVIDUAL';
-    
     
     
     public function getEventID()
