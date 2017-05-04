@@ -16,7 +16,7 @@ class Product extends \Wolk\Core\System\HLBlockModel
     const FIELD_TYPE     = 'UF_TYPE';
     
     // Типы.
-    const TYPE_COMMON     = 'COMMON';
+    const TYPE_STANDARD   = 'STANDARD';
     const TYPE_INDIVIDUAL = 'INDIVIDUAL';
     
     
@@ -45,7 +45,7 @@ class Product extends \Wolk\Core\System\HLBlockModel
     public static function getTypeList()
     {
         return [
-            self::TYPE_COMMON,
+            self::TYPE_STANDARD,
             self::TYPE_INDIVIDUAL
         ];
     }

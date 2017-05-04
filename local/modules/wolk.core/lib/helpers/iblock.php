@@ -53,4 +53,19 @@ class IBlock
 		
 		return strval($iblock['CODE']);
 	}
+    
+    
+    /**
+	 * Получение свойств.
+	 */
+	public static function getProps($id, $key = 'CODE') 
+	{
+		$db = \CIBlockProperty::GetList(array(), array('IBLOCK_ID' => $id));
+		
+		$props = array();
+		while ($prop = $db->Fetch()) {
+			$props[$prop[$key]] = $prop;
+		}
+		return $props;
+	}
 }

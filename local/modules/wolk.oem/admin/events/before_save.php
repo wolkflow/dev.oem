@@ -1,6 +1,26 @@
 <?
+
 function BXIBlockAfterSave(&$arFields)
 {
+    if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
+        return;
+    }
+    
+    if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+        return;
+    }
+    
+    // Запрос.
+    $request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+    
+    // Свойства иинфоблока мероприятий.
+    $props = Wolk\Core\Helpers\IBlock::getProps(IBLOCK_EVENTS_ID);
+    
+    
+    file_put_contents($_SERVER['DOCUMENT_ROOT'].'/save.log', print_r($arFields, true) . PHP_EOL  . PHP_EOL  . PHP_EOL  . PHP_EOL . print_r($_REQUEST, true));
+    
+    return;
+    
     if (isset($_REQUEST['CURRENCY_RU'])) {
         $currencyRu = $_REQUEST['useOnRU'] == 'EN' ? $_REQUEST['CURRENCY_EN'] : $_REQUEST['CURRENCY_RU'];
         CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
@@ -141,3 +161,4 @@ function BXIBlockAfterSave(&$arFields)
 
     return $arFields;
 }
+

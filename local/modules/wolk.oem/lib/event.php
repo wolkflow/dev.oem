@@ -180,7 +180,41 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
 		return $this->data['PROPS']['MANAGERS']['VALUE'];
 	}
-	
+    
+    
+    
+    public function getCurrencyStandsStandard($lang = LANG_EN_UP)
+    {
+        $this->load();
+        
+        return (string) $this->data['PROPS']['LANG_STANDS_STANDARD_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+    }
+    
+    
+    public function getCurrencyStandsIndividual($lang = LANG_EN_UP)
+    {
+        $this->load();
+        
+        return (string) $this->data['PROPS']['LANG_STANDS_INDIVIDAL_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+    }
+    
+    
+    public function getCurrencyProductsStandard($lang = LANG_EN_UP)
+    {
+        $this->load();
+        
+        return (string) $this->data['PROPS']['LANG_PRODUCTS_STANDARD_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+    }
+    
+    
+    public function getCurrencyProductsIndividual($lang = LANG_EN_UP)
+    {
+        $this->load();
+        
+        return (string) $this->data['PROPS']['LANG_PRODUCTS_INDIVIDAL_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+    }
+    
+    
 	
 	/**
 	 * Получение списка ID услуг и оборудования мероприятия.
