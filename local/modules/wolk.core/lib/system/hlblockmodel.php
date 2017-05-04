@@ -56,10 +56,10 @@ class HLBlockModel extends Model
 		
 		if ($result->isSuccess()) {
 			$this->id = $result->getID();
-			return $this->getID();
 		} else {
 			throw new \Exception($result->getErrorMessages());
 		}
+        return $result;
 	}
 	
 	
@@ -73,10 +73,10 @@ class HLBlockModel extends Model
 	{
         $class   = self::getEntityClassName();
 		$element = new $class($this->getID());
-		$result = $element->update($data);
+		$result  = $element->update($data);
 		
 		if ($result->isSuccess()) {
-			return $this->getID();
+			return $result;
 		} else {
 			throw new \Exception($result->getErrorMessages());
 		}

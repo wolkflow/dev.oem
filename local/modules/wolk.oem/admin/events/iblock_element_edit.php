@@ -19,6 +19,8 @@ $props = Wolk\Core\Helpers\IBlock::getProps(IBLOCK_EVENTS_ID);
 // Объект мероприятия.
 $event = new Wolk\OEM\Event($ID);
 
+$event->clearStandsPrices('STANDARD', 'RU');
+
 
 
 // Список стендов.

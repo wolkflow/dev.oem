@@ -26,6 +26,18 @@ class Stand extends \Wolk\Core\System\HLBlockModel
     }
     
     
+    public function getType()
+    {
+        return $this->get(self::FIELD_TYPE);
+    }
+    
+    
+    public function getLang()
+    {
+        return $this->get(self::FIELD_LANG);
+    }
+    
+    
     public function getStandID()
     {
         return $this->get(self::FIELD_STAND);
@@ -49,4 +61,23 @@ class Stand extends \Wolk\Core\System\HLBlockModel
         ];
     }
     
+    
+    /**
+     * Удаление цен мероприятия с выбранным типом для выбранного языка.
+     */
+    public static function clear($event, $type, $lang)
+    {
+        $class  = self::getEntityClassName();
+        $entity = new $class();
+        
+        $query = "
+            DELETE FROM `" . $entity->getTableName() . "`
+            WHERE `" . self::FIELD_EVENT . "` = '" . strval($event) . "'
+              AND `" . self::FIELD_TYPE . "`  = '" . strval($type) . "'
+              AND `" . self::FIELD_LANG . "`  = '" . strval($lang) . "'
+        ";
+        
+        $connection = \Bitrix\Main\Application::getConnection();
+        $connection->query($query);
+    }
 }

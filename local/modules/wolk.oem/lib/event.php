@@ -3,6 +3,9 @@
 namespace Wolk\OEM;
 
 use \Wolk\OEM\Products\Base as Product;
+use Wolk\OEM\Prices\Stand as StandPrice;
+use Wolk\OEM\Prices\Product as ProductPrice;
+
 
 class Event extends \Wolk\Core\System\IBlockEntity
 {
@@ -493,5 +496,64 @@ class Event extends \Wolk\Core\System\IBlockEntity
             return $notes[$index];
         }
         return 0;
+    }
+    
+    
+    /**
+     * Установка цен на стенды в рамках мерпориятия.
+     */
+    public function clearStandsPrices($type, $lang)
+    {
+        return StandPrice::clear($this->getID(), $type, $lang);
+    }
+    
+    
+    /**
+     * Установка цен на стенды в рамках мерпориятия.
+     */
+    public function setStandsPrices($type, $lang, $currency, $prices)
+    {
+        $type     = mb_strtoupper((string) $type);
+        $lang     = mb_strtoupper((string) $lang);
+        $currency = mb_strtoupper((string) $currency);
+        $prices   = (array) $prices;
+        
+        if (empty($language)) {
+            throw new \Exception('Не указан язык для сохранения цен стендов');
+        }
+        
+        if (empty($currency)) {
+            throw new \Exception('Не указана валюта для сохранения цен стендов');
+        }
+        
+        if (empty($type)) {
+            throw new \Exception('Не указан тип для сохранения цен стендов');
+        }
+        
+        if (!in_array($type, \Wolk\OEM\Prices\Stand::getTypeList())) {
+            throw new \Exception('Недопустимый тип для сохранения цен стендов');
+        }
+        
+        // Удаление цен для текущего языка и типа.
+        $this->clearStandsPrices($language, $type);
+        
+        // Сохранение цен по стендам.
+        foreach ($prices as $id => $price) {
+            $standprice = new StandPrice();
+            
+            // Добавление цены стенду.
+            $result = $standprice->add([
+                StandPrice::FIELD_EVENT     => $this->getID(),
+                StandPrice::FIELD_STAND     => intval($id),
+                StandPrice::FIELD_PRICE     => floatval($price),
+                StandPrice::FIELD_CURRENCY  => $currency,
+                StandPrice::FIELD_LANG      => $language,
+                StandPrice::FIELD_TYPE      => $type,
+            ]);
+            
+            if (!$result->isSuccess()) {
+                // TODO: note about fail.
+            }
+        }
     }
 }
