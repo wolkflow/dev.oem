@@ -7,9 +7,8 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
 {
 	const IBLOCK_ID = IBLOCK_STAND_OFFERS_ID;
 
-	protected $id   = null;
-	protected $data = [];
-	
+	protected $id    = null;
+	protected $data  = [];
 	
     
 	public function getStand()
@@ -44,7 +43,6 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
         $this->load();
         
         $ids = $this->data['PROPS']['EQUIPMENT']['VALUE'];
-        print_r($ids);
 	}	
 	
 	

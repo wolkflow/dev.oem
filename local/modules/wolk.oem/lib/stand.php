@@ -6,25 +6,28 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 {
 	const IBLOCK_ID = IBLOCK_STANDS_ID;
 
-	protected $id    = null;
-	protected $data  = [];
-	protected $price = null;
-	protected $lang  = LANG_EN_UP;
+	protected $id      = null;
+	protected $data    = [];
+	protected $price   = null;
+	protected $context = null;
 	
-	
-    public function __construct($id = null, $data = [], $lang = LANG_EN_UP)
+    public function __construct($id = null, $data = [], Context $context = null)
     {
 		parent::__construct($id, $data);
         
-		$this->lang = mb_strtoupper((string) $lang);
+        // Контекст, связанный с типом стенда и языком.
+        if (empty($context)) {
+            $context = new Context();
+        }
+        $this->context = $context;
     }
 	
-	
-	public function getLang()
-	{
-		return $this->lang;
-	}
-	
+    
+    public function getContext()
+    {
+        return $this->context;
+    }
+    
 	
 	public function getLangTitle($lang = LANG_EN_UP)
 	{
@@ -101,8 +104,12 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 	/**
 	 * Расчет цены стенда по площади.
 	 */
-	protected function calc($price, $width, $depth)
+	protected static function calc($price, $width, $depth)
     {
+        $price = (float) $price;
+        $width = (float) $width;
+        $depth = (float) $depth;
+        
         return ($price * $width * $depth);
     }
 }

@@ -19,9 +19,6 @@ $props = Wolk\Core\Helpers\IBlock::getProps(IBLOCK_EVENTS_ID);
 // Объект мероприятия.
 $event = new Wolk\OEM\Event($ID);
 
-$event->clearStandsPrices('STANDARD', 'RU');
-
-
 
 // Список стендов.
 $result = Stand::getList(
@@ -442,20 +439,20 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             <td>
                                 <input 
                                     class="js-prices-products-standard-<?= LANG_RU ?>"
-                                    name="PRICES_PRODUCTS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>][<?= $selected_product ?>]" 
+                                    name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
-                                    value="<?= $prices_products[StandPrices::TYPE_STANDARD][LANG_RU_UP][$selected_product][StandPrices::FIELD_PRICE] ?>"
+                                    value="<?= $prices_products[ProductPrices::TYPE_STANDARD][LANG_RU_UP][$selected_product][ProductPrices::FIELD_PRICE] ?>"
                                     data-stand="<?= $selected_product ?>"
                                 />
                             </td>
                             <td>
                                 <input
                                     class="js-prices-products-standard-<?= LANG_EN ?>"
-                                    name="PRICES_PRODUCTS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>][<?= $selected_product ?>]" 
+                                    name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
-                                    value="<?= $prices_products[StandPrices::TYPE_STANDARD][LANG_EN_UP][$selected_product][StandPrices::FIELD_PRICE] ?>"
+                                    value="<?= $prices_products[ProductPrices::TYPE_STANDARD][LANG_EN_UP][$selected_product][ProductPrices::FIELD_PRICE] ?>"
                                     data-stand="<?= $selected_product ?>"
                                 />
                             </td>
@@ -473,7 +470,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             Используемая валюта
                         </td>
 						<td>
-							<select name="CURRENCY_PRODUCTS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>]" class="js-prices-products-currency-standard-<?= LANG_RU ?>">
+							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>]" class="js-prices-products-currency-standard-<?= LANG_RU ?>">
 								<option value="">- не выбрано -</option>
 								<? foreach ($currencies as $id => $currency) { ?>
 									<option <? if ($id == $event->getCurrencyProductsStandard(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
@@ -483,7 +480,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 							</select>
 						</td>
 						<td>
-							<select name="CURRENCY_PRODUCTS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>]" class="js-prices-products-currency-standard-<?= LANG_EN ?>">
+							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>]" class="js-prices-products-currency-standard-<?= LANG_EN ?>">
 								<option value="">- не выбрано -</option>
 								<? foreach ($currencies as $id => $currency) { ?>
 									<option <? if ($id == $event->getCurrencyProductsStandard(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
@@ -565,20 +562,20 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             <td>
                                 <input 
                                     class="js-prices-products-individual-<?= LANG_RU ?>"
-                                    name="PRICES_PRODUCTS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>][<?= $selected_product ?>]" 
+                                    name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
-                                    value="<?= $prices_products[StandPrices::TYPE_INDIVIDUAL][LANG_RU_UP][$selected_product][StandPrices::FIELD_PRICE] ?>"
+                                    value="<?= $prices_products[ProductPrices::TYPE_INDIVIDUAL][LANG_RU_UP][$selected_product][ProductPrices::FIELD_PRICE] ?>"
                                     data-stand="<?= $selected_product ?>"
                                 />
                             </td>
                             <td>
                                 <input
                                     class="js-prices-products-individual-<?= LANG_EN ?>"
-                                    name="PRICES_PRODUCTS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= $selected_product ?>]" 
+                                    name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
-                                    value="<?= $prices_products[StandPrices::TYPE_INDIVIDUAL][LANG_EN_UP][$selected_product][StandPrices::FIELD_PRICE] ?>"
+                                    value="<?= $prices_products[ProductPrices::TYPE_INDIVIDUAL][LANG_EN_UP][$selected_product][ProductPrices::FIELD_PRICE] ?>"
                                     data-stand="<?= $selected_product ?>"
                                 />
                             </td>
@@ -596,7 +593,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             Используемая валюта
                         </td>
 						<td>
-							<select name="CURRENCY_PRODUCTS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>]" class="js-prices-products-currency-individual-<?= LANG_RU ?>">
+							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>]" class="js-prices-products-currency-individual-<?= LANG_RU ?>">
 								<option value="">- не выбрано -</option>
 								<? foreach ($currencies as $id => $currency) { ?>
 									<option <? if ($id == $event->getCurrencyProductsIndividual(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
@@ -606,7 +603,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 							</select>
 						</td>
 						<td>
-							<select name="CURRENCY_PRODUCTS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>]" class="js-prices-products-currency-individual-<?= LANG_EN ?>">
+							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>]" class="js-prices-products-currency-individual-<?= LANG_EN ?>">
 								<option value="">- не выбрано -</option>
 								<? foreach ($currencies as $id => $currency) { ?>
 									<option <? if ($id == $event->getCurrencyProductsIndividual(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">

@@ -1,164 +1,174 @@
-<?
+<?php
 
+use \Wolk\OEM\Event;
+use \Wolk\OEM\Products\Base as Product;
+use Wolk\OEM\Prices\Stand   as StandPrice;
+use Wolk\OEM\Prices\Product as ProductPrice;
+
+if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
+    return;
+}
+
+if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+    return;
+}
+
+// Запрос.
+$request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+
+if (!$request->isPost() || !empty($dontsave)) {
+    return;
+}
+
+//if ($REQUEST_METHOD=="POST" && strlen($Update)>0 && $view!="Y" && (!$error) && empty($dontsave) && strlen($_POST['DETAIL_TEXT'])<=0)
+  // $error = new _CIBlockError(2, "DESCRIPTION_REQUIRED", "Введите текст статьи");
+
+
+
+// ID элемента инфоблока.
+$ID = (int) $request->get('ID');
+
+// Валюты цен на стенды.
+$currencies_stands = (array) $request->get('CURRENCY_STANDS');
+
+// Валюты цен на продукцию.
+$currencies_products = (array) $request->get('CURRENCY_PRODUCTS');
+
+
+// Проверка наличия ошибок в данных.
+if (!empty($ID)) {
+    if (empty($currencies_stands[StandPrice::TYPE_STANDARD]['RU'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартных стендов (RU)');
+    }
+
+    if (empty($currencies_stands[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартных стендов (EN)');
+    }
+
+    if (empty($currencies_stands[StandPrice::TYPE_STANDARD]['RU'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальных стендов (RU)');
+    }
+
+    if (empty($currencies_stands[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальных стендов (EN)');
+    }
+
+
+    if (empty($currencies_products[ProductPrice::TYPE_STANDARD]['RU'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной продукции (RU)');
+    }
+
+    if (empty($currencies_products[ProductPrice::TYPE_INDIVIDUAL]['EN'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной продукции (EN)');
+    }
+
+    if (empty($currencies_products[ProductPrice::TYPE_STANDARD]['RU'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной продукции (RU)');
+    }
+
+    if (empty($currencies_products[ProductPrice::TYPE_INDIVIDUAL]['EN'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной продукции (EN)');
+    }
+}
+
+
+/**
+ * Функция сохранения данных.
+ */
 function BXIBlockAfterSave(&$arFields)
 {
-    if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
-        return;
-    }
-    
-    if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
-        return;
-    }
-    
     // Запрос.
     $request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
     
     // Свойства иинфоблока мероприятий.
-    $props = Wolk\Core\Helpers\IBlock::getProps(IBLOCK_EVENTS_ID);
+    // $props = Wolk\Core\Helpers\IBlock::getProps(IBLOCK_EVENTS_ID);
+    
+    // Мероприятие.
+    $event = new Event($arFields['ID']);
     
     
-    file_put_contents($_SERVER['DOCUMENT_ROOT'].'/save.log', print_r($arFields, true) . PHP_EOL  . PHP_EOL  . PHP_EOL  . PHP_EOL . print_r($_REQUEST, true));
+    // Цены на стенды.
+    $prices_stands = (array) $request->get('PRICES_STANDS');
     
-    return;
+    // Цены на продукцию.
+    $prices_products = (array) $request->get('PRICES_PRODUCTS');
     
-    if (isset($_REQUEST['CURRENCY_RU'])) {
-        $currencyRu = $_REQUEST['useOnRU'] == 'EN' ? $_REQUEST['CURRENCY_EN'] : $_REQUEST['CURRENCY_RU'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
-            'LANG_CURRENCY_RU' => $currencyRu
-        ]);
-    }
-
-    if (isset($_REQUEST['CURRENCY_EN'])) {
-        $currencyEn = $_REQUEST['useOnEN'] == 'RU' ? $_REQUEST['CURRENCY_RU'] : $_REQUEST['CURRENCY_EN'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
-            'LANG_CURRENCY_EN' => $currencyEn
-        ]);
-    }
-	
-	if (isset($_REQUEST['CURRENCY_STAND_RU'])) {
-        $currencyStandRu = $_REQUEST['useStandOnRU'] == 'EN' ? $_REQUEST['CURRENCY_STAND_EN'] : $_REQUEST['CURRENCY_STAND_RU'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
-            'LANG_STAND_CURRENCY_RU' => (string) $currencyStandRu
-        ]);
-    }
-
-    if (isset($_REQUEST['CURRENCY_STAND_EN'])) {
-        $currencyStandEn = $_REQUEST['useStandOnEN'] == 'RU' ? $_REQUEST['CURRENCY_STAND_RU'] : $_REQUEST['CURRENCY_STAND_EN'];
-        CIblockElement::SetPropertyValuesEx($arFields['ID'], EVENTS_IBLOCK_ID, [
-            'LANG_STAND_CURRENCY_EN' => (string) $currencyStandEn
-        ]);
-    }
-	
-
-	// Формирование цен стендов.
-	if (isset($_REQUEST['stand']) && !empty($_REQUEST['stand'])) {
-		\Bitrix\Main\Loader::includeModule('catalog');
-		
-		$stands = \Wolk\Core\Helpers\ArrayHelper::index($_REQUEST['stand'], 'ID');
-		
-		// Удаление текущих цен на стенды.
-		$current_stand_prices = \Wolk\OEM\EventStandPricesTable::getList(['filter' =>['EVENT_ID' => $arFields['ID']]])->fetchAll();
-        foreach ($current_stand_prices as $current_stand_price) {
-            \Wolk\OEM\EventStandPricesTable::delete($current_stand_price['ID']);
+    
+    // Валюты цен на стенды.
+    $currencies_stands = (array) $request->get('CURRENCY_STANDS');
+    
+    // Валюты цен на продукцию.
+    $currencies_products = (array) $request->get('CURRENCY_PRODUCTS');
+    
+   
+    
+    // Сохранение цен на выбранные стенды.
+    if (!empty($prices_stands)) {
+        foreach ($prices_stands as $type => $langs) {
+            foreach ($langs as $lang => $prices) {
+                
+                // Удаление старых цен.
+                $event->clearStandsPrices($type, $lang);
+                
+                foreach ($prices as $stand => $price) {
+                    $pricedata = [
+                        StandPrice::FIELD_EVENT    => $arFields['ID'],
+                        StandPrice::FIELD_STAND    => $stand,
+                        StandPrice::FIELD_TYPE     => $type,
+                        StandPrice::FIELD_LANG     => $lang,
+                        StandPrice::FIELD_CURRENCY => ($currencies_stands[$type][$lang]) ?: (CURRENCY_DEFAULT),
+                        StandPrice::FIELD_PRICE    => (float) $price,
+                    ];
+                    
+                    $element = new StandPrice();
+                    
+                    try {
+                        $result = $element->add($pricedata);
+                    } catch (\Exception $e) {
+                        //
+                    }
+                }
+                
+                // Сохранение валюты для цен.
+                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_STANDS_'.$type.'_CURRENCY_'.$lang, $currencies_stands[$type][$lang]);
+            }
         }
-		
-		foreach ($stands as $stand) {
-			
-			$data = [
-				'EVENT_ID' => $arFields['ID'],
-				'STAND_ID' => $stand['ID'],
-				'PRICE'    => $_REQUEST['useStandOnRU'] == 'EN' ? $stand['PRICE_EN'] : $stand['PRICE_RU'],
-                'SITE_ID'  => 'RU'
-			];
-			
-			if (!is_numeric($data['PRICE'])) {
-                $arPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
-                if ($arPrice['CURRENCY'] != $currencyStandRu) {
-                    $arPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arPrice['PRICE'] ?: 0, $arPrice['CURRENCY'], $currencyStandRu);
-                }
-                $data['PRICE'] = $arPrice['PRICE'] ?: 0;
-            }
-			$data['PRICE'] = (float) $data['PRICE'];
-			
-			
-			\Wolk\OEM\EventStandPricesTable::add($data);
-						
-			$data = [
-				'EVENT_ID' => $arFields['ID'],
-				'STAND_ID' => $stand['ID'],
-				'PRICE'    => $_REQUEST['useStandOnEN'] == 'RU' ? $stand['PRICE_RU'] : $stand['PRICE_EN'],
-                'SITE_ID'  => 'EN'
-			];
-			if (!is_numeric($data['PRICE'])) {
-                $arPrice = GetCatalogProductPrice($data['STAND_ID'], 1);
-                if ($arPrice['CURRENCY'] != $currencyStandEn) {
-                    $arPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arPrice['PRICE'] ?: 0, $arPrice['CURRENCY'], $currencyStandEn);
-                }
-                $data['PRICE'] = $arPrice['PRICE'] ?: 0;
-            }
-			$data['PRICE'] = (float) $data['PRICE'];
-			
-			\Wolk\OEM\EventStandPricesTable::add($data);
-		}
-	}
-	
-	
-	
-    if (isset($_REQUEST['eq']) && !empty($_REQUEST['eq'])) {
-        \Bitrix\Main\Loader::includeModule('catalog');
-        $eq = \Wolk\Core\Helpers\ArrayHelper::index($_REQUEST['eq'], 'ID');
-        $stEq = \Wolk\Core\Helpers\ArrayHelper::index($_REQUEST['steq'], 'ID');
-        $resultEq = $eq + $stEq;
-        $curEq = \Wolk\OEM\EventEquipmentPricesTable::getList([
-            'filter' =>
-                [
-                    'EVENT_ID' => $arFields['ID']
-                ]
-        ])->fetchAll();
-        foreach ($curEq as $eq) {
-            \Wolk\OEM\EventEquipmentPricesTable::delete($eq['ID']);
-        }
-        unset($eq);
-        
-        foreach ($resultEq as $eq) {
-            $ruItem = [
-                'EQUIPMENT_ID' => $eq['ID'],
-                'EVENT_ID'     => $arFields['ID'],
-                'PRICE'        => $_REQUEST['useOnRU'] == 'EN' ? $eq['PRICE_EN'] : $eq['PRICE_RU'],
-                'SITE_ID'      => 'RU'
-            ];
-            if (!$ruItem['PRICE']) {
-                $arRuPrice = GetCatalogProductPrice($ruItem['EQUIPMENT_ID'], 1);
-                if ($arRuPrice['CURRENCY'] != $currencyRu) {
-                    $arRuPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arRuPrice['PRICE'] ?: 0, $arRuPrice['CURRENCY'], $currencyRu);
-                }
-                $ruItem['PRICE'] = $arRuPrice['PRICE'] ?: 0;
-            }
-            //file_put_contents($_SERVER['DOCUMENT_ROOT'].'/prru.log', print_r([$arRuPrice, $ruItem], true), FILE_APPEND);
-            
-            \Wolk\OEM\EventEquipmentPricesTable::add($ruItem);
-
-            $enItem = [
-                'EQUIPMENT_ID' => $eq['ID'],
-                'EVENT_ID'     => $arFields['ID'],
-                'PRICE'        => $_REQUEST['useOnEN'] == 'RU' ? $eq['PRICE_RU'] : $eq['PRICE_EN'],
-                'SITE_ID'      => 'EN'
-            ];
-            if (!$enItem['PRICE']) {
-                $arEnPrice = GetCatalogProductPrice($enItem['EQUIPMENT_ID'], 1);
-                if ($arEnPrice['CURRENCY'] != $currencyEn) {
-                    $arEnPrice['PRICE'] = CCurrencyRates::ConvertCurrency($arEnPrice['PRICE'] ?: 0, $arEnPrice['CURRENCY'], $currencyEn);
-                }
-                $enItem['PRICE'] = $arEnPrice['PRICE'] ?: 0;
-            }
-            //file_put_contents($_SERVER['DOCUMENT_ROOT'].'/pren.log', print_r([$arEnPrice, $enItem], true), FILE_APPEND);
-            
-            \Wolk\OEM\EventEquipmentPricesTable::add($enItem);
-        }
-        
-        //file_put_contents($_SERVER['DOCUMENT_ROOT'].'/pr.log', print_r([$_REQUEST, $resultEq], true));
     }
-
+    
+    
+    // Сохранение цен на выбранные стенды.
+    if (!empty($prices_products)) {
+        foreach ($prices_products as $type => $langs) {
+            foreach ($langs as $lang => $prices) {
+                
+                // Удаление старых цен.
+                $event->clearProductsPrices($type, $lang);
+                
+                foreach ($prices as $product => $price) {
+                    $pricedata = [
+                        ProductPrice::FIELD_EVENT    => $arFields['ID'],
+                        ProductPrice::FIELD_PRODUCT  => $product,
+                        ProductPrice::FIELD_TYPE     => $type,
+                        ProductPrice::FIELD_LANG     => $lang,
+                        ProductPrice::FIELD_CURRENCY => ($currencies_products[$type][$lang]) ?: (CURRENCY_DEFAULT),
+                        ProductPrice::FIELD_PRICE    => (float) $price,
+                    ];
+                    
+                    $element = new ProductPrice();
+                    
+                    try {
+                        $result = $element->add($pricedata);
+                    } catch (\Exception $e) {
+                        // 
+                    }
+                }
+                
+                // Сохранение валюты для цен.
+                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_PRODUCTS_'.$type.'_CURRENCY_'.$lang, $currencies_products[$type][$lang]);
+            }
+        }
+    }
+    
     return $arFields;
 }
 

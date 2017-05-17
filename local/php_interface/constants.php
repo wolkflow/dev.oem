@@ -40,6 +40,11 @@ define('PERSON_TYPE_DETAULT', 1);
  */
 define('GROUP_MANAGERS_ID', 9);
 define('GROUP_PARTNERS_ID', 10);
+
+/*
+ * Валюта.
+ */
+define('CURRENCY_DEFAULT', 'EUR'); 
  
  
 /*
@@ -47,6 +52,11 @@ define('GROUP_PARTNERS_ID', 10);
  */
 define('DELIVERY_DETAULT', 1);
 
+/*
+ * Тип по умолчанию.
+ */
+define('TYPE_DEFAULT', 'STANDARD');
+ 
 
 // Инфоблоки.
 define('EVENTS_IBLOCK_ID', 1);
@@ -97,3 +107,11 @@ define('PRODUCTION_IP', '89.253.254.58');
 
 
 define('HLBLOCK_USERS_API_ID', 7);
+
+
+
+/*
+ * Ошибки инфоблоков.
+ */
+define('IBLOCK_ERROR_TYPE_CRITICAL', 1);
+define('IBLOCK_ERROR_TYPE_FAIL',     2);

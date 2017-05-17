@@ -50,14 +50,13 @@ class HLBlockModel extends Model
 	 */
 	public function add($data)
 	{
-        $class   = self::getEntityClassName();
-		//$element = new $class();
+        $class  = self::getEntityClassName();
 		$result = $class::add($data);
 		
 		if ($result->isSuccess()) {
 			$this->id = $result->getID();
 		} else {
-			throw new \Exception($result->getErrorMessages());
+			throw new \Exception(implode(", ", (array) $result->getErrorMessages()));
 		}
         return $result;
 	}

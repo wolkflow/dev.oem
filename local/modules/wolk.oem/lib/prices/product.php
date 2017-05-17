@@ -12,8 +12,9 @@ class Product extends \Wolk\Core\System\HLBlockModel
     const FIELD_PRODUCT  = 'UF_PRODUCT';
     const FIELD_PRICE    = 'UF_PRICE';
     const FIELD_CURRENCY = 'UF_CURRENCY';
-    const FIELD_LANG     = 'UF_LANG';
     const FIELD_TYPE     = 'UF_TYPE';
+    const FIELD_LANG     = 'UF_LANG';
+    
     
     // Типы.
     const TYPE_STANDARD   = 'STANDARD';
@@ -50,4 +51,23 @@ class Product extends \Wolk\Core\System\HLBlockModel
         ];
     }
     
+    
+    /**
+     * ”даление цен меропри¤ти¤ с выбранным типом дл¤ выбранного ¤зыка.
+     */
+    public static function clear($event, $type, $lang)
+    {
+        $class  = self::getEntityClassName();
+        $entity = new $class();
+        
+        $query = "
+            DELETE FROM `" . $entity->getTableName() . "`
+            WHERE `" . self::FIELD_EVENT . "` = '" . strval($event) . "'
+              AND `" . self::FIELD_TYPE . "`  = '" . strval($type) . "'
+              AND `" . self::FIELD_LANG . "`  = '" . strval($lang) . "'
+        ";
+        
+        $connection = \Bitrix\Main\Application::getConnection();
+        $connection->query($query);
+    }
 }

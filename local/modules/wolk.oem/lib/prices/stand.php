@@ -6,7 +6,7 @@ class Stand extends \Wolk\Core\System\HLBlockModel
 {
     const HBLOCK_ID = HLBLOCK_PRICES_STANDS_ID;
     
-    // Список полей.
+    // РЎРїРёСЃРѕРє РїРѕР»РµР№.
     const FIELD_ID       = 'ID';
     const FIELD_EVENT    = 'UF_EVENT';
     const FIELD_STAND    = 'UF_STAND';
@@ -15,7 +15,7 @@ class Stand extends \Wolk\Core\System\HLBlockModel
     const FIELD_LANG     = 'UF_LANG';
     const FIELD_TYPE     = 'UF_TYPE';
     
-    // Типы.
+    // РўРёРїС‹.
     const TYPE_STANDARD   = 'STANDARD';
     const TYPE_INDIVIDUAL = 'INDIVIDUAL';
     
@@ -51,7 +51,7 @@ class Stand extends \Wolk\Core\System\HLBlockModel
     
     
     /**
-     * Список типов.
+     * вЂ”РїРёСЃРѕРє С‚РёРїРѕРІ.
      */
     public static function getTypeList()
     {
@@ -63,7 +63,7 @@ class Stand extends \Wolk\Core\System\HLBlockModel
     
     
     /**
-     * Удаление цен мероприятия с выбранным типом для выбранного языка.
+     * вЂќРґР°Р»РµРЅРёРµ С†РµРЅ РјРµСЂРѕРїСЂРёВ¤С‚РёВ¤ СЃ РІС‹Р±СЂР°РЅРЅС‹Рј С‚РёРїРѕРј РґР»В¤ РІС‹Р±СЂР°РЅРЅРѕРіРѕ В¤Р·С‹РєР°.
      */
     public static function clear($event, $type, $lang)
     {
