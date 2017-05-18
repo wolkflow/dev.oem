@@ -44,6 +44,13 @@ class WizardComponent extends \CBitrixComponent
         // Язык.
         $arParams['LANG'] = (string) $arParams['LANG'];
         
+        // Ширина стенда.
+        $arParams['WIDTH'] = (float) $arParams['WIDTH'];
+        
+        // Глубина стенда.
+        $arParams['DEPTH'] = (float) $arParams['DEPTH'];
+        
+        
         
         // Контекст исполнения.
         $this->context = new Context($arParams['EID'], $arParams['TYPE'], $arParams['LANG']);
@@ -118,7 +125,7 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepStands()
     {
-        $this->arResult['STANDS'] = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['HEIGHT'], $this->getContext());
+        $this->arResult['STANDS'] = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
     }
     
     

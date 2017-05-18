@@ -23,6 +23,9 @@
             "STEP" => $step,
             "TYPE" => $type,
             "LANG" => $lang,
+            
+            "WIDTH" => 4,
+            "DEPTH" => 6,
         )
     );
 ?>

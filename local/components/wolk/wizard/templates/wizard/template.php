@@ -17,3 +17,7 @@
         <? } ?>
     </div>
 </div>
+
+
+<? // Подключение шага // ?>
+<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/steps/' . $arResult['STEP'].'.php') ?>
