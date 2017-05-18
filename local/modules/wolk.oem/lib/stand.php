@@ -11,43 +11,37 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 	protected $price   = null;
 	protected $context = null;
 	
-    public function __construct($id = null, $data = [], Context $context = null)
+    
+    
+    public function __construct($id = null, $data = [])
     {
 		parent::__construct($id, $data);
-        
-        //  онтекст, св€занный с типом стенда и €зыком.
-        if (empty($context)) {
-            $context = new Context();
-        }
-        $this->context = $context;
     }
 	
-    
-    public function getContext()
-    {
-        return $this->context;
-    }
-    
-	
-	public function getLangTitle($lang = LANG_EN_UP)
+	    
+	public function getTitle($lang = null)
 	{
-		if (empty($lang)) {
-			$lang = $this->getLang();
-		} else {
-			$lang = mb_strtoupper((string) $lang);
-		}
-		
-		$this->load();
-		
+        $this->load();
+        
+        if (empty($lang)) {
+            $lang = LANGUAGE_ID;
+        }
+        $lang = mb_strtoupper($lang);
+        
 		return $this->data['PROPS']['LANG_NAME_' . $lang]['VALUE'];
 	}
 	
-	
-	public function getTitle()
-	{
-		return $this->getLangTitle($this->getLang());
-	}
-	
+    
+    public function setPrice($price)
+    {
+        $this->price = (float) $price;
+    }
+    
+    
+    public function getPrice()
+    {
+        return $this->price;
+    }
     
     
     /**

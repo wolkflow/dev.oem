@@ -2,6 +2,11 @@
 
 namespace Wolk\OEM;
 
+use Wolk\OEM\Products\Base      as Product;
+use Wolk\OEM\Products\Equipment as Equipment;
+use Wolk\OEM\Products\Service   as Service;
+use Wolk\OEM\Products\Marketing as Marketing;
+
 
 class StandOffer extends \Wolk\Core\System\IBlockEntity
 {
@@ -9,13 +14,34 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
 
 	protected $id    = null;
 	protected $data  = [];
+    protected $price = null;
 	
+    
+    public function setPrice($price)
+    {
+        $this->price = (float) $price;
+    }
+    
+    
+    public function getPrice()
+    {
+        return $this->price;
+    }
+    
+    
+    public function getStandID()
+	{
+		$this->load();
+		
+		return ((int) $this->data['PROPS']['CML2_LINK']['VALUE']);
+	}
+    
     
 	public function getStand()
 	{
 		$this->load();
 		
-		return (new Stand($this->data['PROPS']['CML2_LINK']['VALUE']));
+		return (new Stand($this->getStandID()));
 	}
 	
 	
@@ -38,11 +64,63 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
     /**
      * Список базового оборудования.
      */
+	public function getBaseProducts(Context $context = null)
+	{
+        $this->load();
+        
+        // ID продукции в базовой комплектации стенда.
+        $ids = (array) $this->data['PROPS']['PRODUCTS']['VALUE'];
+        
+        $pids = [];
+        foreach ($ids as $i => $id) {
+            $pids[$id] = (int) $this->data['PROPS']['PRODUCTS']['DESCRIPTION'][$i];
+        }
+        unset($ids);
+        
+        
+        // Если задан контекст, можем определить цены на продукцию.
+        $prices = [];
+        if (!empty($pids) && !is_null($context)) {
+            $event  = new Event($context->getEventID());
+            $prices = $event->getProductPrices($context);
+        }
+        unset($event);
+        
+        // Базовая комплектация стенда.
+        $products = [];
+        foreach ($pids as $id => $count) {
+            $product = new Product($id);
+            
+            // Установка цены.
+            if (!empty($prices[$product->getID()])) {
+                $product->setPrice($prices[$product->getID()]->getPrice());
+            } else {
+                $product->setPrice(0);
+            }
+            
+            // Установка количества.
+            $product->setCount($count);
+            
+            $products[$product->getID()] = $product;
+        }
+        return $products;
+	}	
+    
+    
+    /**
+     * Список базового оборудования.
+     */
 	public function getBaseEquipments()
 	{
         $this->load();
         
-        $ids = $this->data['PROPS']['EQUIPMENT']['VALUE'];
+        $ids = (array) $this->data['PROPS']['EQUIPMENT']['VALUE'];
+        
+        $products = [];
+        foreach ($ids as $id) {
+            $products[$id] = new Equipment($id);
+        }
+        return $products;
 	}	
 	
 	

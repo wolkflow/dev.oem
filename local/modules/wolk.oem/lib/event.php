@@ -10,6 +10,10 @@ use Wolk\OEM\Prices\Product as ProductPrice;
 class Event extends \Wolk\Core\System\IBlockEntity
 {
     const IBLOCK_ID = IBLOCK_EVENTS_ID;
+    
+    const STEP_EQUIPMENTS = 'EQUIPMENTS';
+    const STEP_SERVICES   = 'SERVICES';
+    const STEP_MARKETINGS = 'MARKETINGS';
 
 	protected $id      = null;
 	protected $data    = [];
@@ -50,14 +54,14 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	/**
 	 * Локализованное название мероприятия.
 	 */
-    public function getTitle($lang)
+    public function getTitle($lang = null)
     {
 		$this->load();
         
-        $lang = mb_strtoupper((string) $lang);
         if (empty($lang)) {
-            $lang = LANG;
+            $lang = LANGUAGE_ID;
         }
+        $lang = mb_strtoupper($lang);
 		
 		return ($this->data['PROPS']['LANG_TITLE_' . $lang]['VALUE']);
     }
@@ -66,27 +70,27 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	/**
 	 * Получение расписания мероприятия.
 	 */
-	public function getShedule($lang)
+	public function getShedule($lang = null)
     {
 		$this->load();
         
-        $lang = mb_strtoupper((string) $lang);
         if (empty($lang)) {
-            $lang = LANG;
+            $lang = LANGUAGE_ID;
         }
+        $lang = mb_strtoupper($lang);
 		
 		return ($this->data['PROPS']['LANG_SCHEDULE_' . $lang]['VALUE']);
     }
 	
 	
-	public function getContacts($lang)
+	public function getContacts($lang = null)
     {
 		$this->load();
         
-        $lang = mb_strtoupper((string) $lang);
         if (empty($lang)) {
-            $lang = LANG;
+            $lang = LANGUAGE_ID;
         }
+        $lang = mb_strtoupper($lang);
 		
 		return ($this->data['PROPS']['LANG_CONTACTS_' . $lang]['VALUE']);
     }
@@ -104,11 +108,24 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	}
     
     
-    public function getSteps()
+    /**
+     * Получение списка шагов конструктора мероприятия.
+     */
+    public function getSteps(Context $context = null)
     {
         $this->load();
         
-        return ((array) $this->data['PROPS']['STEPS']['VALUE_XML_ID']);
+        $steps = (array) $this->data['PROPS']['STEPS']['VALUE_XML_ID'];
+        $steps = array_combine($steps, $steps);
+        
+        if (!is_null($context)) {
+            if ($context->getType() == Context::TYPE_INDIVIDUAL) {
+                unset($steps[self::STEP_EQUIPMENTS]);
+            }
+        }
+        $steps = array_values($steps);
+        
+        return $steps;
     }
 
     
@@ -182,7 +199,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
         
 		$stands = [];
 		foreach ($ids as $id) {
-			$stands[$id] = new Stand($id, [], $this->getContext());
+			$stands[$id] = new Stand($id, []);
 		}
 		return $stands;
 	}
@@ -214,6 +231,27 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return $this->data['PROPS']['MANAGERS']['VALUE'];
 	}
     
+    
+    public function getCurrencyStandsContext(Context $context)
+    {
+        $this->load();
+        
+        $type = $context->getType();
+        $lang = $context->getLang();
+        
+        return ((string) $this->data['PROPS']['LANG_STANDS_' . $type . '_CURRENCY_' . $lang]['VALUE']);
+    }
+    
+    
+    public function getCurrencyProductsContext(Context $context)
+    {
+        $this->load();
+        
+        $type = $context->getType();
+        $lang = $context->getLang();
+        
+        return ((string) $this->data['PROPS']['LANG_PRODUCTS_' . $type . '_CURRENCY_' . $lang]['VALUE']);
+    }
     
     
     public function getCurrencyStandsStandard($lang = LANG_EN_UP)
@@ -270,6 +308,41 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return array_map('intval', $this->data['PROPS']['OPTIONS']['VALUE']);
 	}
 	
+    
+    /**
+	 * Получение списка стендовых предложений в зависимости от размеров.
+	 */
+	public function getStandsList($width, $depth, Context $context)
+	{
+        // Цены на стенды.
+        $prices = $this->getStandPrices($context);
+        
+        $width = (float) $width;
+		$depth = (float) $depth;
+        
+        // Площадь стенда.
+		$area = $width * $depth;
+		
+        // Выбор вариантов стендов с подходящей площадью.
+		$stands = StandOffer::getList([
+			'order'  => ['PROPERTY_AREA_MAX' => 'DESC'],
+			'filter' => [
+				'ACTIVE'              => 'Y',
+				'PROPERTY_CML2_LINK'  => $this->getStandIDs(),
+				'<=PROPERTY_AREA_MIN' => $area,
+				'>=PROPERTY_AREA_MAX' => $area,
+			]
+		]);
+        
+        
+        // Список стендов с ценами.
+        foreach ($stands as $stand) {
+            $stand->setPrice($prices[$stand->getStandID()]->getPrice());
+        }
+        return $stands;
+    }
+    
+    
 	
 	/**
 	 * Получение списка стендовых предложений в зависимости от размеров.
@@ -293,7 +366,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 			]
 		]);
         
-        if ($asobject) {
+        if (!$asobject) {
             return $offers;
         }
         
@@ -355,20 +428,20 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	/**
 	 * Получение списка цен на стенды мероприятия по типу.
 	 */
-	public function getStandPrices(Context $context)
-    {   
-        //if (!in_array($type, StandPrice::getTypeList())) {
-        //    throw new \Exception("Wrong type of stands.");
-        //}
-        
+	protected function getStandPrices(Context $context)
+    {
         if (empty($this->prices['stands'])) {
-            $this->prices['stands'][$type] = StandPrice::getList([
-                'filter' => [
-                    StandPrice::FIELD_EVENT => $this->getID(),
-                    StandPrice::FIELD_TYPE  => $context->getType(),
-                    StandPrice::FIELD_LANG  => $context->getLang(),
-                ]
-            ]);
+            $this->prices['stands'] = StandPrice::getList(
+                [
+                    'filter' => [
+                        StandPrice::FIELD_EVENT => $this->getID(),
+                        StandPrice::FIELD_TYPE  => $context->getType(),
+                        StandPrice::FIELD_LANG  => $context->getLang(),
+                    ]
+                ], 
+                true,
+                StandPrice::FIELD_STAND
+            );
 		}
 		return $this->prices['stands'];
     }
@@ -380,13 +453,17 @@ class Event extends \Wolk\Core\System\IBlockEntity
     public function getProductPrices(Context $context)
     {
         if (empty($this->prices['products'])) {
-            $this->prices['products'] = ProductPrice::getList([
-                'filter' => [
-                    ProductPrice::FIELD_EVENT => $this->getID(),
-                    ProductPrice::FIELD_TYPE  => $context->getType(),
-                    ProductPrice::FIELD_LANG  => $context->getLang(),
-                ]
-            ]);
+            $this->prices['products'] = ProductPrice::getList(
+                [
+                    'filter' => [
+                        ProductPrice::FIELD_EVENT => $this->getID(),
+                        ProductPrice::FIELD_TYPE  => $context->getType(),
+                        ProductPrice::FIELD_LANG  => $context->getLang(),
+                    ]
+                ],
+                true,
+                ProductPrice::FIELD_PRODUCT
+            );
 		}
 		return $this->prices['products'];
     }

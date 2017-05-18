@@ -8,17 +8,25 @@ namespace Wolk\OEM;
  */
 class Context
 {
-    protected $type = null;
-    protected $lang = null;
+    protected $event = null;
+    protected $type  = null;
+    protected $lang  = null;
     
     const TYPE_STANDARD   = 'STANDARD';
     const TYPE_INDIVIDUAL = 'INDIVIDUAL';
     
     
-    public function __construct($type, $lang)
+    public function __construct($event, $type, $lang)
     {
-        $this->type = mb_strtoupper((string) $type);
-        $this->lang = mb_strtoupper((string) $lang);
+        $this->event = (int) $event;
+        $this->type  = mb_strtoupper((string) $type);
+        $this->lang  = mb_strtoupper((string) $lang);
+    }
+
+    
+    public function getEventID()
+    {
+        return $this->event;
     }
     
     
