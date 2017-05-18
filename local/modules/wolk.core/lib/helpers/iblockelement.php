@@ -2,10 +2,18 @@
 
 namespace Wolk\Core\Helpers;
 
+\Bitrix\Main\Loader::includeModule('iblock');
 
 class IBlockElement
 {	
-	
+	public static function getIDByCode($iblockID, $code)
+	{
+		$feilds = \CIBlockElement::GetList(array(), array('IBLOCK_ID' => intval($iblockID), 'CODE' => strval($code)), false, array('nTopCount' => 1), array('ID'))->fetch();
+        
+		return $feilds['ID'];
+	}
+    
+    
 	public static function getByCode($iblockID, $code)
 	{
 		$result  = null;

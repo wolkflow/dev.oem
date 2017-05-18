@@ -5,12 +5,12 @@
 <?  // Параметры запроса.
     $request = \Bitrix\Main\Context::getCurrent()->getRequest();
     
-    $eid  = (int)    $request->get('EID');
+    $code = (string) $request->get('CODE');
     $step = (int)    $request->get('STEP');
-    $type = (string) $request->get('TYPE');
+    $type = mb_strtoupper((string) $request->get('TYPE'));
     $lang = mb_strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     
-    var_dump($eid, $step, $type, $lang);
+    $eid  = Wolk\Core\Helpers\IBlockElement::getIDByCode(IBLOCK_EVENTS_ID, $code);
 ?>
 
 <?  // Конструкторстенда.
@@ -19,6 +19,7 @@
         "wizard", 
         array(
             "EID"  => $eid,
+            "CODE" => $code,
             "STEP" => $step,
             "TYPE" => $type,
             "LANG" => $lang,

@@ -32,6 +32,9 @@ class WizardComponent extends \CBitrixComponent
         // ID мероприятия.
         $arParams['EID']  = (int) $arParams['EID'];
         
+        // Код мероприятия.
+        $arParams['CODE'] = (string) $arParams['CODE'];
+        
         // Текущий шаг конструктора мероприятия.
         $arParams['STEP'] = (string) $arParams['STEP'];
         
@@ -64,13 +67,43 @@ class WizardComponent extends \CBitrixComponent
 		}
         
         
-        
         // Шаги.
-        $step = $this->getStep();
+        $this->arResult['STEPS'] = $this->getSteps();
+        $this->arResult['STEP']  = $this->arResult['STEPS'][$this->getStep()];
         
-        echo '<hr/>';
+        // Выбираем шаг.
+        switch ($this->arResult['STEP']) {
+            // Выбор стенда.
+            case ('stands'):
+                $this->doStepStands();
+                break;
+            
+            // Выбор оборудования.
+            case ('equpments'):
+                break;
+            
+            // Выбор сервисов.
+            case ('services'):
+                break;
+            
+            // Выбор маркетинга.
+            case ('marketings'):
+                break;
+            
+            // Расстановка на скетче.
+            case ('sketch'):
+                break;
+                
+            // Заказ.
+            case ('order'):
+                break;
+            
+            default:
+                break;
+        }
         
-        print_r($this->getSteps());
+        
+        
         
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
@@ -78,6 +111,16 @@ class WizardComponent extends \CBitrixComponent
         
 		return $this->arResult;
     }
+    
+    
+    /**
+     * ШАГ "Выбор стенда".
+     */
+    protected function doStepStands()
+    {
+        $this->arResult['STANDS'] = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['HEIGHT'], $this->getContext());
+    }
+    
     
     
     
@@ -104,9 +147,25 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function getStep()
     {
-        return $this->getSessionParam['STEP'];
+        return $this->arParams['STEP'];
     }
     
+    
+    /**
+     * Получение ссылки шага.
+     */
+    public function getStepLink($step)
+    {
+        $fields = [
+            $this->arParams['CODE'],
+            mb_strtolower($this->arParams['TYPE']),
+            intval($step),
+        ];
+        
+        $link = '/wizard/' . implode('/', $fields) . '/';
+        
+        return $link;
+    }
     
     
     /**

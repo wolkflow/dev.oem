@@ -30,6 +30,14 @@ $arUrlRewrite = array(
 		"ID" => "bitrix:catalog",
 		"PATH" => "/events/index.php",
 	),
+    
+    
+    array(
+		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/#",
+		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&",
+		"ID" => "",
+		"PATH" => "/wizard/index.php",
+	),
 );
 
 ?>
