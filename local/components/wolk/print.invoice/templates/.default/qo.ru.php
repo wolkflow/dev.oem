@@ -54,7 +54,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td align="right">
-						<table style="width: 60%">
+						<table style="width: 100%">
 							<tbody>
 								<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
 									<tr class="qp-table-footer">

@@ -163,7 +163,7 @@ $MESS['shelf_popup_label'] = 'Please, set height (cm) for the shelf to be mounte
 $MESS['popuplabel'] = '';
 
 $MESS['extent'] = 'Choose logo';
-$MESS['extend_choose'] = 'Выберите';
+$MESS['extend_choose'] = 'Choose';
 
 $MESS['EXTERLAN_TEXT'] = 'For order the improved standard stands please use';
 
