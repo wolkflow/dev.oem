@@ -9,7 +9,6 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 	protected $id      = null;
 	protected $data    = [];
 	protected $price   = null;
-	protected $context = null;
 	
     
     
@@ -29,6 +28,19 @@ class Stand extends \Wolk\Core\System\IBlockEntity
         $lang = mb_strtoupper($lang);
         
 		return $this->data['PROPS']['LANG_NAME_' . $lang]['VALUE'];
+	}
+    
+    
+    public function getDescription($lang = null)
+	{
+        $this->load();
+        
+        if (empty($lang)) {
+            $lang = LANGUAGE_ID;
+        }
+        $lang = mb_strtoupper($lang);
+        
+		return $this->data['PROPS']['LANG_DESCRIPTION_' . $lang]['VALUE']['TEXT'];
 	}
 	
     
@@ -74,15 +86,15 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 	/**
 	 * Получение цены стенда.
 	 */
-	public function getLangPrice($event_id, $lang)
+	public function getLangPrice(Context $context)
 	{
 		if (is_null($this->price)) {
 			$price = \Wolk\OEM\EventStandPricesTable::getList([
 				'filter' =>
 					[
-						'EVENT_ID' => intval($event_id),
+						'EVENT_ID' => $context->getEventID(),
 						'STAND_ID' => $this->getID(),
-						'SITE_ID'  => $lang,
+						'SITE_ID'  => $context->getLang(),
 					],
 				'limit' => 1
 			])->fetch();

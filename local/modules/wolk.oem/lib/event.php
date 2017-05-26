@@ -96,11 +96,14 @@ class Event extends \Wolk\Core\System\IBlockEntity
     }
 	
 	
+    /**
+     * Получение дат для наценок.
+     */
 	public function getMarginDates()
 	{
 		$this->load();
         
-        $dates = array();
+        $dates = [];
         foreach ($this->data['PROPS']['MARGIN_DATES']['VALUE'] as $i => $date) {
             $dates[$date] = (float) $this->data['PROPS']['MARGIN_DATES']['DESCRIPTION'][$i];
         }
@@ -337,7 +340,10 @@ class Event extends \Wolk\Core\System\IBlockEntity
         
         // Список стендов с ценами.
         foreach ($stands as $stand) {
-            $stand->setPrice($prices[$stand->getStandID()]->getPrice());
+            $priceitem = $prices[$stand->getStandID()];
+            if (!is_null($priceitem)) {
+                $stand->setPrice($priceitem->getPrice());
+            }
         }
         return $stands;
     }

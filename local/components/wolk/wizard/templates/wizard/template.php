@@ -5,6 +5,7 @@
 <? $component = $this->getComponent() ?>
 
 <? use Bitrix\Main\Localization\Loc; ?>
+<? use Wolk\Core\Helpers\Text as TextHelper ?>
 
 <div class="breadcrumbs">
     <div class="breadcrumbs__container">
@@ -15,6 +16,40 @@
                 </span>
             </a>
         <? } ?>
+    </div>
+</div>
+
+<? // Даты наценки // ?>
+<div class="catalogdeadline" v-show="hasMargins">
+	<div class="catalogdeadline__deadlinecontainer">
+		<div class="catalogdeadline__deadlinetitle customizable_border">
+			<?= Loc::getMessage('DEADLINE') ?>
+			<span class="catalogdeadline__deadlinedate">
+                <? $dates = $arResult['EVENT']->getMarginDates() ?>
+                
+                <? if (\Bitrix\Main\Context::getCurrent()->getLanguage() == LANG_RU) { ?>
+                    <? $date = strtotime(reset(array_keys($dates))) ?>
+                    <?= date('j', $date) ?>
+                    <?= TextHelper::i18nmonth(date('n', $date), false, \Bitrix\Main\Context::getCurrent()->getLanguage()) ?>,
+                    <?= date('Y', $date) ?>
+                <? } else { ?>
+                    <? $date = strtotime(reset($dates)) ?>
+                    <?= TextHelper::i18nmonth(date('n', $date)) ?>
+                    <?= date('j', $date) ?><sup><?= Loc::getMessage('WEEKDAY') ?></sup>,
+                    <?= date('Y', $date) ?>
+                <? } ?>
+			</span>
+		</div>
+        <div class="catalogdeadline__deadlinedescription">
+            <? foreach ($dates as $date => $percent) { ?>
+                <span>
+                    <?= Loc::getMessage('SURCHARGE', ['#PERCENT#' => $percent, '#DATE#' => $date]) ?><br>
+                </span>
+            <? } ?>
+        </div>
+    </div>
+    <div class="catalogdeadline__timetablebutton customizable" data-modal="#timetable">
+        <?= Loc::getMessage('SCHEDULE') ?>
     </div>
 </div>
 

@@ -75,8 +75,13 @@ class WizardComponent extends \CBitrixComponent
         
         
         // Шаги.
-        $this->arResult['STEPS'] = $this->getSteps();
-        $this->arResult['STEP']  = $this->arResult['STEPS'][$this->getStep()];
+        $this->arResult['STEPS']    = $this->getSteps();
+        $this->arResult['STEP']     = $this->getStep();
+        $this->arResult['NEXTSTEP'] = $this->getNextStepNumber();
+        $this->arResult['LINKS']    = [
+            'PREV' => $this->getPrevStepLink(),
+            'NEXT' => $this->getNextStepLink(),
+        ];
         
         // Выбираем шаг.
         switch ($this->arResult['STEP']) {
@@ -110,6 +115,8 @@ class WizardComponent extends \CBitrixComponent
         }
         
         
+        // Мероприятие.
+        $this->arResult['EVENT'] = $this->getEvent();
         
         
         // Подключение шаблона компонента.
@@ -150,11 +157,90 @@ class WizardComponent extends \CBitrixComponent
     
     
     /**
+     * Получение номера текущего шага.
+     */
+    protected function getStepNumber()
+    {
+        return (int) $this->arParams['STEP'];
+    }
+    
+    
+    /**
      * Получение текущего шага.
      */
     protected function getStep()
     {
-        return $this->arParams['STEP'];
+        $steps = $this->getSteps();
+        
+        return $steps[$this->getStepNumber()];
+    }
+    
+    
+    /**
+     * Получение номера следующего шага.
+     */
+    protected function getPrevStepNumber()
+    {
+        $count = count($this->getSteps());
+        $step  = $this->getStepNumber() - 1;
+        
+        if ($step < 0) {
+            $step = 0;
+        }
+        return $step;
+    }
+    
+    
+    /**
+     * Получение следующего шага.
+     */
+    protected function getPrevStep()
+    {
+        $steps = $this->getSteps();
+        
+        return $steps[$this->getPrevStepNumber()];
+    }
+    
+    
+    /**
+     * Получение номера следующего шага.
+     */
+    protected function getNextStepNumber()
+    {
+        $count = count($this->getSteps());
+        $step  = $this->getStepNumber() + 1;
+        
+        if ($step > $count) {
+            $step = $count;
+        }
+        return $step;
+    }
+    
+    
+    /**
+     * Получение следующего шага.
+     */
+    protected function getNextStep()
+    {
+        $steps = $this->getSteps();
+        
+        return $steps[$this->getNextStepNumber()];
+    }
+    
+    
+    /**
+     * Получение ссылки предыдущего шага.
+     */
+    public function getPrevStepLink($step)
+    {
+        $fields = [
+            $this->arParams['CODE'],
+            mb_strtolower($this->arParams['TYPE']),
+            $this->getPrevStepNumber(),
+        ];
+        $link = '/wizard/' . implode('/', $fields) . '/';
+        
+        return $link;
     }
     
     
@@ -166,9 +252,24 @@ class WizardComponent extends \CBitrixComponent
         $fields = [
             $this->arParams['CODE'],
             mb_strtolower($this->arParams['TYPE']),
-            intval($step),
+            $this->getStepNumber(),
         ];
+        $link = '/wizard/' . implode('/', $fields) . '/';
         
+        return $link;
+    }
+    
+    
+    /**
+     * Получение ссылки следующего шага.
+     */
+    public function getNextStepLink($step)
+    {
+        $fields = [
+            $this->arParams['CODE'],
+            mb_strtolower($this->arParams['TYPE']),
+            $this->getNextStepNumber(),
+        ];
         $link = '/wizard/' . implode('/', $fields) . '/';
         
         return $link;
