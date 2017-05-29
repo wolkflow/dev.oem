@@ -59,7 +59,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		$this->load();
         
         if (empty($lang)) {
-            $lang = LANGUAGE_ID;
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
 		
@@ -75,7 +75,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		$this->load();
         
         if (empty($lang)) {
-            $lang = LANGUAGE_ID;
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
 		
@@ -88,7 +88,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		$this->load();
         
         if (empty($lang)) {
-            $lang = LANGUAGE_ID;
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
 		
@@ -151,6 +151,33 @@ class Event extends \Wolk\Core\System\IBlockEntity
         $this->load();
         
         return (new Location($this->getLocationID()));
+    }
+    
+    
+    /**
+     * Показывать внешнюю ссылку.
+     */
+    public function showExternalLink()
+    {
+        $this->load();
+        
+        return ($this->data['PROPS']['SHOW_EXTERNAL_LINK']['VALUE'] == 'Y');
+    }
+        
+    
+    /**
+     * Получить внешнюю ссылку.
+     */
+    public function getExternalLink($lang = null)
+    {
+        $this->load();
+        
+        if (empty($lang)) {
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+        }
+        $lang = mb_strtoupper($lang);
+        
+        return ($this->data['PROPS']['LANG_EXTERNAL_LINK_' . $lang]['VALUE']);
     }
     
     

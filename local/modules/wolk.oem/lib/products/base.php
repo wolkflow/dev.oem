@@ -30,7 +30,7 @@ class Base extends \Wolk\Core\System\IBlockModel
 		$this->load();
         
         if (empty($lang)) {
-            $lang = LANGUAGE_ID;
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
 		
@@ -43,7 +43,7 @@ class Base extends \Wolk\Core\System\IBlockModel
 		$this->load();
         
         if (empty($lang)) {
-            $lang = LANGUAGE_ID;
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
 		

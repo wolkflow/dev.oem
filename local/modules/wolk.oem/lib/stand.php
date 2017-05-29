@@ -23,7 +23,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity
         $this->load();
         
         if (empty($lang)) {
-            $lang = LANGUAGE_ID;
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
         
@@ -36,12 +36,20 @@ class Stand extends \Wolk\Core\System\IBlockEntity
         $this->load();
         
         if (empty($lang)) {
-            $lang = LANGUAGE_ID;
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
         
 		return $this->data['PROPS']['LANG_DESCRIPTION_' . $lang]['VALUE']['TEXT'];
 	}
+    
+    
+    public function getPreviewImageSrc()
+    {
+        $this->load();
+        
+        return (\CFile::getPath($this->data['PREVIEW_PICTURE']));
+    }
 	
     
     public function setPrice($price)
@@ -54,7 +62,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity
     {
         return $this->price;
     }
-    
+        
     
     /**
      * Список оборудования.
@@ -105,6 +113,37 @@ class Stand extends \Wolk\Core\System\IBlockEntity
 		}
 		return $this->price;
 	}
+    
+    
+    /**
+     * Получение подходищего стендового предложения текущего стенда.
+     */
+    public function getStandOffer($width, $depth, Context $context)
+    {
+        $width = (float) $width;
+		$depth = (float) $depth;
+        
+        // Площадь стенда.
+		$area = $width * $depth;
+		
+        // Выбор вариантов стендов с подходящей площадью.
+		$stands = StandOffer::getList([
+			'order'  => ['PROPERTY_AREA_MAX' => 'DESC'],
+			'filter' => [
+				'ACTIVE'              => 'Y',
+				'=PROPERTY_CML2_LINK' => $this->getID(),
+				'<=PROPERTY_AREA_MIN' => $area,
+				'>=PROPERTY_AREA_MAX' => $area,
+			],
+            'limit' => 1
+		]);
+        
+        $stand = null;
+        if (!empty($stands)) {
+            $stand = reset($stands);
+        }
+        return $stand;
+    }
 	
 	
 	/**

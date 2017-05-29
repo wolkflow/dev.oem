@@ -29,6 +29,12 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
     }
     
     
+    public function getPriceArea($area)
+    {
+        return ($this->getPrice() * floatval($area));
+    }
+    
+    
     public function getStandID()
 	{
 		$this->load();
@@ -69,7 +75,7 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
         $this->load();
         
         // ID продукции в базовой комплектации стенда.
-        $ids = (array) $this->data['PROPS']['PRODUCTS']['VALUE'];
+        $ids = array_filter((array) $this->data['PROPS']['PRODUCTS']['VALUE']);
         
         $pids = [];
         foreach ($ids as $i => $id) {
@@ -85,6 +91,7 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
             $prices = $event->getProductPrices($context);
         }
         unset($event);
+        
         
         // Базовая комплектация стенда.
         $products = [];

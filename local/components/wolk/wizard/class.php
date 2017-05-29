@@ -118,6 +118,11 @@ class WizardComponent extends \CBitrixComponent
         // Мероприятие.
         $this->arResult['EVENT'] = $this->getEvent();
         
+        // Контекст.
+        $this->arResult['CONTEXT'] = $this->getContext();
+        
+        // Валюта.
+        $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyStandsContext($this->getContext());
         
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
@@ -132,8 +137,21 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepStands()
     {
+        $event = $this->getEvent(); 
+        
+        
+        // Площадь стенда.
+        $this->arResult['AREA'] = $this->arParams['WIDTH'] * $this->arParams['DEPTH'];
+        
+        $this->arResult['PRESTAND'] = $event->getPreselectStand();
+        $this->arResult['PREOFFER'] = null;
+        if (!empty($this->arResult['PRESTAND'])) {
+            $this->arResult['PREOFFER'] = $this->arResult['PRESTAND']->getStandOffer($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
+        }
         $this->arResult['STANDS'] = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
     }
+    
+    
     
     
     
@@ -333,8 +351,4 @@ class WizardComponent extends \CBitrixComponent
         $_SESSION[self::SESSCODE][$param] = $value;
     }
 }
-
-
-
-
 
