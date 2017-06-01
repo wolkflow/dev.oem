@@ -7,9 +7,14 @@
 
 <? $lang = \Bitrix\Main\Context::getCurrent()->getLanguage() ?>
 
+<?  // Языковые переменные.
+    $GLOBALS['JSVARS']['LANGS']['CHOOSEN'] = Loc::getMessage('CHOOSEN');
+    $GLOBALS['JSVARS']['LANGS']['CHOOSE']  = Loc::getMessage('CHOOSE');
+?>
+
 <div id="step1">
-    <form action="<?= $arResult['LINKS']['NEXT'] ?>">
-        <input id="js-form-input-stand-id" type="hidden" name="STAND" value="" />
+    <form action="<?= $arResult['LINKS']['NEXT'] ?>" method="post">
+        <input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
         <div class="standspagetop" id="preselect">
             <? if (!empty($arResult['PRESTAND'])) { ?>
                 <div class="pagedescription">
@@ -23,14 +28,14 @@
                     <?= Loc::getMessage('CURRENT_STAND') ?>
                 </div>
                 <? if (!empty($arResult['PRESTAND'])) { ?>
-                    <div class="standspagetop__currentstandcontainer customizable_border">
+                    <div id="js-prestand-id" class="standspagetop__currentstandcontainer customizable_border">
                         <div class="standspagetop__currentstanddescription">
-                            <p>
+                            <p class="js-stand-description">
                                 <?= $arResult['PRESTAND']->getDescription($lang) ?>
                             </p>
                             <? $products = $arResult['PREOFFER']->getBaseProducts() ?>
                             <? if (!empty($products)) { ?>
-                                <ul>
+                                <ul class="js-stand-includes">
                                     <?= Loc::getMessage('INCLUDES') ?>:
                                     <? foreach ($products as $product) { ?>
                                         <li>
@@ -40,8 +45,8 @@
                                 </ul>
                             <? } ?>
                         </div>
-                        <img src="/i/?src=<?= $arResult['PRESTAND']->getPreviewImageSrc() ?>&w=420&h=270" class="standspagetop__photo" />
-                        <a href="<?= $arResult['LINKS']['NEXT'] ?>" class="standspagetop__continuebutton customizable js-wizard-next-step js-submit">
+                        <img src="/i/?src=<?= $arResult['PRESTAND']->getPreviewImageSrc() ?>&w=420&h=270" class="standspagetop__photo js-stand-image" />
+                        <a href="javascript:void(0)" class="standspagetop__continuebutton customizable js-wizard-next-step js-submit">
                             <?= Loc::getMessage('CONTINUE') ?>
                         </a>
                     </div>
@@ -59,11 +64,11 @@
                         <?= Loc::getMessage('BETTER_STANDART_NOTE') ?>
                     </div>
                 </div>
-                <div class="standstypescontainer__standscontainer standsTypesRow">
+                <div id="js-stands-wrapper-id" class="standstypescontainer__standscontainer standsTypesRow">
                     <? $c = 0 ?>
                     <? foreach ($arResult['STANDS'] as $standoffer) { ?>
                         <? $stand = $standoffer->getStand() ?>
-                        <div class="standstypescontainer__standcontainer <?= ($c % 2 == 0) ? ('standsTypesLeft') : ('standsTypesRight') ?>">
+                        <div class="js-stand-block standstypescontainer__standcontainer <?= ($c % 2 == 0) ? ('standsTypesLeft') : ('standsTypesRight') ?>">
                             
                             <div class="pagesubtitle customizable_border">
                                 <?= $stand->getTitle() ?>
@@ -74,20 +79,20 @@
                                       <?= FormatCurrency($standoffer->getPriceArea($arResult['AREA']), $arResult['CURRENCY']) ?> 
                                     / <?= Loc::getMessage('M2') ?>
                                 </span>
-                                <div class="js-stand-button standstypescontainer__choosebutton customizable <?= ($arResult['DATA']['STAND'] == $stand->getID()) ? ('current') : ('') ?>">
+                                <div data-id="<?= $stand->getID() ?>" class="js-stand-choose-button standstypescontainer__choosebutton customizable <?= ($arResult['DATA']['STAND'] == $stand->getID()) ? ('current') : ('') ?>">
                                     <?= ($arResult['DATA']['STAND'] == $stand->getID()) ? (Loc::getMessage('CHOOSEN')) : (Loc::getMessage('CHOOSE')) ?>
                                 </div>
                             </div>
                             
-                            <img height="138" src="/i/?src=<?= $stand->getPreviewImageSrc() ?>&h=138" class="standstypescontainer__photo" />
+                            <img height="138" src="/i/?src=<?= $stand->getPreviewImageSrc() ?>&w=420&h=270" class="standstypescontainer__photo js-stand-image" />
 
                             <div class="standstypescontainer__description">
-                                <p>
+                                <p class="js-stand-description">
                                     <?= $stand->getDescription() ?>
                                 </p>
                                 <? $products = $standoffer->getBaseProducts() ?>
                                 <? if (!empty($products)) { ?>
-                                    <ul>
+                                    <ul class="js-stand-includes">
                                         <?= Loc::getMessage('INCLUDES') ?>:
                                         <? foreach ($products as $product) { ?>
                                             <li>

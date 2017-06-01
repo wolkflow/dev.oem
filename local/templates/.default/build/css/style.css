@@ -441,7 +441,32 @@ div.lamColor								{width: 200px}
 .lamCount									{width: 160px}
 .lamCount input.styler						{margin: 0;width: 100%}
 
+.ui-datepicker {
+    z-index: 101;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    display: none;
+}
 
+.setDate.hasDatepicker {
+    position: relative;
+}
+
+.breadcrumbs__button.hidden {
+    display: none;
+}
+
+.ordertotalcontainer__surchargetotal {
+	width: 200px;
+}
+
+.pagetitle-note {
+	font-weight: 100;
+    font-size: 13px;
+    line-height: 24px;
+    text-transform: none;
+}
 
 
 

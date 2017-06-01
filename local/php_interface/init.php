@@ -1,5 +1,11 @@
 <?php
 
+// Глобальный js-переменные.
+$GLOBALS['JSVARS'] = array(
+    'LANGS' => [], 
+    'LANG'  => \Bitrix\Main\Context::getCurrent()->getLanguage()
+);
+
 // Константы.
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Loader;
@@ -36,6 +42,7 @@ Loader::registerAutoLoadClasses(
 );
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
 
 
 // Исправление добавления товара.

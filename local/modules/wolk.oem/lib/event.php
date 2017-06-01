@@ -50,6 +50,15 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	}
 	*/
     
+    
+    /**
+     * Получение кода мероприятия.
+     */
+    public function getCode()
+	{
+		return $this->get('CODE');
+	}
+    
 	
 	/**
 	 * Локализованное название мероприятия.
@@ -70,7 +79,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	/**
 	 * Получение расписания мероприятия.
 	 */
-	public function getShedule($lang = null)
+	public function getSchedule($lang = null)
     {
 		$this->load();
         
@@ -79,7 +88,12 @@ class Event extends \Wolk\Core\System\IBlockEntity
         }
         $lang = mb_strtoupper($lang);
 		
-		return ($this->data['PROPS']['LANG_SCHEDULE_' . $lang]['VALUE']);
+        $schedule = $this->data['PROPS']['LANG_SCHEDULE_' . $lang]['~VALUE']['TEXT'];
+         
+        if ($this->data['PROPS']['LANG_SCHEDULE_' . $lang]['~VALUE']['TYPE'] == 'text') {
+            $schedule = nl2br($schedule);
+        }
+        return $schedule;
     }
 	
 	
@@ -205,12 +219,12 @@ class Event extends \Wolk\Core\System\IBlockEntity
         return $this->preselect;
     }
 	
-	
+	/*
     public function getAvailableStands()
     {
         return [];
     }
-	
+	*/
 	
 	public function getStandIDs()
 	{
@@ -334,8 +348,8 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	public function getProductIDs()
 	{
 		$this->load();
-		// TODO: PRODUCTS.
-		return array_map('intval', $this->data['PROPS']['OPTIONS']['VALUE']);
+		
+		return array_map('intval', $this->data['PROPS']['PRODUCTS']['VALUE']);
 	}
 	
     
@@ -419,7 +433,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
     /**
      * Получение списка оборудования и услуг с ценами.
      */
-    public function getProducts()
+    public function getProducts(Context $context, $section = null)
     {
         $ids = $this->getProductIDs();
         
@@ -428,15 +442,26 @@ class Event extends \Wolk\Core\System\IBlockEntity
         }
         
         // Цены для мероприятия.
-        $prices = $this->getProductPrices();
+        $prices = $this->getProductPrices($context);
+        
+        // Фильтр.
+        $filter = ['ID' => $ids, 'ACTIVE' => 'Y'];
+        
+        if (!is_null($section)) {
+            $filter['SECTION_CODE'] = (string) $section;
+            $filter['INCLUDE_SUBSECTIONS'] = 'Y';
+        }
         
         // Установка ценовой политики мероприятия.
         $products = Product::getList([
-            'filter' => ['ID' => $ids, 'ACTIVE' => 'Y']
+            'filter' => $filter
         ]);
         
 		foreach ($products as &$product) {
-			$product->setPrice($prices[$product->getID()]);
+            $priceitem = $prices[$product->getID()];
+            if (!is_null($priceitem)) {
+                $product->setPrice($priceitem->getPrice());
+            }
 		}
 		return $products;
     }

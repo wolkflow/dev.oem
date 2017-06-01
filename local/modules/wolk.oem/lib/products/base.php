@@ -2,6 +2,9 @@
 
 namespace Wolk\OEM\Products;
 
+use Wolk\OEM\Context;
+use Wolk\OEM\Prices\Product as ProductPrice;
+
 class Base extends \Wolk\Core\System\IBlockModel
 {
 	const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
@@ -11,19 +14,11 @@ class Base extends \Wolk\Core\System\IBlockModel
     protected $count;
 	
 	
-    public function __construct($id = null, $data = [], $lang = LANG_EN_UP)
+    public function __construct($id = null, $data = [])
     {
         parent::__construct($id, $data);
-		
-		$this->lang = mb_strtoupper((string) $lang);
     }
     
-    
-    public function getLang()
-	{
-		return $this->lang;
-	}
-	
 	
 	public function getTitle($lang = null)
 	{
@@ -68,13 +63,42 @@ class Base extends \Wolk\Core\System\IBlockModel
     
     
     /**
+     * Получение цены из контекста.
+     */
+	public function getContextPrice(Context $context)
+	{
+        $price = 0;
+        
+		if (!empty($context)) {
+			$result = ProductPrice::getList(
+                [
+                    'filter' => [
+                        ProductPrice::FIELD_PRODUCT => $this->getID(),
+                        ProductPrice::FIELD_EVENT   => $context->getEventID(),
+                        ProductPrice::FIELD_TYPE    => $context->getType(),
+                        ProductPrice::FIELD_LANG    => $context->getLang(),
+                    ],
+                    'select' => [
+                        ProductPrice::FIELD_PRICE
+                    ],
+                    'limit' => 1
+                ],
+                false
+            );
+            
+            if ($item = $result->fetch()) {
+                $price = (float) $item[ProductPrice::FIELD_PRICE];
+            }
+		}
+		return $price;
+	}
+    
+    
+    /**
      * Получение цены.
      */
-	public function getPrice($default = true)
+	public function getPrice()
 	{
-		if (!empty($this->price) && $default) {
-			$this->load();
-		}
 		return $this->price;
 	}
 	
@@ -107,4 +131,31 @@ class Base extends \Wolk\Core\System\IBlockModel
 	{
 		$this->count = (int) $count;
 	}
+    
+    
+    
+    public function getSectionID()
+    {
+        return (int) $this->get('IBLOCK_SECTION_ID');
+    }
+    
+    
+    public function getSection()
+    {
+        $section = new Section((int) $this->get('IBLOCK_SECTION_ID'));
+        
+        return $section;
+    }
+    
+    
+    public function getPriceType()
+    {
+        
+    }
+    
+    
+    public function getProps()
+    {
+        
+    }
 }

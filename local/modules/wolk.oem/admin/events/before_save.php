@@ -1,6 +1,7 @@
 <?php
 
 use \Wolk\OEM\Event;
+use \Wolk\OEM\Context;
 use \Wolk\OEM\Products\Base as Product;
 use Wolk\OEM\Prices\Stand   as StandPrice;
 use Wolk\OEM\Prices\Product as ProductPrice;
@@ -100,7 +101,6 @@ function BXIBlockAfterSave(&$arFields)
     // Валюты цен на продукцию.
     $currencies_products = (array) $request->get('CURRENCY_PRODUCTS');
     
-   
     
     // Сохранение цен на выбранные стенды.
     if (!empty($prices_stands)) {

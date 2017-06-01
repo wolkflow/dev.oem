@@ -7,6 +7,8 @@ Loc::loadLanguageFile(__FILE__);
 
 $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 
+$APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
+
 ?>
 	<div class="footersection customizable_border">
 

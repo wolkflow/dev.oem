@@ -9,19 +9,20 @@ use Bitrix\Sale\Internals\BasketTable;
 use Bitrix\Sale\Internals\OrderPropsValueTable;
 use Bitrix\Sale\Internals\OrderTable;
 use Wolk\Core\Helpers\ArrayHelper;
-use Wolk\OEM\Components\BaseListComponent;
 
 use Wolk\OEM\Event;
 use Wolk\OEM\Context;
+use Wolk\OEM\Basket;
 
 /**
  * Class WizardComponent
  */
 class WizardComponent extends \CBitrixComponent
 {
-    const SESSCODE = 'OEMEVENT';
+    const SESSCODE = 'OEMEVENTS';
     
     protected $context = null;
+    protected $basket  = null;
     
     
     /** 
@@ -51,9 +52,11 @@ class WizardComponent extends \CBitrixComponent
         $arParams['DEPTH'] = (float) $arParams['DEPTH'];
         
         
-        
         // Контекст исполнения.
         $this->context = new Context($arParams['EID'], $arParams['TYPE'], $arParams['LANG']);
+        
+        // Объект корзины.
+        $this->basket = new Basket($this->getEventCode());
         
         
         return $arParams;
@@ -73,15 +76,57 @@ class WizardComponent extends \CBitrixComponent
 			return;
 		}
         
+        // Проверка валидности сессии.
+        if ($this->getStepNumber() > 1 && empty($_SESSION[self::SESSCODE][$this->getEventCode()])) {
+            LocalRedirect($this->getStepLink(1));
+        }
+        
+        // Запрос.
+        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
         
         // Шаги.
         $this->arResult['STEPS']    = $this->getSteps();
         $this->arResult['STEP']     = $this->getStep();
-        $this->arResult['NEXTSTEP'] = $this->getNextStepNumber();
+        $this->arResult['PREV']     = $this->getPrevStep();
         $this->arResult['LINKS']    = [
             'PREV' => $this->getPrevStepLink(),
             'NEXT' => $this->getNextStepLink(),
         ];
+        
+        // Обработка данных предыдущего шага.
+        if ($request->isPost()) {
+            switch ($this->arResult['PREV']) {
+                // Выбор стенда.
+                case ('stands'):
+                    $this->processStepStands();
+                    break;
+                
+                // Выбор оборудования.
+                case ('equipments'):
+                    $this->processStepEquipments();
+                    break;
+                
+                // Выбор сервисов.
+                case ('services'):
+                    break;
+                
+                // Выбор маркетинга.
+                case ('marketings'):
+                    break;
+                
+                // Расстановка на скетче.
+                case ('sketch'):
+                    break;
+                    
+                // Заказ.
+                case ('order'):
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+        
         
         // Выбираем шаг.
         switch ($this->arResult['STEP']) {
@@ -91,7 +136,8 @@ class WizardComponent extends \CBitrixComponent
                 break;
             
             // Выбор оборудования.
-            case ('equpments'):
+            case ('equipments'):
+                $this->doStepEquipments();
                 break;
             
             // Выбор сервисов.
@@ -124,9 +170,17 @@ class WizardComponent extends \CBitrixComponent
         // Валюта.
         $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyStandsContext($this->getContext());
         
+        
+        
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
 		
+        
+        /*
+        echo '<pre>';
+        print_r($_SESSION[self::SESSCODE]);
+        echo '</pre>';
+        */
         
 		return $this->arResult;
     }
@@ -137,8 +191,10 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepStands()
     {
-        $event = $this->getEvent(); 
+        $event = $this->getEvent();
         
+        // Очистка данных по выставке.
+        $_SESSION[self::SESSCODE][mb_strtoupper($event->getCode())] = array('STAND' => array(), 'BASKET' => array());
         
         // Площадь стенда.
         $this->arResult['AREA'] = $this->arParams['WIDTH'] * $this->arParams['DEPTH'];
@@ -151,6 +207,51 @@ class WizardComponent extends \CBitrixComponent
         $this->arResult['STANDS'] = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
     }
     
+    /**
+     * Обработка шага "Выбор стенда".
+     */
+    protected function processStepStands()
+    {
+        // Запрос.
+        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+        
+        // Стенды мероприятия.
+        $stands = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
+        
+        // Получение данных из сессии.
+        $data = $this->getSession();
+        
+        
+        // Сохранение данных в корзину.
+        $this->getBasket()->put(
+            intval($request->get('STAND')),
+            1,
+            'stand',
+            [
+                'width' => $this->arParams['WIDHT'], 
+                'depth' => $this->arParams['DEPTH']
+            ],
+            $this->getContext()
+        );
+    }
+    
+    
+    
+    /**
+     * ШАГ "Выбор оборудования".
+     */
+    protected function doStepEquipments()
+    {
+        
+    }
+    
+    /**
+     * Обработка шага "Выбор оборудования".
+     */
+    protected function processStepEquipments()
+    {
+        
+    }
     
     
     
@@ -166,11 +267,29 @@ class WizardComponent extends \CBitrixComponent
     
     
     /**
+     * Получение корзины.
+     */
+    protected function getBasket()
+    {
+        return $this->basket;
+    }
+    
+    
+    /**
      * Получение обхекта мероприятия.
      */
     protected function getEvent()
     {
         return (new Event($this->arParams['EID']));
+    }
+    
+    
+    /**
+     * Получение кода мероприятия.
+     */
+    protected function getEventCode()
+    {
+        return (mb_strtoupper($this->getEvent()->getCode()));
     }
     
     
@@ -202,8 +321,8 @@ class WizardComponent extends \CBitrixComponent
         $count = count($this->getSteps());
         $step  = $this->getStepNumber() - 1;
         
-        if ($step < 0) {
-            $step = 0;
+        if ($step < 1) {
+            $step = 1;
         }
         return $step;
     }
@@ -265,12 +384,16 @@ class WizardComponent extends \CBitrixComponent
     /**
      * Получение ссылки шага.
      */
-    public function getStepLink($step)
+    public function getStepLink($step = null)
     {
+        if (is_null($step)) {
+            $step = $this->getStepNumber();
+        }
+        
         $fields = [
             $this->arParams['CODE'],
             mb_strtolower($this->arParams['TYPE']),
-            $this->getStepNumber(),
+            $step,
         ];
         $link = '/wizard/' . implode('/', $fields) . '/';
         
@@ -308,6 +431,7 @@ class WizardComponent extends \CBitrixComponent
                 $steps = array_merge($steps, ['ORDER']);
             }
             $steps = array_map('mb_strtolower', $steps);
+            $steps = array_flip(array_map(function($x) { return ($x + 1); }, array_flip($steps)));
             
             // Сохранение шагов в сессию.
             $this->putSessionParam('STEPS', $steps);
@@ -317,11 +441,20 @@ class WizardComponent extends \CBitrixComponent
     
     
     /**
+     * Полчение кода мероприятия для сессии.
+     */
+    protected function getSessionEventCode()
+    {
+        return (mb_strtoupper($this->getEvent()->getCode()));
+    }
+    
+    
+    /**
      * Получение массива данных из сессии.
      */
     protected function getSession()
     {
-        return $_SESSION[self::SESSCODE];
+        return $_SESSION[self::SESSCODE][$this->getSessionEventCode()];
     }
     
     
@@ -330,7 +463,7 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function putSession($data)
     {
-        $_SESSION[self::SESSCODE] = $data;
+        $_SESSION[self::SESSCODE][$this->getSessionEventCode()] = $data;
     }
     
     
@@ -339,7 +472,7 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function getSessionParam($param)
     {
-        return $_SESSION[self::SESSCODE][$param];
+        return $_SESSION[self::SESSCODE][$this->getSessionEventCode()][$param];
     }
     
     
@@ -348,7 +481,7 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function putSessionParam($param, $value)
     {
-        $_SESSION[self::SESSCODE][$param] = $value;
+        $_SESSION[self::SESSCODE][$this->getSessionEventCode()][$param] = $value;
     }
 }
 

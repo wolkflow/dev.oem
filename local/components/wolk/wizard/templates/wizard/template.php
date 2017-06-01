@@ -12,7 +12,7 @@
         <? foreach ($arResult['STEPS'] as $i => $step) { ?>
             <a href="<?= $component->getStepLink($i) ?>" class="breadcrumbs__button <?= ($step == $arResult['STEP']) ? ('active') : ('') ?>"> 
                 <span class="breadcrumbs__buttoncontainer">
-                    <?= ($i + 1) ?>. <?= Loc::getMessage('STEP_' . mb_strtoupper($step)) ?>
+                    <?= $i ?>. <?= Loc::getMessage('STEP_' . mb_strtoupper($step)) ?>
                 </span>
             </a>
         <? } ?>
@@ -56,3 +56,14 @@
 
 <? // Подключение шага // ?>
 <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/steps/' . $arResult['STEP'].'.php') ?>
+
+
+<div class="hide">
+    <div class="modal" id="timetable">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('EVENT_TIMETABLE') ?>
+		</div>
+        <?= $arResult['EVENT']->getSchedule() ?>
+    </div>
+</div>

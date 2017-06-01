@@ -10,6 +10,10 @@ Loc::loadLanguageFile(__FILE__);
 <head>
     <meta charset="utf-8" />
 	<link rel="shortcut icon" href="/favicon.ico" />
+    
+    <script>
+        var jsvars = <?=$APPLICATION->ShowProperty('jsvars') ?>;
+    </script>
 	
     <? $am = \Bitrix\Main\Page\Asset::getInstance(); ?>
     <?  // Подключение скриптов и стилей.
