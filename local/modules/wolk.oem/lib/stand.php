@@ -2,7 +2,9 @@
 
 namespace Wolk\OEM;
 
-class Stand extends \Wolk\Core\System\IBlockEntity
+use \Wolk\OEM\Prices\Stand as StandPrice;
+
+class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfaces\ContextPricing
 {
 	const IBLOCK_ID = IBLOCK_STANDS_ID;
 
@@ -52,17 +54,49 @@ class Stand extends \Wolk\Core\System\IBlockEntity
     }
 	
     
-    public function setPrice($price)
-    {
-        $this->price = (float) $price;
-    }
-    
+    /**
+     * Получение цены из контекста.
+     */
+	public function getContextPrice(Context $context)
+	{
+        $price = 0;
+        
+		if (!empty($context)) {
+			$result = StandPrice::getList(
+                [
+                    'filter' => [
+                        StandPrice::FIELD_STAND => $this->getID(),
+                        StandPrice::FIELD_EVENT => $context->getEventID(),
+                        StandPrice::FIELD_TYPE  => $context->getType(),
+                        StandPrice::FIELD_LANG  => $context->getLang(),
+                    ],
+                    'select' => [
+                        StandPrice::FIELD_PRICE
+                    ],
+                    'limit' => 1
+                ],
+                false
+            );
+            
+            if ($item = $result->fetch()) {
+                $price = (float) $item[StandPrice::FIELD_PRICE];
+            }
+		}
+		return $price;
+	}
+     
     
     public function getPrice()
     {
         return $this->price;
     }
-        
+    
+    
+    public function setPrice($price)
+    {
+        $this->price = (float) $price;
+    }
+    
     
     /**
      * Список оборудования.

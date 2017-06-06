@@ -5,7 +5,7 @@ namespace Wolk\OEM\Products;
 use Wolk\OEM\Context;
 use Wolk\OEM\Prices\Product as ProductPrice;
 
-class Base extends \Wolk\Core\System\IBlockModel
+class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces\ContextPricing
 {
 	const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
     const LANG_PREFIX = 'LANG_';

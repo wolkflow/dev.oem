@@ -56,7 +56,7 @@ class WizardComponent extends \CBitrixComponent
         $this->context = new Context($arParams['EID'], $arParams['TYPE'], $arParams['LANG']);
         
         // Объект корзины.
-        $this->basket = new Basket($this->getEventCode());
+        $this->basket = new Basket($arParams['CODE']);
         
         
         return $arParams;
@@ -220,15 +220,16 @@ class WizardComponent extends \CBitrixComponent
         
         // Получение данных из сессии.
         $data = $this->getSession();
-        
+        $data['STAND'] = (int) $request->get('STAND');
+        $this->putSession($data);
         
         // Сохранение данных в корзину.
         $this->getBasket()->put(
             intval($request->get('STAND')),
-            1,
-            'stand',
+            ($this->arParams['WIDTH'] * $this->arParams['DEPTH']),
+            Basket::KIND_STAND,
             [
-                'width' => $this->arParams['WIDHT'], 
+                'width' => $this->arParams['WIDTH'], 
                 'depth' => $this->arParams['DEPTH']
             ],
             $this->getContext()

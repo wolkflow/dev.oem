@@ -2,12 +2,16 @@
 
 namespace Wolk\OEM;
 
+use Wolk\OEM\Stand as Stand;
 use Wolk\OEM\Products\Base as Product;
 
 class Basket
 {
-    const SESSCODE_EVENT  = 'OEMEVENT';
+    const SESSCODE_EVENT  = 'OEMEVENTS';
     const SESSCODE_BASKET = 'BASKET';
+    
+    const KIND_STAND   = 'stand';
+    const KIND_PRODUCT = 'product';
     
     protected $code = null;
     protected $data = array();
@@ -41,27 +45,37 @@ class Basket
     /**
      * Добавление продукции в корзину.
      */
-    public function put($pid, $quantity, $kind = 'product', $params = [], Context $context)
+    public function put($pid, $quantity, $kind, $params = [], Context $context)
     {
-        $product = new Product($pid);
+        switch ($kind) {
+            case ('stand'):
+                $element = new Stand($pid);
+                break;
+            case ('product');
+                $element = new Product($pid);
+                break;
+            default:
+                return;
+                break;
+        }
         
         $quantity = (float) $quantity;
-        $price    = (float) $product->getContextprice($context);
-        $cost     = $quantity * $price;
+        //$price    = (float) $element->getContextPrice($context);
+        //$cost     = $quantity * $price;
         $kind     = (string) $kind;
         $params   = (array) $params;
         
         $item = array(
-            'bid'      => uniqid(time()),
-            'pid'      => $product->getID(),
+            'id'       => uniqid(time()),
+            'pid'      => $element->getID(),
             'quantity' => $quantity,
-            'price'    => $price,
-            'cost'     => $cost,
+            //'price'    => $price,
+            //'cost'     => $cost,
             'kind'     => $kind,
             'params'   => $params,
         );
         
-        $this->data[$item['bid']] = $item;
+        $this->data[$item['id']] = $item;
         
         // сохранение в сесиию.
         $this->putSession();

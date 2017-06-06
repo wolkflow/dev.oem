@@ -11,19 +11,28 @@
     <?= Loc::getMessage('BASKET') ?>
 </div>
 
+<? /*
+<pre>
+<? print_r($_SESSION) ?>
+<? print_r($arResult) ?>
+</pre>
+*/ ?>
+
 <div class="basketcontainer__itemscontainer customizable_border">
     
-    <div class="basketcontainer__itemcontainer customizable_border">
-        <div class="basketcontainer__itemname">
-            InterStellar
+    <? if (!is_null($arResult['STAND'])) { ?>
+        <div class="basketcontainer__itemcontainer customizable_border">
+            <div class="basketcontainer__itemname">
+                <?= $arResult['STAND']->getTitle() ?>
+            </div>
+            <div class="basketcontainer__itemtotalprice">
+                <?= FormatCurrency($arResult['STANDITEM']['cost'], $arResult['CURRENCY']) ?>
+            </div>
+            <div class="basketcontainer__itemprice">
+                <?= $arResult['STANDITEM']['params']['width'] ?>m &times; <?= $arResult['STANDITEM']['params']['depth'] ?>m
+            </div>
         </div>
-        <div class="basketcontainer__itemtotalprice">
-            $2400
-        </div>
-        <div class="basketcontainer__itemprice">
-            5m &times; 4m
-        </div>
-    </div>
+    <? } ?>
     
     <? foreach ($arResult['ITEMS'] as $item) { ?>
         <? $product = $arResult['PRODUCTS'][$item['pid']] ?>

@@ -75,17 +75,28 @@ class BasketComponent extends \CBitrixComponent
         // Валюта.
         $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyProductsContext($this->getContext());
         
+        // Стенд.
+        $this->arResult['STAND'] = null;
+        
         // Продукция.
         $this->arResult['PRODUCTS'] = array();
         
+        // Записив корзине.
         $this->arResult['ITEMS'] = $this->arResult['BASKET']->getData();
         
         foreach ($this->arResult['ITEMS'] as $item) {
-            $product = new \Wolk\OEM\Products\Base($item['pid']);
-            $product->setPrice($item['price']);
-            $product->setCount($item['quantity']);
-            
-            $this->arResult['PRODUCTS'][$product->getID()] = $product;
+            if ($item['kind'] == 'stand') {
+                $this->arResult['STANDITEM'] = $item;
+                
+                $this->arResult['STAND'] = new \Wolk\OEM\Stand($item['pid']);
+                $this->arResult['STAND']->setPrice($item['price']);
+            } else {
+                $product = new \Wolk\OEM\Products\Base($item['pid']);
+                $product->setPrice($item['price']);
+                $product->setCount($item['quantity']);
+                
+                $this->arResult['PRODUCTS'][$product->getID()] = $product;
+            }
         }
         
         
