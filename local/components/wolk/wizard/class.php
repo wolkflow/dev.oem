@@ -13,6 +13,7 @@ use Wolk\Core\Helpers\ArrayHelper;
 use Wolk\OEM\Event;
 use Wolk\OEM\Context;
 use Wolk\OEM\Basket;
+use Wolk\OEM\BasketItem;
 
 /**
  * Class WizardComponent

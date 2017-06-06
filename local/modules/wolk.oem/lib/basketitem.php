@@ -9,9 +9,12 @@ use Wolk\OEM\Products\Base as Product;
 
 class BasketItem
 {
-    protected $id     = null;
-    protected $data   = [];
-    protected $basket = [];
+    protected $id      = null;
+    protected $price   = null;
+    protected $data    = [];
+    
+    protected $basket  = null;
+    protected $element = null;
     
     
     
@@ -22,6 +25,8 @@ class BasketItem
         
         $this->basket = new Basket($event);
         
+        // Загрузка продукта мз корзины.
+        // Не распространяется на стенд.
         if (empty($this->data)) {
             $this->load();
         }
@@ -31,13 +36,13 @@ class BasketItem
     // Загрузка данных из сессии.
     public function load()
     {
-        $this->data = ($this->getBasket()->getData()[$this->getID()]);
+        $this->data = ($this->getBasket()->getData()[Basket::SESSCODE_PRODUCTS][$this->getID()]);
     }
     
     
     public function getID()
     {
-        return $this->data['id'];
+        return $this->id;
     }
     
     
@@ -52,47 +57,94 @@ class BasketItem
      */
     public function getElement()
     {
-        $element = null;
-        
-        switch ($this->getKind()) {
-            case (Basket::KIND_STAND):
-                $element = new Stand($this->getProductID());
-                break;
-            case (Basket::KIND_PRODUCT):
-                $element = new Product($this->getProductID());
-                break;
+        if (empty($this->element)) {
+            switch ($this->getKind()) {
+                case (Basket::KIND_STAND):
+                    $this->element = new Stand($this->getProductID());
+                    break;
+                case (Basket::KIND_PRODUCT):
+                    $this->element = new Product($this->getProductID());
+                    break;
+            }
         }
-        return $element;
+        return $this->element;
     }
     
     
+    /**
+     * Получение количества.
+     */
+    public function getQuantity()
+    {
+        return $this->data['quantity'];
+    }
+    
+    
+    /**
+     * Получение дополнительных параметров.
+     */
     public function getParams()
     {
         return $this->data['params'];
     }
     
     
+    /**
+     * Получение дополнительного параметра по коду.
+     */
+    public function getParam($code)
+    {
+        return $this->data['params'][strval($code)];
+    }
+    
+    
+    /**
+     * Полчение типа элемента корзины.
+     */
     public function getKind()
     {
         return $this->data['kind'];
     }
     
     
+    /**
+     * Получение объекта корзины.
+     */
     public function getBasket()
     {
         return $this->basket;
     }
     
     
-    public function getPrice()
+    /**
+     * Получение цены из контекста.
+     */
+    public function loadPrice(Context $context)
     {
-        
+        if (is_null($this->price)) {
+            $element = $this->getElement();
+            if (!empty($element)) {
+                $this->price = $element->getContextPrice($context);
+            }
+        }
     }
     
     
+    /**
+     * Получение цены.
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+    
+    
+    /**
+     * Получение стоимости.
+     */
     public function getCost()
     {
-        
+        return ($this->getPrice() * $this->getQuantity());
     }
     
 }

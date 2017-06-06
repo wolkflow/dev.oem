@@ -13,6 +13,8 @@ use Wolk\OEM\Components\BaseListComponent;
 
 use Wolk\OEM\Event;
 use Wolk\OEM\Context;
+use Wolk\OEM\Basket;
+use Wolk\OEM\BasketItem;
 
 /**
  * Class BasketComponent
@@ -64,7 +66,10 @@ class BasketComponent extends \CBitrixComponent
 		}
         
         // Корзина.
-        $this->arResult['BASKET'] = new \Wolk\OEM\Basket($this->arParams['CODE']);
+        $this->arResult['BASKET'] = new Basket($this->arParams['CODE']);
+        
+        // Суммарная стоимость.
+        $this->arResult['PRICE'] = 0;
         
         // Мероприятие.
         $this->arResult['EVENT'] = $this->getEvent();
@@ -79,24 +84,20 @@ class BasketComponent extends \CBitrixComponent
         $this->arResult['STAND'] = null;
         
         // Продукция.
-        $this->arResult['PRODUCTS'] = array();
+        $this->arResult['STAND'] = $this->arResult['BASKET']->getStand();
+        if (!empty($this->arResult['STAND'])) {
+            $this->arResult['STAND']->loadPrice($this->getContext());
+            $this->arResult['PRICE'] = $this->arResult['STAND']->getCost();
+        }
         
         // Записив корзине.
-        $this->arResult['ITEMS'] = $this->arResult['BASKET']->getData();
+        $this->arResult['ITEMS'] = $this->arResult['BASKET']->getList();
         
         foreach ($this->arResult['ITEMS'] as $item) {
-            if ($item['kind'] == 'stand') {
-                $this->arResult['STANDITEM'] = $item;
-                
-                $this->arResult['STAND'] = new \Wolk\OEM\Stand($item['pid']);
-                $this->arResult['STAND']->setPrice($item['price']);
-            } else {
-                $product = new \Wolk\OEM\Products\Base($item['pid']);
-                $product->setPrice($item['price']);
-                $product->setCount($item['quantity']);
-                
-                $this->arResult['PRODUCTS'][$product->getID()] = $product;
-            }
+            $item->loadPrice($this->getContext());
+            
+            // Суммарная стоимость продукции.
+            $arResult['PRICE'] += $item->getCost();
         }
         
         

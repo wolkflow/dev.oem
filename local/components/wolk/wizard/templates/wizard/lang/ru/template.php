@@ -8,6 +8,10 @@ $MESS['STEP_MARKETINGS'] = 'Маркетнг';
 $MESS['STEP_SKETCH']     = 'Схема стенда';
 $MESS['STEP_ORDER']      = 'Заказ';
 
+$MESS['BASKET'] = 'Корзина';
+$MESS['PREV'] = 'Назад';
+$MESS['NEXT'] = 'Вперед';
+
 $MESS['DEADLINE']  = 'Крайний срок подачи<br>заказа';
 $MESS['SURCHARGE'] = 'Наценка в размере #PERCENT# будет применена ко всем заказам позднее #DATE#';
 $MESS['SCHEDULE']  = 'Расписание';

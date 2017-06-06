@@ -2,13 +2,16 @@
 
 namespace Wolk\OEM;
 
+use Wolk\OEM\BasketItem as BasketItem;
 use Wolk\OEM\Stand as Stand;
 use Wolk\OEM\Products\Base as Product;
 
 class Basket
 {
-    const SESSCODE_EVENT  = 'OEMEVENTS';
-    const SESSCODE_BASKET = 'BASKET';
+    const SESSCODE_EVENT    = 'OEMEVENTS';
+    const SESSCODE_BASKET   = 'BASKET';
+    const SESSCODE_STAND    = 'STAND';
+    const SESSCODE_PRODUCTS = 'PRODUCTS';
     
     const KIND_STAND   = 'stand';
     const KIND_PRODUCT = 'product';
@@ -43,39 +46,62 @@ class Basket
     
     
     /**
+     * Получение списка элементов корзины.
+     */
+    public function getStand()
+    {
+        $data = $this->getData()[self::SESSCODE_STAND];
+        $item = null;
+        if (!empty($data)) {
+            $item = new BasketItem($this->getEventCode(), $data['id'], $data);
+        }
+        return $item;
+    }
+    
+    
+    /**
+     * Получение списка элементов корзины.
+     */
+    public function getList()
+    {
+        $items = [];
+        $data  = $this->getData()[self::SESSCODE_PRODUCTS];
+        foreach ($data as $item) {
+            $items[$item['id']] = new BasketItem($this->getEventCode(), $item['id'], $item);
+        }
+        return $items;
+    }
+    
+    
+    /**
      * Добавление продукции в корзину.
      */
-    public function put($pid, $quantity, $kind, $params = [], Context $context)
+    public function put($pid, $quantity, $kind, $params = [])
     {
+        $quantity = (float) $quantity;
+        $kind     = (string) $kind;
+        $params   = (array) $params;
+        
+        $item = array(
+            'id'       => uniqid(time()),
+            'pid'      => $pid,
+            'quantity' => $quantity,
+            'kind'     => $kind,
+            'params'   => $params,
+        );
+        
         switch ($kind) {
             case ('stand'):
-                $element = new Stand($pid);
+                $this->data[self::SESSCODE_STAND] = $item;
                 break;
             case ('product');
-                $element = new Product($pid);
+                $this->data[self::SESSCODE_PRODUCTS][$item['id']] = $item;
                 break;
             default:
                 return;
                 break;
         }
         
-        $quantity = (float) $quantity;
-        //$price    = (float) $element->getContextPrice($context);
-        //$cost     = $quantity * $price;
-        $kind     = (string) $kind;
-        $params   = (array) $params;
-        
-        $item = array(
-            'id'       => uniqid(time()),
-            'pid'      => $element->getID(),
-            'quantity' => $quantity,
-            //'price'    => $price,
-            //'cost'     => $cost,
-            'kind'     => $kind,
-            'params'   => $params,
-        );
-        
-        $this->data[$item['id']] = $item;
         
         // сохранение в сесиию.
         $this->putSession();
@@ -88,21 +114,6 @@ class Basket
     public function remove($bid)
     {
         
-    }
-    
-    
-    /**
-     * Получение общей цены.
-     */
-    public function getPrice()
-    {
-        $items = $this->getData();
-        
-        $price = 0;
-        foreach ($items as $item) {
-            $price += (float) $item['cost'];
-        }
-        return $price;
     }
     
     

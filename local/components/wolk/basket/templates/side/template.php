@@ -7,35 +7,24 @@
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 
-<div class="basketcontainer__title customizable_border">
-    <?= Loc::getMessage('BASKET') ?>
-</div>
 
-<? /*
-<pre>
-<? print_r($_SESSION) ?>
-<? print_r($arResult) ?>
-</pre>
-*/ ?>
-
-<div class="basketcontainer__itemscontainer customizable_border">
-    
-    <? if (!is_null($arResult['STAND'])) { ?>
-        <div class="basketcontainer__itemcontainer customizable_border">
-            <div class="basketcontainer__itemname">
-                <?= $arResult['STAND']->getTitle() ?>
-            </div>
-            <div class="basketcontainer__itemtotalprice">
-                <?= FormatCurrency($arResult['STANDITEM']['cost'], $arResult['CURRENCY']) ?>
-            </div>
-            <div class="basketcontainer__itemprice">
-                <?= $arResult['STANDITEM']['params']['width'] ?>m &times; <?= $arResult['STANDITEM']['params']['depth'] ?>m
-            </div>
+<? if (!is_null($arResult['STAND'])) { ?>
+    <div class="basketcontainer__itemcontainer customizable_border">
+        <div class="basketcontainer__itemname">
+            <?= $arResult['STAND']->getElement()->getTitle() ?>
         </div>
-    <? } ?>
-    
+        <div class="basketcontainer__itemtotalprice">
+            <?= FormatCurrency($arResult['STAND']->getCost(), $arResult['CURRENCY']) ?>
+        </div>
+        <div class="basketcontainer__itemprice">
+            <?= $arResult['STAND']->getParam('width') ?>m &times; <?= $arResult['STAND']->getParam('depth') ?>m
+        </div>
+    </div>
+<? } ?>
+
+<? if (!empty($arResult['ITEMS']))  { ?>
     <? foreach ($arResult['ITEMS'] as $item) { ?>
-        <? $product = $arResult['PRODUCTS'][$item['pid']] ?>
+        <? $product = $item->getElement() ?>
         
         <? if (empty($product)) continue; ?>
         
@@ -44,36 +33,29 @@
                 <?= $product->getTitle() ?>
             </div>
             <div class="basketcontainer__itemtotalprice">
-                <?= FormatCurrency($item['cost'], $arResult['CURRENCY']) ?>
+                <?= FormatCurrency($item->getCost(), $arResult['CURRENCY']) ?>
             </div>
             <div class="basketcontainer__itemprice">
-                <?= FormatCurrency($item['price'], $arResult['CURRENCY']) ?> &times; <?= $item['quantity'] ?>
+                <?= FormatCurrency($item->getPrice(), $arResult['CURRENCY']) ?> &times; <?= $item->getQuantity() ?>
             </div>
         </div>
     <? } ?>
-    
-    <div class="basketcontainer__totalpricecontainer" v-show="totalPrice">
-        <div class="basketcontainer__totalpricecontainertitle">
-            <?= Loc::getMessage('TOTAL_PRICE') ?>*:
-        </div>
-        <div class="basketcontainer__totalpricecontainercount">
-            <?= FormatCurrency($arResult['BASKET']->getPrice(), $arResult['CURRENCY']) ?>
-        </div>
-        <small>
-            <? if ($arResult['EVENT']->hasVAT()) { ?>
-                <?= Loc::getMessage('TAX_INCLUDED') ?>
-            <? } else { ?>
-                <?= Loc::getMessage('TAX_EXCLUDED') ?>
-            <? } ?>
-        </small>
+<? } ?>
+
+<div class="basketcontainer__totalpricecontainer">
+    <div class="basketcontainer__totalpricecontainertitle">
+        <?= Loc::getMessage('TOTAL_PRICE') ?>*:
     </div>
-    
-    <div class="navButtons">
-        <a href="javascript:void(0)" class="button styler prev">
-            <?= Loc::getMessage('BACK') ?>
-        </a>
-        <div class="basketcontainer__nextstepbutton">
-            <?= Loc::getMessage('NEXT') ?>
-        </div>
+    <div class="basketcontainer__totalpricecontainercount">
+        <?= FormatCurrency($arResult['PRICE'], $arResult['CURRENCY']) ?>
     </div>
+    <small>
+        <? if ($arResult['EVENT']->hasVAT()) { ?>
+            <?= Loc::getMessage('TAX_INCLUDED') ?>
+        <? } else { ?>
+            <?= Loc::getMessage('TAX_EXCLUDED') ?>
+        <? } ?>
+    </small>
 </div>
+    
+    

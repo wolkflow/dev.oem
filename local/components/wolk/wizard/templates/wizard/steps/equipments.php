@@ -2,10 +2,8 @@
 
 <? $this->setFrameMode(true); ?>
 
-
-
-
-
+<? use Bitrix\Main\Localization\Loc; ?>
+<? use Wolk\Core\Helpers\Text as TextHelper ?>
 
 <div class="main">
     <div id="step3" v-show="curStep == 2">
@@ -29,18 +27,31 @@
     
     <aside class="siteAside" data-sticky_column>
         <div class="basketcontainer">
-            <?  // Корзина.
-                $APPLICATION->IncludeComponent(
-                    "wolk:basket", 
-                    "side", 
-                    array(
-                        "EID"  => $arResult['EVENT']->getID(),
-                        "CODE" => $arResult['EVENT']->getCode(),
-                        "TYPE" => $arResult['CONTEXT']->getType(),
-                        "LANG" => $arResult['CONTEXT']->getLang(),
-                    )
-                );
-            ?>
+            <div class="basketcontainer__title customizable_border">
+                <?= Loc::getMessage('BASKET') ?>
+            </div>
+            <div class="basketcontainer__itemscontainer customizable_border">
+                <?  // Корзина.
+                    $APPLICATION->IncludeComponent(
+                        "wolk:basket", 
+                        "side", 
+                        array(
+                            "EID"  => $arResult['EVENT']->getID(),
+                            "CODE" => $arResult['EVENT']->getCode(),
+                            "TYPE" => $arResult['CONTEXT']->getType(),
+                            "LANG" => $arResult['CONTEXT']->getLang(),
+                        )
+                    );
+                ?>
+            <div class="navButtons">
+                <a href="<?= $arResult['LINKS']['PREV'] ?>" class="button styler prev">
+                    <?= Loc::getMessage('PREV') ?>
+                </a>
+                <div class="basketcontainer__nextstepbutton">
+                    <?= Loc::getMessage('NEXT') ?>
+                </div>
+            </div>
+        </div>
         </div>
     </aside>
     <div style="clear:both;"></div>
