@@ -133,6 +133,28 @@ class IBlockSectionModel extends Model
     
     
     /**
+     * Получение родительского раздела.
+     */
+    public function getSectionID()
+    {
+        return (int) $this->get('IBLOCK_SECTION_ID');
+    }
+    
+    
+    /**
+     * Получение родительского раздела.
+     */
+    public function getSection()
+    {
+        $section = null;
+        if ($this->getSectionID() > 0) {
+            $section = new static($this->getSectionID());
+        }
+        return $section;
+    }
+    
+    
+    /**
      * Получение пути до корневого раздела.
      */
     public function getNavChain($select = array())

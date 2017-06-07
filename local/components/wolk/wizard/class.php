@@ -208,6 +208,7 @@ class WizardComponent extends \CBitrixComponent
         $this->arResult['STANDS'] = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
     }
     
+    
     /**
      * Обработка шага "Выбор стенда".
      */
@@ -244,8 +245,35 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepEquipments()
     {
+        $event = $this->getEvent();
         
+        // Спсиок оборудования.
+        $products = $event->getProducts($this->getContext(), Wolk\OEM\Products\Section::TYPE_EQUIPMENTS);
+        $sections = [];
+        foreach ($products as &$product) {
+            if (!array_key_exists($product->getSectionID(), $sections)) {
+                $sections[$product->getSectionID()] = $product->getSection();
+            }
+            $section = $sections[$product->getSectionID()];
+            $section->load();
+            $section->addInside($product, $product->getID());
+        }
+        
+        // Список разделов.
+        $parents = [];
+        foreach ($sections as &$section) {
+            if (!array_key_exists($section->getSectionID(), $parents)) {
+                $parents[$section->getSectionID()] = $section->getSection();
+            }
+            $parent = $parents[$section->getSectionID()];
+            $parent->load();
+            $parent->addInside($section, $section->getID());
+        }
+        
+        // Группы и продукция.
+        $this->arResult['ITEMS'] = $parents;
     }
+    
     
     /**
      * Обработка шага "Выбор оборудования".

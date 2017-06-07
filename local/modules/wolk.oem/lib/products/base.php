@@ -133,29 +133,22 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
 	}
     
     
-    
+    /**
+     * Получение ID раздела.
+     */
     public function getSectionID()
     {
         return (int) $this->get('IBLOCK_SECTION_ID');
     }
     
     
+    /**
+     * Получение раздела.
+     */
     public function getSection()
     {
         $section = new Section((int) $this->get('IBLOCK_SECTION_ID'));
         
         return $section;
-    }
-    
-    
-    public function getPriceType()
-    {
-        
-    }
-    
-    
-    public function getProps()
-    {
-        
     }
 }

@@ -18,6 +18,9 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
     protected static $pricetypes = array();
     protected static $properties = array();
     
+    // Временные внутренние данные (в текущем рабочем простаранстве).
+    protected $insides = [];
+    
     
     public function __construct($id = null, $data = [])
     {
@@ -87,7 +90,6 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
         foreach ($values as $value) {
             $result []= $properties[$value]['XML_ID'];
         }
-        
         return $result;
     }
     
@@ -127,6 +129,46 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
         return $result;
     }
      */
+    
+    
+    /**
+     * Установка внутренних данных.
+     */
+    public function setInsides($items)
+    {
+        $this->insides = (array) $items;
+    }
+    
+    
+    /**
+     * Добавление внутренних данных.
+     */
+    public function addInside($item, $key = null)
+    {
+        if (is_null($key)) {
+            $this->insides []= $item;
+        } else {
+            $this->insides[strval($key)] = $item;
+        }
+    }
+    
+    
+    /**
+     * Удаление внутренних данных.
+     */
+    public function delInside($key)
+    {
+        unset($this->insides[strval($key)]);
+    }
+    
+    
+    /**
+     * Получение внутренних данных.
+     */
+    public function getInsides()
+    {
+        return $this->insides;
+    }
     
     
     /**

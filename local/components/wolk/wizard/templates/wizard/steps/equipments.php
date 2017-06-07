@@ -5,22 +5,26 @@
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 
+<pre>
+    <? print_r($arResult['ITEMS']) ?>
+</pre>
+
+<div class="pagetitle">
+    <?= Loc::getMessage('TITLE_EQUIPMENT') ?>
+</div>
+
 <div class="main">
-    <div id="step3" v-show="curStep == 2">
+    <div id="step3">
         <div class="equipmentcontainer">
-            <div class="options_group" v-for="section in options.SECTIONS | orderBy 'SORT'">
-                <div
-					v-if="section.ITEMS" 
-					@click="toggleSectionVisible(section)" 
-					data-module="pagesubtitle-dropdown"
-                    class="pagesubtitle moduleinited customizable_border"
-                    :class="{'open': section.visible == true || !section.hasOwnProperty('visible')}"
-				>
-					{{ section.NAME }}
-                </div>
-                <div class="pagesubtitleopencontainer">
-                    <additional-equipment v-for="item in section.ITEMS" :item="item" :section="section"></additional-equipment>
-                </div>
+            <div class="options_group">
+                <? foreach ($arResult['ITEMS'] as $group) { ?>
+                    <div class="pagesubtitle moduleinited customizable_border" data-module="pagesubtitle-dropdown">
+                        <?= $group->getTitle() ?>
+                    </div>
+                    <div class="pagesubtitleopencontainer">
+                        <additional-equipment v-for="item in section.ITEMS" :item="item" :section="section"></additional-equipment>
+                    </div>
+                <? } ?>
             </div>
         </div>
     </div>
