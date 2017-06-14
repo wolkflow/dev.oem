@@ -4,24 +4,33 @@ function PutBasket(pid, quantity, params, $self)
         return;
     }
     
-    if (quantity <= 0) {
-        return;
-    }
-    
     // Дополнительные параметра.
     // params = params || [];
     
     var $wrapper = $('#js-wrapper-id');
     var $section = $self.closest('.js-product-section');
     
+    var bid    = $section.attr('data-bid');
+    var action = (empty(bid)) ? ('put-basket') : ('update-basket');
+    
+    if (!empty(bid)) {
+        if (quantity <= 0) {
+            RemoveBasket(bid);
+            return;
+        }
+        action = 'update-basket';
+    } else {
+        action = 'put-basket';
+    }
+    
     // Отправка продукции в корзину.
     $.ajax({
         url: '/remote/',
         type: 'post',
         data: {
-            'action':   'put-basket',
+            'action':   action,
             'pid':      pid,
-            'bid':      $section.data('bid'),
+            'bid':      bid,
             'eid':      $wrapper.data('eid'),
             'code':     $wrapper.data('code'),
             'type':     $wrapper.data('type'),
@@ -35,7 +44,33 @@ function PutBasket(pid, quantity, params, $self)
                 $('#js-basket-wrapper-id').html(response.data['html']);
                 
                 // Сохранение идентификатора элемента корзины.
-                $section.attr('data-bid', response.data['item']['id']);
+                if (!empty(response.data['item'])) {
+                    $section.attr('data-bid', response.data['item']['id']);
+                }
+            }
+        }
+    });
+}
+
+function RemoveBasket(bid)
+{
+    var $wrapper = $('#js-wrapper-id');
+            
+    $.ajax({
+        url: '/remote/',
+        type: 'post',
+        data: {
+            'action': 'remove-basket',
+            'bid':    bid,
+            'eid':    $wrapper.data('eid'),
+            'code':   $wrapper.data('code'),
+            'type':   $wrapper.data('type')
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status) {
+                $('#js-basket-wrapper-id').html(response.data['html']);
+                $('.js-product-section[data-bid="' + bid + '"] .js-quantity').val(0);
             }
         }
     });
@@ -84,26 +119,7 @@ $(document).ready(function() {
         var bid = $(this).data('bid');
         
         if (bid.length > 0) {
-            var $wrapper = $('#js-wrapper-id');
-            
-            $.ajax({
-                url: '/remote/',
-                type: 'post',
-                data: {
-                    'action': 'remove-basket',
-                    'bid':    bid,
-                    'eid':    $wrapper.data('eid'),
-                    'code':   $wrapper.data('code'),
-                    'type':   $wrapper.data('type')
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status) {
-                        $('#js-basket-wrapper-id').html(response.data['html']);
-                        $('.js-product-section[data-bid="' + bid + '"] .js-quantity').val(0);
-                    }
-                }
-            });
+            RemoveBasket(bid);
         }
     });
     
