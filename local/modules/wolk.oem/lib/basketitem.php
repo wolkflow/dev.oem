@@ -52,6 +52,12 @@ class BasketItem
     }
     
     
+    public function getSectionID()
+    {
+        return $this->data['sid'];
+    }
+    
+    
     /**
      * Получение элемента.
      */

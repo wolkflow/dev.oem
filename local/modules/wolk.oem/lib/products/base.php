@@ -42,8 +42,16 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
         }
         $lang = mb_strtoupper($lang);
 		
-		return $this->data['PROPS'][self::LANG_PREFIX . 'DESCRIPTION_' . $lang]['VALUE'];
+		return $this->data['PROPS'][self::LANG_PREFIX . 'DESCRIPTION_' . $lang]['VALUE']['TEXT'];
 	}
+    
+    
+    public function getImageSrc()
+    {
+        $this->load();
+        
+        return (\CFile::getPath($this->data['PREVIEW_PICTURE']));
+    }
     
     
     public function getSketchWidth()

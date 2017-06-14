@@ -165,8 +165,15 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
     /**
      * Получение внутренних данных.
      */
-    public function getInsides()
+    public function getInsides($sort = null)
     {
+        if (!is_null($sort)) {
+            $sort = (string) $sort;
+            
+            uasort($this->insides, function($x1, $x2) use ($sort) {
+                return ($x1->get($sort) - $x2->get($sort));
+            });
+        }
         return $this->insides;
     }
     

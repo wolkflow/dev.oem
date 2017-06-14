@@ -55,8 +55,9 @@
 
 
 <? // Подключение шага // ?>
-<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/steps/' . $arResult['STEP'].'.php') ?>
-
+<div id="js-wrapper-id" data-eid="<?= $arResult['CONTEXT']->getEventID() ?>" data-code="<?= $arResult['EVENT']->getCode() ?>" data-type="<?= $arResult['CONTEXT']->getType() ?>">
+    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/steps/' . $arResult['STEP'].'.php') ?>
+</div>
 
 <div class="hide">
     <div class="modal" id="timetable">

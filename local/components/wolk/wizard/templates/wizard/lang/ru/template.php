@@ -30,3 +30,10 @@ $MESS['M2'] = 'м<sup>2</sup>';
 
 $MESS['CHOOSEN'] = 'Выбран';
 $MESS['CHOOSE']  = 'Выбрать';
+
+$MESS['QUANTITY'] = 'Количество';
+$MESS['MORE'] = 'Добавить';
+
+$MESS['PRICE'] = 'Цена';
+
+$MESS['STANDARD_INCLUDES'] = 'Стенд включает';

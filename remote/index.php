@@ -14,7 +14,6 @@ require ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before
 // Директория для ajax-скриптов.
 define ('DIR_REMOTE', $_SERVER['DOCUMENT_ROOT'] . '/remote/include/');
 
-IncludeFileLangFile(__FILE__);
 
 /**
  * Ответ в формате JSON.
@@ -75,7 +74,7 @@ switch ($action) {
         $index    = (int)    $request->get('index');
         $pid      = (int)    $request->get('pid');
         $eid      = (int)    $request->get('eid');
-        $event    = (string) $request->get('event');
+        $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');
         $kind     = (string) $request->get('kind');
         $quantity = (float)  $request->get('quantity');
@@ -85,23 +84,69 @@ switch ($action) {
         $context = new Wolk\OEM\Context($eid, $type);
         
         // Корзина.
-        $basket = new \Wolk\OEM\Basket($event);
+        $basket = new \Wolk\OEM\Basket($code);
         
         // Сохранение продукции в корзину.
-        $basket->put(
+        $item = $basket->put(
             $pid,
             $quantity,
-            $kind,
+            \Wolk\OEM\Basket::KIND_PRODUCT,
             $params,
             $context
         );
         
         // Обновление данных в корзине.
-        $html = getdataremote('basket.php');
+        $html = gethtmlremote('basket.php');
         
-        jsonresponse(true, '', array('html' => $html));
+        jsonresponse(true, '', array('html' => $html, 'item' => $item));
         break;
 
+    
+    // Изменение количества товара в корзине.
+    case ('update-basket'):
+        $bid      = (string) $request->get('bid');
+        $eid      = (int)    $request->get('eid');
+        $code     = (string) $request->get('code');
+        $type     = (string) $request->get('type');
+        $quantity = (float)  $request->get('quantity');
+        
+        // Контекст конструктора.
+        $context = new Wolk\OEM\Context($eid, $type);
+        
+        // Корзина.
+        $basket = new \Wolk\OEM\Basket($code);
+        
+        // Изменение количества товара в корзине.
+        $item = $basket->update($bid, $quantity);
+        
+        // Обновление данных в корзине.
+        $html = gethtmlremote('basket.php');
+        
+        jsonresponse(true, '', array('html' => $html, 'item' => $item));
+        break;
+        
+    
+    // Удаление продукции их корзины.
+    case ('remove-basket'):
+        $bid      = (string) $request->get('bid');
+        $eid      = (int)    $request->get('eid');
+        $code     = (string) $request->get('code');
+        $type     = (string) $request->get('type');
+        
+        // Контекст конструктора.
+        $context = new Wolk\OEM\Context($eid, $type);
+        
+        // Корзина.
+        $basket = new \Wolk\OEM\Basket($code);
+        
+        // Удаление продукции их корзины.
+        $item = $basket->remove($bid);
+        
+        // Обновление данных в корзине.
+        $html = gethtmlremote('basket.php');
+        
+        jsonresponse(true, '', array('html' => $html, 'item' => $item));
+        break;
         
     
     default:

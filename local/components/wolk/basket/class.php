@@ -97,7 +97,7 @@ class BasketComponent extends \CBitrixComponent
             $item->loadPrice($this->getContext());
             
             // Суммарная стоимость продукции.
-            $arResult['PRICE'] += $item->getCost();
+            $this->arResult['PRICE'] += $item->getCost();
         }
         
         

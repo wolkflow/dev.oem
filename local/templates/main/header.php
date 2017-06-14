@@ -12,7 +12,7 @@ Loc::loadLanguageFile(__FILE__);
 	<link rel="shortcut icon" href="/favicon.ico" />
     
     <script>
-        var jsvars = <?=$APPLICATION->ShowProperty('jsvars') ?>;
+        var jsvars = <?= $APPLICATION->ShowProperty('jsvars', '[]') ?>;
     </script>
 	
     <? $am = \Bitrix\Main\Page\Asset::getInstance(); ?>
@@ -30,6 +30,7 @@ Loc::loadLanguageFile(__FILE__);
         $am->addJs('/local/templates/.default/build/js/jquery.inputmask.bundle.js');
         $am->addJs('/local/templates/.default/build/js/jquery.tooltipster.min.js');
         $am->addJs('/local/templates/.default/build/js/sticky-kit.min.js');
+        $am->addJs("/local/templates/.default/build/js/functions.js");
         $am->addJs("/local/templates/.default/build/js/script.js");
         $APPLICATION->ShowHead(); 
     ?>

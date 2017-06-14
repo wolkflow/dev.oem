@@ -74,6 +74,37 @@ class Basket
     
     
     /**
+     * Получение списка ID продукции в корзине.
+     */
+    public function getPIDs()
+    {
+        $items = $this->getList();
+        $pids  = [];
+        foreach ($items as $item) {
+            $pids = (int) $item->getProductID();
+        }
+        $pids = array_unique($pids);
+        
+        return $pids;
+    }
+    
+    
+    /**
+     * Получение продукции, сгруппированной по разделам.
+     */
+    public function getSectionGroups()
+    {
+        $items = $this->getList();
+        
+        $sections = [];
+        foreach ($items as $item) {
+            $sections[intval($item->getSectionID())][$item->getID()] = $item;
+        }
+        return $sections;
+    }
+    
+    
+    /**
      * Добавление продукции в корзину.
      */
     public function put($pid, $quantity, $kind, $params = [])
@@ -82,19 +113,26 @@ class Basket
         $kind     = (string) $kind;
         $params   = (array) $params;
         
+        $sid = 0;
+        if ($kind == self::KIND_PRODUCT) {
+            $sid = (new Product($pid))->getSectionID();
+        }
+        
+        // Данные для добавления в корзину.
         $item = array(
             'id'       => uniqid(time()),
             'pid'      => $pid,
+            'sid'      => $sid,
             'quantity' => $quantity,
             'kind'     => $kind,
             'params'   => $params,
         );
         
         switch ($kind) {
-            case ('stand'):
+            case (self::KIND_STAND):
                 $this->data[self::SESSCODE_STAND] = $item;
                 break;
-            case ('product');
+            case (self::KIND_PRODUCT);
                 $this->data[self::SESSCODE_PRODUCTS][$item['id']] = $item;
                 break;
             default:
@@ -102,8 +140,26 @@ class Basket
                 break;
         }
         
+        // Сохранение в сесиию.
+        $this->putSession();
         
-        // сохранение в сесиию.
+        return $item;
+    }
+    
+    
+    /**
+     * Обновление количества товара.
+     */
+    public function update($bid, $quantity)
+    {
+        $quantity = (float) $quantity;
+        
+        if ($quantity <= 0) {
+            return;
+        }
+        $this->data[self::SESSCODE_PRODUCTS][strval($bid)]['quantity'] = $quantity;
+        
+        // Сохранение в сесиию.
         $this->putSession();
     }
     
@@ -113,7 +169,10 @@ class Basket
      */
     public function remove($bid)
     {
+        unset($this->data[self::SESSCODE_PRODUCTS][strval($bid)]);
         
+        // Сохранение в сесиию.
+        $this->putSession();
     }
     
     

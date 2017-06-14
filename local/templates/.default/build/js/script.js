@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+
+
+/*
 	$('.itemCount__up').click(function() {
 		var $input = $(this).parent().find('input');
 		$input.val(parseInt($input.val()) + 1);

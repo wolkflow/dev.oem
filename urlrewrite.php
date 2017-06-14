@@ -39,6 +39,12 @@ $arUrlRewrite = array(
 		"PATH" => "/wizard/index.php",
 	),
     array(
+		"CONDITION" => "#^/i/(.+?)/#",
+		"RULE" => "src=$1&",
+		"ID" => "",
+		"PATH" => "/i.php",
+	),
+    array(
 		"CONDITION" => "#^/i/#",
 		"RULE" => "",
 		"ID" => "",

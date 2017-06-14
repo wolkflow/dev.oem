@@ -161,12 +161,17 @@ class WizardComponent extends \CBitrixComponent
                 break;
         }
         
+        // Контекст.
+        $this->arResult['CONTEXT'] = $this->getContext();
         
         // Мероприятие.
         $this->arResult['EVENT'] = $this->getEvent();
         
-        // Контекст.
-        $this->arResult['CONTEXT'] = $this->getContext();
+        // Корзина.
+        $this->arResult['BASKET'] = $this->getBasket();
+        
+        // Получение предвыбранного стенда.
+        $this->usePreStand();
         
         // Валюта.
         $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyStandsContext($this->getContext());
@@ -200,11 +205,10 @@ class WizardComponent extends \CBitrixComponent
         // Площадь стенда.
         $this->arResult['AREA'] = $this->arParams['WIDTH'] * $this->arParams['DEPTH'];
         
-        $this->arResult['PRESTAND'] = $event->getPreselectStand();
-        $this->arResult['PREOFFER'] = null;
-        if (!empty($this->arResult['PRESTAND'])) {
-            $this->arResult['PREOFFER'] = $this->arResult['PRESTAND']->getStandOffer($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
-        }
+        // Получение предвыбранного стенда.
+        $this->usePreStand();
+        
+        // Список стендов.
         $this->arResult['STANDS'] = $this->getEvent()->getStandsList($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
     }
     
@@ -223,6 +227,16 @@ class WizardComponent extends \CBitrixComponent
         // Получение данных из сессии.
         $data = $this->getSession();
         $data['STAND'] = (int) $request->get('STAND');
+        
+        // Если выбран предустановленный станд.
+        if ($data['STAND'] == $this->getEvent()->getPreselectStandID()) {
+            $standoffer = $this->getEvent()->getPreselectStand()->getStandOffer($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
+            
+            if (!empty($standoffer)) {
+                $data['BASE'] = $standoffer->getBaseProductQIDs();
+            }
+        }
+        
         $this->putSession($data);
         
         // Сохранение данных в корзину.
@@ -245,6 +259,7 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepEquipments()
     {
+        $data  = $this->getSession();
         $event = $this->getEvent();
         
         // Спсиок оборудования.
@@ -270,8 +285,15 @@ class WizardComponent extends \CBitrixComponent
             $parent->addInside($section, $section->getID());
         }
         
+        uasort($parents, function($x1, $x2) {
+            return ($x1->get('SORT') - $x2->get('SORT'));
+        });
+        
         // Группы и продукция.
         $this->arResult['ITEMS'] = $parents;
+        
+        // Стенд.
+        $this->arResult['BASE'] = $data['BASE'];
     }
     
     
@@ -297,11 +319,11 @@ class WizardComponent extends \CBitrixComponent
     
     
     /**
-     * Получение корзины.
+     * Получение кода мероприятия.
      */
-    protected function getBasket()
+    protected function getEventCode()
     {
-        return $this->basket;
+        return (mb_strtoupper($this->getEvent()->getCode()));
     }
     
     
@@ -315,11 +337,24 @@ class WizardComponent extends \CBitrixComponent
     
     
     /**
-     * Получение кода мероприятия.
+     * Получение корзины.
      */
-    protected function getEventCode()
+    protected function getBasket()
     {
-        return (mb_strtoupper($this->getEvent()->getCode()));
+        return $this->basket;
+    }
+    
+    
+    /**
+     * Получение предвыбранного стенда.
+     */
+    protected function usePreStand()
+    {
+        $this->arResult['PRESTAND'] = $this->getEvent()->getPreselectStand();
+        $this->arResult['PREOFFER'] = null;
+        if (!empty($this->arResult['PRESTAND'])) {
+            $this->arResult['PREOFFER'] = $this->arResult['PRESTAND']->getStandOffer($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
+        }
     }
     
     

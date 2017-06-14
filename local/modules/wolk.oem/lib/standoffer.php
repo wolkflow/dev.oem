@@ -70,19 +70,29 @@ class StandOffer extends \Wolk\Core\System\IBlockEntity
     /**
      * Список базового оборудования.
      */
-	public function getBaseProducts(Context $context = null)
+	public function getBaseProductQIDs()
 	{
         $this->load();
         
         // ID продукции в базовой комплектации стенда.
         $ids = array_filter((array) $this->data['PROPS']['PRODUCTS']['VALUE']);
         
-        $pids = [];
+        $qids = [];
         foreach ($ids as $i => $id) {
-            $pids[$id] = (int) $this->data['PROPS']['PRODUCTS']['DESCRIPTION'][$i];
+            $qids[$id] = (int) $this->data['PROPS']['PRODUCTS']['DESCRIPTION'][$i];
         }
         unset($ids);
         
+        return $qids;
+    }
+    
+    
+    /**
+     * Список базового оборудования.
+     */
+	public function getBaseProducts(Context $context = null)
+	{
+        $pids = $this->getBaseProductQIDs();
         
         // Если задан контекст, можем определить цены на продукцию.
         $prices = [];

@@ -109,6 +109,15 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return ($this->data['PROPS']['LANG_CONTACTS_' . $lang]['VALUE']);
     }
 	
+    
+    /**
+     * Полуение электронных почт для отправки копий счета.
+     */
+    public function getEmails()
+    {
+		return ($this->data['PROPS']['EMAILS']['VALUE']);
+    }
+    
 	
     /**
      * Получение дат для наценок.
