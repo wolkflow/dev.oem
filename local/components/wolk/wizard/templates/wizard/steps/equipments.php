@@ -9,6 +9,8 @@
     <?= Loc::getMessage('TITLE_EQUIPMENT') ?>
 </div>
 
+<? $groups = $arResult['BASKET']->getSectionGroups() ?>
+
 <div class="main">
     <div id="step">
         <div class="equipmentcontainer">
@@ -24,100 +26,15 @@
                             <? $properties = $section->getProperties() ?>
                             <? $products   = $section->getInsides() ?>
                         
-                            <div class="js-product-section js-pricetype-<?= mb_strtolower($pricetype) ?>" data-bid="" data-sid="<?= $section->getID() ?>" data-pricetype="<?= $pricetype ?>">
-                                <div class="serviceItem__title">
-                                    <?= $section->getTitle() ?>
-                                </div>
-                                
-                                <? if ($pricetype == 'QUANTITY') { ?>
-                                    
-                                    <? if (count($products) == 1) { ?>
-                                        <? $product = reset($products) ?>
-                                        <div class="equipmentcontainer__itemcontainer">
-                                            <div class="equipmentcontainer__itemrightside">
-                                                <div class="equipmentcontainer__itemprice">
-                                                    <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
-                                                </div>
-                                                <div class="itemquantitycontainer">
-                                                    <div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-                                                        <div class="serviceItem__subtitle">
-                                                            <?= Loc::getMessage('QUANTITY') ?>
-                                                        </div>
-                                                        <div class="js-quantity-dec itemCount__button itemCount__down"></div>
-                                                        <div class="js-quantity-inc itemCount__button itemCount__up"></div>
-                                                        
-                                                        <input id="<?= $product->getID() ?>" type="text" class="js-quantity itemCount__input styler" value="0" />
-                                                    </div>
-                                                    <? if (array_key_exists($product->getID(), $arResult['BASE'])) { ?>
-                                                        <div class="equipmentcontainer__standartnote">
-                                                            <?= Loc::getMessage('STANDARD_INCLUDES') ?>
-                                                            <b><?= $arResult['BASE'][$product->getID()] ?></b>
-                                                        </div>
-                                                    <? } ?>
-                                                </div>
-                                            </div>
-                                            <div class="equipmentcontainer__itemleftside">
-                                                <div class="equipmentcontainer__itemphotocontainer">
-                                                    <a class="photoZoom" href="<?= $product->getImageSrc() ?>"></a>
-                                                    <img src="/i?src=<?= $product->getImageSrc() ?>&h=210" class="equipmentcontainer__itemphoto" />
-                                                </div>
-                                                <div class="equipmentcontainer__itemsize">
-                                                    <?= $product->getDescription() ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <? } else { ?>
-                                        <div class="equipmentcontainer__itemcontainer">
-                                            <div class="equipmentcontainer__itemrightside">
-                                                <div class="equipmentcontainer__itemprice">
-                                                    {{ price | format_currency ' ' currency_format }}
-                                                </div>
-                                                <? /* // ЦВЕТ
-                                                <div class="equipmentcontainer__itemcolorcontainer" v-if="colors">
-                                                    <div class="equipmentcontainer__itemcolortitle">
-                                                        <?= Loc::getMessage('color') ?>
-                                                    </div>
-                                                    <div class="equipmentcontainer__itemcolordropdown" v-if="colorsLength > 1">
-                                                        <select v-styler="selectedColor" class="styler">
-                                                            <option :value="">
-                                                                <?= Loc::getMessage('not selected') ?>
-                                                            </option>
-                                                            <option v-for="(colorValueId, color) in colors" value="{{ colorValueId }}">
-                                                                {{ color }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                    <span v-else>
-                                                        {{ colors.VALUE }}
-                                                    </span>
-                                                    <input type="hidden" v-model="selectedColor" :value="colors.ID" />
-                                                </div>
-                                                */ ?>
-                                                <div class="itemquantitycontainer">
-                                                    <div class="itemCount">
-                                                        <div class="serviceItem__subtitle"><?= Loc::getMessage('quantity') ?></div>
-                                                        <div class="itemCount__button itemCount__down" @click="decQty"></div>
-                                                        <div class="itemCount__button itemCount__up" @click="incQty"></div>
-                                                        <input id="{{section.ID}}_{{item.ID}}" v-model="item.QUANTITY" type="text" class="itemCount__input styler" number :value="item.QUANTITY" />
-                                                    </div>
-                                                    <div class="equipmentcontainer__standartnote" v-if="item.STANDART > 0">
-                                                        <?= Loc::getMessage('eqipment_standart_include') ?> <b>{{ item.STANDART }}</b>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="equipmentcontainer__itemleftside">
-                                                <div class="equipmentcontainer__itemphotocontainer">
-                                                    <a class="photoZoom" :href="item.PICTURE.BIG"></a>
-                                                    <img :src="item.PICTURE.SMALL" class="equipmentcontainer__itemphoto" />
-                                                </div>
-                                                <div class="equipmentcontainer__itemsize">
-                                                    {{{ description }}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <? } ?>
-                                <? } ?>
-                            </div>
+                            
+                            <?  // Наличие продукции в корзине.
+                                $basketgroup = $groups[$section->getID()];
+                            ?>
+                            
+                            <? // Простое количество // ?>
+                            <? if ($pricetype == 'QUANTITY') { ?>
+                                 <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/quantity.php') ?> 
+                            <? } ?>
                             
                             <? if (false) { ?>
                                 <div class="serviceItem__block" v-for="selectedItem in selectedItems">
@@ -163,6 +80,7 @@
                             <? if (!empty($properties)) { ?>
                                 <div class="serviceItem__bottom">
                                     <a href="javascript:void(0);" class="js-more-field itemAdd_field">
+                                        <i></i>
                                         <span><?= Loc::getMessage('MORE') ?></span>
                                     </a>
                                 </div>
@@ -200,9 +118,9 @@
                 <a href="<?= $arResult['LINKS']['PREV'] ?>" class="button styler prev">
                     <?= Loc::getMessage('PREV') ?>
                 </a>
-                <div class="basketcontainer__nextstepbutton">
+                <a href="<?= $arResult['LINKS']['NEXT'] ?>" class="button styler prev">
                     <?= Loc::getMessage('NEXT') ?>
-                </div>
+                </a>
             </div>
         </div>
     </div>

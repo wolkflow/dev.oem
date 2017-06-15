@@ -1,4 +1,4 @@
-function PutBasket(pid, quantity, params, $self)
+function PutBasket(pid, quantity, params, $section)
 {
     if (pid <= 0) {
         return;
@@ -8,14 +8,14 @@ function PutBasket(pid, quantity, params, $self)
     // params = params || [];
     
     var $wrapper = $('#js-wrapper-id');
-    var $section = $self.closest('.js-product-section');
     
     var bid    = $section.attr('data-bid');
     var action = (empty(bid)) ? ('put-basket') : ('update-basket');
     
+    
     if (!empty(bid)) {
         if (quantity <= 0) {
-            RemoveBasket(bid);
+            RemoveBasket(bid, $section);
             return;
         }
         action = 'update-basket';
@@ -52,10 +52,10 @@ function PutBasket(pid, quantity, params, $self)
     });
 }
 
-function RemoveBasket(bid)
+function RemoveBasket(bid, $section)
 {
     var $wrapper = $('#js-wrapper-id');
-            
+    
     $.ajax({
         url: '/remote/',
         type: 'post',
@@ -71,6 +71,8 @@ function RemoveBasket(bid)
             if (response.status) {
                 $('#js-basket-wrapper-id').html(response.data['html']);
                 $('.js-product-section[data-bid="' + bid + '"] .js-quantity').val(0);
+                
+                $section.attr('data-bid', '');
             }
         }
     });
@@ -96,7 +98,7 @@ $(document).ready(function() {
 		$input.val(quantity);
 		$input.change();
         
-        PutBasket($wrapper.data('pid'), quantity, [], $(this));
+        PutBasket($wrapper.data('pid'), quantity, [], $(this).closest('.js-product-section'));
         
 		return false;
 	});
@@ -109,7 +111,7 @@ $(document).ready(function() {
 		$input.val(quantity);
 		$input.change();
         
-        PutBasket($wrapper.data('pid'), quantity, [], $(this));
+        PutBasket($wrapper.data('pid'), quantity, [], $(this).closest('.js-product-section'));
         
 		return false;
 	});
