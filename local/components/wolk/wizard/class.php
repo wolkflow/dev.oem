@@ -161,6 +161,9 @@ class WizardComponent extends \CBitrixComponent
                 break;
         }
         
+        // Язык.
+        $this->arResult['LANG'] = $this->getContext()->getLang();
+        
         // Контекст.
         $this->arResult['CONTEXT'] = $this->getContext();
         
@@ -294,6 +297,9 @@ class WizardComponent extends \CBitrixComponent
         
         // Стенд.
         $this->arResult['BASE'] = $data['BASE'];
+        
+        // Цвета.
+        $this->arResult['COLORS'] = self::getColors();
     }
     
     
@@ -547,6 +553,23 @@ class WizardComponent extends \CBitrixComponent
     protected function putSessionParam($param, $value)
     {
         $_SESSION[self::SESSCODE][$this->getSessionEventCode()][$param] = $value;
+    }
+    
+    
+    
+    
+    /**
+     * Выбор цветов.
+     */
+    protected static function getColors()
+    {
+        Bitrix\Main\Loader::includeModule('highloadblock');
+        
+        $hlblock = HighloadBlockTable::getById(COLORS_ENTITY_ID)->fetch();
+        $entity  = HighloadBlockTable::compileEntity($hlblock);
+        $class   = $entity->getDataClass();
+
+        return $class::getList(['order' => ['UF_NUM' => 'ASC', 'UF_SORT' => 'ASC']])->fetchAll();
     }
 }
 

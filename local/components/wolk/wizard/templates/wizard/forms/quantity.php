@@ -89,6 +89,13 @@
                                         <b><?= $arResult['BASE'][$product->getID()] ?></b>
                                     </div>
                                 <? } ?>
+                                
+                                <? // Обработка свойств товара // ?>
+                                <? foreach ($properties as $property) { ?>
+                                    <? if ($property == 'COLOR') { ?>
+                                        <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
+                                    <? } ?>
+                                <? } ?>
                             </div>
                         </div>
                         <div class="equipmentcontainer__itemleftside">

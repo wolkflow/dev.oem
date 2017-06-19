@@ -37,3 +37,11 @@ $MESS['MORE'] = 'Добавить';
 $MESS['PRICE'] = 'Цена';
 
 $MESS['STANDARD_INCLUDES'] = 'Стенд включает';
+
+
+// Свойства.
+$MESS['COLOR'] = 'Цвет';
+$MESS['CHANGE_COLOR'] = 'Cмнить цвет';
+$MESS['CHOOSE_COLOR'] = 'Выбрать цвет';
+$MESS['CHOOSING_COLOR'] = 'Выберите цвет';
+$MESS['COLOR_NOTE'] = 'Цвета могут не точно совпадать с фактическим материалом';

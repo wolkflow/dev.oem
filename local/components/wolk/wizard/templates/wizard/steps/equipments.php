@@ -33,7 +33,7 @@
                             
                             <? // Простое количество // ?>
                             <? if ($pricetype == 'QUANTITY') { ?>
-                                 <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/quantity.php') ?> 
+                                 <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/quantity.php') ?>
                             <? } ?>
                             
                             <? if (false) { ?>
