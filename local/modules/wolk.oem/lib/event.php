@@ -112,6 +112,17 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		}
 		return $stands;
 	}
+    
+    
+    /**
+	 * Получение списка e-mail'ов для отправки счета.
+	 */
+	public function getEmails()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['EMAILS']['VALUE'];
+	}
 	
 	
 	/**

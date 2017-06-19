@@ -59,7 +59,7 @@
 								<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
 									<tr class="qp-table-footer">
 										<td align="right">
-											Итого без НДС
+											ИТОГО БЕЗ НДС
 										</td>
 										<td>&nbsp;</td>
 										<td align="left">
