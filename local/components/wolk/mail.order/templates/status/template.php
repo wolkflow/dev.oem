@@ -5,6 +5,8 @@
 
 <? $order = new Wolk\OEM\Order($arResult['ORDER']['ID']); ?>
 
+<? $status = (!empty($arParams['STATUS'])) ? (strval($arParams['STATUS'])) : ($order->getStatus()) ?>
+
 <? $this->setFrameMode(true); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -46,7 +48,7 @@
 									<td style="padding-top: 53px;padding-bottom: 1px;">
 										<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" /></div>
 										<p style="margin: 0;padding: 23px 0 23px 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #333333;line-height: 1px">
-											<?= Loc::getMessage('status') ?>: <b><?= $order->getStatusLangTitle();// $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
+											<?= Loc::getMessage('status') ?>: <b><?= \Wolk\OEM\Order::getStatusLangTitleStatic($status, $order->getLanguage());// $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
 										</p>
 										<div>
 											<img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" />

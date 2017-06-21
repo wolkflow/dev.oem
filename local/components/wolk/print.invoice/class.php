@@ -74,7 +74,8 @@ class PrintInvoiceComponent extends \CBitrixComponent
             'kz.ru'    => 'KZ (ru)',
             'kz.en'    => 'KZ (en)',
 		];
-		
+        
+        
 		if (!array_key_exists($this->arParams['TEMPLATE'], $invoices)) {
 			return;
 		}
@@ -82,11 +83,6 @@ class PrintInvoiceComponent extends \CBitrixComponent
         $this->arResult['SERVER_NAME'] = $site['SERVER_NAME'];
 		$this->arResult['LANGUAGE']    = strtoupper($this->arParams['LANG']);
 		
-        if (!empty($this->arResult['PROPS']['LANGUAGE']['VALUE'])) {
-            $this->arResult['LANGUAGE'] = strtoupper($this->arResult['PROPS']['LANGUAGE']['VALUE']);
-        }
-        
-        
 		// Заказ.
 		$this->arResult['ORDER']   = CSaleOrder::getByID($this->arParams['ORDER_ID']);
 		$this->arResult['PROPS']   = Wolk\Core\Helpers\SaleOrder::getProperties($this->arParams['ORDER_ID']);
@@ -94,6 +90,17 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		$this->arResult['USER']    = CUser::getByID($this->arResult['ORDER']['USER_ID'])->Fetch();
 		
         
+        if (!empty($this->arResult['PROPS']['LANGUAGE']['VALUE'])) {
+            $this->arResult['LANGUAGE'] = strtoupper($this->arResult['PROPS']['LANGUAGE']['VALUE']);
+        }
+        
+        list($tpl, $lang) = explode('.', $this->arParams['TEMPLATE']);
+        
+        if (!empty($lang)) {
+            $lang = strtoupper($lang);
+        } else {
+            $lang = $this->arResult['LANGUAGE'];
+        }
         
         
 		
@@ -128,6 +135,19 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		$count   = 0;
 		$summary = 0;
 		foreach ($this->arResult['BASKETS'] as &$basket) {
+            $element = CIBlockElement::getByID($basket['PRODUCT_ID'])->getNextElement();
+            
+            if ($element) {
+                $fields = $element->getFields();
+                
+                $basket['TITLE'] = $basket['NAME'];
+                
+                if ($fields['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
+                    $basket['NAME']  = $element->getProperty('LANG_NAME_' . $this->arResult['LANGUAGE'])['VALUE'];
+                } else {
+                    $basket['NAME']  = $element->getProperty('LANG_TITLE_' . $this->arResult['LANGUAGE'])['VALUE'];
+                }
+            }
 			if ($basket['SUMMARY_PRICE'] > 0) {
 				$count   += $basket['QUANTITY'];
 				$summary += $basket['SUMMARY_PRICE'];

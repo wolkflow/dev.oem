@@ -23,6 +23,10 @@ $MESS['HEADER_STATUS']   = 'Status';
 $MESS['HEADER_DATE']  	 = 'Date order';
 $MESS['ORIGINAL_PRICE']  = 'Original price';
 $MESS['CONVERT_PRICE'] 	 = 'Convert price';
+$MESS['SENDMAIL'] 	     = 'Sending a mail';
+
+$MESS['YES'] = 'Yes';
+$MESS['NO']  = 'No';
 
 $MESS['SELECT_ANY'] = '- any -';
 

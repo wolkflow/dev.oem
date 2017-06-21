@@ -253,7 +253,21 @@ class Order
 		}
 		$this->load();
 		
-		$title = Loc::getMessage('ORDER_STATUS_'.$this->data['STATUS_ID'], Loc::loadLanguageFile(__FILE__, $lang), $lang); 
+		$title = self::getStatusLangTitleStatic($this->data['STATUS_ID'], $lang); 
+		
+		return $title;
+	}
+    
+    
+    /**
+	 * Получение названия статуса с учтом языка
+	 */
+	public static function getStatusLangTitleStatic($status, $lang = null)
+	{
+		if (is_null($lang)) {
+			$lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+		}
+		$title = Loc::getMessage('ORDER_STATUS_'.$status, Loc::loadLanguageFile(__FILE__, $lang), $lang); 
 		
 		return $title;
 	}

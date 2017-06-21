@@ -293,6 +293,12 @@ $ladmin->AddHeaders(array(
 		"sort"      => 'ORIGINAL_PRICE',
 		"default"   => false,
 	),
+    array( 
+		"id"    	=> 'SENDMAIL',
+		"content"   => Loc::getMessage('SENDMAIL'),
+		"sort"      => 'SENDMAIL',
+		"default"   => true,
+	),
 ));
 
 
@@ -323,7 +329,8 @@ while ($item = $result->NavNext(true, "f_")) {
     $row->AddViewField('TAX', number_format($item['TAX_VALUE'] * $rate, 2, ',', ''));
     $row->AddViewField('CURRENCY', $currency);
     $row->AddViewField('ORIGINAL_PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
-	
+    $row->AddViewField('SENDMAIL', (!empty($props['SENDTIME']['VALUE'])) ? (Loc::getMessage('YES')) : (Loc::getMessage('NO')));
+    
   
 	// Сформируем контекстное меню.
 	$actions = array();
