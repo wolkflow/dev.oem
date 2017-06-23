@@ -1,4 +1,4 @@
-function PutBasket(pid, quantity, params, $section)
+function PutBasket(pid, quantity, params, $block)
 {
     if (pid <= 0) {
         return;
@@ -8,14 +8,15 @@ function PutBasket(pid, quantity, params, $section)
     // params = params || [];
     
     var $wrapper = $('#js-wrapper-id');
-    
-    var bid    = $section.attr('data-bid');
+
+    var bid    = $block.attr('data-bid');
+    var sid    = $block.closest('.js-product-section').attr('data-sid');
     var action = (empty(bid)) ? ('put-basket') : ('update-basket');
     
     
     if (!empty(bid)) {
         if (quantity <= 0) {
-            RemoveBasket(bid, $section);
+            RemoveBasket(bid, sid, $block);
             return;
         }
         action = 'update-basket';
@@ -45,16 +46,24 @@ function PutBasket(pid, quantity, params, $section)
                 
                 // Сохранение идентификатора элемента корзины.
                 if (!empty(response.data['item'])) {
-                    $section.attr('data-bid', response.data['item']['id']);
+                    $block.attr('data-bid', response.data['item']['id']);
                 }
             }
         }
     });
 }
 
-function RemoveBasket(bid, $section)
+/**
+ * Удаление позиции.
+ */
+function RemoveBasket(bid, sid, $block)
 {
     var $wrapper = $('#js-wrapper-id');
+
+    if (empty($block)) {
+        var $block   = $('.js-product-block[data-bid="' + bid + '"]');
+    }
+    var $section = $block.closest('.js-product-section');
     
     $.ajax({
         url: '/remote/',
@@ -70,9 +79,13 @@ function RemoveBasket(bid, $section)
         success: function(response) {
             if (response.status) {
                 $('#js-basket-wrapper-id').html(response.data['html']);
-                $('.js-product-section[data-bid="' + bid + '"] .js-quantity').val(0);
-                
-                $section.attr('data-bid', '');
+
+                if ($section.find('.js-product-block').length > 1) {
+                    $block.remove();
+                } else {
+                    $block.find('.js-quantity').val(0);
+                    $block.attr('data-bid', '');
+                }
             }
         }
     });
@@ -80,74 +93,50 @@ function RemoveBasket(bid, $section)
 
 
 $(document).ready(function() {
-    
+
+    // Стилизация.
+    $('.styler').styler();
+
     // Загрузка формы.
     $(document).on('click', '.js-submit', function(event) {
         $(this).closest('form').submit();
     });
-    
-    
-    $(document).on('click', '.js-pricetype-quantity .js-quantity-dec', function() {
-		var $wrapper = $(this).parent();
-		var $input   = $wrapper.find('input');
-        var quantity = parseInt($input.val()) - 1;
-        
-        if (quantity < 0) {
-            quantity = 0;
-        }
-		$input.val(quantity);
-		$input.change();
-        
-        PutBasket($wrapper.data('pid'), quantity, [], $(this).closest('.js-product-section'));
-        
-		return false;
-	});
-    
-    $(document).on('click', '.js-pricetype-quantity .js-quantity-inc', function() {
-        var $wrapper = $(this).parent();
-		var $input   = $wrapper.find('input');
-        var quantity = parseInt($input.val()) + 1;
-        
-		$input.val(quantity);
-		$input.change();
-        
-        PutBasket($wrapper.data('pid'), quantity, [], $(this).closest('.js-product-section'));
-        
-		return false;
-	});
-    
+
+
     // Удаление из корзины.
     $(document).on('click', '.js-basket-remove', function(event) {
         var bid = $(this).data('bid');
-        
+        var sid = $(this).data('sid');
+
         if (bid.length > 0) {
-            RemoveBasket(bid);
+            RemoveBasket(bid, sid);
         }
     });
-    
-    
+
+
     // Выбор стенда.
     $(document).on('click', '.js-stand-choose-button', function(event) {
         var $that  = $(this);
         var $wrap  = $('#js-stands-wrapper-id');
         var $stand = $that.closest('.js-stand-block');
-        
+
         // ID стенда.
         var sid = $that.data('id');
-        
+
         // Выбранный стенд.
         var $prestand = $('#js-prestand-id');
-        
+
         // Установка данных.
         $prestand.find('.js-stand-description').html($stand.find('.js-stand-description').html() || '');
         $prestand.find('.js-stand-includes').html($stand.find('.js-stand-includes').html() || '');
         $prestand.find('.js-stand-image').prop('src', $stand.find('.js-stand-image').prop('src'));
-        
+
         // Установка кнопки выбрано.
         $wrap.find('.js-stand-choose-button').removeClass('current').html(jsvars.LANGS['CHOOSE']);
         $wrap.find('.js-stand-choose-button[data-id="' + sid + '"]').addClass('current').html(jsvars.LANGS['CHOOSEN']);
-        
+
         // Установка текущего стенда.
         $('#js-form-input-stand-id').val($that.data('id'));
     });
+
 });

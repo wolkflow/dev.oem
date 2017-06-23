@@ -143,6 +143,7 @@ class WizardComponent extends \CBitrixComponent
             
             // Выбор сервисов.
             case ('services'):
+                $this->doStepServices();
                 break;
             
             // Выбор маркетинга.
@@ -258,13 +259,13 @@ class WizardComponent extends \CBitrixComponent
     
     
     /**
-     * ШАГ "Выбор оборудования".
-     */
+ * ШАГ "Выбор оборудования".
+ */
     protected function doStepEquipments()
     {
         $data  = $this->getSession();
         $event = $this->getEvent();
-        
+
         // Спсиок оборудования.
         $products = $event->getProducts($this->getContext(), Wolk\OEM\Products\Section::TYPE_EQUIPMENTS);
         $sections = [];
@@ -276,7 +277,7 @@ class WizardComponent extends \CBitrixComponent
             $section->load();
             $section->addInside($product, $product->getID());
         }
-        
+
         // Список разделов.
         $parents = [];
         foreach ($sections as &$section) {
@@ -287,17 +288,17 @@ class WizardComponent extends \CBitrixComponent
             $parent->load();
             $parent->addInside($section, $section->getID());
         }
-        
+
         uasort($parents, function($x1, $x2) {
             return ($x1->get('SORT') - $x2->get('SORT'));
         });
-        
+
         // Группы и продукция.
         $this->arResult['ITEMS'] = $parents;
-        
+
         // Стенд.
         $this->arResult['BASE'] = $data['BASE'];
-        
+
         // Цвета.
         $this->arResult['COLORS'] = self::getColors();
     }
@@ -310,7 +311,61 @@ class WizardComponent extends \CBitrixComponent
     {
         
     }
-    
+
+
+    /**
+     * ШАГ "Выбор услуг".
+     */
+    protected function doStepServices()
+    {
+        $data  = $this->getSession();
+        $event = $this->getEvent();
+
+        // Спсиок оборудования.
+        $products = $event->getProducts($this->getContext(), Wolk\OEM\Products\Section::TYPE_SERVICES);
+        $sections = [];
+        foreach ($products as &$product) {
+            if (!array_key_exists($product->getSectionID(), $sections)) {
+                $sections[$product->getSectionID()] = $product->getSection();
+            }
+            $section = $sections[$product->getSectionID()];
+            $section->load();
+            $section->addInside($product, $product->getID());
+        }
+
+        // Список разделов.
+        $parents = [];
+        foreach ($sections as &$section) {
+            if (!array_key_exists($section->getSectionID(), $parents)) {
+                $parents[$section->getSectionID()] = $section->getSection();
+            }
+            $parent = $parents[$section->getSectionID()];
+            $parent->load();
+            $parent->addInside($section, $section->getID());
+        }
+
+        uasort($parents, function($x1, $x2) {
+            return ($x1->get('SORT') - $x2->get('SORT'));
+        });
+
+        // Группы и продукция.
+        $this->arResult['ITEMS'] = $parents;
+
+        // Стенд.
+        $this->arResult['BASE'] = $data['BASE'];
+
+        // Цвета.
+        $this->arResult['COLORS'] = self::getColors();
+    }
+
+
+    /**
+     * Обработка шага "Выбор услуг".
+     */
+    protected function processStepServices()
+    {
+
+    }
     
     
     

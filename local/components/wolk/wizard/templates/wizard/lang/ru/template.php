@@ -30,6 +30,7 @@ $MESS['M2'] = 'м<sup>2</sup>';
 
 $MESS['CHOOSEN'] = 'Выбран';
 $MESS['CHOOSE']  = 'Выбрать';
+$MESS['NOT_SELECTED'] = 'Не выбрано';
 
 $MESS['QUANTITY'] = 'Количество';
 $MESS['MORE'] = 'Добавить';

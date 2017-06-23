@@ -32,7 +32,7 @@
             <div class="basketcontainer__itemname">
                 <?= $product->getTitle() ?>
                 
-                <a href="javascript:void(0)" class="js-basket-remove" data-bid="<?= $item->getID() ?>">&times;</a>
+                <a href="javascript:void(0)" class="js-basket-remove" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>">&times;</a>
             </div>
             <div class="basketcontainer__itemtotalprice">
                 <?= FormatCurrency($item->getCost(), $arResult['CURRENCY']) ?>

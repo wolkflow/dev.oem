@@ -42,7 +42,7 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
         }
         $lang = mb_strtoupper($lang);
 		
-		return $this->data['PROPS'][self::LANG_PREFIX . 'DESCRIPTION_' . $lang]['VALUE']['TEXT'];
+		return $this->data['PROPS'][self::LANG_PREFIX . 'DESCRIPTION_' . $lang]['~VALUE']['TEXT'];
 	}
     
     

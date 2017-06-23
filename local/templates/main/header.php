@@ -54,7 +54,8 @@ Loc::loadLanguageFile(__FILE__);
 			stickyCall();
 		});
 	</script>
-	
+
+    <? /*
 	<?  // Янекдс.Метрика.
 		$APPLICATION->IncludeComponent('bitrix:main.include', '', array(
 			'AREA_FILE_SHOW' => 'file',
@@ -68,6 +69,7 @@ Loc::loadLanguageFile(__FILE__);
 			'PATH' => SITE_TEMPLATE_PATH.'/include/counters/google-analitycs.php',
 		));
 	?>
+    */ ?>
 </head>
 <body>
 <? $APPLICATION->ShowPanel(); ?>

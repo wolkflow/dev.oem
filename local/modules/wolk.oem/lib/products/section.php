@@ -39,7 +39,20 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
 		
 		return $this->data['UF_' . self::LANG_PREFIX . 'TITLE_' . $lang];
 	}
-    
+
+
+    public function getListTitle($lang = null)
+    {
+        $this->load();
+
+        if (empty($lang)) {
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+        }
+        $lang = mb_strtoupper($lang);
+
+        return $this->data['UF_' . self::LANG_PREFIX . 'LIST_NAME_' . $lang];
+    }
+
     
     public function getDescription($lang = null)
 	{

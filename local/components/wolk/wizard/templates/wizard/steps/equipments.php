@@ -9,7 +9,7 @@
     <?= Loc::getMessage('TITLE_EQUIPMENT') ?>
 </div>
 
-<? $groups = $arResult['BASKET']->getSectionGroups() ?>
+<? $basketgroups = $arResult['BASKET']->getSectionGroups() ?>
 
 <div class="main">
     <div id="step">
@@ -20,22 +20,60 @@
                         <?= $group->getTitle() ?>
                     </div>
                     <div class="js-section-wrapper pagesubtitleopencontainer">
+
                         <? $sections = $group->getInsides('SORT') ?>
                         <? foreach ($sections as $section) { ?>
                             <? $pricetype  = $section->getPriceType() ?>
                             <? $properties = $section->getProperties() ?>
                             <? $products   = $section->getInsides() ?>
-                        
-                            
+                            <? $multiple   = (!empty($properties) || count($products) > 1) ?>
+                            <? $formtpl    = mb_strtolower($pricetype) ?>
+
                             <?  // Наличие продукции в корзине.
-                                $basketgroup = $groups[$section->getID()];
+                                $basketgroup = $basketgroups[$section->getID()];
                             ?>
-                            
-                            <? // Простое количество // ?>
-                            <? if ($pricetype == 'QUANTITY') { ?>
-                                 <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/quantity.php') ?>
-                            <? } ?>
-                            
+
+                            <div class="js-block-<?= strtolower($pricetype) ?>">
+                                <? if (!empty($basketgroup)) { ?>
+                                    <? if ($multiple) { ?>
+                                        <div class="js-product-section js-pricetype-<?= strtolower($pricetype) ?>" data-sid="<?= $section->getID() ?>" data-pricetype="<?= $pricetype ?>">
+                                            <div class="serviceItem__title">
+                                                <?= $section->getTitle() ?>
+                                            </div>
+                                            <? foreach ($basketgroup as $basketitem) { ?>
+                                                <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$formtpl.'.php') ?>
+                                            <? } ?>
+                                        </div>
+                                    <? } else { ?>
+                                        <? $basketitem = reset($basketgroup) ?>
+                                        <div class="js-product-section js-pricetype-<?= strtolower($pricetype) ?>" data-sid="<?= $section->getID() ?>" data-pricetype="<?= $pricetype ?>">
+                                            <div class="serviceItem__title">
+                                                <?= $section->getTitle() ?>
+                                            </div>
+                                            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$formtpl.'.php') ?>
+                                        </div>
+                                    <? } ?>
+                                <? } else { ?>
+                                    <div class="js-product-section js-pricetype-<?= strtolower($pricetype) ?>" data-sid="<?= $section->getID() ?>" data-pricetype="<?= $pricetype ?>">
+                                        <div class="serviceItem__title">
+                                            <?= $section->getTitle() ?>
+                                        </div>
+                                        <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$formtpl.'.php') ?>
+                                    </div>
+                                <? } ?>
+
+                                <? // Добавление типа товара // ?>
+                                <? if ($multiple) { ?>
+                                    <div class="serviceItem__bottom">
+                                        <a href="javascript:void(0);" class="js-more-field itemAdd_field">
+                                            <i></i>
+                                            <span><?= Loc::getMessage('MORE') ?></span>
+                                        </a>
+                                    </div>
+                                <? } ?>
+                            </div>
+
+                            <? /*
                             <? if (false) { ?>
                                 <div class="serviceItem__block" v-for="selectedItem in selectedItems">
                                     <div class="serviceItem__row">
@@ -75,16 +113,7 @@
                                     </div>
                                 </div>
                             <? } ?>
-                            
-                            <? // Добавление типа товара // ?>
-                            <? if (!empty($properties)) { ?>
-                                <div class="serviceItem__bottom">
-                                    <a href="javascript:void(0);" class="js-more-field itemAdd_field">
-                                        <i></i>
-                                        <span><?= Loc::getMessage('MORE') ?></span>
-                                    </a>
-                                </div>
-                            <? } ?>
+                            */ ?>
                         <? } ?>
                     </div>
                 <? } ?>
