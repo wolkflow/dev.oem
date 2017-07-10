@@ -15,8 +15,8 @@ class HLBlockModel extends Model
     public static function getEntityClassName()
     {
     	$hldata    = \Bitrix\Highloadblock\HighloadBlockTable::getById(static::HBLOCK_ID)->Fetch();
-    	$hlentity  = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity($hldata);
-    	$classname = $hlentity->getDataClass();
+    	$entity    = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity($hldata);
+    	$classname = $entity->getDataClass();
     	
         return $classname;
     }
@@ -31,7 +31,7 @@ class HLBlockModel extends Model
 	public function load($force = false)
 	{
 		if (empty($this->data) || $force) {
-			$entity = self::getEntityClassName();
+			$entity  = self::getEntityClassName();
 			$element = $entity::GetByID($this->getID());
 			
 			if ($element) {

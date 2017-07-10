@@ -41,6 +41,8 @@ $MESS['STANDARD_INCLUDES'] = 'Стенд включает';
 
 
 // Свойства.
+$MESS['LINK'] = 'Ссылка';
+
 $MESS['COLOR'] = 'Цвет';
 $MESS['CHANGE_COLOR'] = 'Cмнить цвет';
 $MESS['CHOOSE_COLOR'] = 'Выбрать цвет';

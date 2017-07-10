@@ -30,6 +30,7 @@
                             <? $formtpl    = mb_strtolower($pricetype) ?>
 
                             <?  // Наличие продукции в корзине.
+                                $basketitem  = null;
                                 $basketgroup = $basketgroups[$section->getID()];
                             ?>
 

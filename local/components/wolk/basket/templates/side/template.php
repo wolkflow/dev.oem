@@ -6,7 +6,7 @@
 
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
-
+<? use Wolk\Oem\Basket; ?>
 
 <? if (!is_null($arResult['STAND'])) { ?>
     <div class="basketcontainer__itemcontainer customizable_border">
@@ -25,13 +25,22 @@
 <? if (!empty($arResult['ITEMS']))  { ?>
     <? foreach ($arResult['ITEMS'] as $item) { ?>
         <? $product = $item->getElement() ?>
-        
+
         <? if (empty($product)) continue; ?>
         
         <div class="basketcontainer__itemcontainer customizable_border">
             <div class="basketcontainer__itemname">
                 <?= $product->getTitle() ?>
-                
+
+                <span class="product-params">
+                    <? if ($item->hasParam(Basket::PARAM_COLOR)) { ?>
+                        <? $param = $item->getParam(Basket::PARAM_COLOR) ?>
+                        <? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
+                        <span class="product-param">
+                            (<?= $color->getName() ?>)
+                        </span>
+                    <? } ?>
+                </span>
                 <a href="javascript:void(0)" class="js-basket-remove" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>">&times;</a>
             </div>
             <div class="basketcontainer__itemtotalprice">

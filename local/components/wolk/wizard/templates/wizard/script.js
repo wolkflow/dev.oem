@@ -1,12 +1,11 @@
-function PutBasket(pid, quantity, params, $block)
+
+
+
+function PutBasket(pid, quantity, $block)
 {
     if (pid <= 0) {
         return;
     }
-    
-    // Дополнительные параметра.
-    // params = params || [];
-    
     var $wrapper = $('#js-wrapper-id');
 
     var bid    = $block.attr('data-bid');
@@ -22,6 +21,22 @@ function PutBasket(pid, quantity, params, $block)
         action = 'update-basket';
     } else {
         action = 'put-basket';
+    }
+
+    // Проверка заполненности всех свойств товара.
+    var params   = {};
+    var reqprops = false;
+    $block.find('input.js-param-value').each(function() {
+        var $that = $(this);
+        if ($that.hasClass('js-param-required') && $that.val().length == 0) {
+            reqprops = true;
+        }
+        params[$that.attr('name')] = $that.val();
+    });
+
+    if (reqprops) {
+        showError('Внимание!', 'Не заполнены все свойства товара');
+        return;
     }
     
     // Отправка продукции в корзину.
@@ -61,10 +76,10 @@ function RemoveBasket(bid, sid, $block)
     var $wrapper = $('#js-wrapper-id');
 
     if (empty($block)) {
-        var $block   = $('.js-product-block[data-bid="' + bid + '"]');
+        var $block = $('.js-product-block[data-bid="' + bid + '"]');
     }
     var $section = $block.closest('.js-product-section');
-    
+
     $.ajax({
         url: '/remote/',
         type: 'post',
@@ -86,6 +101,9 @@ function RemoveBasket(bid, sid, $block)
                     $block.find('.js-quantity').val(0);
                     $block.attr('data-bid', '');
                 }
+
+                // Сброс всех парамметров.
+                ResetParams($block);
             }
         }
     });

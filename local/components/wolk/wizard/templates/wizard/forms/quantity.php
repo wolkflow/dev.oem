@@ -2,6 +2,7 @@
 
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\Oem\Basket; ?>
 
 <div class="js-product-block js-product-block-<?= $section->getID() ?>" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>">
 
@@ -35,7 +36,10 @@
 
                     <? // Обработка свойств товара. // ?>
                     <? foreach ($properties as $property) { ?>
-                        <? if ($property == 'COLOR') { ?>
+                        <? if ($property == Basket::PARAM_LINK) { ?>
+                            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/link.php') ?>
+                        <? } ?>
+                        <? if ($property == Basket::PARAM_COLOR) { ?>
                             <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
                         <? } ?>
                     <? } ?>

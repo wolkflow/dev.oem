@@ -620,11 +620,16 @@ class WizardComponent extends \CBitrixComponent
     {
         Bitrix\Main\Loader::includeModule('highloadblock');
         
-        $hlblock = HighloadBlockTable::getById(COLORS_ENTITY_ID)->fetch();
-        $entity  = HighloadBlockTable::compileEntity($hlblock);
-        $class   = $entity->getDataClass();
+        //$hlblock = HighloadBlockTable::getById(COLORS_ENTITY_ID)->fetch();
+        //$entity  = HighloadBlockTable::compileEntity($hlblock);
+        //$class   = $entity->getDataClass();
 
-        return $class::getList(['order' => ['UF_NUM' => 'ASC', 'UF_SORT' => 'ASC']])->fetchAll();
+        $result = \Wolk\OEM\Dicts\Color::getList(['order' => ['UF_NUM' => 'ASC', 'UF_SORT' => 'ASC']], false);
+        $colors = array();
+        while ($color = $result->fetch()) {
+            $colors[$color['ID']] = $color;
+        }
+        return $colors;
     }
 }
 

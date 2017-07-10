@@ -79,6 +79,17 @@ switch ($action) {
         $kind     = (string) $request->get('kind');
         $quantity = (float)  $request->get('quantity');
         $params   = (array)  $request->get('params');
+
+        $parameters = [];
+        foreach ($params as $key => $value) {
+            if (strpos($key, '.') !== false) {
+                list($key, $subkey) = explode('.', $key);
+
+                $parameters[$key][$subkey] = $value;
+            } else {
+                $parameters[$key] = $value;
+            }
+        }
         
         // Контекст конструктора.
         $context = new Wolk\OEM\Context($eid, $type);
@@ -91,7 +102,7 @@ switch ($action) {
             $pid,
             $quantity,
             \Wolk\OEM\Basket::KIND_PRODUCT,
-            $params,
+            $parameters,
             $context
         );
         
@@ -109,6 +120,19 @@ switch ($action) {
         $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');
         $quantity = (float)  $request->get('quantity');
+        $params   = (array)  $request->get('params');
+
+        $parameters = [];
+        foreach ($params as $key => $value) {
+            if (strpos($key, '.') !== false) {
+                list($key, $subkey) = explode('.', $key);
+
+                $parameters[$key][$subkey] = $value;
+            } else {
+                $parameters[$key] = $value;
+            }
+        }
+
         
         // Контекст конструктора.
         $context = new Wolk\OEM\Context($eid, $type);
@@ -117,7 +141,7 @@ switch ($action) {
         $basket = new \Wolk\OEM\Basket($code);
         
         // Изменение количества товара в корзине.
-        $item = $basket->update($bid, $quantity);
+        $item = $basket->update($bid, $quantity, $parameters);
         
         // Обновление данных в корзине.
         $html = gethtmlremote('basket.php');

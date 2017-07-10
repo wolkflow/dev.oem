@@ -146,7 +146,15 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 			</div>
 		</div>
 	</div>
-	
+
+
+    <div class="modal modalError" id="js-modal-error-id">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalTitle"></div>
+        <div class="modalContent"></div>
+    </div>
+
+
 </div>
 </body>
 </html>

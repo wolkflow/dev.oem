@@ -15,6 +15,13 @@ class Basket
     
     const KIND_STAND   = 'stand';
     const KIND_PRODUCT = 'product';
+
+    // Типы параметров.
+    const PARAM_FILE                   = 'FILE';
+    const PARAM_COMMENT                = 'COMMENT';
+    const PARAM_LINK                   = 'LINK';
+    const PARAM_COLOR                  = 'COLOR';
+    const PARAM_FORM_HANGING_STRUCTURE = 'FORM_HANGING_STRUCTURE';
     
     protected $code = null;
     protected $data = array();
@@ -117,7 +124,8 @@ class Basket
         if ($kind == self::KIND_PRODUCT) {
             $sid = (new Product($pid))->getSectionID();
         }
-        
+
+
         // Данные для добавления в корзину.
         $item = array(
             'id'       => uniqid(time()),
@@ -150,15 +158,18 @@ class Basket
     /**
      * Обновление количества товара.
      */
-    public function update($bid, $quantity)
+    public function update($bid, $quantity, $params)
     {
+        $bid      = (string) $bid;
         $quantity = (float) $quantity;
+        $params   = (array) $params;
         
         if ($quantity <= 0) {
             return;
         }
-        $this->data[self::SESSCODE_PRODUCTS][strval($bid)]['quantity'] = $quantity;
-        
+        $this->data[self::SESSCODE_PRODUCTS][$bid]['quantity'] = $quantity;
+        $this->data[self::SESSCODE_PRODUCTS][$bid]['params']   = $params;
+
         // Сохранение в сесиию.
         $this->putSession();
     }

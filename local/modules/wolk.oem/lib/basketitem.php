@@ -93,7 +93,16 @@ class BasketItem
     {
         return $this->data['params'];
     }
-    
+
+
+    /**
+     * Проверка наличия дополнительного параметра по коду.
+     */
+    public function hasParam($code)
+    {
+        return (!empty($this->data['params'][strval($code)]));
+    }
+
     
     /**
      * Получение дополнительного параметра по коду.
