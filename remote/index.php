@@ -65,7 +65,24 @@ switch ($action) {
     
     
     // Загрузка изображения.
-    case ('image-upload-tmp'):
+    case ('file-upload'):
+        if (!empty($_FILES['upload'])) {
+            $file = $_FILES['upload'];
+
+            // Временный файл.
+            $file['MODULE_ID']   = 'temp';
+            $file['description'] = '';
+
+            if ($fid = CFile::SaveFile($file, 'temp')) {
+                $path  = CFile::GetPath($fid);
+                $isimg = false;
+                if (in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['png', 'jpeg', 'jpg', 'gif'])) {
+                    $isimg = true;
+                }
+                jsonresponse(true, '', ['file' => $fid, 'path' => $path, 'isimg' => $isimg]);
+            }
+            jsonresponse(false, '');
+        }
         break;
         
         

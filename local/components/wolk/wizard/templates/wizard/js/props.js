@@ -1,7 +1,8 @@
 function ResetParams($block)
 {
     // Общий сброс значений свойств.
-    $block.find('.js-param-value').val('');
+    $block.find('input.js-param-value').val('');
+    $block.find('textarea.js-param-value').html('');
 
     // Для своства "Цвет".
     var uniqid = (new Date()).getTime();
@@ -13,6 +14,66 @@ function ResetParams($block)
 
 
 $(document).ready(function() {
+
+    // СВОЙСТВО: Файл.
+    $(document).on('change', '.js-param-x-file', function(event) {
+        //event.preventDefault();
+
+        if ($(this).get(0).files == undefined) {
+            return;
+        }
+        var $that    = $(this);
+        var $bloock  = $that.closest('.js-param-block');
+        var $preview = $bloock.find('.js-param-preview');
+        var data     = new FormData();
+
+        data.append('upload', $that.get(0).files[0]);
+        data.append('action', 'file-upload');
+        data.append('sessid', BX.bitrix_sessid());
+
+        $.ajax({
+            url: '/remote/',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            async: true,
+            cache: false,
+            context: this,
+            contentType: false, // важно - убираем форматирование данных по умолчанию
+            processData: false, // важно - убираем преобразование строк по умолчанию
+            beforeSend: function() {
+                $preview.hide();
+                $preview.html('');
+            },
+            success: function(response) {
+                if (response.status) {
+
+                    if (response.data['isimg']) {
+                        $preview.append('<img width="56" height="56" src="' + response.data['path'] + '" />');
+                        $preview.show();
+                    } else {
+                        $preview.append('<a href="' + response.data['path'] + '" target="_blank"><img width="56" height="56" src="/local/templates/.default/build/images/download.png" /></a>');
+                        $preview.show();
+                    }
+                } else {
+                    // Ошибка загрузки файла.
+                }
+            },
+            /*
+            xhr: function() {
+                var request = $.ajaxSettings.xhr();
+
+                request.upload.onprogress = function(exhr) {
+                    if (exhr.lengthComputable) {
+                        var progress = Math.floor((exhr.loaded / exhr.total) * 100);
+                    }
+                }
+                return request;
+            }
+            */
+        });
+    });
+
 
     // СВОЙСТВО: Выбор цвета.
     $(document).on('click', '.js-colors-palette .js-color-item', function() {

@@ -8,7 +8,7 @@
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
 <? $value  = $params[Basket::PARAM_LINK] ?>
 
-<div class="js-property-block" data-code="<?= Basket::PARAM_LINK ?>">
+<div class="js-param-block" data-code="<?= Basket::PARAM_LINK ?>">
     <div class="serviceItem__left">
         <div class="serviceItem__subtitle">
             <?= Loc::getMessage('LINK') ?>

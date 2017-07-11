@@ -1,6 +1,4 @@
 
-
-
 function PutBasket(pid, quantity, $block)
 {
     if (pid <= 0) {
@@ -45,6 +43,7 @@ function PutBasket(pid, quantity, $block)
         type: 'post',
         data: {
             'action':   action,
+            'sessid':   BX.bitrix_sessid(),
             'pid':      pid,
             'bid':      bid,
             'eid':      $wrapper.data('eid'),
@@ -85,6 +84,7 @@ function RemoveBasket(bid, sid, $block)
         type: 'post',
         data: {
             'action': 'remove-basket',
+            'sessid': BX.bitrix_sessid(),
             'bid':    bid,
             'eid':    $wrapper.data('eid'),
             'code':   $wrapper.data('code'),

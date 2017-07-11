@@ -41,6 +41,11 @@ $MESS['STANDARD_INCLUDES'] = 'Стенд включает';
 
 
 // Свойства.
+$MESS['FILE'] = 'Файл';
+
+$MESS['COMMENT'] = 'Комментарий';
+$MESS['COMMENT_PLACEHOLDER'] = 'Здвсь вы можете описать все более подробно';
+
 $MESS['LINK'] = 'Ссылка';
 
 $MESS['COLOR'] = 'Цвет';

@@ -33,18 +33,9 @@
                             <b><?= $arResult['BASE'][$product->getID()] ?></b>
                         </div>
                     <? } ?>
-
-                    <? // Обработка свойств товара. // ?>
-                    <? foreach ($properties as $property) { ?>
-                        <? if ($property == Basket::PARAM_LINK) { ?>
-                            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/link.php') ?>
-                        <? } ?>
-                        <? if ($property == Basket::PARAM_COLOR) { ?>
-                            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
-                        <? } ?>
-                    <? } ?>
                 </div>
             </div>
+
             <div class="equipmentcontainer__itemleftside">
                 <div class="equipmentcontainer__itemphotocontainer">
                     <a class="photoZoom" href="<?= $product->getImageSrc() ?>"></a>
@@ -54,6 +45,22 @@
                     <?= $product->getDescription() ?>
                 </div>
             </div>
+
+            <? // Обработка свойств товара. // ?>
+            <? foreach ($properties as $property) { ?>
+                <? if ($property == Basket::PARAM_LINK) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
+                <? } ?>
+                <? if ($property == Basket::PARAM_LINK) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
+                <? } ?>
+                <? if ($property == Basket::PARAM_LINK) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/link.php') ?>
+                <? } ?>
+                <? if ($property == Basket::PARAM_COLOR) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
+                <? } ?>
+            <? } ?>
         </div>
 
     <? } else { ?>
