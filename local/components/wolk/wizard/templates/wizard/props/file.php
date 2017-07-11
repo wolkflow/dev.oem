@@ -8,20 +8,21 @@
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
 <? $value  = $params[Basket::PARAM_COMMENT] ?>
 
-<div class="js-param-block" data-code="<?= Basket::PARAM_LINK ?>">
+<div class="js-param-block" data-code="<?= Basket::PARAM_FILE ?>">
+    <input type="hidden" name="<?= Basket::PARAM_FILE ?>" class="styler js-param-required js-param-value js-param-x-file" />
     <div class="serviceItem__right-large">
         <div class="serviceItem__subtitle">
             <?= Loc::getMessage('FILE') ?>
         </div>
-        <div class="preview-image js-param-preview" style="display: none;">
+        <div class="preview-image js-param-x-image" style="display: none;">
             <? if (!empty($value)) { ?>
                 <? $file = CFile::getByID($value); ?>
                 <? $parh = CFile::getPath($value); ?>
                 <? if (in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['png', 'jpeg', 'jpg', 'gif'])) { ?>
-                    <img width="60" height="60" src="<?= $path ?>" />
-                <? } ?>
+                    <img width="56" height="56" src="<?= $path ?>" />
+                <? } ?>6
             <? } ?>
         </div>
-        <input type="file" name="<?= Basket::PARAM_COMMENT ?>" class="styler js-param-value js-param-x-file" />
+        <input type="file" class="styler js-param-x-upload" />
     </div>
 </div>

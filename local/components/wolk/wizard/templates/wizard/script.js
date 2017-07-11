@@ -24,7 +24,7 @@ function PutBasket(pid, quantity, $block)
     // Проверка заполненности всех свойств товара.
     var params   = {};
     var reqprops = false;
-    $block.find('input.js-param-value').each(function() {
+    $block.find('.js-param-value').each(function() {
         var $that = $(this);
         if ($that.hasClass('js-param-required') && $that.val().length == 0) {
             reqprops = true;
