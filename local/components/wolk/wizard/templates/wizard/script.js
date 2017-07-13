@@ -1,4 +1,7 @@
 
+/**
+ * Добавление позиции.
+ */
 function PutBasket(pid, quantity, $block)
 {
     if (pid <= 0) {
@@ -67,6 +70,7 @@ function PutBasket(pid, quantity, $block)
     });
 }
 
+
 /**
  * Удаление позиции.
  */
@@ -100,6 +104,7 @@ function RemoveBasket(bid, sid, $block)
                 } else {
                     $block.find('.js-quantity').val(0);
                     $block.attr('data-bid', '');
+                    $block.find('.js-product-select .js-option-noselect').trigger('click');
                 }
 
                 // Сброс всех парамметров.
@@ -108,6 +113,7 @@ function RemoveBasket(bid, sid, $block)
         }
     });
 }
+
 
 
 $(document).ready(function() {

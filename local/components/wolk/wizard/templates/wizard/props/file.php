@@ -6,21 +6,23 @@
 
 <? $proptmpid = uniqid() ?>
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
-<? $value  = $params[Basket::PARAM_COMMENT] ?>
+<? $value  = $params[Basket::PARAM_FILE] ?>
 
 <div class="js-param-block" data-code="<?= Basket::PARAM_FILE ?>">
-    <input type="hidden" name="<?= Basket::PARAM_FILE ?>" class="styler js-param-required js-param-value js-param-x-file" />
+    <input type="hidden" name="<?= Basket::PARAM_FILE ?>" class="styler js-param-required js-param-value js-param-x-file" value="<?= $value ?>" />
     <div class="serviceItem__right-large">
         <div class="serviceItem__subtitle">
             <?= Loc::getMessage('FILE') ?>
         </div>
-        <div class="preview-image js-param-x-image" style="display: none;">
+        <div class="preview-image js-param-x-image" <?= (empty($value)) ? ('"style="display: none;"') : ('') ?>>
             <? if (!empty($value)) { ?>
                 <? $file = CFile::getByID($value); ?>
-                <? $parh = CFile::getPath($value); ?>
+                <? $path = CFile::getPath($value); ?>
                 <? if (in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['png', 'jpeg', 'jpg', 'gif'])) { ?>
                     <img width="56" height="56" src="<?= $path ?>" />
-                <? } ?>6
+                <? } else { ?>
+                    <img width="56" height="56" src="/local/templates/.default/build/images/download.png" />
+                <? } ?>
             <? } ?>
         </div>
         <input type="file" class="styler js-param-x-upload" />

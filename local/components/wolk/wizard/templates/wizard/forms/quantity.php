@@ -60,6 +60,9 @@
                 <? if ($property == Basket::PARAM_COLOR) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
                 <? } ?>
+                <? if ($property == Basket::PARAM_FORM_HANGING_STRUCTURE) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/form_hanging_structure.php') ?>
+                <? } ?>
             <? } ?>
         </div>
 
@@ -71,12 +74,12 @@
                     <div class="serviceItem__subtitle">
                         <?= $section->getListTitle() ?>
                     </div>
-                    <select class="js-product styler">
-                        <option value="">
+                    <select class="js-product-select styler">
+                        <option class="js-option-noselect" value="" <?= (empty($basketitem)) ? ('selected') : ('') ?>>
                             <?= Loc::getMessage('NOT_SELECTED') ?>
                         </option>
                         <? foreach ($products as $product) { ?>
-                            <option value="<?= $product->getID() ?>" data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>">
+                            <option value="<?= $product->getID() ?>" <?= (!empty($basketitem) && $basketitem->getProductID() == $product->getID()) ? ('selected') : ('') ?> data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>" data-descr="<?= $product->getDescription() ?>">
                                 <?= $product->getTitle() ?>
                                 <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
                             </option>
@@ -102,7 +105,31 @@
                         <div class="js-product-price serviceItem__cost-value"></div>
                     </div>
                 </div>
+                <div class="js-product-select-descr" style="margin-top: 10px; display: none;">
+                    <div class="serviceItem__cost">
+                        <div class="js-product-descr serviceItem__cost-value"></div>
+                    </div>
+                </div>
             </div>
+
+            <? // Обработка свойств товара. // ?>
+            <? foreach ($properties as $property) { ?>
+                <? if ($property == Basket::PARAM_LINK) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
+                <? } ?>
+                <? if ($property == Basket::PARAM_LINK) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
+                <? } ?>
+                <? if ($property == Basket::PARAM_LINK) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/link.php') ?>
+                <? } ?>
+                <? if ($property == Basket::PARAM_COLOR) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
+                <? } ?>
+                <? if ($property == Basket::PARAM_FORM_HANGING_STRUCTURE) { ?>
+                    <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/form_hanging_structure.php') ?>
+                <? } ?>
+            <? } ?>
         </div>
 
     <? } ?>

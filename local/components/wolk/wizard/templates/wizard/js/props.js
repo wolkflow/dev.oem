@@ -9,6 +9,7 @@ function ResetParams($block)
 
     $block.find('.js-button-param').css('background', '');
     $block.find('.js-button-param').attr('data-modal', '#js-color-popup-' + uniqid + '-id');
+    $block.find('.modal .js-colors-palette li').removeClass('active');
     $block.find('.modal').attr('id', 'js-color-popup-' + uniqid + '-id');
 }
 
@@ -101,7 +102,7 @@ $(document).ready(function() {
         $button.css('background', $that.css('background'));
 
         setTimeout(function() {
-            $('.arcticmodal-close').trigger('click');
+            $('#' + $modal.attr('id')).arcticmodal('close');
         }, 200);
     });
 
