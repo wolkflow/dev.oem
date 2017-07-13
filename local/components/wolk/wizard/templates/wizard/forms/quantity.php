@@ -64,6 +64,10 @@
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/form_hanging_structure.php') ?>
                 <? } ?>
             <? } ?>
+
+            <div class="equipmentcontainer__itemsize">
+                <?= $section->getDescription() ?>
+            </div>
         </div>
 
     <? } else { ?>
@@ -87,7 +91,7 @@
                     </select>
                 </div>
                 <div class="serviceItem__right">
-                    <div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
+                    <div class="js-quantity-wrapper itemCount">
                         <div class="serviceItem__subtitle">
                             <?= Loc::getMessage('QUANTITY') ?>
                         </div>
@@ -109,6 +113,10 @@
                     <div class="serviceItem__cost">
                         <div class="js-product-descr serviceItem__cost-value"></div>
                     </div>
+                </div>
+
+                <div class="equipmentcontainer__itemsize">
+                    <?= $section->getDescription() ?>
                 </div>
             </div>
 

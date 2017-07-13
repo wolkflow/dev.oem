@@ -52,13 +52,29 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
         
         return (\CFile::getPath($this->data['PREVIEW_PICTURE']));
     }
+
+
+    public function isSketchShow()
+    {
+        $this->load();
+
+        return boolval($this->data['PROPS']['SKETCH_SHOW']['VALUE'] == 'Y');
+    }
+
+
+    public function getSketchType()
+    {
+        $this->load();
+
+        return strval($this->data['PROPS']['SKETCH_TYPE']['VALUE']);
+    }
     
     
     public function getSketchWidth()
     {
         $this->load();
         
-        return floatval($this->data['PROPS']['SKETCH_WIDHT']['VALUE']);
+        return floatval($this->data['PROPS']['SKETCH_WIDTH']['VALUE']);
     }
     
     
@@ -68,7 +84,39 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
         
         return floatval($this->data['PROPS']['SKETCH_HEIGHT']['VALUE']);
     }
-    
+
+
+    public function getSketchImage()
+    {
+        $this->load();
+
+        return intval($this->data['PROPS']['SKETCH_IMAGE']['VALUE']);
+    }
+
+
+    /**
+     * Получение пути к изображению для скетча.
+     */
+    public function getSketchImageSrc()
+    {
+        return (\CFile::GetPath($this->getSketchImage()));
+    }
+
+
+    /**
+     * Получение подотовленного изображения для скетча.
+     */
+    public function getSketchImagePrepared()
+    {
+        $src = \CFile::ResizeImageGet(
+            $this->getSketchImage(), [
+            'width'  => ($this->getSketchWidth()  / 10 < 5) ? (5) : ($this->getSketchWidth()  / 10),
+            'height' => ($this->getSketchHeight() / 10 < 5) ? (5) : ($this->getSketchHeight() / 10),
+        ])['src'];
+
+        return $src;
+}
+
     
     /**
      * Получение цены из контекста.

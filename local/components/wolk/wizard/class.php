@@ -45,12 +45,19 @@ class WizardComponent extends \CBitrixComponent
         
         // Язык.
         $arParams['LANG'] = (string) $arParams['LANG'];
-        
+
         // Ширина стенда.
         $arParams['WIDTH'] = (float) $arParams['WIDTH'];
         
         // Глубина стенда.
         $arParams['DEPTH'] = (float) $arParams['DEPTH'];
+
+        // Форма стенда.
+        $arParams['SFORM'] = (string) $arParams['SFORM'];
+
+        if (empty($arParams['SFORM'])) {
+            $arParams['SFORM'] = 'row';
+        }
         
         
         // Контекст исполнения.
@@ -148,10 +155,12 @@ class WizardComponent extends \CBitrixComponent
             
             // Выбор маркетинга.
             case ('marketings'):
+                $this->doStepMarketings();
                 break;
             
             // Расстановка на скетче.
             case ('sketch'):
+                $this->doStepSketch();
                 break;
                 
             // Заказ.
@@ -180,8 +189,7 @@ class WizardComponent extends \CBitrixComponent
         // Валюта.
         $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyStandsContext($this->getContext());
         
-        
-        
+
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
 		
@@ -255,14 +263,61 @@ class WizardComponent extends \CBitrixComponent
             $this->getContext()
         );
     }
-    
-    
+
+
+    /**
+     *  Шаг наполнениея продукцией
+     */
+    protected function doStep($code)
+    {
+        $data  = $this->getSession();
+        $event = $this->getEvent();
+
+        // Спсиок оборудования.
+        $products = $event->getProducts($this->getContext(), $code);
+        $sections = [];
+        foreach ($products as &$product) {
+            if (!array_key_exists($product->getSectionID(), $sections)) {
+                $sections[$product->getSectionID()] = $product->getSection();
+            }
+            $section = $sections[$product->getSectionID()];
+            $section->load();
+            $section->addInside($product, $product->getID());
+        }
+
+        // Список разделов.
+        $parents = [];
+        foreach ($sections as &$section) {
+            if (!array_key_exists($section->getSectionID(), $parents)) {
+                $parents[$section->getSectionID()] = $section->getSection();
+            }
+            $parent = $parents[$section->getSectionID()];
+            $parent->load();
+            $parent->addInside($section, $section->getID());
+        }
+
+        uasort($parents, function($x1, $x2) {
+            return ($x1->get('SORT') - $x2->get('SORT'));
+        });
+
+        // Группы и продукция.
+        $this->arResult['ITEMS'] = $parents;
+
+        // Стенд.
+        $this->arResult['BASE'] = $data['BASE'];
+
+        // Цвета.
+        $this->arResult['COLORS'] = self::getColors();
+    }
+
     
     /**
- * ШАГ "Выбор оборудования".
- */
+     * ШАГ "Выбор оборудования".
+     */
     protected function doStepEquipments()
     {
+        $this->doStep(Wolk\OEM\Products\Section::TYPE_EQUIPMENTS);
+        /*
         $data  = $this->getSession();
         $event = $this->getEvent();
 
@@ -301,6 +356,7 @@ class WizardComponent extends \CBitrixComponent
 
         // Цвета.
         $this->arResult['COLORS'] = self::getColors();
+        */
     }
     
     
@@ -318,6 +374,9 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepServices()
     {
+        $this->doStep(Wolk\OEM\Products\Section::TYPE_SERVICES);
+
+        /*
         $data  = $this->getSession();
         $event = $this->getEvent();
 
@@ -356,6 +415,7 @@ class WizardComponent extends \CBitrixComponent
 
         // Цвета.
         $this->arResult['COLORS'] = self::getColors();
+        */
     }
 
 
@@ -366,7 +426,104 @@ class WizardComponent extends \CBitrixComponent
     {
 
     }
-    
+
+
+    /**
+     * ШАГ "Выбор маркетинга".
+     */
+    protected function doStepMarketings()
+    {
+        $this->doStep(Wolk\OEM\Products\Section::TYPE_MARKETINGS);
+
+        /*
+        $data  = $this->getSession();
+        $event = $this->getEvent();
+
+        // Спсиок оборудования.
+        $products = $event->getProducts($this->getContext(), Wolk\OEM\Products\Section::TYPE_MARKETINGS);
+        $sections = [];
+        foreach ($products as &$product) {
+            if (!array_key_exists($product->getSectionID(), $sections)) {
+                $sections[$product->getSectionID()] = $product->getSection();
+            }
+            $section = $sections[$product->getSectionID()];
+            $section->load();
+            $section->addInside($product, $product->getID());
+        }
+
+        // Список разделов.
+        $parents = [];
+        foreach ($sections as &$section) {
+            if (!array_key_exists($section->getSectionID(), $parents)) {
+                $parents[$section->getSectionID()] = $section->getSection();
+            }
+            $parent = $parents[$section->getSectionID()];
+            $parent->load();
+            $parent->addInside($section, $section->getID());
+        }
+
+        uasort($parents, function($x1, $x2) {
+            return ($x1->get('SORT') - $x2->get('SORT'));
+        });
+
+        // Группы и продукция.
+        $this->arResult['ITEMS'] = $parents;
+
+        // Стенд.
+        $this->arResult['BASE'] = $data['BASE'];
+
+        // Цвета.
+        $this->arResult['COLORS'] = self::getColors();
+        */
+    }
+
+
+    /**
+     * Обработка шага "Выбор маркетинга".
+     */
+    protected function processStepMarketings()
+    {
+
+    }
+
+
+    /**
+     * ШАГ "Скетч".
+     */
+    protected function doStepSketch()
+    {
+        $baskets = $this->getBasket()->getList();
+        $objects = [];
+
+        foreach ($baskets as $basket) {
+            $element = $basket->getElement();
+
+            if (empty($element)) {
+                continue;
+            }
+
+            if (!$element->isSketchShow()) {
+                continue;
+            }
+
+            $object = [
+                'id'        => $basket->getID(),
+                'quantity'  => $basket->getQuantity(),
+                'title'     => $element->getTitle(),
+                'type'      => $element->getSketchType(),
+                'w'         => $element->getSketchWidth() / 1000,
+                'h'         => $element->getSketchHeight() / 1000,
+                'imagePath' => $element->getSketchImagePrepared(),
+            ];
+            $objects[$basket->getID()] = $object;
+        }
+
+        // Объекты для скетча.
+        $this->arResult['OBJECTS'] = $objects;
+
+        // Размещенные обекты.
+        $this->arResult['PLACED'] = $this->getBasket()->getSketch();
+    }
     
     
     

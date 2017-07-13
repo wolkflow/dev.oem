@@ -3,8 +3,8 @@
 <div class="pagetitle">
 	<?= ucfirst(Loc::getMessage('sketch')) ?>
     <div class="active pagetitle__button customizable">
-		<?= Loc::getMessage('help') ?>
-	</div>
+    <?= Loc::getMessage('help') ?>
+</div>
 </div>
 <div class="pagedescription">
     <? Helper::includeFile('sketch_desc_'.\Bitrix\Main\Context::getCurrent()->getLanguage()); ?>

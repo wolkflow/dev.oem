@@ -6,7 +6,7 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 
 <div class="pagetitle">
-    <?= Loc::getMessage('TITLE_EQUIPMENT') ?>
+    <?= Loc::getMessage('TITLE_SERVICES') ?>
 </div>
 
 <? $basketgroups = $arResult['BASKET']->getSectionGroups() ?>
@@ -30,7 +30,8 @@
                             <? $formtpl    = mb_strtolower($pricetype) ?>
 
                             <?  // Наличие продукции в корзине.
-                            $basketgroup = $basketgroups[$section->getID()];
+                                $basketitem  = null;
+                                $basketgroup = $basketgroups[$section->getID()];
                             ?>
 
                             <div class="js-block-<?= strtolower($pricetype) ?>">

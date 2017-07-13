@@ -20,12 +20,19 @@ $(document).ready(function() {
         $block.find('.js-quantity').val(0);
         $block.find('.jq-selectbox__select,.jq-selectbox__dropdown').remove();
         $block.find('.styler').styler();
-        $block.find('.js-product-select .js-option-noselect').trigger('click');
+
+
+        //$block.find('.js-product-price').html($option.data('price'));
+        //$block.find('.js-product-descr').html($option.data('descr'));
+        //$block.find('.js-product-select-price').show();
+        //$block.find('.js-product-select-descr').show();
 
         // Сброс всех свойств товара.
         ResetParams($block);
 
         $section.append($block);
+
+        $block.find('.js-product-select .js-option-noselect').trigger('click');
     });
 
 
@@ -57,14 +64,22 @@ $(document).ready(function() {
     // Увеличение количества товара.
     $(document).on('click', '.js-pricetype-quantity .js-quantity-inc', function(event) {
         var $parent  = $(this).parent();
-        var $product = $parent.closest('.js-product-block');
+        var $block   = $parent.closest('.js-product-block');
 		var $input   = $parent.find('input');
         var quantity = parseInt($input.val()) + 1;
         
 		$input.val(quantity);
 		$input.change();
 
-		PutBasket($parent.data('pid'), quantity, $(this).closest('.js-product-block'));
+		var pid;
+		if ($block.find('.js-product-select').length) {
+		    pid = $block.find('.js-product-select option:selected').val();
+        } else {
+		    pid = $parent.data('pid');
+        }
+
+        // Добавление позиции в корзину.
+		PutBasket(pid, quantity, $(this).closest('.js-product-block'));
 
 		return false;
 	});

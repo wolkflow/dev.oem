@@ -8,6 +8,9 @@ $MESS['STEP_SKETCH']     = 'Схема стенда';
 $MESS['STEP_ORDER']      = 'Заказ';
 
 $MESS['TITLE_EQUIPMENT'] = 'Доп. оборудование';
+$MESS['TITLE_SERVICES']  = 'Услуги';
+$MESS['TITLE_MARKETING'] = 'Маркетинг';
+$MESS['TITLE_SKETCH']    = 'Схема стенда';
 
 $MESS['BASKET'] = 'Корзина';
 $MESS['PREV'] = 'Назад';

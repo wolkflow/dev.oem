@@ -26,6 +26,7 @@
             
             "WIDTH" => 4,
             "DEPTH" => 6,
+            'SFORM' => 'row',
         )
     );
 ?>

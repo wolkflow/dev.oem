@@ -12,6 +12,7 @@ class Basket
     const SESSCODE_BASKET   = 'BASKET';
     const SESSCODE_STAND    = 'STAND';
     const SESSCODE_PRODUCTS = 'PRODUCTS';
+    const SESSCODE_SKETCH   = 'SKETCH';
     
     const KIND_STAND   = 'stand';
     const KIND_PRODUCT = 'product';
@@ -63,6 +64,18 @@ class Basket
             $item = new BasketItem($this->getEventCode(), $data['id'], $data);
         }
         return $item;
+    }
+
+
+    public function setSketch($data)
+    {
+        $this->getData()[self::SESSCODE_SKETCH] = (array) $data;
+    }
+
+
+    public function getSketch()
+    {
+        return ((array) $this->getData()[self::SESSCODE_SKETCH]);
     }
     
     
