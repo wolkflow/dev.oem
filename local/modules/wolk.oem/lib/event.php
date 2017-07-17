@@ -288,6 +288,31 @@ class Event extends \Wolk\Core\System\IBlockEntity
     
 	
 	/**
+	 * Получение списка возможных стендов мероприятия.
+	 */
+	public function getStands()
+	{
+		$ids    = $this->getStandIDs();
+		$stands = [];
+		foreach ($ids as $id) {
+			$stands[$id] = new Stand($id);
+		}
+		return $stands;
+	}
+    
+    
+    /**
+	 * Получение списка e-mail'ов для отправки счета.
+	 */
+	public function getEmails()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['EMAILS']['VALUE'];
+	}
+	
+	
+	/**
 	 * Получение списка ID менеджеров мероприятия.
 	 */
 	public function getManagerIDs()

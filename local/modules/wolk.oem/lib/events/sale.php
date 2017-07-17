@@ -1,4 +1,6 @@
-<?php namespace Wolk\OEM\Events;
+<?php 
+
+namespace Wolk\OEM\Events;
 
 class Sale
 {
@@ -39,4 +41,20 @@ class Sale
         	"N"
         );
 	}
+    
+    
+    /**
+     * Сохранение заказа.
+     */
+    public function OnSaleOrderSaved(\Bitrix\Main\Event $event)
+	{
+        if (defined('ADMIN_SECTION')) {
+            $order = $event->getParameter('ENTITY');
+            
+            if (is_object($order)) {
+                $oemorder = new \Wolk\OEM\Order($order->getID());
+                $oemorder->recalc();
+            }
+        }
+    }
 }

@@ -142,12 +142,10 @@ if (!empty($_POST)) {
 			$result = true;
 			
 			if ($status != $oemorder->getStatus()) {
-				$result = $bxorder->setField('STATUS_ID', $status)->isSuccess();
-				
-				if ($result) {
-					$result = $bxorder->save()->isSuccess();
-				}
-				$bxorder = Bitrix\Sale\Order::load($ID);
+				$bxorder->setField('STATUS_ID', $status)->isSuccess();
+				$result = $bxorder->save()->isSuccess();
+                
+				// $bxorder = Bitrix\Sale\Order::load($ID);
 				
 				// $result = CSaleOrder::StatusOrder($oemorder->getID(), $status);
 			}
@@ -182,6 +180,10 @@ if (!empty($_POST)) {
                     ]);
                 }
             }
+            
+            if (is_null($message)) {
+                LocalRedirect('/bitrix/admin/wolk_oem_order_index.php?ID=' . $ID);
+            }
             break;
 
 		
@@ -200,10 +202,21 @@ if (!empty($_POST)) {
 				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
 					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'invoice', array('ID' => $ID, 'LANG' => $oemorder->getLanguage()));
 					
+                    
+                    // Заказ.
+                    $order = CSaleOrder::getByID($ID);
+                    $order['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($ID);
+                    
+                    // Мероприятие.
+                    $event = new Wolk\OEM\Event($order['PROPS']['eventId']['VALUE']);
+                    
+                    // E-mail'ы для отправки.
+                    $emails = array_unique(array_merge([$email], (array) $event->getEmails()));
+                    
 					// Отправка письма.
 					$event = new \CEvent();
 					$event->Send('SEND_INVOICE', SITE_DEFAULT, [
-						'EMAIL' => $email,
+						'EMAIL' => implode(',', $emails),
 						'HTML'  => $html,
 						'THEME' => Loc::getMessage('MESSAGE_THEME_INVOICE', Loc::loadLanguageFile(__FILE__, $oemorder->getLanguage()), $oemorder->getLanguage())
 					], 'N', '', [$fid]);
@@ -256,7 +269,6 @@ if (!empty($_POST)) {
             break;
     }
 }
-
 
 
 

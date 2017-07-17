@@ -32,6 +32,8 @@ if (Loader::includeModule('wolk.oem')) {
     
 	// $em->addEventHandler('catalog', 'OnGetOptimalPrice', ['\Wolk\OEM\Events\Catalog', 'onGetOptimalPriceHandler']);
     // $em->addEventHandler('sale', 'OnSaleStatusOrder', ['\Wolk\OEM\Events\Sale', 'OnOrderStatusSendEmail']);
+    
+    $em->addEventHandler('sale', 'OnSaleOrderSaved', ['\Wolk\OEM\Events\Sale', 'OnSaleOrderSaved']);
 }
 
 Loader::registerAutoLoadClasses(

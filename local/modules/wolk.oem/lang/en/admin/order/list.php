@@ -16,6 +16,7 @@ $MESS['HEADER_ID']       = 'Order number';
 $MESS['HEADER_EVENT']    = 'Exhibition';
 $MESS['HEADER_COMPANY']  = 'Company';
 $MESS['HEADER_PRICE']    = 'Cost';
+$MESS['HEADER_TAX']      = 'Tax';
 $MESS['HEADER_CURRENCY'] = 'Currency';
 $MESS['HEADER_BILL']  	 = 'Invoice number';
 $MESS['HEADER_STATUS']   = 'Status';

@@ -16,6 +16,7 @@ $MESS['HEADER_ID']       = 'Номер заказа';
 $MESS['HEADER_EVENT']    = 'Выставка';
 $MESS['HEADER_COMPANY']  = 'Компания';
 $MESS['HEADER_PRICE']    = 'Стоимость';
+$MESS['HEADER_TAX']      = 'НДС';
 $MESS['HEADER_CURRENCY'] = 'Валюта';
 $MESS['HEADER_BILL']  	 = 'Номер счета';
 $MESS['HEADER_STATUS']   = 'Статус';
