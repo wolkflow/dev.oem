@@ -133,6 +133,7 @@ switch ($action) {
     // Изменение количества товара в корзине.
     case ('update-basket'):
         $bid      = (string) $request->get('bid');
+        $pid      = (int)    $request->get('pid');
         $eid      = (int)    $request->get('eid');
         $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');
@@ -158,7 +159,7 @@ switch ($action) {
         $basket = new \Wolk\OEM\Basket($code);
         
         // Изменение количества товара в корзине.
-        $item = $basket->update($bid, $quantity, $parameters);
+        $item = $basket->update($bid, $pid, $quantity, $parameters);
         
         // Обновление данных в корзине.
         $html = gethtmlremote('basket.php');

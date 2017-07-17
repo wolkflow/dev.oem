@@ -21,6 +21,70 @@
     onmouseout="javascript: ru.octasoft.oem.designer.Main.stopDragging();"
 ></div>
 
+
+<div class="sketchNav">
+    <a href="<?= $arResult['LINKS']['PREV'] ?>" class="button styler prev">
+        <?= Loc::getMessage('PREV') ?>
+    </a>
+    <a id="js-sketch-save-id" href="<?= $arResult['LINKS']['NEXT'] ?>" class="button styler prev">
+        <?= Loc::getMessage('NEXT') ?>
+    </a>
+</div>
+
+
+<div class="sketchAfter">
+    <div class="sketchAfterLeft">
+        <div class="commentsForm">
+            <div class="commentsForm__title">
+                <?= Loc::getMessage('COMMENTS') ?>
+            </div>
+            <textarea placeholder="<?= Loc::getMessage('ADDITIONAL_INFO') ?>">
+                <?= strip_tags($arResult['ORDER']['ORDER_DATA']['USER_DESCRIPTION']) ?>
+            </textarea>
+        </div>
+    </div>
+    <div class="sketchAfterRight">
+        <div class="pagetitle">
+            <?= Loc::getMessage('CONFIGURATION') ?>
+        </div>
+        <div class="reviewconfigurationcontainer customizable_border">
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('SYSTEM_STAND') ?>:
+				</span>
+                <?= $arResult['STAND']->getTitle() ?>
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('WIDTH') ?> &amp; <?= Loc::getMessage('DEPTH') ?>:
+				</span>
+                <?= $arParams['WIDTH'] ?> &times; <?= $arParams['DEPTH'] ?>
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('TYPE') ?>:
+                </span>
+                <?= Loc::getMessage('TYPE_' . strtoupper($arParams['TYPE'])) ?>
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('EXHIBITION') ?>:
+				</span>
+                <?= $arResult['EVENT']->getTitle() ?>
+            </div>
+            <div class="reviewconfigurationcontainer__configuration">
+                <span class="reviewconfigurationcontainer__configurationtitle">
+					<?= Loc::getMessage('LOCATION') ?>:
+				</span>
+                <?= $arResult['EVENT']->getPlaceTitle() ?>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+
+
 <script>
     /*
      * Обработчики скетча.

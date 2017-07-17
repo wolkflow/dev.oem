@@ -55,7 +55,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
 	
     
     /**
-     * Получение цены из контекста.
+     * РџРѕР»СѓС‡РµРЅРёРµ С†РµРЅС‹ РёР· РєРѕРЅС‚РµРєСЃС‚Р°.
      */
 	public function getContextPrice(Context $context)
 	{
@@ -99,7 +99,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
     
     
     /**
-     * Список оборудования.
+     * РЎРїРёСЃРѕРє РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЏ.
      */
 	public function getEquipments()
 	{
@@ -108,7 +108,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
 	
 	
     /**
-     * Список услуг.
+     * РЎРїРёСЃРѕРє СѓСЃР»СѓРі.
      */
 	public function getServices()
 	{
@@ -117,7 +117,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
     
     
     /**
-     * Список услуг маркетинга.
+     * РЎРїРёСЃРѕРє СѓСЃР»СѓРі РјР°СЂРєРµС‚РёРЅРіР°.
      */
     public function getMarketings()
 	{
@@ -126,7 +126,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
 	
 	
 	/**
-	 * Получение цены стенда.
+	 * РџРѕР»СѓС‡РµРЅРёРµ С†РµРЅС‹ СЃС‚РµРЅРґР°.
 	 */
 	public function getLangPrice(Context $context)
 	{
@@ -150,17 +150,17 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
     
     
     /**
-     * Получение подходищего стендового предложения текущего стенда.
+     * РџРѕР»СѓС‡РµРЅРёРµ РїРѕРґС…РѕРґРёС‰РµРіРѕ СЃС‚РµРЅРґРѕРІРѕРіРѕ РїСЂРµРґР»РѕР¶РµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ СЃС‚РµРЅРґР°.
      */
     public function getStandOffer($width, $depth, Context $context)
     {
         $width = (float) $width;
 		$depth = (float) $depth;
         
-        // Площадь стенда.
+        // РџР»РѕС‰Р°РґСЊ СЃС‚РµРЅРґР°.
 		$area = $width * $depth;
 		
-        // Выбор вариантов стендов с подходящей площадью.
+        // Р’С‹Р±РѕСЂ РІР°СЂРёР°РЅС‚РѕРІ СЃС‚РµРЅРґРѕРІ СЃ РїРѕРґС…РѕРґСЏС‰РµР№ РїР»РѕС‰Р°РґСЊСЋ.
 		$stands = StandOffer::getList([
 			'order'  => ['PROPERTY_AREA_MAX' => 'DESC'],
 			'filter' => [
@@ -181,7 +181,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
 	
 	
 	/**
-	 * Расчет цены стенда по площади.
+	 * Р Р°СЃС‡РµС‚ С†РµРЅС‹ СЃС‚РµРЅРґР° РїРѕ РїР»РѕС‰Р°РґРё.
 	 */
 	protected static function calc($price, $width, $depth)
     {

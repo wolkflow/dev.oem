@@ -7,6 +7,9 @@ $MESS['STEP_MARKETINGS'] = 'Маркетнг';
 $MESS['STEP_SKETCH']     = 'Схема стенда';
 $MESS['STEP_ORDER']      = 'Заказ';
 
+$MESS['TYPE_STANDARD']   = 'Стандартный';
+$MESS['TYPE_INDIVIDUAL'] = 'Индивидуальный';
+
 $MESS['TITLE_EQUIPMENT'] = 'Доп. оборудование';
 $MESS['TITLE_SERVICES']  = 'Услуги';
 $MESS['TITLE_MARKETING'] = 'Маркетинг';
@@ -41,6 +44,16 @@ $MESS['MORE'] = 'Добавить';
 $MESS['PRICE'] = 'Цена';
 
 $MESS['STANDARD_INCLUDES'] = 'Стенд включает';
+
+$MESS['COMMENTS'] = 'Комментарии';
+$MESS['ADDITIONAL_INFO'] = 'Дополнительная информация о вашем заказе';
+$MESS['CONFIGURATION'] = 'Ваша конфигурация';
+$MESS['SYSTEM_STAND'] = 'Системный стенд';
+$MESS['WIDTH'] = 'Ширина';
+$MESS['DEPTH'] = 'Глубина';
+$MESS['TYPE'] = 'Тип';
+$MESS['EXHIBITION'] = 'Выставка';
+$MESS['LOCATION'] = 'Место';
 
 
 // Свойства.

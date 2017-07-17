@@ -22,7 +22,7 @@ class Location extends \Wolk\Core\System\IBlockEntity
 	
 	
 	/**
-	 * Получение документов.
+	 * РџРѕР»СѓС‡РµРЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ.
 	 */
     public function getDocs()
     {

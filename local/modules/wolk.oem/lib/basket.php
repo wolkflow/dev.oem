@@ -171,7 +171,7 @@ class Basket
     /**
      * Обновление количества товара.
      */
-    public function update($bid, $quantity, $params)
+    public function update($bid, $pid, $quantity, $params)
     {
         $bid      = (string) $bid;
         $quantity = (float) $quantity;

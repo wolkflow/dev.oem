@@ -523,6 +523,12 @@ class WizardComponent extends \CBitrixComponent
 
         // Размещенные обекты.
         $this->arResult['PLACED'] = $this->getBasket()->getSketch();
+
+        // Стенд.
+        $this->arResult['EVENT'] = $this->getEvent();
+
+        // Стенд.
+        $this->arResult['STAND'] = new \Wolk\OEM\Stand($this->getBasket()->getStand()->getProductID());
     }
     
     

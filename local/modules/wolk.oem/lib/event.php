@@ -175,6 +175,19 @@ class Event extends \Wolk\Core\System\IBlockEntity
         
         return (new Location($this->getLocationID()));
     }
+
+
+    public function getPlaceTitle($lang = null)
+    {
+        $this->load();
+
+        if (empty($lang)) {
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+        }
+        $lang = mb_strtoupper($lang);
+
+        return ($this->data['PROPS']['LANG_LOCATION_' . $lang]['VALUE']);
+    }
     
     
     /**
