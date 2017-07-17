@@ -102,7 +102,6 @@ class PrintInvoiceComponent extends \CBitrixComponent
             $lang = $this->arResult['LANGUAGE'];
         }
         
-        
 		
 		// Курс пересчета заказа.
 		$rate     = (!empty($this->arResult['PROPS']['RATE']['VALUE'])) 
@@ -143,9 +142,9 @@ class PrintInvoiceComponent extends \CBitrixComponent
                 $basket['TITLE'] = $basket['NAME'];
                 
                 if ($fields['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
-                    $basket['NAME']  = $element->getProperty('LANG_NAME_' . $this->arResult['LANGUAGE'])['VALUE'];
+                    $basket['NAME']  = $element->getProperty('LANG_NAME_' . $lang)['VALUE'];
                 } else {
-                    $basket['NAME']  = $element->getProperty('LANG_TITLE_' . $this->arResult['LANGUAGE'])['VALUE'];
+                    $basket['NAME']  = $element->getProperty('LANG_TITLE_' . $lang)['VALUE'];
                 }
             }
 			if ($basket['SUMMARY_PRICE'] > 0) {

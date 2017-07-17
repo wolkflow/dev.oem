@@ -409,7 +409,6 @@ foreach ($baskets as $basket) {
 unset($basket);
 
 
-
 // Печать заказа.
 $orderprint = new \Wolk\OEM\OrderPrint($ID);
 
@@ -1135,7 +1134,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 				}
             </style>
 			
-			<? if (!$oemorder->isIndividual()) { ?>
+			<? // if (!$oemorder->isIndividual()) { ?>
+            <? if (!empty($sketch['objects'])) { ?>
 				<div style="height: 5px; width: 100%"></div>
 				<a id="sketch-order"></a>
 				<div class="adm-container-draggable">
