@@ -31,6 +31,12 @@
     </a>
 </div>
 
+<div class="renders">
+    <div id="js-renders-images-id"></div>
+    <button id="js-render-id" data-code="<?= $arResult['EVENT']->getCode() ?>">
+        Рендер
+    </button>
+</div>
 
 <div class="sketchAfter">
     <div class="sketchAfterLeft">
@@ -86,11 +92,49 @@
 
 
 <script>
+    $(document).ready(function() {
+        $(document).on('click', '#js-sketch-save-id', function(e) {
+            e.preventDefault();
+            
+            var scene = ru.octasoft.oem.designer.Main.getScene();
+            var image = ru.octasoft.oem.designer.Main.saveJPG();
+            
+            if (scene.objects.length < <?= count($arResult['OBJECTS']) ?>) {
+                showError('Ошибка', 'Не все объекты размещены на схеме');
+            }
+            
+            // JSON.stringify(
+        });
+        
+        
+        $(document).on('click', '#js-render-id', function(e) {
+            var objs = ru.octasoft.oem.designer.Main.getScene();
+            var code = $(this).data('code');
+            var data = {'action': 'render', 'code': code, 'view': 1, 'objs': JSON.stringify(objs)};
+            
+            $.ajax({
+                url: '/remote/',
+                type: 'post',
+                data: data,
+                dataType: 'json',
+                async: true,
+                cache: false,
+                success: function(response) {
+                    if (response.status) {
+                        $('#js-renders-images-id').html('<a target="_blank" href="' + response.data['path'] + '"><img src="' + response.data['path'] + '" width="100" height="100" /></a>');
+                    } else {
+                        // Ошибка загрузки файла.
+                    }
+                },
+            });
+        });
+    });
+
     /*
      * Обработчики скетча.
      */
     var sketchitems = <?= json_encode(array_values($arResult['OBJECTS'])) ?>;
-
+    
     var loadsketch = function() {
 
         var gridX = parseInt(<?= (int) ($arParams['WIDTH'])  ?: 5 ?>);

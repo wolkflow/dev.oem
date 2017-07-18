@@ -115,7 +115,16 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
         ])['src'];
 
         return $src;
-}
+    }
+    
+    
+    /**
+     * Получение пути к модели.
+     */
+    public function getModelPath()
+    {
+        return ($_SERVER['DOCUMENT_ROOT'] . \Wolk\OEM\Render::PATH_MODELS . '/' . $this->getID());
+    }
 
     
     /**

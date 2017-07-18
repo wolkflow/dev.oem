@@ -60,6 +60,9 @@ class Product extends \Wolk\Core\System\HLBlockModel
         $class  = self::getEntityClassName();
         $entity = new $class();
         
+        $connection = \Bitrix\Main\Application::getConnection();
+        $connection->startTransaction();
+        
         $query = "
             DELETE FROM `" . $entity->getTableName() . "`
             WHERE `" . self::FIELD_EVENT . "` = '" . strval($event) . "'
@@ -67,7 +70,7 @@ class Product extends \Wolk\Core\System\HLBlockModel
               AND `" . self::FIELD_LANG . "`  = '" . strval($lang) . "'
         ";
         
-        $connection = \Bitrix\Main\Application::getConnection();
         $connection->query($query);
+        $connection->commitTransaction();
     }
 }

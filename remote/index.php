@@ -84,7 +84,48 @@ switch ($action) {
             jsonresponse(false, '');
         }
         break;
+    
+    
+    // Создание сцены изображения.
+    case ('render'):
+        $objs = (string) $request->get('objs');
+        $view = (string) $request->get('view');
+        $code = (string) $request->get('code');
         
+        $oembasket = new \Wolk\OEM\Basket($code);
+        
+        $baskets = $oembasket->getList();
+        $objects = json_decode($objs, true)['objects'];
+        foreach ($objects as &$object) {
+            $basket  = $baskets[$object['id']];
+            $element = $basket->getElement();
+            
+            $object['path'] = $element->getModelPath();
+        }
+        unset($baskets, $element);
+        
+        $bdata = $oembasket->getData();
+        $scene = [
+            'width'      => $bdata['STAND']['params']['depth'],
+            'length'     => $bdata['STAND']['params']['width'],
+            'owner_name' => 'Test Stand',
+            'type'       => 'corner',
+            'objects'    => $objects,
+        ];
+        
+        // Рендер сцены.
+        $path = Wolk\OEM\Render::render($code . $view, json_encode($scene), 'output-'.intval($view));
+        
+        if ($path === false) {
+            jsonresponse(false, '');
+        }
+        $renders = $oembasket->getRenders();
+        $renders []= $path;
+        $oembasket->setRenders($renders);
+        
+        jsonresponse(true, '', ['path' => $path]);
+        break;
+    
         
     // Созхранение продукции в корзину.
     case ('put-basket'):

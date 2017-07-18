@@ -509,11 +509,13 @@ class WizardComponent extends \CBitrixComponent
             $object = [
                 'id'        => $basket->getID(),
                 'quantity'  => $basket->getQuantity(),
+                'pid'       => $element->getID(),
                 'title'     => $element->getTitle(),
                 'type'      => $element->getSketchType(),
                 'w'         => $element->getSketchWidth() / 1000,
                 'h'         => $element->getSketchHeight() / 1000,
                 'imagePath' => $element->getSketchImagePrepared(),
+                'path'      => $element->getModelPath(),
             ];
             $objects[$basket->getID()] = $object;
         }
@@ -657,7 +659,7 @@ class WizardComponent extends \CBitrixComponent
     /**
      * Получение ссылки предыдущего шага.
      */
-    public function getPrevStepLink($step)
+    public function getPrevStepLink()
     {
         $fields = [
             $this->arParams['CODE'],
@@ -693,7 +695,7 @@ class WizardComponent extends \CBitrixComponent
     /**
      * Получение ссылки следующего шага.
      */
-    public function getNextStepLink($step)
+    public function getNextStepLink()
     {
         $fields = [
             $this->arParams['CODE'],

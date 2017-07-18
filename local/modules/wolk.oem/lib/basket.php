@@ -13,6 +13,7 @@ class Basket
     const SESSCODE_STAND    = 'STAND';
     const SESSCODE_PRODUCTS = 'PRODUCTS';
     const SESSCODE_SKETCH   = 'SKETCH';
+    const SESSCODE_RENDERS  = 'RENDERS';
     
     const KIND_STAND   = 'stand';
     const KIND_PRODUCT = 'product';
@@ -76,6 +77,18 @@ class Basket
     public function getSketch()
     {
         return ((array) $this->getData()[self::SESSCODE_SKETCH]);
+    }
+    
+    
+    public function setRenders($data)
+    {
+        $this->getData()[self::SESSCODE_RENDERS] = (array) $data;
+    }
+
+
+    public function getRenders()
+    {
+        return ((array) $this->getData()[self::SESSCODE_RENDERS]);
     }
     
     
