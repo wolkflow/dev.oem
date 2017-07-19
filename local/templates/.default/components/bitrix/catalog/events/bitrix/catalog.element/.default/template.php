@@ -46,24 +46,24 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                 <? $i = 1 ?>
                 <div class="indexInfo__left">
                     <ul>
-                    <? foreach ($arResult['DOCUMENTS'][0] as $document) { ?>
-                        <li>
-                            <a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
-                                <?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
-                            </a>
-                        </li>
-                    <? } ?>
+                        <? foreach ($arResult['DOCUMENTS'][0] as $document) { ?>
+                            <li>
+                                <a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
+                                    <?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
+                                </a>
+                            </li>
+                        <? } ?>
                     </ul>
                 </div>
                 <div class="indexInfo__right">
                     <ul>
-                    <? foreach ($arResult['DOCUMENTS'][1] as $document) { ?>
-                        <li>
-                            <a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
-                                <?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
-                            </a>
-                        </li>
-                    <? } ?>
+                        <? foreach ($arResult['DOCUMENTS'][1] as $document) { ?>
+                            <li>
+                                <a href="javascript:void(0)" data-modal="#document-<?= $document['ID'] ?>">
+                                    <?= $i++ ?>. <?= $document['TITLE'] ?> <? // Loc::getMessage('Order and Delivery Conditions')?>
+                                </a>
+                            </li>
+                        <? } ?>
                     </ul>
                 </div>
                 <div class="clear"></div>
@@ -125,19 +125,19 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         <!-- Выбор стенда -->
         <div class="indexpage__choosestand system">
             <div class="indexpage__choosestandtitlecontainer">
-                <div class="indexpage__choosestandtitle"><?=Loc::getMessage('System stand')?></div>
-                <form class="indexpage__choosestandform">
-                    <input type="hidden" name="ORDER_TYPE" value="standart" />
+                <div class="indexpage__choosestandtitle"><?= Loc::getMessage('System stand') ?></div>
+                <form action="/wizard/<?= $arResult['CODE'] ?>/standard/1/" class="indexpage__choosestandform">
+                    <!--input type="hidden" name="ORDER_TYPE" value="standart" /-->
                     <div class="indexpage__choosestandinputscontainer">
                         <div class="indexpage__choosestandinputcontainer">
                             <div class="indexpage__choosestandinputtitle">
-								<?=Loc::getMessage('Stand width')?> <span>(<?=Loc::getMessage('m')?>)</span>
+								<?=Loc::getMessage('Stand width')?> <span>(<?= Loc::getMessage('m') ?>)</span>
 							</div>
                             <input required name="WIDTH" type="text" value="" />
 						</div>
                         <div class="indexpage__choosestandinputcontainer">
                             <div class="indexpage__choosestandinputtitle">
-								<?=Loc::getMessage('Stand length')?> <span>(<?=Loc::getMessage('m')?>)</span>
+								<?=Loc::getMessage('Stand length')?> <span>(<?= Loc::getMessage('m') ?>)</span>
 							</div>
                             <input required name="DEPTH" type="text" value="" />
 						</div>
@@ -148,19 +148,19 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 							<?= Loc::getMessage('Stand type') ?>
 						</div>
                         <label for="row" class="indexpage__choosestandtype">
-                            <input checked type="radio" value="row" name="standtype" id="row"><span><?= Loc::getMessage('Row') ?></span>
+                            <input checked type="radio" value="row" name="FORM" id="row"><span><?= Loc::getMessage('Row') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="corner" class="indexpage__choosestandtype">
-                            <input type="radio" value="corner" name="standtype" id="corner"><span><?= Loc::getMessage('Corner') ?></span>
+                            <input type="radio" value="corner" name="FORM" id="corner"><span><?= Loc::getMessage('Corner') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="peninsular" class="indexpage__choosestandtype">
-                            <input type="radio" value="head" name="standtype" id="peninsular"><span><?= Loc::getMessage('Head') ?></span>
+                            <input type="radio" value="head" name="FORM" id="peninsular"><span><?= Loc::getMessage('Head') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="island" class="indexpage__choosestandtype">
-                            <input type="radio" value="island" name="standtype" id="island"><span><?= Loc::getMessage('Insel') ?></span>
+                            <input type="radio" value="island" name="FORM" id="island"><span><?= Loc::getMessage('Insel') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                     </div>
@@ -175,8 +175,8 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             <div class="indexpage__choosestandtitlecontainer">
                 <div class="indexpage__choosestandtitle"><?= Loc::getMessage('individual stand') ?></div>
 
-                <form class="indexpage__choosestandform">
-                    <input type="hidden" name="ORDER_TYPE" value="individual" />
+                <form  action="/wizard/<?= $arResult['CODE'] ?>/individual/1/" class="indexpage__choosestandform">
+                    <!--input type="hidden" name="ORDER_TYPE" value="individual" /-->
                     <div class="indexpage__choosestandinputscontainer">
                         <div class="indexpage__choosestandinputcontainer">
                             <div class="indexpage__choosestandinputtitle">

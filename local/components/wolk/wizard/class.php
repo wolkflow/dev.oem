@@ -22,6 +22,8 @@ class WizardComponent extends \CBitrixComponent
 {
     const SESSCODE = 'OEMEVENTS';
     
+    const DEFAULT_STAND_FORM = 'row';
+    
     protected $context = null;
     protected $basket  = null;
     
@@ -38,14 +40,15 @@ class WizardComponent extends \CBitrixComponent
         $arParams['CODE'] = (string) $arParams['CODE'];
         
         // Текущий шаг конструктора мероприятия.
-        $arParams['STEP'] = (string) $arParams['STEP'];
+        $arParams['STEP'] = (int) $arParams['STEP'];
         
         // Тип стенда.
         $arParams['TYPE'] = (string) $arParams['TYPE'];
         
         // Язык.
         $arParams['LANG'] = (string) $arParams['LANG'];
-
+        
+        
         // Ширина стенда.
         $arParams['WIDTH'] = (float) $arParams['WIDTH'];
         
@@ -56,7 +59,7 @@ class WizardComponent extends \CBitrixComponent
         $arParams['SFORM'] = (string) $arParams['SFORM'];
 
         if (empty($arParams['SFORM'])) {
-            $arParams['SFORM'] = 'row';
+            $arParams['SFORM'] = self::DEFAULT_STAND_FORM;
         }
         
         
@@ -66,6 +69,18 @@ class WizardComponent extends \CBitrixComponent
         // Объект корзины.
         $this->basket = new Basket($arParams['CODE']);
         
+        if ($arParams['STEP'] == 1) {
+            $this->getBasket()->clear();
+            
+            // Очистка данных по выставке.
+            $_SESSION[self::SESSCODE][$this->getBasket()->getEventCode()] = array('STAND' => array(), Basket::SESSCODE_BASKET => array());
+            
+            $this->basket->setParams(array(
+                'WIDTH' => $arParams['WIDTH'],
+                'DEPTH' => $arParams['DEPTH'],
+                'SFORM' => $arParams['SFORM']
+            ));
+        }
         
         return $arParams;
 	}
@@ -211,9 +226,6 @@ class WizardComponent extends \CBitrixComponent
     {
         $event = $this->getEvent();
         
-        // Очистка данных по выставке.
-        $_SESSION[self::SESSCODE][mb_strtoupper($event->getCode())] = array('STAND' => array(), 'BASKET' => array());
-        
         // Площадь стенда.
         $this->arResult['AREA'] = $this->arParams['WIDTH'] * $this->arParams['DEPTH'];
         
@@ -242,7 +254,9 @@ class WizardComponent extends \CBitrixComponent
         
         // Если выбран предустановленный станд.
         if ($data['STAND'] == $this->getEvent()->getPreselectStandID()) {
-            $standoffer = $this->getEvent()->getPreselectStand()->getStandOffer($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
+            $params = $this->getBasket()->getParams();
+            
+            $standoffer = $this->getEvent()->getPreselectStand()->getStandOffer($params['WIDTH'], $params['DEPTH'], $this->getContext());
             
             if (!empty($standoffer)) {
                 $data['BASE'] = $standoffer->getBaseProductQIDs();
@@ -317,46 +331,6 @@ class WizardComponent extends \CBitrixComponent
     protected function doStepEquipments()
     {
         $this->doStep(Wolk\OEM\Products\Section::TYPE_EQUIPMENTS);
-        /*
-        $data  = $this->getSession();
-        $event = $this->getEvent();
-
-        // Спсиок оборудования.
-        $products = $event->getProducts($this->getContext(), Wolk\OEM\Products\Section::TYPE_EQUIPMENTS);
-        $sections = [];
-        foreach ($products as &$product) {
-            if (!array_key_exists($product->getSectionID(), $sections)) {
-                $sections[$product->getSectionID()] = $product->getSection();
-            }
-            $section = $sections[$product->getSectionID()];
-            $section->load();
-            $section->addInside($product, $product->getID());
-        }
-
-        // Список разделов.
-        $parents = [];
-        foreach ($sections as &$section) {
-            if (!array_key_exists($section->getSectionID(), $parents)) {
-                $parents[$section->getSectionID()] = $section->getSection();
-            }
-            $parent = $parents[$section->getSectionID()];
-            $parent->load();
-            $parent->addInside($section, $section->getID());
-        }
-
-        uasort($parents, function($x1, $x2) {
-            return ($x1->get('SORT') - $x2->get('SORT'));
-        });
-
-        // Группы и продукция.
-        $this->arResult['ITEMS'] = $parents;
-
-        // Стенд.
-        $this->arResult['BASE'] = $data['BASE'];
-
-        // Цвета.
-        $this->arResult['COLORS'] = self::getColors();
-        */
     }
     
     
@@ -375,47 +349,6 @@ class WizardComponent extends \CBitrixComponent
     protected function doStepServices()
     {
         $this->doStep(Wolk\OEM\Products\Section::TYPE_SERVICES);
-
-        /*
-        $data  = $this->getSession();
-        $event = $this->getEvent();
-
-        // Спсиок оборудования.
-        $products = $event->getProducts($this->getContext(), Wolk\OEM\Products\Section::TYPE_SERVICES);
-        $sections = [];
-        foreach ($products as &$product) {
-            if (!array_key_exists($product->getSectionID(), $sections)) {
-                $sections[$product->getSectionID()] = $product->getSection();
-            }
-            $section = $sections[$product->getSectionID()];
-            $section->load();
-            $section->addInside($product, $product->getID());
-        }
-
-        // Список разделов.
-        $parents = [];
-        foreach ($sections as &$section) {
-            if (!array_key_exists($section->getSectionID(), $parents)) {
-                $parents[$section->getSectionID()] = $section->getSection();
-            }
-            $parent = $parents[$section->getSectionID()];
-            $parent->load();
-            $parent->addInside($section, $section->getID());
-        }
-
-        uasort($parents, function($x1, $x2) {
-            return ($x1->get('SORT') - $x2->get('SORT'));
-        });
-
-        // Группы и продукция.
-        $this->arResult['ITEMS'] = $parents;
-
-        // Стенд.
-        $this->arResult['BASE'] = $data['BASE'];
-
-        // Цвета.
-        $this->arResult['COLORS'] = self::getColors();
-        */
     }
 
 
@@ -434,47 +367,6 @@ class WizardComponent extends \CBitrixComponent
     protected function doStepMarketings()
     {
         $this->doStep(Wolk\OEM\Products\Section::TYPE_MARKETINGS);
-
-        /*
-        $data  = $this->getSession();
-        $event = $this->getEvent();
-
-        // Спсиок оборудования.
-        $products = $event->getProducts($this->getContext(), Wolk\OEM\Products\Section::TYPE_MARKETINGS);
-        $sections = [];
-        foreach ($products as &$product) {
-            if (!array_key_exists($product->getSectionID(), $sections)) {
-                $sections[$product->getSectionID()] = $product->getSection();
-            }
-            $section = $sections[$product->getSectionID()];
-            $section->load();
-            $section->addInside($product, $product->getID());
-        }
-
-        // Список разделов.
-        $parents = [];
-        foreach ($sections as &$section) {
-            if (!array_key_exists($section->getSectionID(), $parents)) {
-                $parents[$section->getSectionID()] = $section->getSection();
-            }
-            $parent = $parents[$section->getSectionID()];
-            $parent->load();
-            $parent->addInside($section, $section->getID());
-        }
-
-        uasort($parents, function($x1, $x2) {
-            return ($x1->get('SORT') - $x2->get('SORT'));
-        });
-
-        // Группы и продукция.
-        $this->arResult['ITEMS'] = $parents;
-
-        // Стенд.
-        $this->arResult['BASE'] = $data['BASE'];
-
-        // Цвета.
-        $this->arResult['COLORS'] = self::getColors();
-        */
     }
 
 
@@ -531,6 +423,13 @@ class WizardComponent extends \CBitrixComponent
 
         // Стенд.
         $this->arResult['STAND'] = new \Wolk\OEM\Stand($this->getBasket()->getStand()->getProductID());
+        
+        // Параметры стенда.
+        $params = $this->getBasket()->getParams();
+        
+        $this->arResult['WIDTH'] = $params['WIDTH'];
+        $this->arResult['DEPTH'] = $params['DEPTH'];
+        $this->arResult['SFORM'] = $params['SFORM'];
     }
     
     

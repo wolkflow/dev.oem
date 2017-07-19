@@ -104,17 +104,17 @@ switch ($action) {
         }
         unset($baskets, $element);
         
-        $bdata = $oembasket->getData();
+        $params = $oembasket->getParams();
         $scene = [
-            'width'      => $bdata['STAND']['params']['depth'],
-            'length'     => $bdata['STAND']['params']['width'],
+            'width'      => $params['WIDTH'],
+            'length'     => $params['DEPTH'],
+            'type'       => $params['SFORM'],
             'owner_name' => 'Test Stand',
-            'type'       => 'corner',
             'objects'    => $objects,
         ];
         
         // Рендер сцены.
-        $path = Wolk\OEM\Render::render($code . $view, json_encode($scene), 'output-'.intval($view));
+        $path = Wolk\OEM\Render::render($code . $view, json_encode($scene), 'out-'.uniqid());
         
         if ($path === false) {
             jsonresponse(false, '');

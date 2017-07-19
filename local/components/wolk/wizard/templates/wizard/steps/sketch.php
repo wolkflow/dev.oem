@@ -44,9 +44,7 @@
             <div class="commentsForm__title">
                 <?= Loc::getMessage('COMMENTS') ?>
             </div>
-            <textarea placeholder="<?= Loc::getMessage('ADDITIONAL_INFO') ?>">
-                <?= strip_tags($arResult['ORDER']['ORDER_DATA']['USER_DESCRIPTION']) ?>
-            </textarea>
+            <textarea placeholder="<?= Loc::getMessage('ADDITIONAL_INFO') ?>"><?= strip_tags($arResult['ORDER']['ORDER_DATA']['USER_DESCRIPTION']) ?></textarea>
         </div>
     </div>
     <div class="sketchAfterRight">
@@ -137,8 +135,8 @@
     
     var loadsketch = function() {
 
-        var gridX = parseInt(<?= (int) ($arParams['WIDTH'])  ?: 5 ?>);
-        var gridY = parseInt(<?= (int) ($arParams['HEIGHT']) ?: 5 ?>);
+        var gridX = parseInt(<?= (int) ($arResult['WIDTH']) ?: 5 ?>);
+        var gridY = parseInt(<?= (int) ($arResult['DEPTH']) ?: 5 ?>);
 
         (window.resizeEditor = function(items) {
             var height =  Math.max(120 + (items.length * 135), $(window).height());
@@ -159,7 +157,7 @@
             ru.octasoft.oem.designer.Main.init({
                 w: gridX,
                 h: gridY,
-                type: '<?= $arParams['SFORM'] ?>',
+                type: '<?= $arResult['SFORM'] ?>',
                 items: sketchitems,
                 placedItems: <?= (!empty($arResult['PLACED'])) ? (json_encode($arResult['PLACED'])) : ('{}') ?>
             });

@@ -12,6 +12,7 @@ class Basket
     const SESSCODE_BASKET   = 'BASKET';
     const SESSCODE_STAND    = 'STAND';
     const SESSCODE_PRODUCTS = 'PRODUCTS';
+    const SESSCODE_PARAMS   = 'PARAMS';
     const SESSCODE_SKETCH   = 'SKETCH';
     const SESSCODE_RENDERS  = 'RENDERS';
     
@@ -33,6 +34,15 @@ class Basket
     {
         $this->code = mb_strtoupper((string) $event);
         $this->data = $this->getSession();
+    }
+    
+    
+    public function clear()
+    {
+        $this->data = [];
+        
+        // Сохранение в сесиию.
+        $this->putSession();
     }
     
     
@@ -66,11 +76,29 @@ class Basket
         }
         return $item;
     }
+    
+    
+    public function setParams($data)
+    {
+        $this->data[self::SESSCODE_PARAMS] = (array) $data;
+        
+        // Сохранение в сесиию.
+        $this->putSession();
+    }
+
+
+    public function getParams()
+    {
+        return ((array) $this->getData()[self::SESSCODE_PARAMS]);
+    }
 
 
     public function setSketch($data)
     {
-        $this->getData()[self::SESSCODE_SKETCH] = (array) $data;
+        $this->data[self::SESSCODE_SKETCH] = (array) $data;
+        
+        // Сохранение в сесиию.
+        $this->putSession();
     }
 
 
@@ -82,7 +110,10 @@ class Basket
     
     public function setRenders($data)
     {
-        $this->getData()[self::SESSCODE_RENDERS] = (array) $data;
+        $this->data[self::SESSCODE_RENDERS] = (array) $data;
+        
+        // Сохранение в сесиию.
+        $this->putSession();
     }
 
 
