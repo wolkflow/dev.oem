@@ -139,7 +139,7 @@ if (!empty($_POST)) {
 			$status = (string) $_POST['STATUS'];
             $bill   = (string) $_POST['BILL'];
 			
-			$result = true;
+			$result = null;
 			
 			if ($status != $oemorder->getStatus()) {
 				$bxorder->setField('STATUS_ID', $status)->isSuccess();
@@ -148,30 +148,29 @@ if (!empty($_POST)) {
 				// $bxorder = Bitrix\Sale\Order::load($ID);
 				
 				// $result = CSaleOrder::StatusOrder($oemorder->getID(), $status);
+                
+                if (!$result) {
+                    $message = new CAdminMessage([
+                        'MESSAGE' => Loc::getMessage('ERROR_CHANGE_DATA'),
+                        'TYPE'    => 'ERROR'
+                    ]);
+                } else {
+                    // Заказчик.
+                    $customer = $oemorder->getUser();
+                    
+                    // Шаблон письма.
+                    $html = $APPLICATION->IncludeComponent('wolk:mail.order', 'status', ['ID' => $oemorder->getID(), 'STATUS' => $status, 'LANG' => $oemorder->getLanguage()]);
+                    
+                    // Отправка письма.
+                    $event = new \CEvent();
+                    $event->Send('SALE_NEW_ORDER_STATUS', SITE_DEFAULT, [
+                        'EMAIL' => $customer['EMAIL'], 
+                        'HTML' => $html, 
+                        'THEME' => Loc::getMessage('MESSAGE_THEME_ORDER_STATUS_CHANGE', Loc::loadLanguageFile(__FILE__, $oemorder->getLanguage()), $oemorder->getLanguage())
+                    ]);
+                }
 			}
-			
-            if (!$result) {
-				$message = new CAdminMessage([
-                    'MESSAGE' => Loc::getMessage('ERROR_CHANGE_DATA'),
-                    'TYPE'    => 'ERROR'
-                ]);
-			} else {
-				
-				// Заказчик.
-				$customer = $oemorder->getUser();
-				
-				// Шаблон письма.
-				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'status', ['ID' => $oemorder->getID(), 'LANG' => $oemorder->getLanguage()]);
-				
-				// Отправка письма.
-				$event = new \CEvent();
-				$event->Send('SALE_NEW_ORDER_STATUS', SITE_DEFAULT, [
-					'EMAIL' => $customer['EMAIL'], 
-					'HTML' => $html, 
-					'THEME' => Loc::getMessage('MESSAGE_THEME_ORDER_STATUS_CHANGE', Loc::loadLanguageFile(__FILE__, $oemorder->getLanguage()), $oemorder->getLanguage())
-				]);
-            }
-			
+            
             if (!empty($bill)) {
                 if (!\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'BILL', $bill)) {
                     $message = new CAdminMessage([
@@ -408,7 +407,6 @@ foreach ($baskets as $basket) {
     }
 }
 unset($basket);
-
 
 
 // Печать заказа.
@@ -1136,7 +1134,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 				}
             </style>
 			
-			<? if (!$oemorder->isIndividual()) { ?>
+			<? // if (!$oemorder->isIndividual()) { ?>
+            <? if (!empty($sketch['objects'])) { ?>
 				<div style="height: 5px; width: 100%"></div>
 				<a id="sketch-order"></a>
 				<div class="adm-container-draggable">

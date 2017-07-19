@@ -11,7 +11,6 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 
 ?>
 	<div class="footersection customizable_border">
-
 		<div class="footerLinks">
 			<a href="javascript:void(0)" data-modal="#contact-us" class="footersection__contact" id="js-contacts-link-id">
 				<?= Loc::getMessage('Contact Us') ?>
@@ -35,7 +34,9 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 		*/ ?>
 		
 		<div class="footerLogo">
-			<a href="/"><img src="/local/templates/.default/build/images/logo-sm.png"></a>
+			<a href="/">
+                <img src="/local/templates/.default/build/images/logo-sm.png" />
+            </a>
 		</div>
 	</div>	
 </div>
@@ -95,7 +96,7 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 	*/ ?>
 	
     
-    <!-- Окно: правила -->
+    <? // Окно "Правила" // ?>
 	<div class="modal modalContact" id="rules">
 		<div class="modalClose arcticmodal-close"></div>
 		<div class="modalTitle">
@@ -113,7 +114,7 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 	</div>
     
 
-	<!-- Окно: контакты -->
+	<? // Окно "Контакты" // ?>
 	<div class="modal modalContact" id="contact-us">
 		<div class="modalClose arcticmodal-close"></div>
 		<div class="modalTitle">
@@ -125,9 +126,9 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 				"wolk:form.mail",
 				"contacts",
 				array(
-					"FORM" => "CONTACTS",
-					"CAPTCHA" => "N",
-					"FIELDS" => array("NAME", "PHONE", "COMPANY", "STAND", "EMAIL", "MESSAGE"),
+					"FORM"     => "CONTACTS",
+					"CAPTCHA"  => "N",
+					"FIELDS"   => array("NAME", "PHONE", "COMPANY", "STAND", "EMAIL", "MESSAGE"),
 					"REQUIRED" => array("NAME", "PHONE", "COMPANY", "STAND", "EMAIL", "MESSAGE"),
 				)		
 			);

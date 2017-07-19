@@ -23,6 +23,10 @@ $MESS['HEADER_STATUS']   = 'Статус';
 $MESS['HEADER_DATE']     = 'Дата заказа';
 $MESS['ORIGINAL_PRICE']  = 'Оригинальная цена';
 $MESS['CONVERT_PRICE'] 	 = 'Цена пересчета';
+$MESS['SENDMAIL'] 	     = 'Отправка письма';
+
+$MESS['YES'] = 'Да';
+$MESS['NO']  = 'Нет';
 
 $MESS['SELECT_ANY'] = '- любой -';
 

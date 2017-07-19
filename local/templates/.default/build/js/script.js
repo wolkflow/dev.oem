@@ -143,7 +143,7 @@ $(document).ready(function() {
 	//	});
 	//};
 
-
+    
     $(document).on('click', '.content-link', function(e) {
         e.preventDefault();
         $.arcticmodal({
