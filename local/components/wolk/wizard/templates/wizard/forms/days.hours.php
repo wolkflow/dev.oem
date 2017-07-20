@@ -16,14 +16,30 @@
                     <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
                 </div>
                 <div class="itemquantitycontainer">
+                    
                     <div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-                        <div class="serviceItem__subtitle">
-                            <?= Loc::getMessage('QUANTITY') ?>
+                        <div class="setDateBlock">
+                            <div class="serviceItem__subtitle">
+                                <?= Loc::getMessage('DATES') ?>
+                            </div>
+                            <div class="setDate hasDatepicker">
+                                <div class="loolee">
+                                    <div class="looleeHead">
+                                        <label class="styler">
+                                            <input id="<?= $product->getID() ?>" type="checkbox" class="changeMode" value="<?= (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('') ?>" />
+                                            <span></span><?= Loc::getMessage('DATERANGE') ?>
+                                        </label>
+                                        <a href="#" class="cButton buttonClear dateClear">
+                                            <?= Loc::getMessage('CLEAR') ?>
+                                        </a>
+                                        <a href="#" class="cButton buttonOk looleeClose">
+                                            ОК
+                                        </a>
+                                    </div>
+                                    <div class="dpBlock" data-mode="multiple"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="js-quantity-dec itemCount__button itemCount__down"></div>
-                        <div class="js-quantity-inc itemCount__button itemCount__up"></div>
-
-                        <input id="<?= $product->getID() ?>" type="text" class="js-quantity itemCount__input styler" value="<?= (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('0') ?>" />
                     </div>
 
                     <? // продукция, включенная в стенд. // ?>
@@ -71,7 +87,7 @@
         </div>
 
     <? } else { ?>
-
+    <? // Рабочее здесь // ?>
         <div class="serviceItem__block">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
@@ -92,17 +108,7 @@
                         <? } ?>
                     </select>
                 </div>
-                <div class="serviceItem__right">
-                    <div class="js-quantity-wrapper itemCount">
-                        <div class="serviceItem__subtitle">
-                            <?= Loc::getMessage('QUANTITY') ?>
-                        </div>
-                        <div class="js-quantity-dec itemCount__button itemCount__down"></div>
-                        <div class="js-quantity-inc itemCount__button itemCount__up"></div>
-
-                        <input type="text" class="js-quantity itemCount__input styler" value="<?= (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('0') ?>" />
-                    </div>
-                </div>
+                
                 <div class="js-product-select-price" style="margin-top: 10px; display: none;">
                     <div class="serviceItem__cost">
                         <div class="serviceItem__subtitle">
@@ -111,14 +117,72 @@
                         <div class="js-product-price serviceItem__cost-value"></div>
                     </div>
                 </div>
+                
                 <div class="js-product-select-descr" style="margin-top: 10px; display: none;">
                     <div class="serviceItem__cost">
                         <div class="js-product-descr serviceItem__cost-value"></div>
                     </div>
                 </div>
-
+                
                 <div class="equipmentcontainer__itemsize">
                     <?= $section->getDescription() ?>
+                </div>
+            </div>
+            
+            <div class="serviceItem__row">
+                <div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
+                
+                    <? // Установка даты // ?>
+                    <div class="serviceItem__left">
+                        <div class="setDateBlock">
+                            <div class="serviceItem__subtitle">
+                                <?= Loc::getMessage('DATES') ?>
+                            </div>
+                            <div class="setDate hasDatepicker js-days-hours-datepicker">
+                                <div class="loolee">
+                                    <div class="looleeHead">
+                                        <label class="styler">
+                                            <input id="<?= $product->getID() ?>" type="checkbox" class="changeMode" value="<?= (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('') ?>" />
+                                            <span></span><?= Loc::getMessage('DATERANGE') ?>
+                                        </label>
+                                        <a href="#" class="cButton buttonClear dateClear">
+                                            <?= Loc::getMessage('CLEAR') ?>
+                                        </a>
+                                        <a href="#" class="cButton buttonOk looleeClose">
+                                            ОК
+                                        </a>
+                                    </div>
+                                    <div class="dpBlock" data-mode="multiple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <? // Установка времени // ?>
+                    <div class="serviceItem__right">
+                        <div class="itemCount">
+                            <div class="serviceItem__subtitle">
+                                <?= Loc::getMessage('TIMES') ?>
+                            </div>
+                            <div class="setTime">
+                                <select class="styler js-date.time-time-begin">
+                                    <? for ($time = 8; $time <= 20; $time++) { ?>
+                                        <option value="<?= $time ?>">
+                                            <?= str_pad($time, 2, '0', STR_PAD_LEFT) ?>.00
+                                        </option>
+                                    <? } ?>
+                                </select>
+                                <span class="setTime__divider"></span>
+                                <select class="styler  js-date.time-time-finish">
+                                    <? for ($time = 8; $time <= 20; $time++) { ?>
+                                        <option value="<?= $time ?>">
+                                            <?= str_pad($time, 2, '0', STR_PAD_LEFT) ?>.00
+                                        </option>
+                                    <? } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

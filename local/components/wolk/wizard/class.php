@@ -265,14 +265,17 @@ class WizardComponent extends \CBitrixComponent
         
         $this->putSession($data);
         
+        // Параметры стенда.
+        $params = $this->getBasket()->getParams();
+        
         // Сохранение данных в корзину.
         $this->getBasket()->put(
             intval($request->get('STAND')),
-            ($this->arParams['WIDTH'] * $this->arParams['DEPTH']),
+            ($params['WIDTH'] * $params['DEPTH']),
             Basket::KIND_STAND,
             [
-                'width' => $this->arParams['WIDTH'], 
-                'depth' => $this->arParams['DEPTH']
+                'width' => $params['WIDTH'], 
+                'depth' => $params['DEPTH']
             ],
             $this->getContext()
         );

@@ -41,6 +41,11 @@ $MESS['NOT_SELECTED'] = 'Не выбрано';
 $MESS['QUANTITY'] = 'Количество';
 $MESS['MORE'] = 'Добавить';
 
+$MESS['DATES'] = 'Даты';
+$MESS['TIMES'] = 'Время';
+$MESS['CLEAR'] = 'Очистить';
+$MESS['DATERANGE'] = 'Диапазон дат';
+
 $MESS['PRICE'] = 'Цена';
 
 $MESS['STANDARD_INCLUDES'] = 'Стенд включает';

@@ -22,10 +22,10 @@ $(document).ready(function() {
         $block.find('.styler').styler();
 
 
-        //$block.find('.js-product-price').html($option.data('price'));
-        //$block.find('.js-product-descr').html($option.data('descr'));
-        //$block.find('.js-product-select-price').show();
-        //$block.find('.js-product-select-descr').show();
+        $block.find('.js-product-price').html('');
+        $block.find('.js-product-descr').html('');
+        $block.find('.js-product-select-price').hide();
+        $block.find('.js-product-select-descr').hide();
 
         // Сброс всех свойств товара.
         ResetParams($block);
@@ -84,21 +84,4 @@ $(document).ready(function() {
 		return false;
 	});
 
-
-    // Выбор товара из выпадающего списка.
-    $(document).on('change', '.js-product-select', function(event) {
-        var $that   = $(this);
-        var $block  = $that.closest('.js-product-block');
-        var $option = $that.find('option:selected');
-
-        if (!empty($option.val())) {
-            $block.find('.js-product-price').html($option.data('price'));
-            $block.find('.js-product-descr').html($option.data('descr'));
-            $block.find('.js-product-select-price').show();
-            $block.find('.js-product-select-descr').show();
-        } else {
-            $block.find('.js-product-select-price').hide();
-            $block.find('.js-product-select-descr').hide();
-        }
-    });
 });

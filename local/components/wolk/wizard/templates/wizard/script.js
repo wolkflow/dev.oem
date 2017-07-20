@@ -136,7 +136,25 @@ $(document).ready(function() {
             RemoveBasket(bid, sid);
         }
     });
+    
+    
+    // Выбор товара из выпадающего списка.
+    $(document).on('change', '.js-product-select', function(event) {
+        var $that   = $(this);
+        var $block  = $that.closest('.js-product-block');
+        var $option = $that.find('option:selected');
 
+        if (!empty($option.val())) {
+            $block.find('.js-product-price').html($option.data('price'));
+            $block.find('.js-product-descr').html($option.data('descr'));
+            $block.find('.js-product-select-price').show();
+            $block.find('.js-product-select-descr').show();
+        } else {
+            $block.find('.js-product-select-price').hide();
+            $block.find('.js-product-select-descr').hide();
+        }
+    });
+    
 
     // Выбор стенда.
     $(document).on('click', '.js-stand-choose-button', function(event) {

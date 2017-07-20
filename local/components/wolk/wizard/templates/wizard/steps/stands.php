@@ -27,7 +27,7 @@
                 <div class="pagetitle">
                     <?= Loc::getMessage('CURRENT_STAND') ?>
                 </div>
-                <? if (!empty($arResult['PRESTAND'])) { ?>
+                <? if (!empty($arResult['PRESTAND']) && !empty($arResult['PREOFFER'])) { ?>
                     <div id="js-prestand-id" class="standspagetop__currentstandcontainer customizable_border">
                         <div class="standspagetop__currentstanddescription">
                             <p class="js-stand-description">

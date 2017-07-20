@@ -142,6 +142,11 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
         return $result;
     }
      */
+     
+    public function asListShow()
+    {
+        return ($this->get('UF_SHOWLIST'));
+    }
     
     
     /**
