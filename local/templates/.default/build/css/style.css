@@ -80,7 +80,7 @@ button.itemColor__custom		{width: 200px}
 
 .serviceItem__beforeDate		{float: left;width: 240px}
 .setDateBlock					{margin-left: 260px}
-.setDate						{width: 60px;height: 60px;background: url(../images/globals/date.png) no-repeat 50% 50% #7f7f7f}
+.setDate						{cursor: pointer;width: 60px;height: 60px;background: url(../images/globals/date.png) no-repeat 50% 50% #7f7f7f;}
 .setDate:hover					{background-color: #999}
 .setTime .jq-selectbox			{width: 90px;float: left}
 .setTime .jq-selectbox__select	{width: 41px;padding-right: 32px}

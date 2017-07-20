@@ -23,12 +23,12 @@
 
                         <? $sections = $group->getInsides('SORT') ?>
                         <? foreach ($sections as $section) { ?>
-                            <? $pricetype  = $section->getPriceType() ?>
+                            <? $pricetype  = str_replace('.', '-', $section->getPriceType()) ?>
                             <? $properties = $section->getProperties() ?>
                             <? $products   = $section->getInsides() ?>
                             <? $multiple   = (!empty($properties) || count($products) > 1) ?>
-                            <? $formtpl    = mb_strtolower($pricetype) ?>
-
+                            <? $formtpl    = strtolower($pricetype) ?>
+                            
                             <?  // Наличие продукции в корзине.
                                 $basketitem  = null;
                                 $basketgroup = $basketgroups[$section->getID()];

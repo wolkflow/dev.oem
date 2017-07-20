@@ -171,11 +171,12 @@ class Basket
     /**
      * Добавление продукции в корзину.
      */
-    public function put($pid, $quantity, $kind, $params = [])
+    public function put($pid, $quantity, $kind, $params = [], $fields = [])
     {
         $quantity = (float) $quantity;
         $kind     = (string) $kind;
         $params   = (array) $params;
+        $fields   = (array) $fields;
         
         $sid = 0;
         if ($kind == self::KIND_PRODUCT) {
@@ -191,6 +192,7 @@ class Basket
             'quantity' => $quantity,
             'kind'     => $kind,
             'params'   => $params,
+            'fields'   => $fields,
         );
         
         switch ($kind) {

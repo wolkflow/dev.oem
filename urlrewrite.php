@@ -33,8 +33,14 @@ $arUrlRewrite = array(
     
     
     array(
-		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/#",
-		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&",
+		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/([\\d]+)x([\\d]+)/([^\/]+)/#",
+		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&WIDTH=$4&DEPTH=$5&SFORM=$6&",
+		"ID" => "",
+		"PATH" => "/wizard/index.php",
+	),
+    array(
+		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/([\\d]+)x([\\d]+)/#",
+		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&WIDTH=$4&DEPTH=$5&",
 		"ID" => "",
 		"PATH" => "/wizard/index.php",
 	),

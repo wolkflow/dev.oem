@@ -12,7 +12,7 @@
     
     $width = $request->get('WIDTH');
     $depth = $request->get('DEPTH');
-    $sform = $request->get('FORM');
+    $sform = $request->get('SFORM');
     
     $eid  = Wolk\Core\Helpers\IBlockElement::getIDByCode(IBLOCK_EVENTS_ID, $code);
 ?>

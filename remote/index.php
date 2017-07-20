@@ -137,7 +137,8 @@ switch ($action) {
         $kind     = (string) $request->get('kind');
         $quantity = (float)  $request->get('quantity');
         $params   = (array)  $request->get('params');
-
+        $fields   = (array)  $request->get('fields');
+        
         $parameters = [];
         foreach ($params as $key => $value) {
             if (strpos($key, '.') !== false) {
@@ -161,7 +162,7 @@ switch ($action) {
             $quantity,
             \Wolk\OEM\Basket::KIND_PRODUCT,
             $parameters,
-            $context
+            $fields
         );
         
         // Обновление данных в корзине.
@@ -180,7 +181,8 @@ switch ($action) {
         $type     = (string) $request->get('type');
         $quantity = (float)  $request->get('quantity');
         $params   = (array)  $request->get('params');
-
+        $fields   = (array)  $request->get('fields');
+        
         $parameters = [];
         foreach ($params as $key => $value) {
             if (strpos($key, '.') !== false) {
@@ -200,7 +202,7 @@ switch ($action) {
         $basket = new \Wolk\OEM\Basket($code);
         
         // Изменение количества товара в корзине.
-        $item = $basket->update($bid, $pid, $quantity, $parameters);
+        $item = $basket->update($bid, $pid, $quantity, $parameters, $fields);
         
         // Обновление данных в корзине.
         $html = gethtmlremote('basket.php');

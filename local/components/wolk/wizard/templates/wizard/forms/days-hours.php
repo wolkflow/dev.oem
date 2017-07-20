@@ -4,10 +4,13 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 <? use Wolk\Oem\Basket; ?>
 
+
 <div class="js-product-block js-product-block-<?= $section->getID() ?>" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>">
+    <input type="hidden" name="dates" class="js-product-days-hours-dates" value="" />
+    <input type="hidden" name="times" class="js-product-days-hours-times" value="" />
     
     <? if (!$section->asListShow() && count($products) == 1) { ?>
-
+        
         <? $product = reset($products) ?>
 
         <div class="equipmentcontainer__itemcontainer">
@@ -17,7 +20,7 @@
                 </div>
                 <div class="itemquantitycontainer">
                     
-                    <div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
+                    <div class="js-days-hours-wrapper itemCount" data-pid="<?= $product->getID() ?>">
                         <div class="setDateBlock">
                             <div class="serviceItem__subtitle">
                                 <?= Loc::getMessage('DATES') ?>
@@ -87,7 +90,7 @@
         </div>
 
     <? } else { ?>
-    <? // Рабочее здесь // ?>
+        <? // Рабочее здесь // ?>
         <div class="serviceItem__block">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
@@ -130,31 +133,16 @@
             </div>
             
             <div class="serviceItem__row">
-                <div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-                
+                <div class="js-days-hours-wrapper itemCount" data-pid="<?= $product->getID() ?>">
+                    
                     <? // Установка даты // ?>
                     <div class="serviceItem__left">
                         <div class="setDateBlock">
                             <div class="serviceItem__subtitle">
                                 <?= Loc::getMessage('DATES') ?>
                             </div>
-                            <div class="setDate hasDatepicker js-days-hours-datepicker">
-                                <div class="loolee">
-                                    <div class="looleeHead">
-                                        <label class="styler">
-                                            <input id="<?= $product->getID() ?>" type="checkbox" class="changeMode" value="<?= (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('') ?>" />
-                                            <span></span><?= Loc::getMessage('DATERANGE') ?>
-                                        </label>
-                                        <a href="#" class="cButton buttonClear dateClear">
-                                            <?= Loc::getMessage('CLEAR') ?>
-                                        </a>
-                                        <a href="#" class="cButton buttonOk looleeClose">
-                                            ОК
-                                        </a>
-                                    </div>
-                                    <div class="dpBlock" data-mode="multiple"></div>
-                                </div>
-                            </div>
+                            
+                            <input class="setDate js-days-hours-datepicker" value="<?= (!empty($basketitem)) ? ($basketitem->getField('dates')) : ('') ?>" />
                         </div>
                     </div>
                     

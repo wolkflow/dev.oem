@@ -46,7 +46,7 @@ class ElementDataComponent extends \CBitrixComponent
 			'element' => '#CODE#/',
 		);
 		
-		$urltemplates = CComponentEngine::MakeComponentUrlTemplates($templates);
+		$urltemplates = CComponentEngine::MakeComponentUrlTemplates($templates, $templates);
 
 		$page = $engine->guessComponentPath(
 			'/events/',

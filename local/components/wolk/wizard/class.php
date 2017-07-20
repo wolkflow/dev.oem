@@ -56,7 +56,7 @@ class WizardComponent extends \CBitrixComponent
         $arParams['DEPTH'] = (float) $arParams['DEPTH'];
 
         // Форма стенда.
-        $arParams['SFORM'] = (string) $arParams['SFORM'];
+        $arParams['SFORM'] = strtolower((string) $arParams['SFORM']);
 
         if (empty($arParams['SFORM'])) {
             $arParams['SFORM'] = self::DEFAULT_STAND_FORM;
@@ -69,17 +69,24 @@ class WizardComponent extends \CBitrixComponent
         // Объект корзины.
         $this->basket = new Basket($arParams['CODE']);
         
+        // На первом шаге сохраняем параметра стенда в сессию.
         if ($arParams['STEP'] == 1) {
             $this->getBasket()->clear();
             
             // Очистка данных по выставке.
             $_SESSION[self::SESSCODE][$this->getBasket()->getEventCode()] = array('STAND' => array(), Basket::SESSCODE_BASKET => array());
             
-            $this->basket->setParams(array(
+            $this->getBasket()->setParams(array(
                 'WIDTH' => $arParams['WIDTH'],
                 'DEPTH' => $arParams['DEPTH'],
                 'SFORM' => $arParams['SFORM']
             ));
+        } else {
+            $params = $this->getBasket()->getParams();
+            
+            $arParams['WIDTH'] = $params['WIDTH'];
+            $arParams['DEPTH'] = $params['DEPTH'];
+            $arParams['SFORM'] = $params['SFORM'];
         }
         
         return $arParams;
@@ -425,7 +432,9 @@ class WizardComponent extends \CBitrixComponent
         $this->arResult['EVENT'] = $this->getEvent();
 
         // Стенд.
-        $this->arResult['STAND'] = new \Wolk\OEM\Stand($this->getBasket()->getStand()->getProductID());
+        if (!is_null($this->getBasket()->getStand())) {
+            $this->arResult['STAND'] = new \Wolk\OEM\Stand($this->getBasket()->getStand()->getProductID());
+        }
         
         // Параметры стенда.
         $params = $this->getBasket()->getParams();
@@ -567,7 +576,13 @@ class WizardComponent extends \CBitrixComponent
             $this->arParams['CODE'],
             mb_strtolower($this->arParams['TYPE']),
             $this->getPrevStepNumber(),
+            $this->arParams['WIDTH'].'x'.$this->arParams['DEPTH']
         ];
+        
+        if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
+            $fields []= $this->arParams['SFORM'];
+        }
+        
         $link = '/wizard/' . implode('/', $fields) . '/';
         
         return $link;
@@ -587,7 +602,13 @@ class WizardComponent extends \CBitrixComponent
             $this->arParams['CODE'],
             mb_strtolower($this->arParams['TYPE']),
             $step,
+            $this->arParams['WIDTH'].'x'.$this->arParams['DEPTH']
         ];
+        
+        if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
+            $fields []= $this->arParams['SFORM'];
+        }
+        
         $link = '/wizard/' . implode('/', $fields) . '/';
         
         return $link;
@@ -603,7 +624,13 @@ class WizardComponent extends \CBitrixComponent
             $this->arParams['CODE'],
             mb_strtolower($this->arParams['TYPE']),
             $this->getNextStepNumber(),
+            $this->arParams['WIDTH'].'x'.$this->arParams['DEPTH']
         ];
+        
+        if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
+            $fields []= $this->arParams['SFORM'];
+        }
+        
         $link = '/wizard/' . implode('/', $fields) . '/';
         
         return $link;
@@ -618,6 +645,8 @@ class WizardComponent extends \CBitrixComponent
         $steps = $this->getSessionParam['STEPS'];
         if (empty($steps)) {
             $steps = array_merge(['STANDS'], $this->getEvent()->getSteps($this->getContext()));
+            
+            // Добавление шага заказ и скетч (в случае если это не индивидуальная застройка).
             if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
                 $steps = array_merge($steps, ['SKETCH', 'ORDER']);
             } else {

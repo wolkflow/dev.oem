@@ -121,25 +121,28 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
         */ ?>
     </div>
     
+    <? // Выбор стенда // ?>
     <div class="indexpage__choosestandcontainer">
-        <!-- Выбор стенда -->
+        
         <div class="indexpage__choosestand system">
             <div class="indexpage__choosestandtitlecontainer">
-                <div class="indexpage__choosestandtitle"><?= Loc::getMessage('System stand') ?></div>
-                <form action="/wizard/<?= $arResult['CODE'] ?>/standard/1/" class="indexpage__choosestandform">
-                    <!--input type="hidden" name="ORDER_TYPE" value="standart" /-->
+                <div class="indexpage__choosestandtitle">
+                    <?= Loc::getMessage('System stand') ?>
+                </div>
+                <form action="/wizard/<?= $arResult['CODE'] ?>/standard/1/" class="indexpage__choosestandform js-stand-select-form">
+                    
                     <div class="indexpage__choosestandinputscontainer">
                         <div class="indexpage__choosestandinputcontainer">
                             <div class="indexpage__choosestandinputtitle">
-								<?=Loc::getMessage('Stand width')?> <span>(<?= Loc::getMessage('m') ?>)</span>
+								<?= Loc::getMessage('Stand width') ?> <span>(<?= Loc::getMessage('m') ?>)</span>
 							</div>
-                            <input required name="WIDTH" type="text" value="" />
+                            <input required name="WIDTH" type="text" value="" class="js-stand-width" />
 						</div>
                         <div class="indexpage__choosestandinputcontainer">
                             <div class="indexpage__choosestandinputtitle">
-								<?=Loc::getMessage('Stand length')?> <span>(<?= Loc::getMessage('m') ?>)</span>
+								<?= Loc::getMessage('Stand length') ?> <span>(<?= Loc::getMessage('m') ?>)</span>
 							</div>
-                            <input required name="DEPTH" type="text" value="" />
+                            <input required name="DEPTH" type="text" value="" class="js-stand-depth" />
 						</div>
                     </div>
 
@@ -148,19 +151,23 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 							<?= Loc::getMessage('Stand type') ?>
 						</div>
                         <label for="row" class="indexpage__choosestandtype">
-                            <input checked type="radio" value="row" name="FORM" id="row"><span><?= Loc::getMessage('Row') ?></span>
+                            <input checked type="radio" value="row" name="FORM" id="row" class="js-stand-sform">
+                            <span><?= Loc::getMessage('Row') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="corner" class="indexpage__choosestandtype">
-                            <input type="radio" value="corner" name="FORM" id="corner"><span><?= Loc::getMessage('Corner') ?></span>
+                            <input type="radio" value="corner" name="FORM" id="corner" class="js-stand-sform">
+                            <span><?= Loc::getMessage('Corner') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="peninsular" class="indexpage__choosestandtype">
-                            <input type="radio" value="head" name="FORM" id="peninsular"><span><?= Loc::getMessage('Head') ?></span>
+                            <input type="radio" value="head" name="FORM" id="peninsular" class="js-stand-sform">
+                            <span><?= Loc::getMessage('Head') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="island" class="indexpage__choosestandtype">
-                            <input type="radio" value="island" name="FORM" id="island"><span><?= Loc::getMessage('Insel') ?></span>
+                            <input type="radio" value="island" name="FORM" id="island" class="js-stand-sform">
+                            <span><?= Loc::getMessage('Insel') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                     </div>
@@ -170,25 +177,27 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
             </div>
             <img src="/local/templates/.default/build/images/index/stand-system.jpg" />
         </div>
-
+        
+        
         <div class="indexpage__choosestand individual">
             <div class="indexpage__choosestandtitlecontainer">
-                <div class="indexpage__choosestandtitle"><?= Loc::getMessage('individual stand') ?></div>
+                <div class="indexpage__choosestandtitle">
+                    <?= Loc::getMessage('individual stand') ?>
+                </div>
 
-                <form  action="/wizard/<?= $arResult['CODE'] ?>/individual/1/" class="indexpage__choosestandform">
-                    <!--input type="hidden" name="ORDER_TYPE" value="individual" /-->
+                <form  action="/wizard/<?= $arResult['CODE'] ?>/individual/1/" class="indexpage__choosestandform js-stand-select-form">
                     <div class="indexpage__choosestandinputscontainer">
                         <div class="indexpage__choosestandinputcontainer">
                             <div class="indexpage__choosestandinputtitle">
 								<?= Loc::getMessage('Stand width') ?> <span>(<?= Loc::getMessage('m') ?>)</span>
 							</div>
-                            <input required name="WIDTH" type="text" value="" />
+                            <input required name="WIDTH" type="text" value="" class="js-stand-width" />
 						</div>
                         <div class="indexpage__choosestandinputcontainer">
                             <div class="indexpage__choosestandinputtitle">
 								<?= Loc::getMessage('Stand length') ?> <span>(<?= Loc::getMessage('m') ?>)</span>
 							</div>
-                            <input required name="DEPTH" type="text" value="" />
+                            <input required name="DEPTH" type="text" value=""  class="js-stand-depth" />
 						</div>
                     </div>
                     <button type="submit" class="indexpage__choosestandnextbutton"><?= Loc::getMessage('next') ?></button>
@@ -197,6 +206,6 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 			<img src="<?= DEFAULT_TEMPLATE_PATH ?>/build/images/index/stand-individual.jpg" />
 		</div>
 	</div>
-    <!--// .Выбор стенда -->
+    
 </div>
 

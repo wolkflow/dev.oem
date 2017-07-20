@@ -114,6 +114,33 @@ class BasketItem
     
     
     /**
+     * Получение дополнительных полей.
+     */
+    public function getFields()
+    {
+        return $this->data['fields'];
+    }
+
+
+    /**
+     * Проверка наличия дополнительного поля по коду.
+     */
+    public function hasField($code)
+    {
+        return (!empty($this->data['fields'][strval($code)]));
+    }
+
+    
+    /**
+     * Получение дополнительного поля по коду.
+     */
+    public function getField($code)
+    {
+        return $this->data['fields'][strval($code)];
+    }
+    
+    
+    /**
      * Полчение типа элемента корзины.
      */
     public function getKind()
