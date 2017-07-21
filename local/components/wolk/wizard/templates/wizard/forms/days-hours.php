@@ -20,11 +20,12 @@
                 </div>
                 <div class="itemquantitycontainer">
                     
-                    <div class="js-days-hours-wrapper itemCount" data-pid="<?= $product->getID() ?>">
+                    <div class="js-days-hours-wrapper js-product-select itemCount" data-pid="<?= $product->getID() ?>">
                         <div class="setDateBlock">
                             <div class="serviceItem__subtitle">
                                 <?= Loc::getMessage('DATES') ?>
                             </div>
+                            
                             <div class="setDate hasDatepicker">
                                 <div class="loolee">
                                     <div class="looleeHead">
@@ -67,10 +68,10 @@
 
             <? // Обработка свойств товара. // ?>
             <? foreach ($properties as $property) { ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_FILE) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
                 <? } ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_COMMENT) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
                 <? } ?>
                 <? if ($property == Basket::PARAM_LINK) { ?>
@@ -141,8 +142,7 @@
                             <div class="serviceItem__subtitle">
                                 <?= Loc::getMessage('DATES') ?>
                             </div>
-                            
-                            <input class="setDate js-days-hours-datepicker" value="<?= (!empty($basketitem)) ? ($basketitem->getField('dates')) : ('') ?>" />
+                            <input name="dates" class="setDate js-field-value js-days-hours-datepicker" value="<?= (!empty($basketitem)) ? ($basketitem->getField('dates')) : ('') ?>" />
                         </div>
                     </div>
                     
@@ -153,18 +153,20 @@
                                 <?= Loc::getMessage('TIMES') ?>
                             </div>
                             <div class="setTime">
-                                <select class="styler js-date.time-time-begin">
+                                <select name="timemin" class="styler js-field-value js-days-hours-times js-days-hours-time-min">
                                     <? for ($time = 8; $time <= 20; $time++) { ?>
-                                        <option value="<?= $time ?>">
-                                            <?= str_pad($time, 2, '0', STR_PAD_LEFT) ?>.00
+                                        <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
+                                        <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemin')) ? ('selected') : ('') ?>>
+                                            <?= $hour ?>
                                         </option>
                                     <? } ?>
                                 </select>
                                 <span class="setTime__divider"></span>
-                                <select class="styler  js-date.time-time-finish">
+                                <select name="timemax" class="styler js-field-value js-days-hours-times js-days-hours-time-max">
                                     <? for ($time = 8; $time <= 20; $time++) { ?>
-                                        <option value="<?= $time ?>">
-                                            <?= str_pad($time, 2, '0', STR_PAD_LEFT) ?>.00
+                                        <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
+                                        <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemax')) ? ('selected') : ('') ?>>
+                                            <?= $hour ?>
                                         </option>
                                     <? } ?>
                                 </select>
@@ -176,10 +178,10 @@
 
             <? // Обработка свойств товара. // ?>
             <? foreach ($properties as $property) { ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_FILE) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
                 <? } ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_COMMENT) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
                 <? } ?>
                 <? if ($property == Basket::PARAM_LINK) { ?>

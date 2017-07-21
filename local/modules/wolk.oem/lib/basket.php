@@ -217,18 +217,20 @@ class Basket
     /**
      * Обновление количества товара.
      */
-    public function update($bid, $pid, $quantity, $params)
+    public function update($bid, $pid, $quantity, $params, $fields)
     {
         $bid      = (string) $bid;
         $quantity = (float) $quantity;
         $params   = (array) $params;
+        $fields   = (array) $fields;
         
         if ($quantity <= 0) {
             return;
         }
         $this->data[self::SESSCODE_PRODUCTS][$bid]['quantity'] = $quantity;
         $this->data[self::SESSCODE_PRODUCTS][$bid]['params']   = $params;
-
+        $this->data[self::SESSCODE_PRODUCTS][$bid]['fields']   = $fields;
+        
         // Сохранение в сесиию.
         $this->putSession();
     }

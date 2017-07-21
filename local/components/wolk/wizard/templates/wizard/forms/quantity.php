@@ -16,7 +16,7 @@
                     <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
                 </div>
                 <div class="itemquantitycontainer">
-                    <div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
+                    <div class="js-quantity-wrapper js-product-select itemCount" data-pid="<?= $product->getID() ?>">
                         <div class="serviceItem__subtitle">
                             <?= Loc::getMessage('QUANTITY') ?>
                         </div>
@@ -48,10 +48,10 @@
 
             <? // Обработка свойств товара. // ?>
             <? foreach ($properties as $property) { ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_FILE) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
                 <? } ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_COMMENT) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
                 <? } ?>
                 <? if ($property == Basket::PARAM_LINK) { ?>
@@ -124,10 +124,10 @@
 
             <? // Обработка свойств товара. // ?>
             <? foreach ($properties as $property) { ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_FILE) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
                 <? } ?>
-                <? if ($property == Basket::PARAM_LINK) { ?>
+                <? if ($property == Basket::PARAM_COMMENT) { ?>
                     <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
                 <? } ?>
                 <? if ($property == Basket::PARAM_LINK) { ?>

@@ -108,7 +108,7 @@ class WizardComponent extends \CBitrixComponent
         
         // Проверка валидности сессии.
         if ($this->getStepNumber() > 1 && empty($_SESSION[self::SESSCODE][$this->getEventCode()])) {
-            LocalRedirect($this->getStepLink(1));
+            LocalRedirect('/events/'.$this->getEventCode().'/');
         }
         
         // Запрос.

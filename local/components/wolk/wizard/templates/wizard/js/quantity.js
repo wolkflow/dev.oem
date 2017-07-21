@@ -1,11 +1,3 @@
-function showError(title, message)
-{
-    var $popup = $('#js-modal-error-id');
-
-    $popup.find('.modalTitle').html(title);
-    $popup.find('.modalContent').html(message);
-    $popup.arcticmodal();
-}
 
 $(document).ready(function() {
 
@@ -55,7 +47,14 @@ $(document).ready(function() {
 		$input.val(quantity);
 		$input.change();
         
-        PutBasket($parent.data('pid'), quantity, $(this).closest('.js-product-block'));
+        var pid;
+		if ($block.find('.js-product-select').length) {
+		    pid = $block.find('.js-product-select option:selected').val();
+        } else {
+		    pid = $block.find('.js-product-select').data('pid');
+        }
+        
+        PutBasket(pid, quantity, $(this).closest('.js-product-block'));
         
 		return false;
 	});
@@ -75,7 +74,7 @@ $(document).ready(function() {
 		if ($block.find('.js-product-select').length) {
 		    pid = $block.find('.js-product-select option:selected').val();
         } else {
-		    pid = $parent.data('pid');
+		    pid = $block.find('.js-product-select').data('pid');
         }
 
         // Добавление позиции в корзину.

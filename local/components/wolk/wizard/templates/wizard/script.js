@@ -1,5 +1,52 @@
 
 /**
+ * Показ ошибки.
+ */
+function ShowError(title, message)
+{
+    var $popup = $('#js-modal-error-id');
+
+    $popup.find('.modalTitle').html(title);
+    $popup.find('.modalContent').html(message);
+    $popup.arcticmodal();
+}
+
+
+/**
+ * Количество часов между датами.
+ */
+Date.getHoursBetween = function (date1, date2) {
+    var one_hour = 1000 * 60 * 60;
+
+    var date1_ms = date1.getTime();
+    var date2_ms = date2.getTime();
+	
+    var difference_ms = parseInt(date2_ms - date1_ms);
+	
+    return Math.round(difference_ms / one_hour);
+};
+
+
+/**
+ * Количество дней между датами.
+ */
+Date.getDaysBetween = function (date1, date2, including) {
+    var one_day = 1000 * 60 * 60 * 24;
+	
+    var date1_ms = date1.getTime();
+    var date2_ms = date2.getTime();
+
+    var difference_ms = parseInt(date2_ms - date1_ms);
+
+    if (including) {
+        return Math.round(difference_ms / one_day) + 1;
+    } else {
+        return Math.round(difference_ms / one_day);
+    }
+};
+
+
+/**
  * Добавление позиции.
  */
 function PutBasket(pid, quantity, $block)
@@ -21,6 +68,9 @@ function PutBasket(pid, quantity, $block)
         }
         action = 'update-basket';
     } else {
+        if (quantity == 0) {
+            return;
+        }
         action = 'put-basket';
     }
 
@@ -29,6 +79,9 @@ function PutBasket(pid, quantity, $block)
     var reqprops = false;
     $block.find('.js-param-value').each(function() {
         var $that = $(this);
+        if ($that.attr('name') == undefined) {
+            return;
+        }
         if ($that.hasClass('js-param-required') && $that.val().length == 0) {
             reqprops = true;
         }
@@ -39,6 +92,16 @@ function PutBasket(pid, quantity, $block)
         showError('Внимание!', 'Не заполнены все свойства товара');
         return;
     }
+    
+    // Отправка дополнительных полей.
+    var fields = {};
+    $block.find('.js-field-value').each(function() {
+        var $that = $(this);
+        if ($that.attr('name') == undefined) {
+            return;
+        }
+        fields[$that.attr('name')] = $that.val();
+    });
     
     // Отправка продукции в корзину.
     $.ajax({
@@ -54,7 +117,8 @@ function PutBasket(pid, quantity, $block)
             'type':     $wrapper.data('type'),
             'quantity': quantity,
             'kind':     'PRODUCTS', 
-            'params':   params
+            'params':   params,
+            'fields':   fields
         },
         dataType: 'json',
         success: function(response) {
