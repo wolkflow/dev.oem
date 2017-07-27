@@ -32,6 +32,7 @@ Loc::loadLanguageFile(__FILE__);
         $am->addJs('/local/templates/.default/build/js/sticky-kit.min.js');
         $am->addJs("/local/templates/.default/build/js/functions.js");
         $am->addJs("/local/templates/.default/build/js/script.js");
+        
         $APPLICATION->ShowHead(); 
     ?>
     <style>

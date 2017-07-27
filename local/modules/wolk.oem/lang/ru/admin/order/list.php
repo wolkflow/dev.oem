@@ -11,6 +11,7 @@ $MESS['ORDER_COMPANY'] 		  = 'Название компании';
 $MESS['ORDER_EVENT']   		  = 'Название выставки';
 $MESS['ORDER_DATE'] 	  	  = 'Дата заказа';
 $MESS['ORDER_BILL']           = 'Номер счета';
+$MESS['ORDER_STAND_NUMBER']   = 'Номер стенда';
 
 $MESS['HEADER_ID']       = 'Номер заказа';
 $MESS['HEADER_EVENT']    = 'Выставка';
@@ -24,6 +25,7 @@ $MESS['HEADER_DATE']     = 'Дата заказа';
 $MESS['ORIGINAL_PRICE']  = 'Оригинальная цена';
 $MESS['CONVERT_PRICE'] 	 = 'Цена пересчета';
 $MESS['SENDMAIL'] 	     = 'Отправка письма';
+$MESS['STANDNUMBER']     = 'Номер стенда';
 
 $MESS['YES'] = 'Да';
 $MESS['NO']  = 'Нет';

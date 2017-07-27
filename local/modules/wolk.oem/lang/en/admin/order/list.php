@@ -11,6 +11,7 @@ $MESS['ORDER_COMPANY'] 		  = 'Compay title';
 $MESS['ORDER_EVENT']   		  = 'Exhibition title';
 $MESS['ORDER_DATE'] 	      = 'Order date';
 $MESS['ORDER_BILL']           = 'Invoice number';
+$MESS['ORDER_STAND_NUMBER']   = 'Stand number';
 
 $MESS['HEADER_ID']       = 'Order number';
 $MESS['HEADER_EVENT']    = 'Exhibition';
@@ -24,6 +25,7 @@ $MESS['HEADER_DATE']  	 = 'Date order';
 $MESS['ORIGINAL_PRICE']  = 'Original price';
 $MESS['CONVERT_PRICE'] 	 = 'Convert price';
 $MESS['SENDMAIL'] 	     = 'Sending a mail';
+$MESS['STANDNUMBER']     = 'Stand number';
 
 $MESS['YES'] = 'Yes';
 $MESS['NO']  = 'No';

@@ -64,6 +64,7 @@ $filters = array(
 	"find_date_order_from",
 	"find_date_order_to",
 	"find_bill",
+    "find_stand_number"
 );
 
 $ladmin->InitFilter($filters);
@@ -172,6 +173,24 @@ if (CheckFilter()) {
 	if (!empty($find_bill)) {
 		$rids = array();
 		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'BILL', '%VALUE' => $find_bill], false, false, ['ORDER_ID']);
+		while ($item = $result->Fetch()) {
+			$rids []= (int) $item['ORDER_ID'];
+		}
+		unset($result, $item);
+		
+		$rids = array_unique(array_filter($rids));
+		
+		if (empty($rids)) {
+			$filter['ID'] = '0';
+		} else {
+			$filter['ID'] = (!empty($filter['ID'])) ? (array_intersect((array) $filter['ID'], $rids)) : ($rids);
+		}
+	}
+    
+    // Фильтр по номеру тенда.
+	if (!empty($find_stand_number)) {
+		$rids = array();
+		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'standNum', '%VALUE' => $find_stand_number], false, false, ['ORDER_ID']);
 		while ($item = $result->Fetch()) {
 			$rids []= (int) $item['ORDER_ID'];
 		}
@@ -299,6 +318,12 @@ $ladmin->AddHeaders(array(
 		"sort"      => 'SENDMAIL',
 		"default"   => true,
 	),
+    array( 
+		"id"    	=> 'STANDNUMBER',
+		"content"   => Loc::getMessage('STANDNUMBER'),
+		"sort"      => 'STANDNUMBER',
+		"default"   => true,
+	),
 ));
 
 
@@ -330,9 +355,10 @@ while ($item = $result->NavNext(true, "f_")) {
     $row->AddViewField('CURRENCY', $currency);
     $row->AddViewField('ORIGINAL_PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
     $row->AddViewField('SENDMAIL', (!empty($props['SENDTIME']['VALUE'])) ? (Loc::getMessage('YES')) : (Loc::getMessage('NO')));
-    
+    $row->AddViewField('STANDNUMBER', ((!empty($props['standNum']['VALUE'])) ? ($props['standNum']['VALUE']) : ('&mdash;')));
   
 	// Сформируем контекстное меню.
+    
 	$actions = array();
 
 	// Редактирование элемента.
@@ -392,6 +418,7 @@ $formfilter = new CAdminFilter(
 		Loc::getMessage('ORDER_EVENT'),
 		Loc::getMessage('ORDER_DATE'),
 		Loc::getMessage('ORDER_BILL'),
+        Loc::getMessage('ORDER_STAND_NUMBER'),
 	)
 );
 
@@ -440,7 +467,13 @@ $formfilter = new CAdminFilter(
 			<input type="text" size="25" name="find_bill" value="<?= htmlspecialchars($find_bill) ?>" />
 		</td>
 	</tr>
-	
+	<tr>
+		<td><b><?= Loc::getMessage('ORDER_STAND_NUMBER') ?>:</b></td>
+		<td>
+			<input type="text" size="25" name="find_stand_number" value="<?= htmlspecialchars($find_stand_number) ?>" />
+		</td>
+	</tr>
+    
 	<? $formfilter->Buttons(array("table_id" => $table, "url" => $APPLICATION->GetCurPage(), "form" => "find_form")) ?>
 	<? $formfilter->End() ?>
 </form>
