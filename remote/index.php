@@ -15,7 +15,6 @@ require ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before
 define ('DIR_REMOTE', $_SERVER['DOCUMENT_ROOT'] . '/remote/include/');
 
 
-
 /**
  * Ответ в формате JSON.
  */
@@ -95,8 +94,9 @@ switch ($action) {
         
         $oembasket = new \Wolk\OEM\Basket($code);
         
-        $baskets = $oembasket->getList();
+        $baskets = $oembasket->getList(true);
         $objects = json_decode($objs, true)['objects'];
+
         foreach ($objects as &$object) {
             $basket  = $baskets[$object['id']];
             $element = $basket->getElement();
@@ -114,8 +114,29 @@ switch ($action) {
             'objects'    => $objects,
         ];
         
+        $distance = 1;
+        if ($params['WIDTH'] <= 3 && $params['DEPTH'] <= 3) {
+            $distance = 2;
+        }
+        
+        $rotate = 0;
+        switch ($view) {
+            case (1):
+                $rotate = 0;
+                break;
+            case (2):
+                $rotate = 30;
+                break;
+            case (3):
+                $rotate = 90;
+                break;
+            case (4):
+                $rotate = 120;
+                break;
+        }
+        
         // Рендер сцены.
-        $path = Wolk\OEM\Render::render($code . $view, json_encode($scene), 'out-'.uniqid());
+        $path = Wolk\OEM\Render::render($code . $view, json_encode($scene), 'out-'.uniqid(), 1280, 1024, $distance, $rotate);
         
         if ($path === false) {
             jsonresponse(false, '');

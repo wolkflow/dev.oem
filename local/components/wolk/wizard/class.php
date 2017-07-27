@@ -62,6 +62,9 @@ class WizardComponent extends \CBitrixComponent
             $arParams['SFORM'] = self::DEFAULT_STAND_FORM;
         }
         
+        // ID заказа.
+        $arParams['OID']  = (int) $arParams['OID'];
+        
         
         // Контекст исполнения.
         $this->context = new Context($arParams['EID'], $arParams['TYPE'], $arParams['LANG']);
@@ -108,7 +111,7 @@ class WizardComponent extends \CBitrixComponent
         
         // Проверка валидности сессии.
         if ($this->getStepNumber() > 1 && empty($_SESSION[self::SESSCODE][$this->getEventCode()])) {
-            LocalRedirect('/events/'.$this->getEventCode().'/');
+            LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
         }
         
         // Запрос.
@@ -138,18 +141,22 @@ class WizardComponent extends \CBitrixComponent
                 
                 // Выбор сервисов.
                 case ('services'):
+                    $this->processStepServices();
                     break;
                 
                 // Выбор маркетинга.
                 case ('marketings'):
+                    $this->processStepMarketings();
                     break;
                 
                 // Расстановка на скетче.
                 case ('sketch'):
+                    $this->processStepSketch();
                     break;
                     
                 // Заказ.
                 case ('order'):
+                    $this->processStepOrder();
                     break;
                 
                 default:
@@ -187,6 +194,7 @@ class WizardComponent extends \CBitrixComponent
                 
             // Заказ.
             case ('order'):
+                $this->doStepOrder();
                 break;
             
             default:
@@ -267,6 +275,18 @@ class WizardComponent extends \CBitrixComponent
             
             if (!empty($standoffer)) {
                 $data['BASE'] = $standoffer->getBaseProductQIDs();
+                
+                $basket = $this->getBasket();
+                foreach ($data['BASE'] as $pid => $quantity) {
+                    $basket->put(
+                        $pid,
+                        $quantity,
+                        \Wolk\OEM\Basket::KIND_PRODUCT,
+                        [],
+                        [],
+                        true
+                    );
+                }
             }
         }
         
@@ -394,9 +414,9 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepSketch()
     {
-        $baskets = $this->getBasket()->getList();
+        $baskets = $this->getBasket()->getList(true);
         $objects = [];
-
+        
         foreach ($baskets as $basket) {
             $element = $basket->getElement();
 
@@ -421,16 +441,17 @@ class WizardComponent extends \CBitrixComponent
             ];
             $objects[$basket->getID()] = $object;
         }
-
+        
+        
+        // Стенд.
+        $this->arResult['EVENT'] = $this->getEvent();
+        
         // Объекты для скетча.
         $this->arResult['OBJECTS'] = $objects;
 
         // Размещенные обекты.
         $this->arResult['PLACED'] = $this->getBasket()->getSketch();
-
-        // Стенд.
-        $this->arResult['EVENT'] = $this->getEvent();
-
+        
         // Стенд.
         if (!is_null($this->getBasket()->getStand())) {
             $this->arResult['STAND'] = new \Wolk\OEM\Stand($this->getBasket()->getStand()->getProductID());
@@ -443,6 +464,45 @@ class WizardComponent extends \CBitrixComponent
         $this->arResult['DEPTH'] = $params['DEPTH'];
         $this->arResult['SFORM'] = $params['SFORM'];
     }
+    
+    
+    /**
+     * Обработка шага "Скетч".
+     */
+    protected function processStepSketch()
+    {
+        // Запрос.
+        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+        
+        $scene    = (string) $request->get('SKETCH_SCENE');
+        $image    = (string) $request->get('SKETCH_IMAGE');
+        $comments = (string) $request->get('COMMENTS');
+        var_dump($image);
+        $this->getBasket()->setSketch([
+            'SKETCH_SCENE' => $scene,
+            'SKETCH_IMAGE' => $image
+        ]);
+        $this->getBasket()->setParam('COMMENTS', $comments);
+    }
+    
+    
+    /**
+     * ШАГ "Заказ".
+     */
+    protected function doStepOrder()
+    {
+        
+    }
+    
+    
+    /**
+     * Обработка шага "Заказ".
+     */
+    protected function processStepOrder()
+    {
+    
+    }
+    
     
     
     

@@ -16,7 +16,7 @@
                     <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
                 </div>
                 <div class="itemquantitycontainer">
-                    <div class="js-quantity-wrapper js-product-select itemCount" data-pid="<?= $product->getID() ?>">
+                    <div class="js-quantity-wrapper js-product-element itemCount" data-pid="<?= $product->getID() ?>">
                         <div class="serviceItem__subtitle">
                             <?= Loc::getMessage('QUANTITY') ?>
                         </div>

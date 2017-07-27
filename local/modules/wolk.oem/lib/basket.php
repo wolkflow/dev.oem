@@ -15,6 +15,7 @@ class Basket
     const SESSCODE_PARAMS   = 'PARAMS';
     const SESSCODE_SKETCH   = 'SKETCH';
     const SESSCODE_RENDERS  = 'RENDERS';
+    const SESSCODE_ORDERID  = 'ORDERID';
     
     const KIND_STAND   = 'stand';
     const KIND_PRODUCT = 'product';
@@ -78,6 +79,15 @@ class Basket
     }
     
     
+    public function setParam($key, $value)
+    {
+        $this->data[self::SESSCODE_PARAMS][strval($key)] = $value;
+        
+        // Сохранение в сесиию.
+        $this->putSession();
+    }
+    
+    
     public function setParams($data)
     {
         $this->data[self::SESSCODE_PARAMS] = (array) $data;
@@ -123,14 +133,32 @@ class Basket
     }
     
     
+    public function setOrderID($oid)
+    {
+        $this->data[self::SESSCODE_ORDERID] = (int) $oid;
+        
+        // Сохранение в сесиию.
+        $this->putSession();
+    }
+
+
+    public function getOrderID()
+    {
+        return ((int) $this->getData()[self::SESSCODE_ORDERID]);
+    }
+    
+    
     /**
      * Получение списка элементов корзины.
      */
-    public function getList()
+    public function getList($included = false)
     {
         $items = [];
         $data  = $this->getData()[self::SESSCODE_PRODUCTS];
         foreach ($data as $item) {
+            if (!$included && $item['included']) {
+                continue;
+            }
             $items[$item['id']] = new BasketItem($this->getEventCode(), $item['id'], $item);
         }
         return $items;
@@ -171,12 +199,13 @@ class Basket
     /**
      * Добавление продукции в корзину.
      */
-    public function put($pid, $quantity, $kind, $params = [], $fields = [])
+    public function put($pid, $quantity, $kind, $params = [], $fields = [], $included = false)
     {
         $quantity = (float) $quantity;
         $kind     = (string) $kind;
         $params   = (array) $params;
         $fields   = (array) $fields;
+        $included = (bool) $included;
         
         $sid = 0;
         if ($kind == self::KIND_PRODUCT) {
@@ -193,6 +222,7 @@ class Basket
             'kind'     => $kind,
             'params'   => $params,
             'fields'   => $fields,
+            'included' => $included,
         );
         
         switch ($kind) {

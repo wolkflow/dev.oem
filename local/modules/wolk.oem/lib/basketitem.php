@@ -58,6 +58,12 @@ class BasketItem
     }
     
     
+    public function isIncluded()
+    {
+        return $this->data['included'];
+    }
+    
+    
     /**
      * Получение элемента.
      */

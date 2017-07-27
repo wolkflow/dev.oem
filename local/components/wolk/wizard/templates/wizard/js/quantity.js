@@ -51,7 +51,7 @@ $(document).ready(function() {
 		if ($block.find('.js-product-select').length) {
 		    pid = $block.find('.js-product-select option:selected').val();
         } else {
-		    pid = $block.find('.js-product-select').data('pid');
+		    pid = $block.find('.js-product-element').data('pid');
         }
         
         PutBasket(pid, quantity, $(this).closest('.js-product-block'));
@@ -74,7 +74,7 @@ $(document).ready(function() {
 		if ($block.find('.js-product-select').length) {
 		    pid = $block.find('.js-product-select option:selected').val();
         } else {
-		    pid = $block.find('.js-product-select').data('pid');
+		    pid = $block.find('.js-product-element').data('pid');
         }
 
         // Добавление позиции в корзину.

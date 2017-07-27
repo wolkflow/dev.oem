@@ -73,48 +73,6 @@
                                     </div>
                                 <? } ?>
                             </div>
-
-                            <? /*
-                            <? if (false) { ?>
-                                <div class="serviceItem__block" v-for="selectedItem in selectedItems">
-                                    <div class="serviceItem__row">
-                                        <div class="serviceItem__left">
-                                            <div class="serviceItem__subtitle">
-                                                <?= $section->getDescription() ?>
-                                            </div>
-                                            <select class="styler">
-                                                <option value="">
-                                                    <?= Loc::getMessage('NOT_SELECTED') ?>
-                                                </option>
-                                                <option value="{{ item.ID }}" v-for="item in items | orderBy SORT">
-                                                    {{ item.NAME }} ({{ item.PRICE | format_currency ' ' currency_format }})
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="serviceItem__right">
-                                            <div class="itemCount">
-                                                <div class="serviceItem__subtitle">
-                                                    <?= Loc::getMessage('quantity') ?>
-                                                </div>
-                                                <div class="itemCount__button itemCount__down" @click="decQty(selectedItem, $index)"></div>
-                                                <div class="itemCount__button itemCount__up" @click="incQty(selectedItem, $index)"></div>
-                                                <input id="{{section.NAME}}_{{$index}}" type="text" v-model="selectedItem.QUANTITY" class="itemCount__input styler" number />
-                                            </div>
-                                        </div>
-                                        <div style="margin-top: 10px;">
-                                            <div class="serviceItem__cost">
-                                                <div class="serviceItem__subtitle">
-                                                    <?= Loc::getMessage('PRICE') ?>
-                                                </div>
-                                                <div class="serviceItem__cost-value">
-                                                    {{ section.ITEMS[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <? } ?>
-                            */ ?>
                         <? } ?>
                     </div>
                 <? } ?>
@@ -123,6 +81,7 @@
     </div>
     <div style="clear:both;"></div>
 </div>
+
 
 <aside class="siteAside" data-sticky_column>
     <div class="basketcontainer">
