@@ -617,7 +617,6 @@ class EventDetailComponent extends BaseListComponent
             $vat = 0;
         }
         
-
         $orderData = [
             "LID"              => SITE_ID,
             "PERSON_TYPE_ID"   => 1,

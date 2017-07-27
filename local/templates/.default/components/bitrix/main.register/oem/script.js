@@ -1,5 +1,9 @@
 $(function() {
 
+    Inputmask("email").mask('#comMail, #email_confirm');
+
+    
+    /*
 	$('#comMail, #email_confirm').inputmask({
 		mask:  "*{1,40}[.*{1,40}][.*{1,40}][.*{1,40}]@*{1,40}[.*{2,16}][.*{1,16}]",
 		greedy: false,
@@ -16,7 +20,7 @@ $(function() {
 		}
 	});
 
-	/* chg: 10/06
+	 chg: 10/06
 	 $("#comMail").inputmask({
 	 mask:  "*{1,40}[.*{1,40}][.*{1,40}][.*{1,40}]@*{1,40}[.*{2,16}][.*{1,16}]",
 	 greedy: false
