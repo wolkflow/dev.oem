@@ -507,7 +507,8 @@ class EventDetailComponent extends BaseListComponent
                             'CURRENCY'   => $this->event['CURRENCY']['NAME'],
                             'LID'        => SITE_ID,
                             'NAME'       => $service['NAME'],
-                            'FUSER_ID'   => $fuserId
+                            'FUSER_ID'   => $fuserId,
+                            'RECOMMENDATION' => 'PRODUCT.SALE'
                         ]);
 
                         if (!$r->isSuccess()) {
@@ -543,7 +544,8 @@ class EventDetailComponent extends BaseListComponent
                             'CURRENCY'   => $this->event['CURRENCY']['NAME'],
                             'LID'        => SITE_ID,
                             'NAME'       => $option['NAME'],
-                            'FUSER_ID'   => $fuserId
+                            'FUSER_ID'   => $fuserId,
+                            'RECOMMENDATION' => 'PRODUCT.SALE'
                         ]);
 
                         if (!$r->isSuccess()) {
