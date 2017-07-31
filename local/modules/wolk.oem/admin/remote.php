@@ -192,15 +192,16 @@ switch ($action) {
 			
 			if ($stand) {
 				$result = BasketTable::add([
-					'PRODUCT_ID'    => $standID,
-					'PRICE'         => $standprice,
-					'QUANTITY'      => $standwidth * $standdepth,
-					'CURRENCY'      => $currency,
-					'LID'           => SITE_DEFAULT,
-					'NAME'          => $stand['NAME'],
-					'SET_PARENT_ID' => 0,
-					'TYPE'          => CSaleBasket::TYPE_SET,
-					'FUSER_ID'      => $userID
+					'PRODUCT_ID'     => $standID,
+					'PRICE'          => $standprice,
+					'QUANTITY'       => $standwidth * $standdepth,
+					'CURRENCY'       => $currency,
+					'LID'            => SITE_DEFAULT,
+					'NAME'           => $stand['NAME'],
+					'SET_PARENT_ID'  => 0,
+					'TYPE'           => CSaleBasket::TYPE_SET,
+					'FUSER_ID'       => $userID,
+                    'RECOMMENDATION' => 'STAND.STANDARD'
 				]);
 				
 				if (!$result->isSuccess()) {
@@ -237,15 +238,16 @@ switch ($action) {
 				$title = $product['PROPS']['LANG_TITLE_'.strtoupper($language)]['VALUE'];
 				
 				$result = BasketTable::add([
-					'PRODUCT_ID'    => $productID,
-					'PRICE'         => $price,
-					'QUANTITY'      => ($quantity) ?: 1,
-					'CURRENCY'      => $currency,
-					'LID'           => SITE_DEFAULT,
-					'NAME'          => (!empty($title)) ? ($title) : ($product['NAME']),
-					'SET_PARENT_ID' => $standID,
-					'TYPE'          => ($parent['ID'] == ADDITIONAL_EQUIPMENT_SECTION_ID) ? (CSaleBasket::TYPE_SET) : (0),
-					'FUSER_ID'      => $userID
+					'PRODUCT_ID'     => $productID,
+					'PRICE'          => $price,
+					'QUANTITY'       => ($quantity) ?: 1,
+					'CURRENCY'       => $currency,
+					'LID'            => SITE_DEFAULT,
+					'NAME'           => (!empty($title)) ? ($title) : ($product['NAME']),
+					'SET_PARENT_ID'  => 0, // $standID,
+					'TYPE'           => ($parent['ID'] == ADDITIONAL_EQUIPMENT_SECTION_ID) ? (CSaleBasket::TYPE_SET) : (0),
+					'FUSER_ID'       => $userID,
+                    'RECOMMENDATION' => 'PRODUCT.SALE'
 				]);
 
 				if (!$result->isSuccess()) {
