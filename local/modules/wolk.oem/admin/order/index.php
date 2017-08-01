@@ -345,7 +345,7 @@ foreach ($baskets as $i => $basket) {
 
 		$baskets[$i]['ITEM'] = $item;
         
-		if ($basket['SET_PARENT_ID'] == 0 && $baskets[$i]['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
+		if (strpos($basket['RECOMMENDATION'], 'STAND') !== false && $baskets[$i]['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) {
 			$stand['BASKET'] = $basket;
 			$stand['ITEM']   = $item;
 		}

@@ -115,3 +115,13 @@ define('HLBLOCK_USERS_API_ID', 7);
  */
 define('IBLOCK_ERROR_TYPE_CRITICAL', 1);
 define('IBLOCK_ERROR_TYPE_FAIL',     2);
+
+
+
+/*
+ * Разделы продукции.
+ */
+define('SECTION_PRODUCTS_EQUIPMENTS_ID', 58);
+define('SECTION_PRODUCTS_SERVICES_ID',   59);
+define('SECTION_PRODUCTS_MARKETINGS_ID', 60);
+

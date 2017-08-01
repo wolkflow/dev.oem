@@ -50,7 +50,7 @@
                 <div class="commentsForm__title">
                     <?= Loc::getMessage('COMMENTS') ?>
                 </div>
-                <textarea id="js-order-comments-id" name="COMMENTS" placeholder="<?= Loc::getMessage('ADDITIONAL_INFO') ?>"><?= strip_tags($arResult['ORDER']['ORDER_DATA']['USER_DESCRIPTION']) ?></textarea>
+                <textarea id="js-order-comments-id" name="COMMENTS" placeholder="<?= Loc::getMessage('ADDITIONAL_INFO') ?>"><?= strip_tags($arResult['COMMENTS']) ?></textarea>
             </div>
         </div>
         <div class="sketchAfterRight">

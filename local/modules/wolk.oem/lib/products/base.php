@@ -3,6 +3,7 @@
 namespace Wolk\OEM\Products;
 
 use Wolk\OEM\Context;
+use Wolk\OEM\Products\Section;
 use Wolk\OEM\Prices\Product as ProductPrice;
 
 class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces\ContextPricing
@@ -204,6 +205,27 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
     public function getSectionID()
     {
         return (int) $this->get('IBLOCK_SECTION_ID');
+    }
+    
+    
+    /**
+     * Получение типа раздела.
+     */
+    public function getSectionType()
+    {
+        $kind = '';
+        switch ($this->getSectionID()) {
+            case (SECTION_PRODUCTS_EQUIPMENTS_ID):
+                $kind = Section::TYPE_EQUIPMENTS;
+                break;
+            case (SECTION_PRODUCTS_SERVICES_ID):
+                $kind = Section::TYPE_SERVICES;
+                break;
+            case (SECTION_PRODUCTS_MARKETINGS_ID):
+                $kind = Section::TYPE_MARKETINGS;
+                break;
+        }
+        return $kind;
     }
     
     

@@ -450,7 +450,7 @@ class WizardComponent extends \CBitrixComponent
         $this->arResult['OBJECTS'] = $objects;
 
         // Размещенные обекты.
-        $this->arResult['PLACED'] = $this->getBasket()->getSketch();
+        $this->arResult['PLACED'] = json_decode($this->getBasket()->getSketch()['SKETCH_SCENE'], true)['objects'];
         
         // Стенд.
         if (!is_null($this->getBasket()->getStand())) {
@@ -463,6 +463,9 @@ class WizardComponent extends \CBitrixComponent
         $this->arResult['WIDTH'] = $params['WIDTH'];
         $this->arResult['DEPTH'] = $params['DEPTH'];
         $this->arResult['SFORM'] = $params['SFORM'];
+        
+        // Комментарий к заказу.
+        $this->arResult['COMMENTS'] = $this->getBasket()->getParam('COMMENTS');
     }
     
     
@@ -477,7 +480,9 @@ class WizardComponent extends \CBitrixComponent
         $scene    = (string) $request->get('SKETCH_SCENE');
         $image    = (string) $request->get('SKETCH_IMAGE');
         $comments = (string) $request->get('COMMENTS');
+        
         var_dump($image);
+        
         $this->getBasket()->setSketch([
             'SKETCH_SCENE' => $scene,
             'SKETCH_IMAGE' => $image
@@ -491,7 +496,25 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepOrder()
     {
+        $baskets = $this->getBasket()->getList(true);
         
+        $$this->arResult['PRODUCTS'] = ['EQUIPMENTS' => [], 'SERVICES' => [], 'MARKETINGS' => []];
+        
+        foreach ($baskets as $basket) {
+            $element = $basket->getElement();
+
+            if (empty($element)) {
+                continue;
+            }
+            $this->arResult['PRODUCTS'][$element->getSectionType()][$element->getID()]= $element;
+        }
+        
+        // Шаги.
+        $steps = $this->getSteps();
+        
+        // наценки и стоимость.
+        // Заказанные услуги и оборудование.
+        // шаги.
     }
     
     

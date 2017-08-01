@@ -88,6 +88,12 @@ class Basket
     }
     
     
+    public function getParam($key)
+    {
+        return ($this->getData()[self::SESSCODE_PARAMS][strval($key)]);
+    }
+    
+    
     public function setParams($data)
     {
         $this->data[self::SESSCODE_PARAMS] = (array) $data;

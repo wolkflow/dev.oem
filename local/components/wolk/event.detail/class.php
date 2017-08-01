@@ -415,15 +415,16 @@ class EventDetailComponent extends BaseListComponent
 
             #add stand
             $r = BasketTable::add([
-                'PRODUCT_ID'    => $arStand['ID'],
-                'QUANTITY'      => 1,
-                'PRICE'         => $this->event['STANDS'][$arStand['ID']]['PRICE']['PRICE'] ?: 0,
-                'CURRENCY'      => $this->event['CURRENCY']['NAME'],
-                'LID'           => SITE_ID,
-                'NAME'          => $arStand['NAME'],
-                'SET_PARENT_ID' => 0,
-                'TYPE'          => CSaleBasket::TYPE_SET,
-                'FUSER_ID'      => $fuserId
+                'PRODUCT_ID'     => $arStand['ID'],
+                'QUANTITY'       => 1,
+                'PRICE'          => $this->event['STANDS'][$arStand['ID']]['PRICE']['PRICE'] ?: 0,
+                'CURRENCY'       => $this->event['CURRENCY']['NAME'],
+                'LID'            => SITE_ID,
+                'NAME'           => $arStand['NAME'],
+                'SET_PARENT_ID'  => 0,
+                'TYPE'           => CSaleBasket::TYPE_SET,
+                'FUSER_ID'       => $fuserId,
+                'RECOMMENDATION' => ($arStand['ID'] > 0) ? ('STAND.STANDARD') : ('STAND.INDIVIDUAL') 
             ]);
 
             if (!$r->isSuccess()) {
@@ -442,15 +443,16 @@ class EventDetailComponent extends BaseListComponent
                 #add including equipment
                 foreach ($arEquipment as $eq) {
                     $r = BasketTable::add([
-                        'PRODUCT_ID'    => $eq['ID'],
-                        'PRICE'         => 0,
-                        'QUANTITY'      => ($eq['COUNT']) ?: 1,
-                        'CURRENCY'      => $this->event['CURRENCY']['NAME'],
-                        'LID'           => SITE_ID,
-                        'NAME'          => $this->event['ALL_SERVICES'][$eq['ID']]['NAME'],
-                        'SET_PARENT_ID' => $basketStandId,
-                        'TYPE'          => CSaleBasket::TYPE_SET,
-                        'FUSER_ID'      => $fuserId
+                        'PRODUCT_ID'     => $eq['ID'],
+                        'PRICE'          => 0,
+                        'QUANTITY'       => ($eq['COUNT']) ?: 1,
+                        'CURRENCY'       => $this->event['CURRENCY']['NAME'],
+                        'LID'            => SITE_ID,
+                        'NAME'           => $this->event['ALL_SERVICES'][$eq['ID']]['NAME'],
+                        'SET_PARENT_ID'  => 0,
+                        'TYPE'           => CSaleBasket::TYPE_SET,
+                        'FUSER_ID'       => $fuserId,
+                        'RECOMMENDATION' => 'PRODUCT.BASE'
                     ]);
 
                     if (!$r->isSuccess()) {
@@ -475,7 +477,8 @@ class EventDetailComponent extends BaseListComponent
                             'CURRENCY'   => $this->event['CURRENCY']['NAME'],
                             'LID'        => SITE_ID,
                             'NAME'       => $this->event['ALL_SERVICES'][$eq['ID']]['NAME'],
-                            'FUSER_ID'   => $fuserId
+                            'FUSER_ID'   => $fuserId,
+                            'RECOMMENDATION' => 'PRODUCT.SALE'
                         ]);
 
                         if (!$r->isSuccess()) {
@@ -504,7 +507,8 @@ class EventDetailComponent extends BaseListComponent
                             'CURRENCY'   => $this->event['CURRENCY']['NAME'],
                             'LID'        => SITE_ID,
                             'NAME'       => $service['NAME'],
-                            'FUSER_ID'   => $fuserId
+                            'FUSER_ID'   => $fuserId,
+                            'RECOMMENDATION' => 'PRODUCT.SALE'
                         ]);
 
                         if (!$r->isSuccess()) {
@@ -540,7 +544,8 @@ class EventDetailComponent extends BaseListComponent
                             'CURRENCY'   => $this->event['CURRENCY']['NAME'],
                             'LID'        => SITE_ID,
                             'NAME'       => $option['NAME'],
-                            'FUSER_ID'   => $fuserId
+                            'FUSER_ID'   => $fuserId,
+                            'RECOMMENDATION' => 'PRODUCT.SALE'
                         ]);
 
                         if (!$r->isSuccess()) {
@@ -1209,7 +1214,7 @@ class EventDetailComponent extends BaseListComponent
 			
             foreach ($items as &$item) {
                 $item['PRICE_FORMATTED'] = CurrencyFormat($item['PRICE'], $order['CURRENCY']);
-                if ($item['TYPE'] == 1 && $item['SET_PARENT_ID']) {
+                if ($item['TYPE'] == 1 && $item['RECOMMENDATION'] == 'PRODUCT.BASE') {
                     $item['COST'] = $item['PRICE'] * $item['QUANTITY'] - $item['COUNT'];
                 } else {
                     $item['COST'] = $item['PRICE'] * $item['QUANTITY'];
@@ -1235,9 +1240,9 @@ class EventDetailComponent extends BaseListComponent
 
             $newItems = [];
             foreach ($items as $itemId => $item) {
-                if ($item['TYPE'] == 1 && !$item['SET_PARENT_ID']) {
+                if ($item['TYPE'] == 1 && $item['RECOMMENDATION'] == 'PRODUCT.SALE') {
                     $newItems['selectedStand'] = $item;
-                } elseif ($item['TYPE'] == 1 && $item['SET_PARENT_ID']) {
+                } elseif ($item['TYPE'] == 1 && $item['RECOMMENDATION'] == 'PRODUCT.BASE') {
                     $newItems['EQUIPMENT'][$item['PRODUCT_ID']] = $item;
                 } elseif ($item['ROOT_SECTION']['ID'] == self::SERVICES_SECTION_ID) {
                     if (isset($item['PROPS']['dateStart'], $item['PROPS']['dateEnd'])) {
