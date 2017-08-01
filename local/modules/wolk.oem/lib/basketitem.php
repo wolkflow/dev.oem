@@ -177,6 +177,14 @@ class BasketItem
         }
     }
     
+    /**
+     * Установка цены.
+     */
+    public function setPrice($price)
+    {
+        $this->price = (float) $price;
+    }
+    
     
     /**
      * Получение цены.

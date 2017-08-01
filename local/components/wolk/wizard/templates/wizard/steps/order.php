@@ -6,7 +6,7 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 
 <pre>
-    <? print_r($arResult) ?>
+    <? // print_r($arResult) ?>
 </pre>
 
 <div class="main">
@@ -24,28 +24,35 @@
                                 <?= Loc::getMessage('EQUIPMENTS') ?>
                                 <div class="pagesubtitle__addbutton customizable"></div>
                             </div>
-                            <div class="ordercontainer__itemscontainer" v-for="(sectionId, items) in selectedStand.OPTIONS">
-                                <div v-if="!isEmptyObject(items)" class="pagesubsubtitle">
-                                    {{ options.SECTIONS[sectionId].NAME }}
-                                </div>
-                                <div class="ordercontainer__item" v-for="item in items">
-                                    <div class="ordercontainer__itemtotalprice">
-                                        {{ allServices[item.ID].PRICE * item.QUANTITY | format_currency ' ' currency_format }}
+                            <? if (!empty($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_EQUIPMENTS])) { ?>
+                                <? foreach ($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_EQUIPMENTS] as $item) { ?>
+                                    <div class="ordercontainer__itemscontainer">
+                                        <div v-if="!isEmptyObject(items)" class="pagesubsubtitle">
+                                            <?= $item['ITEM']->getTitle() ?>
+                                        </div>
+                                        <div class="ordercontainer__item" v-for="item in items">
+                                            <div class="ordercontainer__itemtotalprice">
+                                                <?= FormatCurrency($item['BASKET']->getCost(), $arResult['CURRENCY']) ?>
+                                            </div>
+                                            <div class="ordercontainer__itemname">
+                                                <?= $item['ITEM']->getTitle() ?> | 
+                                                <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
+                                                &times;
+                                                <?= $item['BASKET']->getQuantity() ?>
+                                            </div>
+                                            <div class="ordercontainer__changebutton">
+                                                <a href="<?= '/link' ?>">
+                                                    <?= Loc::getMessage('CHANGE') ?>
+                                                </a>
+                                                |
+                                                <a href="javascript:void(0)" class="js-basket-delete" data-bid="<?= $item['BASKET']->getID() ?>">
+                                                    <?= Loc::getMessage('DELETE') ?>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="ordercontainer__itemname">
-                                        {{ allServices[item.ID].NAME }} | {{ allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
-                                    </div>
-                                    <div class="ordercontainer__changebutton">
-                                        <a  @click.prevent="setStep(2)"  href="javascript:void(0)">
-                                            <?= Loc::getMessage('change') ?>
-                                        </a>
-                                        |
-                                        <a @click.prevent="deleteOption(sectionId, item)" href="javascript:void(0)">
-                                            <?= Loc::getMessage('delete') ?>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                <? } ?>
+                            <? } ?>
                         </div>
                     <? } ?>
                     
@@ -75,26 +82,36 @@
                             <?= Loc::getMessage('services') ?>
                             <div class="pagesubtitle__addbutton customizable" @click="setStep(3)"></div>
                         </div>
-                        <div class="ordercontainer__itemscontainer" v-for="(sectionName, items) in groupedSelectedServices">
-                            <div class="pagesubsubtitle">{{ sectionName }}</div>
-                            <div class="ordercontainer__item" v-for="item in items" v-show="allServices[item.ID].PRICE > 0 || allServices[item.ID].CODE == 'FASCIA_NAME'">
-                                <div class="ordercontainer__itemtotalprice">
-                                    {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.QUANTITY * item.MULTIPLIER : allServices[item.ID].PRICE * item.QUANTITY | format_currency ' ' currency_format }}
+                        
+                        <? if (!empty($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_SERVICES])) { ?>
+                            <? foreach ($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_SERVICES] as $item) { ?>
+                                <div class="ordercontainer__itemscontainer">
+                                    <div class="pagesubsubtitle">
+                                        <?= $item['ITEM']->getSection()->getTitle() ?>
+                                    </div>
+                                    <div class="ordercontainer__item">
+                                        <div class="ordercontainer__itemtotalprice">
+                                            <?= FormatCurrency($item['BASKET']->getCost(), $arResult['CURRENCY']) ?>
+                                        </div>
+                                        <div class="ordercontainer__itemname">
+                                            <?= $item['ITEM']->getTitle() ?> | 
+                                            <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
+                                                &times;
+                                            <?= $item['BASKET']->getQuantity() ?>
+                                        </div>
+                                        <div class="ordercontainer__changebutton">
+                                            <a href="<?= '/link' ?>">
+                                                <?= Loc::getMessage('CHANGE') ?>
+                                            </a>
+                                            |
+                                            <a href="javascript:void(0)" class="js-basket-delete" data-bid="<?= $item['BASKET']->getID() ?>">
+                                                <?= Loc::getMessage('DELETE') ?>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="ordercontainer__itemname">
-                                    {{ item.ID == 5 ? allServices[item.ID].NAME + ' (' + item.FASCIA_TEXT + ' - ' + item.FASCIA_COLOR + ')' : allServices[item.ID].NAME }} | {{ item.MULTIPLIER ? allServices[item.ID].PRICE * item.MULTIPLIER : allServices[item.ID].PRICE | format_currency ' ' currency_format }} &times; {{ item.QUANTITY }}
-                                </div>
-                                <div class="ordercontainer__changebutton">
-                                    <a @click.prevent="setStep(3)" href="javascript:void(0)">
-                                        <?= Loc::getMessage('change') ?>
-                                    </a>
-                                    |
-                                    <a href="#" @click.prevent="deleteServiceItem(sectionName, $index)">
-                                        <?= Loc::getMessage('delete') ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                            <? } ?>
+                        <? } ?>
                     </div>
                 </div>
             </div>

@@ -213,19 +213,9 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
      */
     public function getSectionType()
     {
-        $kind = '';
-        switch ($this->getSectionID()) {
-            case (SECTION_PRODUCTS_EQUIPMENTS_ID):
-                $kind = Section::TYPE_EQUIPMENTS;
-                break;
-            case (SECTION_PRODUCTS_SERVICES_ID):
-                $kind = Section::TYPE_SERVICES;
-                break;
-            case (SECTION_PRODUCTS_MARKETINGS_ID):
-                $kind = Section::TYPE_MARKETINGS;
-                break;
-        }
-        return $kind;
+        $section = $this->getSection()->getMainSection();
+        
+        return $section->getCode();
     }
     
     

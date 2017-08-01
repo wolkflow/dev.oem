@@ -498,15 +498,17 @@ class WizardComponent extends \CBitrixComponent
     {
         $baskets = $this->getBasket()->getList(true);
         
-        $$this->arResult['PRODUCTS'] = ['EQUIPMENTS' => [], 'SERVICES' => [], 'MARKETINGS' => []];
+        $this->arResult['PRODUCTS'] = ['EQUIPMENTS' => [], 'SERVICES' => [], 'MARKETINGS' => []];
         
         foreach ($baskets as $basket) {
-            $element = $basket->getElement();
+            $item = $basket->getElement();
 
-            if (empty($element)) {
+            if (empty($item)) {
                 continue;
             }
-            $this->arResult['PRODUCTS'][$element->getSectionType()][$element->getID()]= $element;
+            $basket->setPrice($item->getContextPrice($this->getContext()));
+            
+            $this->arResult['PRODUCTS'][$item->getSectionType()][$item->getID()] = ['ITEM' => $item, 'BASKET' => $basket];
         }
         
         // Шаги.
