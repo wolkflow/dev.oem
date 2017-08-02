@@ -166,7 +166,8 @@ function RemoveBasket(bid, sid, $block)
                 if ($section.find('.js-product-block').length > 1) {
                     $block.remove();
                 } else {
-                    $block.find('.js-quantity').val(0);
+                    // TODO: Вынести в отдельную функцию очистки.
+                    $block.find('.js-quantity').val(0).data('data-value', 0);
                     $block.attr('data-bid', '');
                     $block.find('.js-product-select .js-option-noselect').trigger('click');
                 }
@@ -217,6 +218,9 @@ $(document).ready(function() {
             $block.find('.js-product-select-price').hide();
             $block.find('.js-product-select-descr').hide();
         }
+        
+        // Обновление данных в корзине.
+        window['oem-func-' + $block.data('price-type') + '-cart']($block);
     });
     
 

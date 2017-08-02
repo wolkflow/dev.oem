@@ -256,6 +256,7 @@ class Basket
     public function update($bid, $pid, $quantity, $params, $fields)
     {
         $bid      = (string) $bid;
+        $pid      = (int)   $pid;
         $quantity = (float) $quantity;
         $params   = (array) $params;
         $fields   = (array) $fields;
@@ -263,6 +264,7 @@ class Basket
         if ($quantity <= 0) {
             return;
         }
+        $this->data[self::SESSCODE_PRODUCTS][$bid]['pid']      = $pid;
         $this->data[self::SESSCODE_PRODUCTS][$bid]['quantity'] = $quantity;
         $this->data[self::SESSCODE_PRODUCTS][$bid]['params']   = $params;
         $this->data[self::SESSCODE_PRODUCTS][$bid]['fields']   = $fields;
