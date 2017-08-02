@@ -42,7 +42,7 @@
                                                 <?= $section->getTitle() ?>
                                             </div>
                                             <? foreach ($basketgroup as $basketitem) { ?>
-                                                <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$formtpl.'.php') ?>
+                                                <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/card.php') ?>
                                             <? } ?>
                                         </div>
                                     <? } else { ?>
@@ -51,7 +51,7 @@
                                             <div class="serviceItem__title">
                                                 <?= $section->getTitle() ?>
                                             </div>
-                                            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$formtpl.'.php') ?>
+                                            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/card.php') ?>
                                         </div>
                                     <? } ?>
                                 <? } else { ?>
@@ -59,7 +59,7 @@
                                         <div class="serviceItem__title">
                                             <?= $section->getTitle() ?>
                                         </div>
-                                        <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$formtpl.'.php') ?>
+                                        <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/card.php') ?>
                                     </div>
                                 <? } ?>
 

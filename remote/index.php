@@ -119,6 +119,7 @@ switch ($action) {
             $distance = 2;
         }
         
+        // Угол поворота.
         $rotate = 0;
         switch ($view) {
             case (1):

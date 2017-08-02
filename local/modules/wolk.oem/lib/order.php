@@ -403,4 +403,51 @@ class Order
         }
     }
     
+    
+    
+    
+    /**
+     * Получение информации о цене заказа.
+     *
+     * $price - Общая стоимость товаров и услуг.
+     * $percent - Процент наценки.
+     * $incvat - Включен ли НДС в стоимость
+     * $vatpercent - Процент НДС
+     */
+    public static function getFullPriceInfo($price, $percent = 0, $incvat = false, $vatpercent = VAT_DEFAULT)
+    {
+        $price      = (float) $price;
+        $percent    = (float) $percent;
+        $vatpercent = (float) $vatpercent;
+        $incvat     = (bool)  $incvat;
+        
+        // Процент НДС в цене.
+        $unvat = $vatpercent / (100 + $vatpercent);
+        
+        // Сумма наценки.
+        $surcharge = $price * $percent / 100;
+        
+        // Общая сумма с наценкой.
+        $total = $price + $surcharge;
+        
+        // Сумма НДС.
+        $vatprice = (!$incvat) ? ($total * $vatpercent / 100) : ($total * $unvat);
+        
+        // Общая сумма с НДС и наценкой.
+        $summary = (!$incvat) ? ($total + $vatprice) : ($total);
+        
+        
+        $prices = [
+            'INCLUDE_VAT'       => $incvat,
+			'SURCHARGE_PERCENT' => (float) $percent,
+            'SURCHARGE_PRICE'   => (float) $surcharge,
+            'VAT_PERCENT'       => (float) $vatpercent,
+            'VAT_PRICE'         => (float) $vatprice,
+			'PRICE'             => (float) $price,
+            'TOTAL'             => (float) $total,
+			'SUMMARY'           => (float) $summary,
+		];
+		
+		return $prices;
+    }
 }

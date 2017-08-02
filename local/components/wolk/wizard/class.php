@@ -481,8 +481,6 @@ class WizardComponent extends \CBitrixComponent
         $image    = (string) $request->get('SKETCH_IMAGE');
         $comments = (string) $request->get('COMMENTS');
         
-        var_dump($image);
-        
         $this->getBasket()->setSketch([
             'SKETCH_SCENE' => $scene,
             'SKETCH_IMAGE' => $image
@@ -496,27 +494,49 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function doStepOrder()
     {
-        $baskets = $this->getBasket()->getList(true);
+        $oembasket = $this->getBasket();
+        $baskets   = $oembasket->getList(true);
         
         $this->arResult['PRODUCTS'] = ['EQUIPMENTS' => [], 'SERVICES' => [], 'MARKETINGS' => []];
         
+        $price = 0;
         foreach ($baskets as $basket) {
-            $item = $basket->getElement();
-
-            if (empty($item)) {
+            $elem = $basket->getElement();
+            if (empty($elem)) {
                 continue;
             }
-            $basket->setPrice($item->getContextPrice($this->getContext()));
+            $basket->setPrice($elem->getContextPrice($this->getContext()));
             
-            $this->arResult['PRODUCTS'][$item->getSectionType()][$item->getID()] = ['ITEM' => $item, 'BASKET' => $basket];
+            // Общая стоимость продукции.
+            $price += $basket->getCost();
+            
+            $this->arResult['PRODUCTS'][$elem->getSectionType()][$elem->getID()] = ['ITEM' => $elem, 'BASKET' => $basket];
+        }
+        
+        // Стенд.
+        if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
+            $basket = $oembasket->getStand();
+            $basket->loadPrice($this->getContext());
+            $this->arResult['STAND'] = ['ITEM' => $basket->getElement(), 'BASKET' => $basket];
+            
+            // Стоимость стенда.
+            $price += $basket->getCost();
         }
         
         // Шаги.
         $steps = $this->getSteps();
         
-        // наценки и стоимость.
-        // Заказанные услуги и оборудование.
-        // шаги.
+        // Ссылки на шаги конструктора.
+        $this->arResult['STEPLINKS'] = [];
+        foreach ($steps as $n => $step) {
+            $this->arResult['STEPLINKS'][$step] = $this->getStepLink($n);
+        }
+        
+        // Мероприятие.
+        $event = $this->getEvent();
+        
+        // Цены.
+        $this->arResult['PRICES'] = \Wolk\OEM\Order::getFullPriceInfo($price, $event->getSurcharge(), $event->hasVAT());
     }
     
     

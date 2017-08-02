@@ -1,10 +1,6 @@
 $(document).ready(function() {
     
     
-    
-    
-    
-    
     // Добавление нового поля.
     $(document).on('click', '.js-block-days-hours .js-more-field', function(event) {
         var $wrapper = $(this).closest('.js-block-days-hours');

@@ -74,3 +74,22 @@ $MESS['CHANGE_COLOR'] = 'Cмнить цвет';
 $MESS['CHOOSE_COLOR'] = 'Выбрать цвет';
 $MESS['CHOOSING_COLOR'] = 'Выберите цвет';
 $MESS['COLOR_NOTE'] = 'Цвета могут не точно совпадать с фактическим материалом';
+
+$MESS['STAND_TYPE'] = 'Тип стенда';
+$MESS['SYSTEM_STAND'] = 'Системный стенд';
+
+$MESS['CHANGE'] = 'Изменить';
+$MESS['DELETE'] = 'Удалить';
+
+$MESS['STAND'] = 'Стенд';
+$MESS['PAVILION'] = 'Павильон';
+
+$MESS['PRICE_TOTAL'] = 'Всего';
+$MESS['SURCHRGE'] = 'Наценка';
+$MESS['PRICE_TOTAL_WITH_VAT'] = 'Всего с НДС';
+$MESS['VAT'] = 'НДС';
+$MESS['PRICE_TOTAL_WITH_SURCHARGE'] = 'Всего с наценкой';
+
+
+
+

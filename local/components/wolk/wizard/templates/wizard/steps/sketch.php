@@ -12,7 +12,7 @@
     </div>
 </div>
 <div class="pagedescription">
-    <? // Helper::includeFile('sketch_desc_'.\Bitrix\Main\Context::getCurrent()->getLanguage()); ?>
+    <? Helper::includeFile('sketch_desc_' . \Bitrix\Main\Context::getCurrent()->getLanguage()); ?>
 </div>
 
 <div
@@ -23,7 +23,7 @@
 
 <form class="js-form" method="post" action="<?= $arResult['LINKS']['NEXT'] ?>" enctype="multipart/form-data">
     <input id="js-sketch-scene-id" type="hidden" name="SKETCH_SCENE" />
-    <input id="js-sketch-image-id" type="hidden" name="SCETCH_IMAGE" />
+    <input id="js-sketch-image-id" type="hidden" name="SKETCH_IMAGE" />
     
     <div class="sketchNav">
         <a href="<?= $arResult['LINKS']['PREV'] ?>" class="basketcontainer__backstepbutton">

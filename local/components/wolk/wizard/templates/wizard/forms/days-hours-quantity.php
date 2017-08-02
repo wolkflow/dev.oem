@@ -6,77 +6,16 @@
 
 
 <div class="js-product-block js-product-block-<?= $section->getID() ?>" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>">
-    <input type="hidden" name="dates" class="js-product-days-hours-dates" value="" />
-    <input type="hidden" name="times" class="js-product-days-hours-times" value="" />
+    <input type="hidden" name="dates" class="js-product-days-hours-quantity-dates" value="" />
+    <input type="hidden" name="times" class="js-product-days-hours-quantity-times" value="" />
     
     <? if (!$section->asListShow() && count($products) == 1) { ?>
         
         <? $product = reset($products) ?>
-
-        <div class="equipmentcontainer__itemcontainer">
-            <div class="equipmentcontainer__itemrightside">
-                <div class="equipmentcontainer__itemprice">
-                    <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
-                </div>
-                <div class="itemquantitycontainer">
-                    
-                    <div class="js-days-hours-wrapper js-product-select itemCount" data-pid="<?= $product->getID() ?>">
-                        <div class="setDateBlock">
-                            <div class="serviceItem__subtitle">
-                                <?= Loc::getMessage('DATES') ?>
-                            </div>
-                            
-                            <div class="setDate hasDatepicker">
-                                <div class="loolee">
-                                    <div class="looleeHead">
-                                        <label class="styler">
-                                            <input id="<?= $product->getID() ?>" type="checkbox" class="changeMode" value="<?= (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('') ?>" />
-                                            <span></span><?= Loc::getMessage('DATERANGE') ?>
-                                        </label>
-                                        <a href="#" class="cButton buttonClear dateClear">
-                                            <?= Loc::getMessage('CLEAR') ?>
-                                        </a>
-                                        <a href="#" class="cButton buttonOk looleeClose">
-                                            ОК
-                                        </a>
-                                    </div>
-                                    <div class="dpBlock" data-mode="multiple"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <? // Продукция, включенная в стенд. // ?>
-                    <? if (array_key_exists($product->getID(), $arResult['BASE'])) { ?>
-                        <div class="equipmentcontainer__standartnote">
-                            <?= Loc::getMessage('STANDARD_INCLUDES') ?>
-                            <b><?= $arResult['BASE'][$product->getID()] ?></b>
-                        </div>
-                    <? } ?>
-                </div>
-            </div>
-
-            <div class="equipmentcontainer__itemleftside">
-                <div class="equipmentcontainer__itemphotocontainer">
-                    <a class="photoZoom" href="<?= $product->getImageSrc() ?>"></a>
-                    <img src="/i?src=<?= $product->getImageSrc() ?>&h=210" class="equipmentcontainer__itemphoto" />
-                </div>
-                <div class="equipmentcontainer__itemsize">
-                    <?= $product->getDescription() ?>
-                </div>
-            </div>
-
-            <? // Обработка свойств товара. // ?>
-            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props.php') ?>
-
-            <div class="equipmentcontainer__itemsize">
-                <?= $section->getDescription() ?>
-            </div>
-        </div>
-
+        
+        
     <? } else { ?>
-    
-        <? // Рабочее здесь // ?>
+        
         <div class="serviceItem__block">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
@@ -164,7 +103,7 @@
             <? // Обработка свойств товара. // ?>
             <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props.php') ?>
         </div>
-
+    
     <? } ?>
-
+    
 </div>
