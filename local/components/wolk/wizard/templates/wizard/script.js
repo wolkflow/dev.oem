@@ -166,8 +166,10 @@ function RemoveBasket(bid, sid, $block)
                 if ($section.find('.js-product-block').length > 1) {
                     $block.remove();
                 } else {
-                    // TODO: Вынести в отдельную функцию очистки.
-                    $block.find('.js-quantity').val(0).data('data-value', 0);
+                    // Очистка данных в блоке.
+                    console.log('Remove basket: ' + $block.data('price-type'));
+                    window['oem-func-' + $block.data('price-type') + '-clear']($block);
+                    
                     $block.attr('data-bid', '');
                     $block.find('.js-product-select .js-option-noselect').trigger('click');
                 }

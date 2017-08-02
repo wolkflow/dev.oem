@@ -34,7 +34,7 @@
                                 $basketgroup = $basketgroups[$section->getID()];
                             ?>
 
-                            <div class="js-block-<?= strtolower($pricetype) ?>">
+                            <div class="js-product-wrapper js-block-<?= strtolower($pricetype) ?>">
                                 <? if (!empty($basketgroup)) { ?>
                                     <? if ($multiple) { ?>
                                         <div class="js-product-section js-pricetype-<?= strtolower($pricetype) ?>" data-sid="<?= $section->getID() ?>" data-pricetype="<?= $pricetype ?>">

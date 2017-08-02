@@ -12,5 +12,6 @@
     <div class="js-quantity-inc itemCount__button itemCount__up"></div>
 
     <? $value = (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('0') ?>
+    
     <input id="<?= $product->getID() ?>" type="text" class="js-quantity itemCount__input styler" data-value="<?= $value ?>" value="<?= $value ?>" />
 </div>

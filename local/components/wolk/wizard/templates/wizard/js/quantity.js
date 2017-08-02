@@ -1,10 +1,9 @@
 
 
-
 /**
  * Функция добавления в корзину.
  */
-window['oem-func-quantity-cart'] = function($block, quantity) {
+window['oem-func-quantity-cart'] = function($block) {
     
     var pid      = 0;
     var $input   = $block.find('input');
@@ -42,10 +41,24 @@ window['oem-func-quantity-cart'] = function($block, quantity) {
  * Функция добавления товарной позиции.
  */
 window['oem-func-quantity-more'] = function($that) {
-    var $wrapper = $that.closest('.js-block-quantity');
+    var $wrapper = $that.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
     var $block   = $wrapper.find('.js-product-block').first().clone();
+    
+    // Сброс параметров.
+    window['oem-func-quantity-clear']($block);
+    
+    // Добавление блока.
+    $section.append($block);
 
+    $block.find('.js-product-select .js-option-noselect').trigger('click');
+}
+
+
+/**
+ * Функция очистки данных.
+ */
+window['oem-func-quantity-clear'] = function($block) {
     $block.attr('data-bid', '');
     $block.find('.js-quantity').val(0).data('value', 0);
     $block.find('.jq-selectbox__select,.jq-selectbox__dropdown').remove();
@@ -58,10 +71,6 @@ window['oem-func-quantity-more'] = function($that) {
 
     // Сброс всех свойств товара.
     ResetParams($block);
-
-    $section.append($block);
-
-    $block.find('.js-product-select .js-option-noselect').trigger('click');
 }
 
 
