@@ -8,7 +8,7 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 <? use Wolk\Oem\Basket; ?>
 
-<? if (!is_null($arResult['STAND'])) { ?>
+<? if ($arResult['CONTEXT']->getType() != \Wolk\OEM\Context::TYPE_INDIVIDUAL && !is_null($arResult['STAND'])) { ?>
     <div class="basketcontainer__itemcontainer customizable_border">
         <div class="basketcontainer__itemname">
             <?= $arResult['STAND']->getElement()->getTitle() ?>

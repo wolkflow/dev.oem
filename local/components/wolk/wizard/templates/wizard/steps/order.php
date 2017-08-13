@@ -140,11 +140,11 @@
                         <input type="text" name="PAVILION" value="0" />
                     </div>
                 </div>
-                <div class="ordertotalcontainer__placeorder" data-modal="<?= ($USER->IsAuthorized()) ? ('#placeLogin') : ('#placeUnlogin') ?>">
+                <div class="ordertotalcontainer__placeorder" data-modal="<?= ($USER->IsAuthorized()) ? ('#place-uuth') : ('#place-unauth') ?>">
                     <?= Loc::getMessage('PLACE_ORDER') ?>
                 </div>
             </div>
-            <div class="ordertotalcontainer__total" v-show="summaryPrice">
+            <div class="ordertotalcontainer__total">
                 <?= Loc::getMessage('PRICE_TOTAL') ?>: 
                 <span>
                     <?= FormatCurrency($arResult['PRICES']['PRICE'], $arResult['CURRENCY']) ?>
@@ -189,4 +189,91 @@
             </div>
         </div>
     </div>
+</div>
+
+
+
+
+<? // --- Модальные окна --- // ?>
+
+<div class="hide">
+
+
+    <? // Окно: залогинен // ?>
+    <div class="modal placeOrder placeOrder__login" id="place-auth">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalTitle">
+            <?= Loc::getMessage('PLACE_ORDER') ?>
+        </div>
+        <form class="js-modal-block">
+            <div class="placeOrder__text">
+                <? Helper::includeFile('placeOrder_logged_in_text_'.$arResult['CONTEXT']->getLang()) ?>
+            </div>
+            <label>
+                <input id="js-order-place-checkbox-auth-id" type="checkbox" class="styler" v-styler="agreement" />
+                <? Helper::includeFile('rules_text_with_link_'.$arResult['CONTEXT']->getLang()) ?>
+            </label>
+            <div id="js-order-place-block-auth-id" class="placeOrder__buttons hide">
+                <button id="js-place-order-id" class="styler">
+					<?= Loc::getMessage('PLACE_ORDER') ?>
+				</button>
+            </div>
+        </form>
+    </div>
+    
+
+    <? // Окно: не залогинен // ?>
+    <div class="modal placeOrder placeOrder__unlogin" id="place-unauth">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalTitle">
+            <?= Loc::getMessage('PLACE_ORDER') ?>
+        </div>
+        <form class="js-modal-block">
+            <div class="placeOrder__text">
+                <?= Loc::getMessage('PLACE_ORDER_NOT_LOGIN_TEXT') ?>
+            </div>
+            <label>
+                <input id="js-order-place-checkbox-unauth-id" type="checkbox" class="styler" />
+                <? Helper::includeFile('rules_text_with_link_'.$arResult['CONTEXT']->getLang()) ?>
+            </label>
+            <div id="js-order-place-block-unauth-id" class="placeOrder__buttons hide">
+                <button class="styler arcticmodal-close" data-modal="#modal-login">
+                    <?= Loc::getMessage('LOGIN') ?>
+                </button>
+                <button class="styler arcticmodal-close" data-modal="#modal-register">
+                    <?= Loc::getMessage('REGISTER') ?>
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    
+    <? // Окно: не залогинен // ?>
+    <div class="modal modalLogin" id="modal-login">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalPrev arcticmodal-close" data-modal="#place-unauth">
+			<?= Loc::getMessage('BACK') ?>
+		</div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('LOGIN') ?>
+		</div>
+        <form id="js-form-login-id" class="js-remote-form">
+            <div class="formRow">
+                <label for="userLogin">
+                    <?= Loc::getMessage('USER_LOGIN') ?>
+                </label>
+                <input type="text" class="styler" id="userLogin" />
+            </div>
+            <div class="formRow">
+                <label for="userPassword"><?= Loc::getMessage('USER_PASSWORD') ?></label>
+                <input type="password" class="styler" id="userPassword" />
+            </div>
+            <div class="formRow">
+                <input type="button" class="styler full-width" value="<?= Loc::getMessage('LOGIN') ?>" />
+            </div>
+            <div class="clear"></div>
+            <div class="errortext"></div>
+        </form>
+    </div>
+    
 </div>

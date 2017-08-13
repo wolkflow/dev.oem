@@ -14,45 +14,58 @@
 
 <div id="step1">
     <form action="<?= $arResult['LINKS']['NEXT'] ?>" method="post">
-        <input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
-        <div class="standspagetop" id="preselect">
-            <? if (!empty($arResult['PRESTAND'])) { ?>
-                <div class="pagedescription">
-                    <?= Loc::getMessage('PRESELECT_STAND_NOTE') ?>
-                </div>
-            <? } ?>
+        <? if ($arResult['CONTEXT']->getType() == \Wolk\OEM\Context::TYPE_INDIVIDUAL) { ?>
             
-            <? // Выбор стандартного стенда // ?>
-            <div>
-                <div class="pagetitle">
-                    <?= Loc::getMessage('CURRENT_STAND') ?>
+            <div class="standspagetop" id="preselect">
+                <div class="pagedescription">
+                    <?= Loc::getMessage('SELECTED_INDIVIDUAL_STAND_NOTE') ?>
                 </div>
-                <? if (!empty($arResult['PRESTAND']) && !empty($arResult['PREOFFER'])) { ?>
-                    <div id="js-prestand-id" class="standspagetop__currentstandcontainer customizable_border">
-                        <div class="standspagetop__currentstanddescription">
-                            <p class="js-stand-description">
-                                <?= $arResult['PRESTAND']->getDescription($lang) ?>
-                            </p>
-                            <? $products = $arResult['PREOFFER']->getBaseProducts() ?>
-                            <? if (!empty($products)) { ?>
-                                <ul class="js-stand-includes">
-                                    <?= Loc::getMessage('INCLUDES') ?>:
-                                    <? foreach ($products as $product) { ?>
-                                        <li>
-                                            <?= $product->getCount() ?> &times; <?= $product->getTitle() ?>
-                                        </li>
-                                    <? } ?>
-                                </ul>
-                            <? } ?>
-                        </div>
-                        <img src="/i/?src=<?= $arResult['PRESTAND']->getPreviewImageSrc() ?>&w=420&h=270" class="standspagetop__photo js-stand-image" />
-                        <a href="javascript:void(0)" class="standspagetop__continuebutton customizable js-wizard-next-step js-submit">
-                            <?= Loc::getMessage('CONTINUE') ?>
-                        </a>
+                <a href="javascript:void(0)" class="standspagetop__continuebutton customizable js-submit">
+                    <?= Loc::getMessage('CONTINUE') ?>
+                </a>
+            </div>
+            
+        <? } else { ?>
+            <input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
+            <div class="standspagetop" id="preselect">
+                <? if (!empty($arResult['PRESTAND'])) { ?>
+                    <div class="pagedescription">
+                        <?= Loc::getMessage('PRESELECT_STAND_NOTE') ?>
                     </div>
                 <? } ?>
+                
+                <? // Выбор стандартного стенда // ?>
+                <div>
+                    <div class="pagetitle">
+                        <?= Loc::getMessage('CURRENT_STAND') ?>
+                    </div>
+                    <? if (!empty($arResult['PRESTAND']) && !empty($arResult['PREOFFER'])) { ?>
+                        <div id="js-prestand-id" class="standspagetop__currentstandcontainer customizable_border">
+                            <div class="standspagetop__currentstanddescription">
+                                <p class="js-stand-description">
+                                    <?= $arResult['PRESTAND']->getDescription($lang) ?>
+                                </p>
+                                <? $products = $arResult['PREOFFER']->getBaseProducts() ?>
+                                <? if (!empty($products)) { ?>
+                                    <ul class="js-stand-includes">
+                                        <?= Loc::getMessage('INCLUDES') ?>:
+                                        <? foreach ($products as $product) { ?>
+                                            <li>
+                                                <?= $product->getCount() ?> &times; <?= $product->getTitle() ?>
+                                            </li>
+                                        <? } ?>
+                                    </ul>
+                                <? } ?>
+                            </div>
+                            <img src="/i/?src=<?= $arResult['PRESTAND']->getPreviewImageSrc() ?>&w=420&h=270" class="standspagetop__photo js-stand-image" />
+                            <a href="javascript:void(0)" class="standspagetop__continuebutton customizable js-wizard-next-step js-submit">
+                                <?= Loc::getMessage('CONTINUE') ?>
+                            </a>
+                        </div>
+                    <? } ?>
+                </div>
             </div>
-        </div>
+        <? } ?>
         
         <? // Выбор стеднов // ?>
         <div class="standstypescontainer">

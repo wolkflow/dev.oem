@@ -250,5 +250,25 @@ $(document).ready(function() {
         // Установка текущего стенда.
         $('#js-form-input-stand-id').val($that.data('id'));
     });
-
+    
+    
+    // Окно входа и регистрации - соглашение.
+    $('#js-order-place-checkbox-auth-id').on('change', function() {
+        var $block = $(this).closest('.js-modal-block');
+        if ($(this).is(':checked')) {
+            $block.find('#js-order-place-block-auth-id').removeClass('hide');
+        } else {
+            $block.find('#js-order-place-block-auth'-id).addClass('hide');
+        }
+    });
+    
+    // Окно входа и регистрации - соглашение.
+    $('#js-order-place-checkbox-unauth-id').on('change', function() {
+        var $block = $(this).closest('.js-modal-block');
+        if ($(this).is(':checked')) {
+            $block.find('#js-order-place-block-unauth-id').removeClass('hide');
+        } else {
+            $block.find('#js-order-place-block-unauth-id').addClass('hide');
+        }
+    });
 });
