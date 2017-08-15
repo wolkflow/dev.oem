@@ -19,6 +19,6 @@
         <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
     <? } ?>
     <? if ($property == Basket::PARAM_FORM_HANGING_STRUCTURE) { ?>
-        <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/form_hanging_structure.php') ?>
+        <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/form-hanging-structure.php') ?>
     <? } ?>
 <? } ?>

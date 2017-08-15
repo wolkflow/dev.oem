@@ -77,6 +77,17 @@ $MESS['CHOOSE_COLOR'] = 'Выбрать цвет';
 $MESS['CHOOSING_COLOR'] = 'Выберите цвет';
 $MESS['COLOR_NOTE'] = 'Цвета могут не точно совпадать с фактическим материалом';
 
+$MESS['FORM_HANDING_DETAILS'] = 'Подвес к потолочным конструкциям';
+$MESS['FORM_HANDING_COMPANY'] = 'Название компании';
+$MESS['FORM_HANDING_PAVILION'] = 'Павильон №';
+$MESS['FORM_HANDING_HALL'] = 'Зал №';
+$MESS['FORM_HANDING_HALL'] = 'Зал №';
+$MESS['FORM_HANDING_STAND'] = 'Стенд №';
+$MESS['FORM_HANDING_SIZE'] = 'Размер';
+$MESS['FORM_HANDING_MATERIAL'] = 'Материал';
+$MESS['FORM_HANDING_WEIGHT'] = 'Вес';
+
+
 $MESS['STAND_TYPE'] = 'Тип стенда';
 $MESS['SYSTEM_STAND'] = 'Системный стенд';
 
@@ -99,3 +110,15 @@ $MESS['REGISTER'] = 'Регистрация';
 
 $MESS['USER_LOGIN'] = 'Логин';
 $MESS['USER_PASSWORD'] = 'Пароль';
+
+$MESS['COMPANY_NAME'] = 'Название компании';
+$MESS['COMPANY_ADDRESS'] = 'Адрес компании';
+$MESS['NAME'] = 'Имя';
+$MESS['LAST_NAME'] = 'Фамиия';
+$MESS['PERSONAL_MOBILE'] = 'Телефон';
+$MESS['EMAIL'] = 'E-mail';
+$MESS['CONFIRM_EMAIL'] = 'Подтверждение e-mail';
+$MESS['USER_CONFIRM_PASSWORD'] = 'Подтверждение пароля';
+$MESS['VAT_ID'] = 'Vat ID';
+
+

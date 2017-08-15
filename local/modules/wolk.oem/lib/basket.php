@@ -25,7 +25,7 @@ class Basket
     const PARAM_COMMENT                = 'COMMENT';
     const PARAM_LINK                   = 'LINK';
     const PARAM_COLOR                  = 'COLOR';
-    const PARAM_FORM_HANGING_STRUCTURE = 'FORM_HANGING_STRUCTURE';
+    const PARAM_FORM_HANGING_STRUCTURE = 'FORM.HANGING-STRUCTURE';
     
     protected $code = null;
     protected $data = array();
@@ -301,5 +301,29 @@ class Basket
     public function getSession()
     {
         return $_SESSION[self::SESSCODE_EVENT][$this->getEventCode()][self::SESSCODE_BASKET];
+    }
+    
+    
+    /**
+     * Создать заказ.
+     */
+    public function order(Context $context)
+    {
+        // Текущая корзина.
+        $items = $this->getList();
+        
+        // Очистка корзины.
+        \CSaleBasket::DeleteAll(\CSaleBasket::GetBasketUserID());
+        
+        // Сохранение корзины.
+        foreach ($items as $item) {
+            // Получение цены.
+            $item->loadPrice($context);
+        }
+        
+        // Создание заказа.
+        
+        
+        // Сохранение свофств заказа.
     }
 }

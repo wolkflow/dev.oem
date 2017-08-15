@@ -26,7 +26,7 @@
                     </div>
                     <? if (!empty($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_EQUIPMENTS])) { ?>
                         <? foreach ($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_EQUIPMENTS] as $item) { ?>
-                            <div class="ordercontainer__itemscontainer js-product-block">
+                            <div class="ordercontainer__itemscontainer js-product-block" data-bid="<?= $item['BASKET']->getID() ?>">
                                 <div class="pagesubsubtitle">
                                     <?= $item['ITEM']->getTitle() ?>
                                 </div>
@@ -89,7 +89,7 @@
                     </div>
                     <? if (!empty($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_SERVICES])) { ?>
                         <? foreach ($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_SERVICES] as $item) { ?>
-                            <div class="ordercontainer__itemscontainer js-product-block">
+                            <div class="ordercontainer__itemscontainer js-product-block" data-bid="<?= $item['BASKET']->getID() ?>">
                                 <div class="pagesubsubtitle">
                                     <?= $item['ITEM']->getSection()->getTitle() ?>
                                 </div>
@@ -237,10 +237,10 @@
                 <? Helper::includeFile('rules_text_with_link_'.$arResult['CONTEXT']->getLang()) ?>
             </label>
             <div id="js-order-place-block-unauth-id" class="placeOrder__buttons hide">
-                <button class="styler arcticmodal-close" data-modal="#modal-login">
+                <button class="styler x-arcticmodal-close" data-modal="#modal-login">
                     <?= Loc::getMessage('LOGIN') ?>
                 </button>
-                <button class="styler arcticmodal-close" data-modal="#modal-register">
+                <button class="styler x-arcticmodal-close" data-modal="#modal-register">
                     <?= Loc::getMessage('REGISTER') ?>
                 </button>
             </div>
@@ -248,7 +248,7 @@
     </div>
     
     
-    <? // Окно: не залогинен // ?>
+    <? // Окно: вход // ?>
     <div class="modal modalLogin" id="modal-login">
         <div class="modalClose arcticmodal-close"></div>
         <div class="modalPrev arcticmodal-close" data-modal="#place-unauth">
@@ -257,21 +257,110 @@
         <div class="modalTitle">
 			<?= Loc::getMessage('LOGIN') ?>
 		</div>
-        <form id="js-form-login-id" class="js-remote-form">
+        <form id="js-form-login-id" class="js-remote-order-form">
+            <input type="hidden" name="preaction" value="login" />
             <div class="formRow">
                 <label for="userLogin">
                     <?= Loc::getMessage('USER_LOGIN') ?>
                 </label>
-                <input type="text" class="styler" id="userLogin" />
+                <input type="text" class="styler" name="AUTH[LOGIN]" />
             </div>
             <div class="formRow">
                 <label for="userPassword"><?= Loc::getMessage('USER_PASSWORD') ?></label>
-                <input type="password" class="styler" id="userPassword" />
+                <input type="password" class="styler"  name="AUTH[PASSWORD]" />
             </div>
             <div class="formRow">
-                <input type="button" class="styler full-width" value="<?= Loc::getMessage('LOGIN') ?>" />
+                <input type="submit" class="styler full-width" value="<?= Loc::getMessage('LOGIN') ?>" />
             </div>
             <div class="clear"></div>
+            <div class="errortext"></div>
+        </form>
+    </div>
+    
+    
+    <? // Окно: регистрация // ?>
+    <div class="modal modalRegister" id="modal-register">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalPrev arcticmodal-close" data-modal="#place-unauth">
+			<?= Loc::getMessage('BACK') ?>
+		</div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('REGISTER') ?>
+		</div>
+        <form id="js-form-register-id" class="js-remote-order-form">
+            <input type="hidden" name="preaction" value="register" />
+            <div class="userForm__left">
+                <div class="formRow">
+                    <label for="comName">
+						<?= Loc::getMessage('COMPANY_NAME') ?>*
+					</label>
+                    <input type="text" class="styler" name="AUTH[COMPANY_NAME]" />
+                </div>
+                <div class="formRow">
+                    <label for="comAddr">
+						<?= Loc::getMessage('COMPANY_ADDRESS') ?>*
+					</label>
+                    <input type="text" class="styler" name="AUTH[COMPANY_ADDRESS]" />
+                </div>
+                <div class="formRow">
+                    <label for="comName">
+						<?= Loc::getMessage('NAME') ?>*
+					</label>
+                    <input type="text" class="styler" name="AUTH[NAME]" />
+                </div>
+                <div class="formRow">
+                    <label for="comLastName">
+						<?= Loc::getMessage('LAST_NAME') ?>*
+					</label>
+                    <input type="text" class="styler" name="AUTH[LAST_NAME]" />
+                </div>
+                <div class="formRow">
+                    <label for="comPhone">
+						<?= Loc::getMessage('PERSONAL_MOBILE') ?>
+					</label>
+                    <input type="text" class="styler" name="AUTH[PERSONAL_MOBILE]" />
+                </div>
+            </div>
+            <div class="userForm__right">
+                <div class="formRow">
+                    <label for="comMail">
+						<?= Loc::getMessage('EMAIL') ?>*
+					</label>
+                    <input type="text" class="styler" name="AUTH[EMAIL]" />
+                </div>
+                <div class="formRow">
+                    <label for="comMail">
+						<?= Loc::getMessage('CONFIRM_EMAIL') ?>*
+					</label>
+                    <input type="text" class="styler" name="AUTH[CONFIRM_EMAIL]" />
+                </div>
+                <div class="formRow">
+                    <label for="comVat">
+						<?= Loc::getMessage('VAT_ID') ?>
+					</label>
+                    <input type="text" class="styler" name="AUTH[VAT_ID]" />
+                </div>
+                <div class="formRow">
+                    <label for="comPass">
+						<?= Loc::getMessage('USER_PASSWORD') ?>*
+					</label>
+                    <input pattern=".{6,}" type="password" name="AUTH[PASSWORD]" />
+                </div>
+                <div class="formRow">
+                    <label for="comPassRe">
+						<?= Loc::getMessage('USER_CONFIRM_PASSWORD') ?>*
+					</label>
+                    <input type="password" class="styler" name="AUTH[CONFIRM_PASSWORD]" />
+                </div>
+                <div class="formRow">
+                    <label>&nbsp;</label>
+                    <input type="submit" class="styler modalSend" value="<?= Loc::getMessage('REGISTER') ?>" />
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="userForm__note">
+				* <?= Loc::getMessage('USERFORM_NOTE') ?>
+			</div>
             <div class="errortext"></div>
         </form>
     </div>

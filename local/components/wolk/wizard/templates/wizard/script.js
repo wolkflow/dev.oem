@@ -271,4 +271,72 @@ $(document).ready(function() {
             $block.find('#js-order-place-block-unauth-id').addClass('hide');
         }
     });
+    
+    
+    // Удаление элемента корзины.
+    $('.js-basket-delete').on('click', function() {
+        var $that    = $(this);
+        var $block   = $that.closest('.js-product-block');
+        var $wrapper = $('#js-wrapper-id');
+        
+        // Идентификатор корзины.
+        var bid = $that.data('bid');
+        
+        if (!bid.length) {
+            return;
+        }
+        
+        $.ajax({
+            url: '/remote/',
+            type: 'post',
+            data: {
+                'action': 'remove-basket',
+                'sessid': BX.bitrix_sessid(),
+                'bid':    bid,
+                'eid':    $wrapper.data('eid'),
+                'code':   $wrapper.data('code'),
+                'type':   $wrapper.data('type')
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status) {
+                    $block.remove();
+                }
+            }
+        });
+    });
+    
+    
+    $('.js-remote-order-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        var $wrapper = $('#js-wrapper-id');
+        var $form = $(this);
+        
+        var data = $form.objectize();
+        
+        data['sessid'] = BX.bitrix_sessid();
+        data['action'] = 'place-order';
+        data['eid']    = $wrapper.data('eid');
+        data['code']   = $wrapper.data('code');
+        data['type']   = $wrapper.data('type');
+        
+        $.ajax({
+            url: '/remote/',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            beforeSend: function() {
+                $form.find('.errortext').html();
+            },
+            success: function(response) {
+                if (response.status) {
+                    console.log(response);
+                } else {
+                    $form.find('.errortext').html(response.message);
+                }
+            }
+        });
+        return false;
+    });
 });

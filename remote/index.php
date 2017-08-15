@@ -255,7 +255,39 @@ switch ($action) {
         
         jsonresponse(true, '', array('html' => $html, 'item' => $item));
         break;
+    
+    
+    // Создание заказа.
+    case ('place-order'):
+        $preaction = $request->get('preaction');
         
+        // Пользователь должен быть авторизован.
+        if (!$USER->IsAuthorized()) {
+            switch ($preaction) {
+                case ('login'):
+                    $data = (array) $request->get('AUTH');
+                    
+                    // Авторизация пользователя.
+                    $result = CUser::Login($data['LOGIN'], $data['PASSWORD']);
+                    
+                    if ($result !== true) {
+                        jsonresponse(false, strip_tags($result['MESSAGE']));
+                    }
+                    break;
+                    
+                case ('register'):
+                    $data = (array) $request->get('AUTH');
+                    jsonresponse(false, 'Register', $data);
+                    break;
+                    
+                default:
+                    jsonresponse(false, Loc::getMessage('GL_NOT_AUTHORIZED'));
+                    break;
+            }
+        }
+        
+        break;
+    
     
     default:
 		jsonresponse(false, Loc::getMessage('GL_ERROR_UNKNOWN'));
