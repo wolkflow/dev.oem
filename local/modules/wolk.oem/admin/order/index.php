@@ -300,14 +300,14 @@ $rate_currency = (!empty($order['PROPS']['RATE_CURRENCY']['VALUE']))
 
 
 
-$result = CCurrencyRates::GetList();
+$result = CCurrencyRates::GetList(($b = 'ID'), ($o = 'ASC'), []);
 $rates  = array();
 while ($irate = $result->fetch()) {
 	$rates[$rate['CURRENCY']] = $irate['RATE'];
 }
 unset($result, $irate);
 
-$result = CCurrency::GetList();
+$result = CCurrency::GetList(($b = 'ID'), ($o = 'ASC'), []);
 $currencies = array();
 while ($currency = $result->fetch()) {
 	if ($order['CURRENCY'] == $currency['CURRENCY']) {

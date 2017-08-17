@@ -679,16 +679,16 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	 */
 	public function getSurcharge($time = null)
     {
-        if (is_null($time)) {
+        if (empty($time)) {
             $time = time();
         }
-		$dates = $this->getMarginDates()['DATES'];
-		$notes = $this->getMarginDates()['NOTES'];
-	
+		$dates = array_keys($this->getMarginDates());
+		$notes = array_values($this->getMarginDates());
+        
         if (!empty($dates) && is_array($dates)) {
             $index = null;
             foreach ($dates as $i => $date) {
-                if (strtotime($date) <= $time && (is_null($index) || strtotime($date) > $dates[$index])) {
+                if (strtotime($date) <= $time && (is_null($index) || strtotime($date) > strtotime($dates[$index]))) {
                     $index = $i;
                 }
             }

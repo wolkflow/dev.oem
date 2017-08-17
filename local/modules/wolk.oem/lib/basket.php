@@ -326,6 +326,9 @@ class Basket
         // Валюта заказа.
         $currency = $event->getCurrencyStandsContext($context);
         
+        // Итоговая сумма.
+        $price = 0;
+        
         // Очистка корзины.
         \CSaleBasket::DeleteAll(\CSaleBasket::GetBasketUserID());
         
@@ -337,23 +340,23 @@ class Basket
             $item->loadPrice($context);
             
             // Элемент.
-            $elem = $item->getElement();
+            $stand = $item->getElement();
             
-            if (!empty($elem)) {
+            if (!empty($stand)) {
                 $data = [
                     'PRODUCT_ID'     => $item->getProductID(),
                     'QUANTITY'       => $item->getQuantity(),
                     'PRICE'          => $item->getPrice(),
                     'CURRENCY'       => $currency,
                     'LID'            => SITE_ID,
-                    'NAME'           => $elem->getTitle(),
+                    'NAME'           => $stand->getTitle(),
                     'SET_PARENT_ID'  => 0,
                     'TYPE'           => 0,
                     'FUSER_ID'       => \CSaleBasket::GetBasketUserID(),
                     'RECOMMENDATION' => $note,
                 ];
                 
-                print_r($data);
+                $price += $item->getCost();
             }
         }
         
@@ -393,20 +396,130 @@ class Basket
                 'PROPS'          => []
             ];
             
-            $props = [[
-                'BASKET_ID' => $r->getId(),
-                'NAME'      => 'Стандартная комплектация',
-                'CODE'      => 'INCLUDING',
-                'VALUE'     => 'Да'
-            ]];
+            if ($item->isIncluded()) {
+                $props = [[
+                    'NAME'      => 'Стандартная комплектация',
+                    'CODE'      => 'INCLUDING',
+                    'VALUE'     => 'Да'
+                ]];
+                
+                $data['PROPS'] = $props;
+                
+                // Добавление корзины.
+                CSaleBasket::add($data);
+            }
             
-            print_r($data);
-           
+            // Суммирование цены.
+            $price += $item->getCost();   
         }
         
-        // Создание заказа.
+        // Цены.
+        $infoprices = Order::getFullPriceInfo($price, $event->getSurcharge(), $event->hasVAT());
         
+        $data = [
+            'LID'              => SITE_ID,
+            'USER_ID'          => \Cuser::getID(),
+            'PERSON_TYPE_ID'   => PERSON_TYPE_DETAULT,
+            'DELIVERY_ID'      => DELIVERY_DETAULT,
+            'PAYED'            => 'N',
+            'CANCELED'         => 'N',
+            'STATUS_ID'        => 'N',
+            'DISCOUNT_VALUE'   => '',
+            'PRICE'            => $infoprices['SUMMARY'],
+            'TAX_VALUE'        => (!$event->hasVAT()) ? ($infoprices['VAT_PRICE']) : (0),
+            'CURRENCY'         => $currency,
+            'USER_DESCRIPTION' => $this->getParam('COMMENTS'),
+        ];
+        
+        // Сохранение заказа.
+        $oid = \CSaleOrder::add($data);
+        
+        if (!$oid) {
+            throw new \Exception("Cant' create order.");
+        }
         
         // Сохранение свофств заказа.
+        $result = \CSaleOrderProps::GetList();
+        $props = [];
+        while ($prop = $result->Fetch()) {
+            $props[$prop['CODE']] = $prop;
+        }
+        $dataprops = [];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['eventId']['ID'],
+            'NAME'           => 'ID мероприятия',
+            'CODE'           => 'eventId',
+            'VALUE'          => $event->getID(),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['eventName']['ID'],
+            'NAME'           => 'Название мероприятия',
+            'CODE'           => 'eventName',
+            'VALUE'          => $event->getTitle(),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['width']['ID'],
+            'NAME'           => 'Ширина стенда',
+            'CODE'           => 'width',
+            'VALUE'          => $this->getParam('WIDTH'),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['depth']['ID'],
+            'NAME'           => 'Глубина стенда',
+            'CODE'           => 'depth',
+            'VALUE'          => $this->getParam('DEPTH'),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SURCHARGE']['ID'],
+            'NAME'           => 'Процент наценки',
+            'CODE'           => 'SURCHARGE',
+            'VALUE'          => $infoprices['SURCHARGE_PERCENT'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SURCHARGE_PRICE']['ID'],
+            'NAME'           => 'Сумма наценки',
+            'CODE'           => 'SURCHARGE_PRICE',
+            'VALUE'          => $infoprices['SURCHARGE_PRICE'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['LANGUAGE']['ID'],
+            'NAME'           => 'Язык заказа',
+            'CODE'           => 'LANGUAGE',
+            'VALUE'          => $context->getLang(),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['sketch']['ID'],
+            'NAME'           => 'Скетч',
+            'CODE'           => 'sketch',
+            'VALUE'          => $this->getSketch()['SKETCH_SCENE'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SKETCH_IMAGE']['ID'],
+            'NAME'           => 'Изображение скетча',
+            'CODE'           => 'SKETCH_IMAGE',
+            'VALUE'          => $this->getSketch()['SKETCH_IMAGE'],
+        ];
+        
+        foreach ($dataprops as $dataprop) {
+            \CSaleOrderPropsValue::add($dataprop);
+        }
     }
 }
