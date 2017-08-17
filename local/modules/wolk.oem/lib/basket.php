@@ -19,13 +19,21 @@ class Basket
     
     const KIND_STAND   = 'stand';
     const KIND_PRODUCT = 'product';
-
+    
+    const NOTE_PRODUCT_BASE     = 'PRODUCT.BASE';
+    const NOTE_PRODUCT_SALE     = 'PRODUCT.SALE';
+    const NOTE_STAND_STANDARD   = 'STAND.STANDARD';
+    const NOTE_STAND_INDIVIDUAL = 'STAND.INDIVIDUAL';
+    
+    
     // Типы параметров.
     const PARAM_FILE                   = 'FILE';
     const PARAM_COMMENT                = 'COMMENT';
     const PARAM_LINK                   = 'LINK';
     const PARAM_COLOR                  = 'COLOR';
     const PARAM_FORM_HANGING_STRUCTURE = 'FORM.HANGING-STRUCTURE';
+    
+    
     
     protected $code = null;
     protected $data = array();
@@ -310,15 +318,90 @@ class Basket
     public function order(Context $context)
     {
         // Текущая корзина.
-        $items = $this->getList();
+        $items = $this->getList(true);
+        
+        // Мероприятие.
+        $event = new Event($context->getEventID());
+                
+        // Валюта заказа.
+        $currency = $event->getCurrencyStandsContext($context);
         
         // Очистка корзины.
         \CSaleBasket::DeleteAll(\CSaleBasket::GetBasketUserID());
         
-        // Сохранение корзины.
-        foreach ($items as $item) {
+        // Сохранение стенда.
+        $item = $this->getStand();
+        
+        if (!empty($item)) {
             // Получение цены.
             $item->loadPrice($context);
+            
+            // Элемент.
+            $elem = $item->getElement();
+            
+            if (!empty($elem)) {
+                $data = [
+                    'PRODUCT_ID'     => $item->getProductID(),
+                    'QUANTITY'       => $item->getQuantity(),
+                    'PRICE'          => $item->getPrice(),
+                    'CURRENCY'       => $currency,
+                    'LID'            => SITE_ID,
+                    'NAME'           => $elem->getTitle(),
+                    'SET_PARENT_ID'  => 0,
+                    'TYPE'           => 0,
+                    'FUSER_ID'       => \CSaleBasket::GetBasketUserID(),
+                    'RECOMMENDATION' => $note,
+                ];
+                
+                print_r($data);
+            }
+        }
+        
+        // Сохранение продукции.
+        foreach ($items as $item) {
+            // Элемент.
+            $elem = $item->getElement();
+            
+            if (empty($elem)) {
+                continue;
+            }
+            
+            // Получение цены.
+            $item->loadPrice($context);
+            
+            // Тип продукции.
+            $kind = $item->getKind();
+            
+            if ($kind == self::KIND_STAND) {
+                $note = 'STAND.' . strtoupper($context->getType());
+            }
+            if ($kind == self::KIND_PRODUCT) {
+                $note = 'PRODUCT.' . (($item->isIncluded()) ? ('BASE') : ('SALE'));
+            }
+            
+            $data = [
+                'PRODUCT_ID'     => $item->getProductID(),
+                'QUANTITY'       => $item->getQuantity(),
+                'PRICE'          => $item->getPrice(),
+                'CURRENCY'       => $currency,
+                'LID'            => SITE_ID,
+                'NAME'           => $elem->getTitle(),
+                'SET_PARENT_ID'  => 0,
+                'TYPE'           => 0,
+                'FUSER_ID'       => \CSaleBasket::GetBasketUserID(),
+                'RECOMMENDATION' => $note,
+                'PROPS'          => []
+            ];
+            
+            $props = [[
+                'BASKET_ID' => $r->getId(),
+                'NAME'      => 'Стандартная комплектация',
+                'CODE'      => 'INCLUDING',
+                'VALUE'     => 'Да'
+            ]];
+            
+            print_r($data);
+           
         }
         
         // Создание заказа.

@@ -321,6 +321,10 @@ $(document).ready(function() {
         data['code']   = $wrapper.data('code');
         data['type']   = $wrapper.data('type');
         
+        $wrapper.find('.js-form-remote-input').each(function() {
+            data[$(this).prop('name')] = $(this).val();
+        });
+        
         $.ajax({
             url: '/remote/',
             type: 'post',

@@ -129,7 +129,7 @@
                         <?= Loc::getMessage('STAND') ?> №
                     </div>
                     <div class="ordertotalcontainer__number">
-                        <input type="text" name="STAND_NUMBER" value="0" />
+                        <input class="js-form-remote-input" type="text" name="STAND_NUMBER" value="0" />
                     </div>
                 </div>
                 <div class="ordertotalcontainer__pavillioncontainer">
@@ -137,10 +137,10 @@
                         <?= Loc::getMessage('PAVILION') ?>
                     </div>
                     <div class="ordertotalcontainer__number">
-                        <input type="text" name="PAVILION" value="0" />
+                        <input class="js-form-remote-input" type="text" name="PAVILION" value="0" />
                     </div>
                 </div>
-                <div class="ordertotalcontainer__placeorder" data-modal="<?= ($USER->IsAuthorized()) ? ('#place-uuth') : ('#place-unauth') ?>">
+                <div class="ordertotalcontainer__placeorder" data-modal="<?= ($USER->IsAuthorized()) ? ('#place-auth') : ('#place-unauth') ?>">
                     <?= Loc::getMessage('PLACE_ORDER') ?>
                 </div>
             </div>
@@ -205,7 +205,7 @@
         <div class="modalTitle">
             <?= Loc::getMessage('PLACE_ORDER') ?>
         </div>
-        <form class="js-modal-block">
+        <form class="js-modal-block js-remote-order-form">
             <div class="placeOrder__text">
                 <? Helper::includeFile('placeOrder_logged_in_text_'.$arResult['CONTEXT']->getLang()) ?>
             </div>
@@ -214,7 +214,7 @@
                 <? Helper::includeFile('rules_text_with_link_'.$arResult['CONTEXT']->getLang()) ?>
             </label>
             <div id="js-order-place-block-auth-id" class="placeOrder__buttons hide">
-                <button id="js-place-order-id" class="styler">
+                <button id="js-place-order-id" class="styler js-submit">
 					<?= Loc::getMessage('PLACE_ORDER') ?>
 				</button>
             </div>
@@ -228,7 +228,7 @@
         <div class="modalTitle">
             <?= Loc::getMessage('PLACE_ORDER') ?>
         </div>
-        <form class="js-modal-block">
+        <form class="js-modal-block js-remote-order-form">
             <div class="placeOrder__text">
                 <?= Loc::getMessage('PLACE_ORDER_NOT_LOGIN_TEXT') ?>
             </div>
@@ -257,7 +257,7 @@
         <div class="modalTitle">
 			<?= Loc::getMessage('LOGIN') ?>
 		</div>
-        <form id="js-form-login-id" class="js-remote-order-form">
+        <form id="js-form-login-id" class="js-remote-order-form js-modal-block">
             <input type="hidden" name="preaction" value="login" />
             <div class="formRow">
                 <label for="userLogin">
@@ -287,20 +287,20 @@
         <div class="modalTitle">
 			<?= Loc::getMessage('REGISTER') ?>
 		</div>
-        <form id="js-form-register-id" class="js-remote-order-form">
+        <form id="js-form-register-id" class="js-remote-order-form js-modal-block">
             <input type="hidden" name="preaction" value="register" />
             <div class="userForm__left">
                 <div class="formRow">
                     <label for="comName">
 						<?= Loc::getMessage('COMPANY_NAME') ?>*
 					</label>
-                    <input type="text" class="styler" name="AUTH[COMPANY_NAME]" />
+                    <input type="text" class="styler" name="AUTH[WORK_COMPANY]" />
                 </div>
                 <div class="formRow">
                     <label for="comAddr">
 						<?= Loc::getMessage('COMPANY_ADDRESS') ?>*
 					</label>
-                    <input type="text" class="styler" name="AUTH[COMPANY_ADDRESS]" />
+                    <input type="text" class="styler" name="AUTH[WORK_STREET]" />
                 </div>
                 <div class="formRow">
                     <label for="comName">
@@ -338,7 +338,7 @@
                     <label for="comVat">
 						<?= Loc::getMessage('VAT_ID') ?>
 					</label>
-                    <input type="text" class="styler" name="AUTH[VAT_ID]" />
+                    <input type="text" class="styler" name="AUTH[UF_VAT]" />
                 </div>
                 <div class="formRow">
                     <label for="comPass">
@@ -350,7 +350,7 @@
                     <label for="comPassRe">
 						<?= Loc::getMessage('USER_CONFIRM_PASSWORD') ?>*
 					</label>
-                    <input type="password" class="styler" name="AUTH[CONFIRM_PASSWORD]" />
+                    <input type="password" class="styler" name="AUTH[PASSWORD_CONFIRM]" />
                 </div>
                 <div class="formRow">
                     <label>&nbsp;</label>

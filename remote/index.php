@@ -58,6 +58,8 @@ $request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 // Действие.
 $token = (string) $request->get('TOKEN');
 
+// Язык.
+$lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 
 
 // Обработка действий.
@@ -174,7 +176,7 @@ switch ($action) {
         }
         
         // Контекст конструктора.
-        $context = new Wolk\OEM\Context($eid, $type);
+        $context = new Wolk\OEM\Context($eid, $type, $lang);
         
         // Корзина.
         $basket = new \Wolk\OEM\Basket($code);
@@ -219,7 +221,7 @@ switch ($action) {
 
         
         // Контекст конструктора.
-        $context = new Wolk\OEM\Context($eid, $type);
+        $context = new Wolk\OEM\Context($eid, $type, $lang);
         
         // Корзина.
         $basket = new \Wolk\OEM\Basket($code);
@@ -242,7 +244,7 @@ switch ($action) {
         $type     = (string) $request->get('type');
         
         // Контекст конструктора.
-        $context = new Wolk\OEM\Context($eid, $type);
+        $context = new Wolk\OEM\Context($eid, $type, $lang);
         
         // Корзина.
         $basket = new \Wolk\OEM\Basket($code);
@@ -259,25 +261,43 @@ switch ($action) {
     
     // Создание заказа.
     case ('place-order'):
+        $eid      = (int)    $request->get('eid');
+        $code     = (string) $request->get('code');
+        $type     = (string) $request->get('type');
+        
+        // Контекст конструктора.
+        $context = new Wolk\OEM\Context($eid, $type, $lang);
+    
+        // Предварительное действие.
         $preaction = $request->get('preaction');
         
         // Пользователь должен быть авторизован.
         if (!$USER->IsAuthorized()) {
             switch ($preaction) {
+                
+                // Авторизация пользователя.
                 case ('login'):
                     $data = (array) $request->get('AUTH');
                     
-                    // Авторизация пользователя.
-                    $result = CUser::Login($data['LOGIN'], $data['PASSWORD']);
-                    
+                    $result = $USER->login($data['LOGIN'], $data['PASSWORD']);
                     if ($result !== true) {
                         jsonresponse(false, strip_tags($result['MESSAGE']));
                     }
                     break;
-                    
+                
+                // Регистрация пользователя.
                 case ('register'):
                     $data = (array) $request->get('AUTH');
-                    jsonresponse(false, 'Register', $data);
+                    
+                    // Обработка полей.
+                    $data['LOGIN'] = $data['EMAIL'];
+                    
+                    $bxuser = new CUser();
+                    $userid = $bxuser->add($data);
+                    if (!$userid) {
+                        jsonresponse(false, $bxuser->LAST_ERROR);
+                    }
+                    $USER->authorize($userid);
                     break;
                     
                 default:
@@ -286,6 +306,16 @@ switch ($action) {
             }
         }
         
+        // Корзина.
+        $basket = new \Wolk\OEM\Basket($code);
+        
+        // Создание заказа.
+        try {
+            $basket->order($context);
+        } catch (Exceptino $e) {
+            jsonresponse(false, $e->getMessag());
+        }
+        jsonresponse(true);
         break;
     
     
