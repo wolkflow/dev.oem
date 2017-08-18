@@ -448,9 +448,9 @@ class Basket
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['eventId']['ID'],
+            'ORDER_PROPS_ID' => $props['EVENT_ID']['ID'],
             'NAME'           => 'ID мероприятия',
-            'CODE'           => 'eventId',
+            'CODE'           => 'EVENT_ID',
             'VALUE'          => $event->getID(),
         ];
         
@@ -458,7 +458,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['eventName']['ID'],
             'NAME'           => 'Название мероприятия',
-            'CODE'           => 'eventName',
+            'CODE'           => 'EVENT_NAME',
             'VALUE'          => $event->getTitle(),
         ];
         

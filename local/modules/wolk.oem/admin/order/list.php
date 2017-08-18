@@ -144,7 +144,7 @@ if (CheckFilter()) {
 	// Фильтр по названию выставки.
 	if (!empty($find_event)) {
 		$rids = array();
-		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'eventName', '%VALUE' => $find_event], false, false, ['ORDER_ID']);
+		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'EVENT_NAME', '%VALUE' => $find_event], false, false, ['ORDER_ID']);
 		while ($item = $result->Fetch()) {
 			$rids []= (int) $item['ORDER_ID'];
 		}
@@ -217,7 +217,7 @@ if ($ismanager) {
 	$eids = array_unique(array_filter($eids));
 	
 	$rids = array();
-	$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'eventId', '@VALUE' => $eids], false, false, ['ORDER_ID']);
+	$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'EVENT_ID', '@VALUE' => $eids], false, false, ['ORDER_ID']);
 	while ($item = $result->Fetch()) {
 		$rids []= (int) $item['ORDER_ID'];
 	}

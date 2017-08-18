@@ -61,7 +61,7 @@ if ($ismanager) {
 	}
 	unset($result, $item);
 	
-	$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'eventId', '@VALUE' => $eids, 'ORDER_ID' => $ID], false, false, ['ORDER_ID']);
+	$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'EVENT_ID', '@VALUE' => $eids, 'ORDER_ID' => $ID], false, false, ['ORDER_ID']);
 	if ($result->SelectedRowsCount() <= 0) {
 		ShowError('Вы не являетесь менеджером данного заказа.');
 		return;
@@ -207,7 +207,7 @@ if (!empty($_POST)) {
                     $order['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($ID);
                     
                     // Мероприятие.
-                    $event = new Wolk\OEM\Event($order['PROPS']['eventId']['VALUE']);
+                    $event = new Wolk\OEM\Event($order['PROPS']['EVENT_ID']['VALUE']);
                     
                     // E-mail'ы для отправки.
                     $emails = array_unique(array_merge([$email], (array) $event->getEmails()));
@@ -279,7 +279,7 @@ $order['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($ID);
 $customer = CUser::GetByID($order['USER_ID'])->Fetch();
 
 // Мероприятие.
-$element = CIBlockElement::getByID($order['PROPS']['eventId']['VALUE'])->GetNextElement();
+$element = CIBlockElement::getByID($order['PROPS']['EVENT_ID']['VALUE'])->GetNextElement();
 
 if ($element) {
 	$event = $element->GetFields();
