@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Bitrix\Sale\Helpers\Admin\OrderEdit;
 use Bitrix\Main\Localization\Loc;
@@ -24,6 +24,13 @@ if (in_array(GROUP_MANAGERS_ID, $groups)) {
 	$ismanager = true;
 }
 
+
+$oid = (int) $_REQEST['OID'];
+
+$oemorder = null;
+if (!empty($oid)) {
+    $oemorder = new Wolk\OEM\Order($oid);
+}
 
 // Подключение модуля.
 Bitrix\Main\Loader::includeModule('wolk.oem');
@@ -164,11 +171,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         
         // Добавление стенда.
         $('#js-form-stand-select-button-id').on('click', function() {
-            var event    = $('#form-event-id').val();
-            var language = $('#form-language-id').val();
-            var currency = $('#form-currency-id').val();
+            var event     = $('#form-event-id').val();
+            var language  = $('#form-language-id').val();
+            var currency  = $('#form-currency-id').val();
+            var typestand = $('.js-form-type-stand:checked').val();
             
-            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=ru&IBLOCK_ID=<?= STANDS_IBLOCK_ID ?>&func=SetStandElement&event=' + event + '&language=' + language + '&currency=' + currency, 900, 700);
+            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=ru&IBLOCK_ID=<?= STANDS_IBLOCK_ID ?>&func=SetStandElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand, 900, 600);
         });
         
         
@@ -201,11 +209,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         
         // Добавление товарной позиции.
         $('#js-form-insert-position-id').on('click', function() {
-            var event    = $('#form-event-id').val();
-            var language = $('#form-language-id').val();
-            var currency = $('#form-currency-id').val();
+            var event     = $('#form-event-id').val();
+            var language  = $('#form-language-id').val();
+            var currency  = $('#form-currency-id').val();
+            var typestand = $('.js-form-type-stand:checked').val();
             
-            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=ru&IBLOCK_ID=<?= EQUIPMENT_IBLOCK_ID ?>&func=SetElement&event=' + event + '&language=' + language + '&currency=' + currency, 900, 700);
+            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_product_search.php?lang=ru&IBLOCK_ID=<?= IBLOCK_PRODUCTS_ID ?>&func=SetElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand, 900, 600);
         });
         
         
@@ -300,6 +309,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                 }
 			});
 		});
+        
+        // Всплывающее окно для своства.
+        $(document).on('click', '.js-basket-prop', function() {
+            var $wrap = $(this).closest('.js-basket-prop-wrap');
+            
+            $wrap.find('.modal').modal();
+        });
     });
     
     
@@ -332,9 +348,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             total = summ + vat;
         }
         
-        $('#js-order-price-summ').html(summ.toFixed(2));
-        $('#js-order-price-vat').html(vat.toFixed(2));
-        $('#js-order-price-total').html(total.toFixed(2));
+        $('#js-order-price-summ-id').html(summ.toFixed(2));
+        $('#js-order-price-vat-id').html(vat.toFixed(2));
+        $('#js-order-price-total-id').html(total.toFixed(2));
     }
     
     
@@ -354,7 +370,22 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         html += '<td><input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[QUANTITY][' + element.ID + ']" value="1" /></td>';
         html += '<td><input type="text" class="js-price form-control input-text-small" name="PRODUCTS[PRICE][' + element.ID + ']" value="' + (element.PRICE).toFixed(2) + '" /></td>';
         html += '<td><span class="js-cost">' + (element.PRICE).toFixed(2) + '</span></td>';
-        html += '<td><div class="js-basket-props"></div></td>';
+        html += '<td><div class="js-basket-props">';
+        
+        if (element.PRODUCT.PROPS.length > 0) {
+            html += '<div class="btn-group-vertical btn-group-xs" role="group" aria-label="Свойства">';
+            for (let i in element.PRODUCT.PROPS) {
+                let property = element.PRODUCT.PROPS[i];
+                
+                html += '<div class="js-basket-prop-wrap">';
+                html += '<button type="button" class="js-basket-prop btn btn-info" data-prop="' + property.CODE + '">' + property.CODE + '</button>';
+                html += property.HTML;
+                html += '</div>';
+            }
+            html += '</div>';
+        }
+        
+        html += '</div></td>';
         html += '<td><input type="text" class="js-comment form-control" name="PRODUCTS[COMMENTS][' + element.ID + ']" value="" /></td>';
         html += '<td><a class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></a></td>';
         html += '</tr>';
@@ -386,7 +417,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 <div id="js-error-message-id" class="alert alert-danger hidden" role="alert"></div>
 
 <div class="row" id="js-order-form-od">
-    <div class="col-md-10">
+    <div class="col-md-12">
         
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -480,9 +511,24 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                     
                     <hr/>
                     
-                     <div class="row">
+                    <div class="row">
                         <div class="col-md-11">
                             <h3>Стенд</h3>
+                            <div class="form-group">
+                                <div class="radio">
+                                    <label>
+                                        <input class="js-form-type-stand" type="radio" name="TYPESTAND" id="form-type-stand-standard-id" value="<?= Wolk\OEM\Context::TYPE_STANDARD ?>" checked="checked" />
+                                        Стандартная застройка
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input class="js-form-type-stand" type="radio" name="TYPESTAND" id="form-type-stand-individual-id" value="<?= Wolk\OEM\Context::TYPE_INDIVIDUAL ?>" />
+                                        Индивидуальная застройка
+                                    </label>
+                                </div>
+                            </div>
+                            
                             <table class="table table-bordered" id="js-stand-id">
                                 <thead>
                                     <tr>
@@ -574,15 +620,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                             <table class="table table-bordered table-condensed table-prices">
                                 <tr>
                                     <td>Итого:</td>
-                                    <td id="js-order-price-summ"></td>
+                                    <td id="js-order-price-summ-id"></td>
                                 </tr>
                                 <tr>
                                     <td>НДС:</td>
-                                    <td id="js-order-price-vat"></td>
+                                    <td id="js-order-price-vat-id"></td>
                                 </tr>
                                 <tr class="info">
                                     <td>Итого с НДС:</td>
-                                    <td id="js-order-price-total"></td>
+                                    <td id="js-order-price-total-id"></td>
                                 </tr>
                             </table>
                         </div>

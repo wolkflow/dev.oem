@@ -5,33 +5,37 @@ CModule::IncludeModule("iblock");
 CModule::IncludeModule("wolk.oem");
 IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/iblock/admin/iblock_element_search.php');
 
-//Init variables
+// Init variables
 $reloadParams = array();
 
 $eventID = '';
-if (isset($_GET['event']))
+if (isset($_GET['event'])) {
 	$eventID = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['event']);
-//if ($eventID != '')
-	//$reloadParams['event'] = $eventID;
+}
 
 $func = '';
-if (isset($_GET['func']))
+if (isset($_GET['func'])) {
 	$func = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['func']);
-//if ($func != '')
-	//$reloadParams['func'] = $func;
+}
 
 $language = '';
-if (isset($_GET['language']))
+if (isset($_GET['language'])) {
 	$language = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['language']);
-//if ($language != '')
-	//$reloadParams['language'] = $language;
-
+}
 
 $currency = '';
-if (isset($_GET['currency']))
+if (isset($_GET['currency'])) {
 	$currency = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['currency']);
-//if ($currency != '')
-	//$reloadParams['currency'] = $currency;
+}
+
+$typestand = '';
+if (isset($_GET['typestand'])) {
+	$typestand = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['typestand']);
+}
+
+// Контекст.
+$context = new Wolk\OEM\Context($event, $typestand, $language);
+
 
 
 
@@ -292,18 +296,18 @@ $arSelectedFields[] = "XML_ID";
 $arSelectedFields[] = "PREVIEW_PICTURE";
 $arSelectedFields[] = "DETAIL_PICTURE";
 
-if ($IBLOCK_ID == EQUIPMENT_IBLOCK_ID) {
+if ($IBLOCK_ID == IBLOCK_PRODUCTS_ID) {
     $arSelectedFields[] = 'PROPERTY_LANG_TITLE_'.strtoupper($language);
 }
     
-if ($IBLOCK_ID == STANDS_IBLOCK_ID) {
+if ($IBLOCK_ID == IBLOCK_STANDS_ID) {
     $arSelectedFields[] = 'PROPERTY_LANG_NAME_'.strtoupper($language);
 }
 
-$rsData = CIBlockElement::GetList($arOrder, $arFilter, false, array("nPageSize"=>CAdminResult::GetNavSize($sTableID)), $arSelectedFields);
-$rsData = new CAdminResult($rsData, $sTableID);
-$rsData->NavStart();
-$lAdmin->NavText($rsData->GetNavPrint($arIBlock["ELEMENTS_NAME"]));
+$result = CIBlockElement::GetList($arOrder, $arFilter, false, array("nPageSize"=>CAdminResult::GetNavSize($sTableID)), $arSelectedFields);
+$result = new CAdminResult($result, $sTableID);
+$result->NavStart();
+$lAdmin->NavText($result->GetNavPrint($arIBlock["ELEMENTS_NAME"]));
 
 function GetElementName($ID)
 {
@@ -372,66 +376,60 @@ if ($element) {
     }
 }
 
-$prices = [];
-switch ($IBLOCK_ID) {
-    case (EQUIPMENT_IBLOCK_ID):
-        $currency_item = $currencies['EQUIPMENTS'][$currency];
-        
-        if (count($currency_item) > 1) {
-            $currency_item = $currency_item[strtoupper($language)];
-        } else {
-            $currency_item = reset($currency_item);
-        }
-    
-        $prices = \Wolk\OEM\EventEquipmentPricesTable::getList([
-            'filter' => ['EVENT_ID' => $eventID, 'SITE_ID'  => strtoupper($currency_item)]
-        ])->fetchAll();
 
-        $eventIDprices = [];
-        foreach ($prices as $price) {
-            $eventIDprices[$price['EQUIPMENT_ID']] = $price['PRICE'];
+// Цены.
+$prices = [];
+
+switch ($IBLOCK_ID) {
+    
+    // Цены для продукции.
+    case (IBLOCK_PRODUCTS_ID):
+        $oprices = Wolk\OEM\Prices\Product::getList([
+            'filter' => [
+                Wolk\OEM\Prices\Product::FIELD_EVENT => $context->getEventID(),
+                Wolk\OEM\Prices\Product::FIELD_TYPE  => $context->getType(),
+                Wolk\OEM\Prices\Product::FIELD_LANG  => $context->getLang(),
+            ]
+        ]);
+        
+        foreach ($oprices as $oprice) {
+            $prices[$oprice->getProductID()] = $oprice->getPrice();
         }
         break;
         
+    
+    // Цены для стендов.
+    case (IBLOCK_STANDS_ID):
+        $oprices = Wolk\OEM\Prices\Stand::getList([
+            'filter' => [
+                Wolk\OEM\Prices\Stand::FIELD_EVENT => $context->getEventID(),
+                Wolk\OEM\Prices\Stand::FIELD_TYPE  => $context->getType(),
+                Wolk\OEM\Prices\Stand::FIELD_LANG  => $context->getLang(),
+            ]
+        ]);
         
-    case (STANDS_IBLOCK_ID):
-        $currency_item = $currencies['STANDS'][$currency];
-    
-        if (count($currency_item) > 1) {
-            $currency_item = $currency_item[strtoupper($language)];
-        } else {
-            $currency_item = reset($currency_item);
-        }
-    
-        $prices = \Wolk\OEM\EventStandPricesTable::getList([
-            'filter' => ['EVENT_ID' => $eventID, 'SITE_ID'  => strtoupper($currency_item)]
-        ])->fetchAll();
-
-        $eventIDprices = [];
-        foreach ($prices as $price) {
-            $eventIDprices[$price['STAND_ID']] = $price['PRICE'];
+        foreach ($oprices as $oprice) {
+            $prices[$oprice->getStandID()] = $oprice->getPrice();
         }
         break;
 }
 
-// print_r($eventIDprices);
-// LANG_NAME_RU
-// LANG_TITLE_RU
 
-while ($arRes = $rsData->GetNext()) {
+while ($item = $result->GetNext()) {
 	foreach ($arSelectedProps as $aProp) {
-		if ($arRes["PROPERTY_".$aProp['ID'].'_ENUM_ID'] > 0)
-			$arRes["PROPERTY_".$aProp['ID']] = $arRes["PROPERTY_".$aProp['ID'].'_ENUM_ID'];
-		else
-			$arRes["PROPERTY_".$aProp['ID']] = $arRes["PROPERTY_".$aProp['ID'].'_VALUE'];
+		if ($item["PROPERTY_".$aProp['ID'].'_ENUM_ID'] > 0) {
+			$item["PROPERTY_".$aProp['ID']] = $item["PROPERTY_".$aProp['ID'].'_ENUM_ID'];
+		} else {
+			$item["PROPERTY_".$aProp['ID']] = $item["PROPERTY_".$aProp['ID'].'_VALUE'];
+        }
 	}
 
-	$row =& $lAdmin->AddRow($arRes["ID"], $arRes);
+	$row =& $lAdmin->AddRow($item["ID"], $item);
 
-	$row->AddViewField("NAME", $arRes["NAME"]."<input type=hidden name='n".$arRes["ID"]."' id='name_".$arRes["ID"]."' value='".CUtil::JSEscape(htmlspecialcharsbx($arRes["NAME"]))."'>");
-	$row->AddViewField("USER_NAME", "[<a target=\"_blank\" href=\"user_edit.php?lang=".LANGUAGE_ID."&ID=".$arRes["MODIFIED_BY"]."\">".$arRes["MODIFIED_BY"]."</a>]&nbsp;".$arRes["USER_NAME"]);
+	$row->AddViewField("NAME", $item["NAME"]."<input type=hidden name='n".$item["ID"]."' id='name_".$item["ID"]."' value='".CUtil::JSEscape(htmlspecialcharsbx($item["NAME"]))."'>");
+	$row->AddViewField("USER_NAME", "[<a target=\"_blank\" href=\"user_edit.php?lang=".LANGUAGE_ID."&ID=".$item["MODIFIED_BY"]."\">".$item["MODIFIED_BY"]."</a>]&nbsp;".$item["USER_NAME"]);
 	$row->AddCheckField("ACTIVE", false);
-	$row->AddViewField("CREATED_USER_NAME", "[<a target=\"_blank\" href=\"user_edit.php?lang=".LANGUAGE_ID."&ID=".$arRes["CREATED_BY"]."\">".$arRes["CREATED_BY"]."</a>]&nbsp;".$arRes["CREATED_USER_NAME"]);
+	$row->AddViewField("CREATED_USER_NAME", "[<a target=\"_blank\" href=\"user_edit.php?lang=".LANGUAGE_ID."&ID=".$item["CREATED_BY"]."\">".$item["CREATED_BY"]."</a>]&nbsp;".$item["CREATED_USER_NAME"]);
 	$row->AddViewFileField("PREVIEW_PICTURE", array(
 			"IMAGE" => "Y",
 			"PATH" => "Y",
@@ -453,12 +451,12 @@ while ($arRes = $rsData->GetNext()) {
 		)
 	);
 
-	$row->AddViewField("WF_STATUS_ID", htmlspecialcharsbx(CIBlockElement::WF_GetStatusTitle($arRes["WF_STATUS_ID"]))."<input type=hidden name='n".$arRes["ID"]."' value='".CUtil::JSEscape($arRes["NAME"])."'>");
-	$row->AddViewField("LOCKED_USER_NAME", '&nbsp;<a href="user_edit.php?lang='.LANGUAGE_ID.'&ID='.$arRes["WF_LOCKED_BY"].'" title="'.GetMessage("IBLOCK_ELSEARCH_USERINFO").'">'.$arRes["LOCKED_USER_NAME"].'</a>');
+	$row->AddViewField("WF_STATUS_ID", htmlspecialcharsbx(CIBlockElement::WF_GetStatusTitle($item["WF_STATUS_ID"]))."<input type=hidden name='n".$item["ID"]."' value='".CUtil::JSEscape($item["NAME"])."'>");
+	$row->AddViewField("LOCKED_USER_NAME", '&nbsp;<a href="user_edit.php?lang='.LANGUAGE_ID.'&ID='.$item["WF_LOCKED_BY"].'" title="'.GetMessage("IBLOCK_ELSEARCH_USERINFO").'">'.$item["LOCKED_USER_NAME"].'</a>');
 
 	$arProperties = array();
 	if (count($arSelectedProps) > 0) {
-		$rsProperties = CIBlockElement::GetProperty($IBLOCK_ID, $arRes["ID"]);
+		$rsProperties = CIBlockElement::GetProperty($IBLOCK_ID, $item["ID"]);
 		while ($ar = $rsProperties->GetNext()) {
 			if (!array_key_exists($ar["ID"], $arProperties)) {
 				$arProperties[$ar["ID"]] = array();
@@ -476,8 +474,8 @@ while ($arRes = $rsData->GetNext()) {
 		$v = '';
 		foreach ($arProperties[$aProp['ID']] as $property_value_id => $property_value) {
 			$property_value['PROPERTY_VALUE_ID'] = intval($property_value['PROPERTY_VALUE_ID']);
-			$VALUE_NAME = 'FIELDS['.$arRes["ID"].'][PROPERTY_'.$property_value['ID'].']['.$property_value['PROPERTY_VALUE_ID'].'][VALUE]';
-			$DESCR_NAME = 'FIELDS['.$arRes["ID"].'][PROPERTY_'.$property_value['ID'].']['.$property_value['PROPERTY_VALUE_ID'].'][DESCRIPTION]';
+			$VALUE_NAME = 'FIELDS['.$item["ID"].'][PROPERTY_'.$property_value['ID'].']['.$property_value['PROPERTY_VALUE_ID'].'][VALUE]';
+			$DESCR_NAME = 'FIELDS['.$item["ID"].'][PROPERTY_'.$property_value['ID'].']['.$property_value['PROPERTY_VALUE_ID'].'][DESCRIPTION]';
 			$res = '';
 			if (array_key_exists("GetAdminListViewHTML", $arUserType)) {
 				$res = call_user_func_array($arUserType["GetAdminListViewHTML"],
@@ -538,44 +536,95 @@ while ($arRes = $rsData->GetNext()) {
 	}
     
     $picture = null;
-    if (!empty($arRes['PREVIEW_PICTURE'])) {
-        $picture = CFile::getPath($arRes['PREVIEW_PICTURE']);
+    if (!empty($item['PREVIEW_PICTURE'])) {
+        $picture = CFile::getPath($item['PREVIEW_PICTURE']);
         if (!is_readable($_SERVER['DOCUMENT_ROOT'] . $picture)) {
             $picture = null;
         }
     }
         
-    $arRes['PICTURE'] = $picture;
-    $arRes['PRICE']   = (float) $eventIDprices[$arRes['ID']];
-    // print_r($arRes);die();
+    $item['PICTURE'] = $picture;
+    $item['PRICE']   = (float) $prices[$item['ID']];
+    
     switch ($IBLOCK_ID) {
-        case (EQUIPMENT_IBLOCK_ID):
-            $title = $arRes['PROPERTY_LANG_TITLE_'.strtoupper($language).'_VALUE'];
+        case (IBLOCK_PRODUCTS_ID):
+            $title = $item['PROPERTY_LANG_TITLE_'.strtoupper($language).'_VALUE'];
             if (!empty($title)) {
-                $arRes['NAME'] = $title;
+                $item['NAME'] = $title;
             }
             break;
-        case (STANDS_IBLOCK_ID):
-            $title = $arRes['PROPERTY_LANG_NAME_'.strtoupper($language).'_VALUE'];
+        case (IBLOCK_STANDS_ID):
+            $title = $item['PROPERTY_LANG_NAME_'.strtoupper($language).'_VALUE'];
             if (!empty($title)) {
-                $arRes['NAME'] = $title;
+                $item['NAME'] = $title;
             }
             break;
     }
+    
+    $item['PRODUCT'] = [];
+    
+    
+    // Раздел продукции.
+    $section = new Wolk\OEM\Products\Section($item['IBLOCK_SECTION_ID']);
+    
+    // Тип цены.
+    $item['PRODUCT']['PRICETYPE'] = $section->getPriceType();
+    
+    // Свойства продукта.
+    $item['PRODUCT']['PROPS'] = $section->getProperties();
+    
+    //echo '<pre>';
+    //print_r($item);
+    //echo '</pre>';
+    
+    foreach ($item['PRODUCT']['PROPS'] as &$prop) {
+        $prop = [
+            'CODE' => $prop,
+            'HTML' => 
+                '<div class="modal fade" tabindex="-1" role="dialog">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Modal title</h4>
+                      </div>
+                      <div class="modal-body">
+                         <form>
+                          <div class="form-group">
+                            <label for="recipient-name" class="control-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                          </div>
+                          <div class="form-group">
+                            <label for="message-text" class="control-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                        <button type="button" class="btn btn-primary">Созранить</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>'
+        ];
+    }
+    
+    
     
 	$row->AddActions(array(
 		array(
 			"DEFAULT" => "Y",
 			"TEXT"    => GetMessage("IBLOCK_ELSEARCH_SELECT"),
-			"ACTION"  => "javascript:SelEl('".CUtil::JSEscape($get_xml_id? $arRes["XML_ID"]: $arRes["ID"])."', '".CUtil::JSEscape($arRes["NAME"])."', '".$picture."', '".CUtil::JSEscape(json_encode($arRes))."')",
+			"ACTION"  => "javascript:SelEl('".CUtil::JSEscape($get_xml_id? $item['XML_ID'] : $item['ID'])."', '".CUtil::JSEscape($item["NAME"])."', '".$picture."', '".CUtil::JSEscape(json_encode($item))."')",
 		),
 	));
 }
 
 $lAdmin->AddFooter(
 	array(
-		array("title"=>GetMessage("MAIN_ADMIN_LIST_SELECTED"), "value"=>$rsData->SelectedRowsCount()),
-		array("counter"=>true, "title"=>GetMessage("MAIN_ADMIN_LIST_CHECKED"), "value"=>"0"),
+		array("title" => GetMessage("MAIN_ADMIN_LIST_SELECTED"), "value" => $result->SelectedRowsCount()),
+		array("counter" => true, "title" => GetMessage("MAIN_ADMIN_LIST_CHECKED"), "value" => "0"),
 	)
 );
 
@@ -661,6 +710,7 @@ function applyFilter(el)
 	<?= $sTableID."_filter"; ?>.OnSet('<?= CUtil::JSEscape($sTableID)?>', '<?= CUtil::JSEscape($filterPath); ?>');
 	return false;
 }
+
 function deleteFilter(el)
 {
 	if (blockedFilter)
@@ -675,7 +725,7 @@ function deleteFilter(el)
 			}
 		}
 	}
-	<?=$sTableID."_filter"?>.OnClear('<?= CUtil::JSEscape($sTableID)?>', '<?= CUtil::JSEscape($APPLICATION->GetCurPage().'?type='.urlencode($type).'&IBLOCK_ID='.urlencode($IBLOCK_ID).'&lang='.LANGUAGE_ID.'&')?>');
+	<?= $sTableID."_filter"?>.OnClear('<?= CUtil::JSEscape($sTableID) ?>', '<?= CUtil::JSEscape($APPLICATION->GetCurPage().'?type='.urlencode($type).'&IBLOCK_ID='.urlencode($IBLOCK_ID).'&lang='.LANGUAGE_ID.'&') ?>');
 	return false;
 }
 
@@ -765,22 +815,18 @@ function reloadFilter(el)
 }
 </script>
 
-<input type="hidden" name="language" value="<?= $language; ?>" />
-<input type="hidden" name="currency" value="<?= $currency; ?>" />
-<input type="hidden" name="func" value="<?= $func; ?>" />
-<input type="hidden" name="event" value="<?= $eventID; ?>" />
+<input type="hidden" name="func"      value="<?= $func; ?>" />
+<input type="hidden" name="event"     value="<?= $eventID; ?>" />
+<input type="hidden" name="language"  value="<?= $language; ?>" />
+<input type="hidden" name="currency"  value="<?= $currency; ?>" />
+<input type="hidden" name="typestand" value="<?= $typestand ?>" />
 
-<?
-if ($iblockFix) {
-	?>
+<? if ($iblockFix) { ?>
     <input type="hidden" name="IBLOCK_ID" value="<?= $IBLOCK_ID; ?>" />
 	<input type="hidden" name="filter_iblock_id" value="<?= $IBLOCK_ID; ?>" />
-    <?
-}
-$oFilter->Begin();
-if (!$iblockFix)
-{
-?>
+<? } ?>
+<? $oFilter->Begin(); ?>
+<? if (!$iblockFix) { ?>
 	<tr>
 		<td><b><?= GetMessage("IBLOCK_ELSEARCH_IBLOCK")?></b></td>
 		<td><?= GetIBlockDropDownListEx(
@@ -825,22 +871,19 @@ if (!$iblockFix)
 			);?>
 		</td>
 	</tr>
-	<?if(CModule::IncludeModule("workflow")):?>
-	<tr>
-		<td nowrap><?=GetMessage("IBLOCK_FIELD_STATUS")?>:</td>
-		<td nowrap><input type="text" name="filter_status_id" value="<?= htmlspecialcharsex($filter_status_id)?>" size="3">
-		<select name="filter_status">
-		<option value=""><?=GetMessage("IBLOCK_VALUE_ANY")?></option>
-		<?
-		$rs = CWorkflowStatus::GetDropDownList("Y");
-		while($arRs = $rs->GetNext())
-		{
-			?><option value="<?=$arRs["REFERENCE_ID"]?>"<?if($filter_status == $arRs["~REFERENCE_ID"])echo " selected"?>><?=$arRs["REFERENCE"]?></option><?
-		}
-		?>
-		</select></td>
-	</tr>
-	<?endif?>
+	<? if (CModule::IncludeModule("workflow")) { ?>
+        <tr>
+            <td nowrap><?=GetMessage("IBLOCK_FIELD_STATUS")?>:</td>
+            <td nowrap><input type="text" name="filter_status_id" value="<?= htmlspecialcharsex($filter_status_id)?>" size="3">
+            <select name="filter_status">
+            <option value=""><?=GetMessage("IBLOCK_VALUE_ANY")?></option>
+            <? $rs = CWorkflowStatus::GetDropDownList("Y"); ?>
+            <? while($arRs = $rs->GetNext()) { ?>
+                <option value="<?=$arRs["REFERENCE_ID"]?>"<?if($filter_status == $arRs["~REFERENCE_ID"])echo " selected"?>><?=$arRs["REFERENCE"]?></option>
+            <? } ?>
+            </select></td>
+        </tr>
+	<? } ?>
 
 	<?if(is_array($arIBTYPE) && ($arIBTYPE["SECTIONS"] == "Y")):?>
 	<tr>

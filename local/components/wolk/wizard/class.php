@@ -63,7 +63,7 @@ class WizardComponent extends \CBitrixComponent
         }
         
         // ID заказа.
-        $arParams['OID']  = (int) $arParams['OID'];
+        $arParams['OID'] = (int) $arParams['OID'];
         
         
         // Контекст исполнения.
@@ -74,7 +74,7 @@ class WizardComponent extends \CBitrixComponent
         
         // На первом шаге сохраняем параметра стенда в сессию.
         if ($arParams['STEP'] == 1) {
-            $this->getBasket()->clear();
+            // $this->getBasket()->clear();
             
             // Очистка данных по выставке.
             $_SESSION[self::SESSCODE][$this->getBasket()->getEventCode()] = array('STAND' => array(), Basket::SESSCODE_BASKET => array());

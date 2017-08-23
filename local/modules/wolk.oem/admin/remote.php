@@ -108,7 +108,6 @@ switch ($action) {
         );
         while ($user = $result->fetch()) {
             $user['FULLNAME'] = trim($user['WORK_COMPANY'] . ' | ' . $user['NAME'] . ' ' . $user['LAST_NAME']);
-            
             $users[$user['ID']] = $user;
         }
         unset($result);
