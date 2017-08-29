@@ -311,8 +311,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 		});
         
         // Всплывающее окно для своства.
-        $(document).on('click', '.js-basket-prop', function() {
-            var $wrap = $(this).closest('.js-basket-prop-wrap');
+        $(document).on('click', '.js-props', function() {
+            var $wrap = $(this).closest('td');
             
             $wrap.find('.modal').modal();
         });
@@ -362,14 +362,16 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         var html = '<tr id="position-' + element.ID + '" class="js-position row-position">';
         
         if (element.PICTURE) {
-            html += '<td><img src="' + element.PICTURE + '" class="img-thumbnail position-image-preview" /></td>';
+            html += '<td class="td-image"><img src="' + element.PICTURE + '" class="img-thumbnail position-image-preview" /></td>';
         } else {
-            html += '<td><div class="no_foto">Нет картинки</div></td>';
+            html += '<td class="td-image"><div class="no_foto">Нет картинки</div></td>';
         }
         html += '<td>' + element.NAME + ' <input type="hidden" name="PRODUCTS[IDS][' + element.ID + ']" value="' + element.ID + '" /></td>';
-        html += '<td><input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[QUANTITY][' + element.ID + ']" value="1" /></td>';
+        html += '<td><div class="col-xs-3"><input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[QUANTITY][' + element.ID + ']" value="1" /></div></td>';
         html += '<td><input type="text" class="js-price form-control input-text-small" name="PRODUCTS[PRICE][' + element.ID + ']" value="' + (element.PRICE).toFixed(2) + '" /></td>';
         html += '<td><span class="js-cost">' + (element.PRICE).toFixed(2) + '</span></td>';
+        
+        <? /*
         html += '<td><div class="js-basket-props">';
         
         if (element.PRODUCT.PROPS.length > 0) {
@@ -386,8 +388,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         }
         
         html += '</div></td>';
+        */ ?>
         html += '<td><input type="text" class="js-comment form-control" name="PRODUCTS[COMMENTS][' + element.ID + ']" value="" /></td>';
-        html += '<td><a class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></a></td>';
+        html += '<td>';
+        html += element.PRODUCT.HTML;
+        html += '<div class="btn-group" role="group">';
+        html += '<button type="button" class="btn btn-primary js-props" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>';
+        html += '<button type="button" class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></button>';
+        html += '</div>';
+        html += '</td>';
         html += '</tr>';
         
         $('#js-positions-id tbody').append(html);
@@ -416,255 +425,255 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 
 <div id="js-error-message-id" class="alert alert-danger hidden" role="alert"></div>
 
-<div class="row" id="js-order-form-od">
-    <div class="col-md-12">
-        
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3>Создание заказа</h3>
-            </div>
-            <div class="panel-body">
-                <form method="POST" id="js-order-make-form-id">
-					<input type="hidden" name="action" value="order-make" />
-                    <div class="form-group">
-                        <label class="control-label" for="form-event-id">Выставка:</label>
-                        <select class="form-control" id="form-event-id" name="EVENT">
-                            <option class="option-no-select"> - выберите - </option>
-                            <? foreach ($events as $event) { ?>
-                                <option value="<?= $event->getID() ?>">
-                                    <?= $event->get('NAME') ?>
-                                </option>
-                            <? } ?>
-                        </select>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label" for="js-form-user-id">Участник:</label>
-                                <input type="hidden" name="USER" id="furm-user-value-id" />
-                                
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="js-form-user-id" placeholder="Введите название компании" />
-                                    <div class="input-group-btn">
-                                        <a class="btn btn-primary" href="/bitrix/admin/user_edit.php" target="_blank">Добавить участника</a>
+<div class="container-fluid" id="js-order-form-od">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Создание заказа</h3>
+                </div>
+                <div class="panel-body">
+                    <form method="POST" id="js-order-make-form-id">
+                        <input type="hidden" name="action" value="order-make" />
+                        <div class="form-group">
+                            <label class="control-label" for="form-event-id">Выставка:</label>
+                            <select class="form-control" id="form-event-id" name="EVENT">
+                                <option class="option-no-select"> - выберите - </option>
+                                <? foreach ($events as $event) { ?>
+                                    <option value="<?= $event->getID() ?>">
+                                        <?= $event->get('NAME') ?>
+                                    </option>
+                                <? } ?>
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="js-form-user-id">Участник:</label>
+                                    <input type="hidden" name="USER" id="furm-user-value-id" />
+                                    
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="js-form-user-id" placeholder="Введите название компании" />
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-primary" href="/bitrix/admin/user_edit.php" target="_blank">Добавить участника</a>
+                                        </div>
+                                    </div>
+                                    <select multiple class="form-control hidden" id="js-form-user-select-id" style="min-height: 200px; margin-top: 2px; z-index: 1000; position: absolute;"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="form-standnum-id">Номер стенда:</label>
+                                    <input type="text" class="form-control" id="form-standnum-id" name="STANDNUM" />
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="form-pavillion-id">Павильон:</label>
+                                    <input type="text" class="form-control" id="form-pavillion-id" name="PAVILLION" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="radio">
+                                <label>
+                                    <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-common-id" value="COMMON" checked="checked" />
+                                    Обычный заказ
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-quick-id" value="QUICK" />
+                                    Быстрый заказ
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="form-currency-id">Валюта заказа:</label>
+                                    <select class="form-control" id="form-currency-id" name="CURRENCY">
+                                        <? foreach ($currencies as $currency) { ?>
+                                            <option value="<?= $currency['CURRENCY'] ?>">
+                                                <?= $currency['FULL_NAME'] ?>
+                                            </option>
+                                        <? } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="form-language-id">Язык заказа:</label>
+                                    <select class="form-control" id="form-language-id" name="LANGUAGE">
+                                        <? foreach ($languages as $language) { ?>
+                                            <option value="<?= $language['LID'] ?>">
+                                                <?= $language['NAME'] ?>
+                                            </option>
+                                        <? } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr/>
+                        
+                        <div class="row">
+                            <div class="col-md-11">
+                                <h3>Стенд</h3>
+                                <div class="form-group">
+                                    <div class="radio">
+                                        <label>
+                                            <input class="js-form-type-stand" type="radio" name="TYPESTAND" id="form-type-stand-standard-id" value="<?= Wolk\OEM\Context::TYPE_STANDARD ?>" checked="checked" />
+                                            Стандартная застройка
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input class="js-form-type-stand" type="radio" name="TYPESTAND" id="form-type-stand-individual-id" value="<?= Wolk\OEM\Context::TYPE_INDIVIDUAL ?>" />
+                                            Индивидуальная застройка
+                                        </label>
                                     </div>
                                 </div>
-                                <select multiple class="form-control hidden" id="js-form-user-select-id" style="min-height: 200px; margin-top: 2px; z-index: 1000; position: absolute;"></select>
+                                
+                                <table class="table table-bordered" id="js-stand-id">
+                                    <thead>
+                                        <tr>
+                                            <th>Название</th>
+                                            <th>Цена</th>
+                                            <th>Ширина (м)</th>
+                                            <th>Шлубина (м)</th>
+                                            <th>Стоимость</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td id="js-stand-title-id">&mdash;</td>
+                                            <td>
+                                                <input id="js-stand-price-id" type="text" class="form-control" name="STANDPRICE" value="0.00" disabled="disabled" />
+                                            </td>
+                                            <td>
+                                                <input id="js-stand-width-id" type="text" class="form-control" name="STANDWIDTH" value="1" disabled="disabled" />
+                                            </td>
+                                            <td>
+                                                <input id="js-stand-depth-id" type="text" class="form-control" name="STANDDEPTH" value="1" disabled="disabled" />
+                                            </td>
+                                            <td id="js-stand-cost-id">0.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-primary" id="js-form-stand-select-button-id" disabled="disabled">
+                                    Выбрать стенд
+                                </button>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label" for="form-standnum-id">Номер стенда:</label>
-                                <input type="text" class="form-control" id="form-standnum-id" name="STANDNUM" />
+                        
+                        <div class="row">
+                            <div class="col-md-11">
+                                <h3>Товарные позиции</h3>
+                                <table class="table table-bordered table-condensed" id="js-positions-id">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Название</th>
+                                            <th>Количество</th>
+                                            <th>Цена</th>
+                                            <th>Сумма</th>
+                                            <!--th>Свойства</th-->
+                                            <th colspan="2">Комментарий</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <button type="button" class="btn btn-primary" id="js-form-insert-position-id" disabled="disabled">
+                                    Добавить позицию
+                                </button>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label" for="form-pavillion-id">Павильон:</label>
-                                <input type="text" class="form-control" id="form-pavillion-id" name="PAVILLION" />
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="radio">
-                            <label>
-                                <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-common-id" value="COMMON" checked="checked" />
-                                Обычный заказ
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-quick-id" value="QUICK" />
-                                Быстрый заказ
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label" for="form-currency-id">Валюта заказа:</label>
-                                <select class="form-control" id="form-currency-id" name="CURRENCY">
-                                    <? foreach ($currencies as $currency) { ?>
-                                        <option value="<?= $currency['CURRENCY'] ?>">
-                                            <?= $currency['FULL_NAME'] ?>
-                                        </option>
-                                    <? } ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label" for="form-language-id">Язык заказа:</label>
-                                <select class="form-control" id="form-language-id" name="LANGUAGE">
-                                    <? foreach ($languages as $language) { ?>
-                                        <option value="<?= $language['LID'] ?>">
-                                            <?= $language['NAME'] ?>
-                                        </option>
-                                    <? } ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <hr/>
-                    
-                    <div class="row">
-                        <div class="col-md-11">
-                            <h3>Стенд</h3>
-                            <div class="form-group">
-                                <div class="radio">
-                                    <label>
-                                        <input class="js-form-type-stand" type="radio" name="TYPESTAND" id="form-type-stand-standard-id" value="<?= Wolk\OEM\Context::TYPE_STANDARD ?>" checked="checked" />
-                                        Стандартная застройка
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input class="js-form-type-stand" type="radio" name="TYPESTAND" id="form-type-stand-individual-id" value="<?= Wolk\OEM\Context::TYPE_INDIVIDUAL ?>" />
-                                        Индивидуальная застройка
-                                    </label>
+                        
+                        <br/>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="form-comments-id">Комментарий:</label>
+                                    <textarea class="form-control" id="form-comments-id" name="COMMENT" rows="3"></textarea>
                                 </div>
                             </div>
-                            
-                            <table class="table table-bordered" id="js-stand-id">
-                                <thead>
-                                    <tr>
-                                        <th>Название</th>
-                                        <th>Цена</th>
-                                        <th>Ширина (м)</th>
-                                        <th>Шлубина (м)</th>
-                                        <th>Стоимость</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td id="js-stand-title-id">&mdash;</td>
-                                        <td>
-                                            <input id="js-stand-price-id" type="text" class="form-control" name="STANDPRICE" value="0.00" disabled="disabled" />
-                                        </td>
-                                        <td>
-                                            <input id="js-stand-width-id" type="text" class="form-control" name="STANDWIDTH" value="1" disabled="disabled" />
-                                        </td>
-                                        <td>
-                                            <input id="js-stand-depth-id" type="text" class="form-control" name="STANDDEPTH" value="1" disabled="disabled" />
-                                        </td>
-                                        <td id="js-stand-cost-id">0.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <button type="button" class="btn btn-primary" id="js-form-stand-select-button-id" disabled="disabled">
-                                Выбрать стенд
-                            </button>
                         </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-11">
-                            <h3>Товарные позиции</h3>
-                            <table class="table table-bordered" id="js-positions-id">
-                                <thead>
+                        
+                        <hr/>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="form-surcharge-id">Наценка:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="form-surcharge-id" name="SURCHARGE" />
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="form-vat-id" name="VAT" value="1" />
+                                            Включен НДС
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">Сумма заказа:</label>
+                                <table class="table table-bordered table-condensed table-prices">
                                     <tr>
-                                        <th>Изображение</th>
-                                        <th>Название</th>
-                                        <th>Количество</th>
-                                        <th>Цена</th>
-                                        <th>Сумма</th>
-                                        <th>Свойства</th>
-                                        <th colspan="2">Комментарий</th>
+                                        <td>Итого:</td>
+                                        <td id="js-order-price-summ-id"></td>
                                     </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <button type="button" class="btn btn-primary" id="js-form-insert-position-id" disabled="disabled">
-                                Добавить позицию
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <br/>
-                    
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label" for="form-comments-id">Комментарий:</label>
-                                <textarea class="form-control" id="form-comments-id" name="COMMENT" rows="3"></textarea>
+                                    <tr>
+                                        <td>НДС:</td>
+                                        <td id="js-order-price-vat-id"></td>
+                                    </tr>
+                                    <tr class="info">
+                                        <td>Итого с НДС:</td>
+                                        <td id="js-order-price-total-id"></td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
-                    </div>
-                    
-                    <hr/>
-                    
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label" for="form-surcharge-id">Наценка:</label>
+                        
+                        <hr/>
+                        
+                        <? /*
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label" for="form-invoice-id">Счет:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="form-surcharge-id" name="SURCHARGE" />
-                                    <span class="input-group-addon">%</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="form-vat-id" name="VAT" value="1" />
-                                        Включен НДС
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="control-label">Сумма заказа:</label>
-                            <table class="table table-bordered table-condensed table-prices">
-                                <tr>
-                                    <td>Итого:</td>
-                                    <td id="js-order-price-summ-id"></td>
-                                </tr>
-                                <tr>
-                                    <td>НДС:</td>
-                                    <td id="js-order-price-vat-id"></td>
-                                </tr>
-                                <tr class="info">
-                                    <td>Итого с НДС:</td>
-                                    <td id="js-order-price-total-id"></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <hr/>
-                    
-					<? /*
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="control-label" for="form-invoice-id">Счет:</label>
-                            <div class="input-group">
-                                <select class="form-control" id="form-invoice-id" name="INVOICE"></select>
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default">
-                                        <span class="glyphicon glyphicon-list-alt"></span>
-                                        Сгенерировать счет
-                                    </button>
-                                    <button type="button" class="btn btn-default" disabled>
-                                        <span class="glyphicon glyphicon-download-alt"></span>
-                                        Скачать счет
-                                    </button>
+                                    <select class="form-control" id="form-invoice-id" name="INVOICE"></select>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-list-alt"></span>
+                                            Сгенерировать счет
+                                        </button>
+                                        <button type="button" class="btn btn-default" disabled>
+                                            <span class="glyphicon glyphicon-download-alt"></span>
+                                            Скачать счет
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    */ ?>
-					
-                    <div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">Создать</a>
-							</div>
-						</div>
-                    </div>
-                </form>
+                        */ ?>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">Создать</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -722,8 +731,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         height: auto;
     }
     
-    .position-image-preview {
+    .td-image {
+        width: 50px;
+    }
+    
+    .td-image .position-image-preview {
         max-height: 50px;
+        max-width:  50px;
     }
     
     .table tr.row-position td, .table tr.row-position th {
@@ -740,11 +754,19 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         color: #777777;
     }
     
+    .js-cost {
+        font-weight: bold;
+    }
+    
     .table-prices td {
         font-weight: 600;
     }
     .table-prices td:nth-child(1) {
         width: 30%;
+    }
+    
+    .modal-header, .modal-footer {
+        background: #f0f0f0;
     }
 </style>
 

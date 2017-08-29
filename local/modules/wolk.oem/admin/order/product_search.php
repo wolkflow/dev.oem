@@ -5,6 +5,15 @@ CModule::IncludeModule("iblock");
 CModule::IncludeModule("wolk.oem");
 IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/iblock/admin/iblock_element_search.php');
 
+
+function getfilehtml($file)
+{
+	ob_start();
+	include ($file);
+	return ob_get_clean();
+}
+
+
 // Init variables
 $reloadParams = array();
 
@@ -577,40 +586,39 @@ while ($item = $result->GetNext()) {
     //print_r($item);
     //echo '</pre>';
     
-    foreach ($item['PRODUCT']['PROPS'] as &$prop) {
-        $prop = [
-            'CODE' => $prop,
-            'HTML' => 
-                '<div class="modal fade" tabindex="-1" role="dialog">
-                  <div class="modal-dialog" role="document">
+    
+    $html = '<div class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Modal title</h4>
-                      </div>
-                      <div class="modal-body">
-                         <form>
-                          <div class="form-group">
-                            <label for="recipient-name" class="control-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                          </div>
-                          <div class="form-group">
-                            <label for="message-text" class="control-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
-                          </div>
-                        </form>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
-                        <button type="button" class="btn btn-primary">Созранить</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>'
-        ];
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Свойства продукции</h4>
+                        </div>
+                        <div class="modal-body">';
+    
+    foreach ($item['PRODUCT']['PROPS'] as &$prop) {
+        $propfile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/wolk.oem/admin/order/props/' . strtolower($prop) . '.php';
+        echo $propfile;
+        if (is_readable($propfile)) {
+            $prophtml = getfilehtml($propfile);
+            
+            if (!empty($prophtml)) {
+                $html .= $prophtml . '<ht/>';
+            }
+        }
     }
     
+    $html .= '  </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>';
     
+    //var_dump($html);
+    
+    $item['PRODUCT']['HTML'] = $html;
     
 	$row->AddActions(array(
 		array(
