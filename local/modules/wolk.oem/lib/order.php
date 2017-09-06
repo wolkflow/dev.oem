@@ -147,10 +147,10 @@ class Order
 		$data = $this->getData();
 		
         if ($asobject) {
-            return (new Event($data['PROPS']['eventId']['VALUE']));
+            return (new Event($data['PROPS']['EVENT_ID']['VALUE']));
         }
         
-		$event = \CIBlockElement::getByID($data['PROPS']['eventId']['VALUE'])->GetNextElement();
+		$event = \CIBlockElement::getByID($data['PROPS']['EVENT_ID']['VALUE'])->GetNextElement();
 		
 		if ($event) {
 			$result = $event->getFields();

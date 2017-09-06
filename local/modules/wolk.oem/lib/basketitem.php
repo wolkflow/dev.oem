@@ -200,7 +200,7 @@ class BasketItem
      */
     public function getCost()
     {
-        return ($this->getPrice() * $this->getQuantity());
+        return ((float) $this->getPrice() * $this->getQuantity());
     }
     
 }

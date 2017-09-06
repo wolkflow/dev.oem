@@ -138,6 +138,7 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
 		if (!empty($context)) {
 			$result = ProductPrice::getList(
                 [
+                    'order'  => [ProductPrice::FIELD_ID => 'DESC'],
                     'filter' => [
                         ProductPrice::FIELD_PRODUCT => $this->getID(),
                         ProductPrice::FIELD_EVENT   => $context->getEventID(),

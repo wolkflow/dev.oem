@@ -89,7 +89,7 @@ function PutBasket(pid, quantity, $block)
     });
 
     if (reqprops) {
-        showError('Внимание!', 'Не заполнены все свойства товара');
+        ShowError('Внимание!', 'Не заполнены все свойства товара');
         return;
     }
     
@@ -258,7 +258,7 @@ $(document).ready(function() {
         if ($(this).is(':checked')) {
             $block.find('#js-order-place-block-auth-id').removeClass('hide');
         } else {
-            $block.find('#js-order-place-block-auth'-id).addClass('hide');
+            $block.find('#js-order-place-block-auth-id').addClass('hide');
         }
     });
     
@@ -335,7 +335,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.status) {
-                    console.log(response);
+                    $('#modal-order-success').arcticmodal();
                 } else {
                     $form.find('.errortext').html(response.message);
                 }

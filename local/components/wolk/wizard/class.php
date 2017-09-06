@@ -502,9 +502,16 @@ class WizardComponent extends \CBitrixComponent
         $price = 0;
         foreach ($baskets as $basket) {
             $elem = $basket->getElement();
+            
             if (empty($elem)) {
                 continue;
             }
+            
+            // Входит в стоимость стнеда.
+            if ($basket->isIncluded()) {
+                continue;
+            }
+            
             $basket->setPrice($elem->getContextPrice($this->getContext()));
             
             // Общая стоимость продукции.

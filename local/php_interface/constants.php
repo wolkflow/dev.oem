@@ -9,6 +9,11 @@ define('TIME_YEAR', 31536000);
 
 
 /*
+ * Код в сессии.
+ */
+define('SESSION_CODE', 'OEMEVENTS');
+
+/*
  * Языки.
  */
 define('LANG_RU', 'ru');

@@ -46,6 +46,9 @@ if ($obEvent = $obElement->GetNextElement()) {
 
 $_SESSION['REGEVENT'] = $arResult['VARIABLES']['ELEMENT_CODE'];
 
+// Очистка данных по этой выставке.
+$_SESSION[SESSION_CODE][strtoupper($event['CODE'])] = [];
+
 ?>
 <? if (
     (isset($_REQUEST['ORDER_TYPE'])

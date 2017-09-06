@@ -309,7 +309,7 @@ switch ($action) {
         // Корзина.
         $basket = new \Wolk\OEM\Basket($code);
         
-        $basket->setParam('STAND_NUMBER', (string) $request->get('STAND_NUMBER'));
+        $basket->setParam('STANDNUM', (string) $request->get('STANDNUM'));
         $basket->setParam('PAVILION', (string) $request->get('PAVILION'));
         
         // Создание заказа.

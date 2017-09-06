@@ -129,7 +129,7 @@
                         <?= Loc::getMessage('STAND') ?> №
                     </div>
                     <div class="ordertotalcontainer__number">
-                        <input class="js-form-remote-input" type="text" name="STAND_NUMBER" value="0" />
+                        <input class="js-form-remote-input" type="text" name="STANDNUM" value="0" />
                     </div>
                 </div>
                 <div class="ordertotalcontainer__pavillioncontainer">
@@ -363,6 +363,39 @@
 			</div>
             <div class="errortext"></div>
         </form>
+    </div>
+    
+    
+    
+    <? // Окно: заказ офрмлен // ?>
+    <div class="modal modalSuccessOrder" id="modal-order-success">
+        <div class="modalTitle">
+			<?= Loc::getMessage('SUCCESS') ?>!
+		</div>
+        <p>
+			<?= Loc::getMessage('ORDER_PLACED') ?>
+		</p>
+        <a href="/events/<?= $arResult['EVENT']->getCode() ?>/" class="styler modalSend">
+            <?= Loc::getMessage('HOME') ?>
+        </a>
+        <br>
+        <a href="/personal/orders-history.php">
+            <?= Loc::getMessage('REVIEW_ORDER') ?>
+        </a>
+        <div class="clear"></div>
+    </div>
+    
+    
+    
+    <? // Окно: ошибка оформления заказа // ?>
+    <div class="modal modalError" id="modal-order-error">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('ERROR') ?>!
+		</div>
+        <div class="modalContent">
+			<?= Loc::getMessage('ORDER_PLACE_ERROR') ?>
+		</div>
     </div>
     
 </div>

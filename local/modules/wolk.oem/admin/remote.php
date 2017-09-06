@@ -122,8 +122,9 @@ switch ($action) {
 		$eventID    = intval($_REQUEST['EVENT']);
 		$userID     = intval($_REQUEST['USER']);
 		$standnum   = strval($_REQUEST['STANDNUM']);
-		$pavilion   = strval($_REQUEST['PAVILLION']);
+		$pavilion   = strval($_REQUEST['PAVILION']);
 		$type       = strval($_REQUEST['TYPE']);
+        $standtype  = strval($_REQUEST['STANDTYPE']);
 		$currency   = strval($_REQUEST['CURRENCY']);
 		$language   = strval($_REQUEST['LANGUAGE']);
 		$surcharge  = floatval($_REQUEST['SURCHARGE']);
@@ -133,7 +134,7 @@ switch ($action) {
         $standprice = floatval($_REQUEST['STANDPRICE']);
         $standwidth = floatval($_REQUEST['STANDWIDTH']);
         $standdepth = floatval($_REQUEST['STANDDEPTH']);
-        $comments   = strval($_REQUEST['COMMENT']);
+        $comments   = strval($_REQUEST['COMMENTS']);
 		
         
 		\Bitrix\Main\Loader::includeModule('iblock');
@@ -157,7 +158,7 @@ switch ($action) {
 		if (empty($language)) {
 			$errors['SURCHARGE'] = 'Не укаазн язык';
 		}
-        if ($type != 'QUICK') {
+        if ($type != 'QUICK' && $standtype != 'INDIVIDUAL') {
             if (empty($standID)) {
                 $errors['STAND'] = 'Не укаазн стенд';
             }
@@ -190,7 +191,7 @@ switch ($action) {
 			$stand = CIBlockElement::GetByID($standID)->fetch();
 			
 			if ($stand) {
-				$result = BasketTable::add([
+				$result = CSaleBasket::add([
 					'PRODUCT_ID'     => $standID,
 					'PRICE'          => $standprice,
 					'QUANTITY'       => $standwidth * $standdepth,
@@ -203,7 +204,7 @@ switch ($action) {
                     'RECOMMENDATION' => 'STAND.STANDARD'
 				]);
 				
-				if (!$result->isSuccess()) {
+				if ($result == false) {
 					$errors['BASKET'] [] = $result->getErrorMessages();
 				} else {
 					$summprice = $standprice * ($standwidth * $standdepth);
@@ -236,7 +237,7 @@ switch ($action) {
 				
 				$title = $product['PROPS']['LANG_TITLE_'.strtoupper($language)]['VALUE'];
 				
-				$result = BasketTable::add([
+				$result = CSaleBasket::add([
 					'PRODUCT_ID'     => $productID,
 					'PRICE'          => $price,
 					'QUANTITY'       => ($quantity) ?: 1,
@@ -249,7 +250,7 @@ switch ($action) {
                     'RECOMMENDATION' => 'PRODUCT.SALE'
 				]);
 
-				if (!$result->isSuccess()) {
+				if ($result == false) {
 					$errors['BASKET'] [] = $result->getErrorMessages();
 				} else {
 					if (!empty($comment)) {
@@ -305,7 +306,7 @@ switch ($action) {
 		
 		if ($orderID > 0) {
 			 $res = CSaleOrderProps::GetList([], [
-				'CODE' => ['eventId', 'eventName', 'LANGUAGE', 'pavillion', 'standNum', 'width', 'depth', 'SURCHARGE', 'SURCHARGE_PRICE', 'TYPE']
+				'CODE' => ['EVENT_ID', 'EVENT_NAM', 'LANGUAGE', 'PAVILION', 'STANDNUM', 'WIDTH', 'DEPTH', 'SURCHARGE', 'SURCHARGE_PRICE', 'TYPE', 'TYPESTAND']
 			]);
 			$orderprops = [];
 			while ($orderprop = $res->Fetch()) {
@@ -318,22 +319,29 @@ switch ($action) {
 				[
 					'ORDER_ID'       => $orderID,
 					'ORDER_PROPS_ID' => $orderprops['TYPE']['ID'],
-					'NAME'           => $orderprops['TYPE']['NAME'] ?: 'Типа заказа',
+					'NAME'           => $orderprops['TYPE']['NAME'] ?: 'Тип заказа',
 					'CODE'           => 'TYPE',
 					'VALUE'          => $type
 				],
 				[
 					'ORDER_ID'       => $orderID,
-					'ORDER_PROPS_ID' => $orderprops['eventId']['ID'],
-					'NAME'           => $orderprops['eventId']['NAME'] ?: 'ID выставки',
-					'CODE'           => 'eventId',
+					'ORDER_PROPS_ID' => $orderprops['STANDTYPE']['ID'],
+					'NAME'           => $orderprops['STANDTYPE']['NAME'] ?: 'Тип застройки',
+					'CODE'           => 'STANDTYPE',
+					'VALUE'          => $standtype
+				],
+                [
+					'ORDER_ID'       => $orderID,
+					'ORDER_PROPS_ID' => $orderprops['EVENT_ID']['ID'],
+					'NAME'           => $orderprops['EVENT_ID']['NAME'] ?: 'ID выставки',
+					'CODE'           => 'EVENT_ID',
 					'VALUE'          => $event['ID']
 				],
 				[
 					'ORDER_ID'       => $orderID,
-					'ORDER_PROPS_ID' => $orderprops['eventName']['ID'],
-					'NAME'           => $orderprops['eventName']['NAME'] ?: 'Название выставки',
-					'CODE'           => 'eventName',
+					'ORDER_PROPS_ID' => $orderprops['EVENT_NAME']['ID'],
+					'NAME'           => $orderprops['EVENT_NAME']['NAME'] ?: 'Название выставки',
+					'CODE'           => 'EVENT_NAME',
 					'VALUE'          => $event['NAME']
 				],
 				[
@@ -345,16 +353,16 @@ switch ($action) {
 				],
 				[
 					'ORDER_ID'       => $orderID,
-					'ORDER_PROPS_ID' => $orderprops['pavillion']['ID'],
-					'NAME'           => $orderprops['pavillion']['NAME'] ?: 'Павильон',
-					'CODE'           => 'pavillion',
+					'ORDER_PROPS_ID' => $orderprops['PAVILION']['ID'],
+					'NAME'           => $orderprops['PAVILION']['NAME'] ?: 'Павильон',
+					'CODE'           => 'PAVILION',
 					'VALUE'          => $pavilion
 				],
 				[
 					'ORDER_ID'       => $orderID,
-					'ORDER_PROPS_ID' => $orderprops['standNum']['ID'],
-					'NAME'           => $orderprops['standNum']['NAME'] ?: 'Номер стенда',
-					'CODE'           => 'standNum',
+					'ORDER_PROPS_ID' => $orderprops['STANDNUM']['ID'],
+					'NAME'           => $orderprops['STANDNUM']['NAME'] ?: 'Номер стенда',
+					'CODE'           => 'STANDNUM',
 					'VALUE'          => $standnum
 				],
 				[
@@ -388,17 +396,17 @@ switch ($action) {
 			if (!empty($stand)) {
 				$props [] = [
 					'ORDER_ID'       => $orderID,
-					'ORDER_PROPS_ID' => $orderprops['width']['ID'],
-					'NAME'           => $orderprops['width']['NAME'] ?: 'Ширина',
-					'CODE'           => 'width',
+					'ORDER_PROPS_ID' => $orderprops['WIDTH']['ID'],
+					'NAME'           => $orderprops['WIDTH']['NAME'] ?: 'Ширина',
+					'CODE'           => 'WIDTH',
 					'VALUE'          => $standwidth
 				];
 				
 				$props [] = [
 					'ORDER_ID'       => $orderID,
-					'ORDER_PROPS_ID' => $orderprops['depth']['ID'],
-					'NAME'           => $orderprops['depth']['NAME'] ?: 'Шлубина',
-					'CODE'           => 'depth',
+					'ORDER_PROPS_ID' => $orderprops['DEPTH']['ID'],
+					'NAME'           => $orderprops['DEPTH']['NAME'] ?: 'Шлубина',
+					'CODE'           => 'DEPTH',
 					'VALUE'          => $standdepth
 				];
 			}

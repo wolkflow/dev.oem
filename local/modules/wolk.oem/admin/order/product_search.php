@@ -42,10 +42,21 @@ if (isset($_GET['typestand'])) {
 	$typestand = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['typestand']);
 }
 
+$basketID = '';
+if (isset($_GET['bid'])) {
+	$basketID = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['bid']);
+}
+
 // Контекст.
-$context = new Wolk\OEM\Context($event, $typestand, $language);
+$context = new Wolk\OEM\Context($eventID, $typestand, $language);
 
+// Мероприятие.
+$event = new Wolk\OEM\Event($eventID);
 
+$basket = null;
+if (!empty($basketID)) {
+    $basket = new Wolk\OEM\BasketItem($event->getCode(), $basketID);
+}
 
 
 $n = '';

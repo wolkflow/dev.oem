@@ -74,6 +74,15 @@ class Basket
     
     
     /**
+     * Проставление данных корзины.
+     */
+    public function setData($data)
+    {
+        $this->data = (array) $data;
+    }
+    
+    
+    /**
      * Получение списка элементов корзины.
      */
     public function getStand()
@@ -314,9 +323,19 @@ class Basket
     
     /**
      * Создать заказ.
+     *
+     * $context - контекст.
+     * $data    - данные для заказа.
      */
-    public function order(Context $context)
-    {
+    public function order(Context $context, $data = [])
+    {   
+        // Замены данных корзины текущими данными для заказа.
+        $dump = $this->getData();
+        if (!empty($data)) {
+            $this->data = $data;
+        }
+        
+        
         // Текущая корзина.
         $items = $this->getList(true);
         
@@ -335,6 +354,7 @@ class Basket
         // Сохранение стенда.
         $item = $this->getStand();
         
+        
         if (!empty($item)) {
             // Получение цены.
             $item->loadPrice($context);
@@ -343,7 +363,7 @@ class Basket
             $stand = $item->getElement();
             
             if (!empty($stand)) {
-                $data = [
+                $fields = [
                     'PRODUCT_ID'     => $item->getProductID(),
                     'QUANTITY'       => $item->getQuantity(),
                     'PRICE'          => $item->getPrice(),
@@ -354,14 +374,33 @@ class Basket
                     'TYPE'           => 0,
                     'FUSER_ID'       => \CSaleBasket::GetBasketUserID(),
                     'RECOMMENDATION' => $note,
+                    'ORDER_CALLBACK_FUNC' => null,
                 ];
                 
+                $props = [[
+                    'NAME'  => 'Стенд',
+                    'CODE'  => 'STAND',
+                    'VALUE' => 'Y'
+                ]];
+                
+                $fields['PROPS'] = $props;
+                
+                // Добавление корзины.
+                \CSaleBasket::add($fields);
+                
+                // Общая стоимость продукции.
                 $price += $item->getCost();
             }
         }
         
         // Сохранение продукции.
         foreach ($items as $item) {
+            
+            // Стоимость включена в стенд.
+            if ($item->isIncluded()) {
+                continue;
+            }
+            
             // Элемент.
             $elem = $item->getElement();
             
@@ -382,7 +421,7 @@ class Basket
                 $note = 'PRODUCT.' . (($item->isIncluded()) ? ('BASE') : ('SALE'));
             }
             
-            $data = [
+            $fields = [
                 'PRODUCT_ID'     => $item->getProductID(),
                 'QUANTITY'       => $item->getQuantity(),
                 'PRICE'          => $item->getPrice(),
@@ -393,30 +432,32 @@ class Basket
                 'TYPE'           => 0,
                 'FUSER_ID'       => \CSaleBasket::GetBasketUserID(),
                 'RECOMMENDATION' => $note,
-                'PROPS'          => []
+                'PROPS'          => [],
+                'ORDER_CALLBACK_FUNC' => null,
             ];
             
             if ($item->isIncluded()) {
                 $props = [[
                     'NAME'      => 'Стандартная комплектация',
                     'CODE'      => 'INCLUDING',
-                    'VALUE'     => 'Да'
+                    'VALUE'     => 'Y'
                 ]];
                 
-                $data['PROPS'] = $props;
+                $fields['PROPS'] = $props;
                 
                 // Добавление корзины.
-                CSaleBasket::add($data);
+                \CSaleBasket::add($fields);
             }
             
             // Суммирование цены.
             $price += $item->getCost();   
         }
         
+        
         // Цены.
         $infoprices = Order::getFullPriceInfo($price, $event->getSurcharge(), $event->hasVAT());
         
-        $data = [
+        $fields = [
             'LID'              => SITE_ID,
             'USER_ID'          => \Cuser::getID(),
             'PERSON_TYPE_ID'   => PERSON_TYPE_DETAULT,
@@ -432,13 +473,13 @@ class Basket
         ];
         
         // Сохранение заказа.
-        $oid = \CSaleOrder::add($data);
+        $oid = \CSaleOrder::add($fields);
         
         if (!$oid) {
             throw new \Exception("Cant' create order.");
         }
         
-        // Сохранение свофств заказа.
+        // Сохранение свойств заказа.
         $result = \CSaleOrderProps::GetList();
         $props = [];
         while ($prop = $result->Fetch()) {
@@ -456,7 +497,7 @@ class Basket
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['eventName']['ID'],
+            'ORDER_PROPS_ID' => $props['EVENT_NAME']['ID'],
             'NAME'           => 'Название мероприятия',
             'CODE'           => 'EVENT_NAME',
             'VALUE'          => $event->getTitle(),
@@ -464,17 +505,25 @@ class Basket
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['width']['ID'],
+            'ORDER_PROPS_ID' => $props['STAND_TYPE']['ID'],
+            'NAME'           => 'Тип стенда',
+            'CODE'           => 'STAND_TYPE',
+            'VALUE'          => $this->getParam('STAND_TYPE'),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['WIDTH']['ID'],
             'NAME'           => 'Ширина стенда',
-            'CODE'           => 'width',
+            'CODE'           => 'WIDTH',
             'VALUE'          => $this->getParam('WIDTH'),
         ];
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['depth']['ID'],
+            'ORDER_PROPS_ID' => $props['DEPTH']['ID'],
             'NAME'           => 'Глубина стенда',
-            'CODE'           => 'depth',
+            'CODE'           => 'DEPTH',
             'VALUE'          => $this->getParam('DEPTH'),
         ];
         
@@ -504,9 +553,9 @@ class Basket
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['sketch']['ID'],
+            'ORDER_PROPS_ID' => $props['SKETCH']['ID'],
             'NAME'           => 'Скетч',
-            'CODE'           => 'sketch',
+            'CODE'           => 'SKETCH',
             'VALUE'          => $this->getSketch()['SKETCH_SCENE'],
         ];
         
@@ -518,8 +567,64 @@ class Basket
             'VALUE'          => $this->getSketch()['SKETCH_IMAGE'],
         ];
         
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['STANDNUM']['ID'],
+            'NAME'           => 'Номер стенда',
+            'CODE'           => 'STANDNUM',
+            'VALUE'          => $this->getParam('STANDNUM'),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['PAVILION']['ID'],
+            'NAME'           => 'Павильон',
+            'CODE'           => 'PAVILION',
+            'VALUE'          => $this->getParam('PAVILION'),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['TYPE']['ID'],
+            'NAME'           => 'Тип заказа',
+            'CODE'           => 'TYPE',
+            'VALUE'          => 'COMMON',
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['TYPESTAND']['ID'],
+            'NAME'           => 'Тип застройки',
+            'CODE'           => 'TYPESTAND',
+            'VALUE'          => $context->getType(),
+        ];
+        
         foreach ($dataprops as $dataprop) {
             \CSaleOrderPropsValue::add($dataprop);
+        }
+        
+        // Сохранение позиций заказа.
+        // \CSaleBasket::OrderBasket($oid, \CSaleBasket::GetBasketUserID());
+        
+        $baskets = \Bitrix\Sale\Internals\BasketTable::getList([
+            'filter' =>
+                [
+                    'FUSER_ID' => \CSaleBasket::GetBasketUserID(),
+                    'ORDER_ID' => null,
+                ]
+        ])->fetchAll();
+        
+        foreach ($baskets as $basket) {
+            var_dump($basket['ID']);
+            $result = \Bitrix\Sale\Internals\BasketTable::update($basket['ID'], ['ORDER_ID' => $oid]);
+        }
+        
+        
+        // Очистка данных.
+        if (empty($data)) {
+            $this->clear();
+        } else {
+            $this->data = $dump;
         }
     }
 }
