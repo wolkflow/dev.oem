@@ -2,24 +2,13 @@
 /**
  * Функция добавления в корзину.
  */
-window['oem-func-days-hours-cart'] = function($block) {
+window['oem-func-days-cart'] = function($block) {
     var pid = 0;
     
-    var $timemin = $block.find('.js-days-hours-time-min option:selected');
-    var $timemax = $block.find('.js-days-hours-time-max option:selected');
-    
-    var dates = $block.find('.js-days-hours-datepicker').multiDatesPicker('getDates');
-    var hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-01 ' + $timemax.val()));
-    
-    if (hours < 0) {
-        hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-02 ' + $timemax.val()));
-    }
-    if (hours != 0) {
-        hours = Math.abs(hours);
-    }
-    
+    var dates = $block.find('.js-days-datepicker').multiDatesPicker('getDates');
+
     // Общее количество часов.
-    var quantity = dates.length * hours;
+    var quantity = dates.length;
     
     if (quantity < 0) {
         quantity = 0;
@@ -39,13 +28,13 @@ window['oem-func-days-hours-cart'] = function($block) {
 /**
  * Функция добавления товарной позиции.
  */
-window['oem-func-days-hours-more'] = function($that) {
+window['oem-func-days-more'] = function($that) {
     var $wrapper = $that.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
     var $block   = $wrapper.find('.js-product-block').first().clone();
 
     // Сброс параметров.
-    window['oem-func-days-hours-clear']($block);
+    window['oem-func-days-clear']($block);
 
     // Добавление блока.
     $section.append($block);
@@ -57,7 +46,7 @@ window['oem-func-days-hours-more'] = function($that) {
 /**
  * Функция очистки данных.
  */
-window['oem-func-days-hours-clear'] = function($block) {
+window['oem-func-days-clear'] = function($block) {
     $block.attr('data-bid', '');
     $block.find('.jq-selectbox__select,.jq-selectbox__dropdown').remove();
     $block.find('.styler').styler();
@@ -68,8 +57,8 @@ window['oem-func-days-hours-clear'] = function($block) {
     $block.find('.js-product-select-price').hide();
     $block.find('.js-product-select-descr').hide();
     
-    $block.find('.js-days-hours-times option:selected').attr('selected', null);
-    $block.find('.js-days-hours-datepicker').multiDatesPicker({
+    $block.find('.js-days-times option:selected').attr('selected', null);
+    $block.find('.js-days-datepicker').multiDatesPicker({
         dateFormat: 'dd.mm.yy',
         minDate:    0,
         autoclose:  true,
@@ -86,12 +75,12 @@ window['oem-func-days-hours-clear'] = function($block) {
 $(document).ready(function() {
     
     // Добавление нового поля.
-    $(document).on('click', '.js-block-days-hours .js-more-field', function(event) {
-        window['oem-func-days-hours-more']($(this));
+    $(document).on('click', '.js-block-days .js-more-field', function(event) {
+        window['oem-func-days-more']($(this));
     });
     
     // Выбор даты.
-    $('.js-block-days-hours .js-days-hours-datepicker').each(function() {
+    $('.js-block-days .js-days-datepicker').each(function() {
         var $that  = $(this);
         var $block = $that.closest('.js-product-block');
         
@@ -100,16 +89,9 @@ $(document).ready(function() {
             minDate: 0,
             autoclose: true,
             onSelect: function(date) {
-                window['oem-func-days-hours-cart']($block);
+                window['oem-func-days-cart']($block);
             }
         });
-    });
-    
-    // Выбор времени.
-    $(document).on('change', '.js-days-hours-times', function(event) {
-        var $block = $(this).closest('.js-product-block');
-        
-        window['oem-func-days-hours-cart']($block);
     });
     
 });

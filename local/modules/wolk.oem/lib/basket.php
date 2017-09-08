@@ -31,7 +31,7 @@ class Basket
     const PARAM_COMMENT                = 'COMMENT';
     const PARAM_LINK                   = 'LINK';
     const PARAM_COLOR                  = 'COLOR';
-    const PARAM_FORM_HANGING_STRUCTURE = 'FORM.HANGING-STRUCTURE';
+    const PARAM_FORM_HANGING_STRUCTURE = 'FORM-HANGING-STRUCTURE';
     
     
     
@@ -470,6 +470,13 @@ class Basket
                 ];
             }
             
+            // Свойства и параметры продукции.
+            $props []= [
+                'NAME'  => 'Свойства и параметры',
+                'CODE'  => 'PARAMS',
+                'VALUE' => json_encode((array) $item->getParams())
+            ];
+            
             // Продукция включена в стенд.
             if ($item->isIncluded()) {
                 $props []= [
@@ -523,7 +530,7 @@ class Basket
         ];
         
         // Создание заказа.
-        $order = \Bitrix\Sale\Order::create(\Bitrix\Main\Context::getCurrent()->getSite(), \Cuser::getID());
+        $order = \Bitrix\Sale\Order::create(\Bitrix\Main\Context::getCurrent()->getSite(), \CUser::getID());
         
         
         
