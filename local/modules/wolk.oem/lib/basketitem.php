@@ -23,18 +23,19 @@ class BasketItem
         $this->id   = (string) $id;
         $this->data = (array) $data;
         
-        $this->basket = new Basket($event);
+        $basket = new Basket($event);
         
         // Загрузка продукта мз корзины.
         // Не распространяется на стенд.
         if (empty($this->data)) {
-            $this->load();
+            //$this->load();
+            $this->data = $basket->getData()[Basket::SESSCODE_PRODUCTS][$this->getID()];
         }
     }
     
     
     // Загрузка данных из сессии.
-    public function load()
+    public function load($data)
     {
         $this->data = ($this->getBasket()->getData()[Basket::SESSCODE_PRODUCTS][$this->getID()]);
     }

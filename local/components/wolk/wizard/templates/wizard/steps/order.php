@@ -214,7 +214,7 @@
                 <? Helper::includeFile('rules_text_with_link_'.$arResult['CONTEXT']->getLang()) ?>
             </label>
             <div id="js-order-place-block-auth-id" class="placeOrder__buttons hide">
-                <button id="js-place-order-id" class="styler js-submit">
+                <button id="js-place-order-id" class="styler">
 					<?= Loc::getMessage('PLACE_ORDER') ?>
 				</button>
             </div>

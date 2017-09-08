@@ -355,6 +355,13 @@ class Basket
         $item = $this->getStand();
         
         
+        // Корзина пользователя.
+        $basket = \Bitrix\Sale\Basket::loadItemsForFUser(
+           \Bitrix\Sale\Fuser::getId(), 
+           \Bitrix\Main\Context::getCurrent()->getSite()
+        );
+        
+        
         if (!empty($item)) {
             // Получение цены.
             $item->loadPrice($context);
@@ -363,10 +370,14 @@ class Basket
             $stand = $item->getElement();
             
             if (!empty($stand)) {
+                // Тип продукции.
+                $note = 'STAND.' . strtoupper($context->getType());
+                
                 $fields = [
                     'PRODUCT_ID'     => $item->getProductID(),
                     'QUANTITY'       => $item->getQuantity(),
                     'PRICE'          => $item->getPrice(),
+                    'CUSTOM_PRICE'   => 'Y',
                     'CURRENCY'       => $currency,
                     'LID'            => SITE_ID,
                     'NAME'           => $stand->getTitle(),
@@ -374,7 +385,7 @@ class Basket
                     'TYPE'           => 0,
                     'FUSER_ID'       => \CSaleBasket::GetBasketUserID(),
                     'RECOMMENDATION' => $note,
-                    'ORDER_CALLBACK_FUNC' => null,
+                    'IGNORE_CALLBACK_FUNC' => 'Y',
                 ];
                 
                 $props = [[
@@ -383,28 +394,39 @@ class Basket
                     'VALUE' => 'Y'
                 ]];
                 
-                $fields['PROPS'] = $props;
-                
                 // Добавление корзины.
-                \CSaleBasket::add($fields);
+                // \CSaleBasket::add($fields);
+                // \Bitrix\Sale\Internals\BasketTable::add($fields);
+                
+                $basket_item = $basket->createItem('catalog', $item->getProductID());
+                $basket_item->setFields([
+                    'QUANTITY'             => $item->getQuantity(),
+                    'PRICE'                => $item->getPrice(),
+                    'CUSTOM_PRICE'         => 'Y',
+                    'CURRENCY'             => $currency,
+                    'NAME'                 => $stand->getTitle(),
+                    'IGNORE_CALLBACK_FUNC' => 'Y',
+                ]);
+                
+                $basket_props = $basket_item->getPropertyCollection();
+                $basket_props->setProperty($props);
+                $basket_props->save();
+                
+                $basket->save();
                 
                 // Общая стоимость продукции.
                 $price += $item->getCost();
             }
         }
         
+        
         // Сохранение продукции.
         foreach ($items as $item) {
             
-            // Стоимость включена в стенд.
-            if ($item->isIncluded()) {
-                continue;
-            }
+            // Продукиця.
+            $prod = $item->getElement();
             
-            // Элемент.
-            $elem = $item->getElement();
-            
-            if (empty($elem)) {
+            if (empty($prod)) {
                 continue;
             }
             
@@ -421,33 +443,61 @@ class Basket
                 $note = 'PRODUCT.' . (($item->isIncluded()) ? ('BASE') : ('SALE'));
             }
             
+            /*
             $fields = [
                 'PRODUCT_ID'     => $item->getProductID(),
                 'QUANTITY'       => $item->getQuantity(),
                 'PRICE'          => $item->getPrice(),
+                'CUSTOM_PRICE'   => 'Y',
                 'CURRENCY'       => $currency,
                 'LID'            => SITE_ID,
-                'NAME'           => $elem->getTitle(),
+                'NAME'           => $prod->getTitle(),
                 'SET_PARENT_ID'  => 0,
                 'TYPE'           => 0,
                 'FUSER_ID'       => \CSaleBasket::GetBasketUserID(),
                 'RECOMMENDATION' => $note,
                 'PROPS'          => [],
-                'ORDER_CALLBACK_FUNC' => null,
+                'IGNORE_CALLBACK_FUNC' => 'Y',
             ];
+            */
+            $props = [];
             
-            if ($item->isIncluded()) {
-                $props = [[
-                    'NAME'      => 'Стандартная комплектация',
-                    'CODE'      => 'INCLUDING',
-                    'VALUE'     => 'Y'
-                ]];
-                
-                $fields['PROPS'] = $props;
-                
-                // Добавление корзины.
-                \CSaleBasket::add($fields);
+            foreach ($item->getFields() as $fkey => $fval) {
+                $props []= [
+                    'NAME'  => $fkey,
+                    'CODE'  => strtoupper($fkey),
+                    'VALUE' => $fval
+                ];
             }
+            
+            // Продукция включена в стенд.
+            if ($item->isIncluded()) {
+                $props []= [
+                    'NAME'  => 'Стандартная комплектация',
+                    'CODE'  => 'INCLUDING',
+                    'VALUE' => 'Y'
+                ];
+            }
+            
+            // Добавление корзины.
+            //\CSaleBasket::add($fields);
+            // \Bitrix\Sale\Internals\BasketTable::add($fields);
+            
+            $basket_item = $basket->createItem('catalog', $item->getProductID());
+            $basket_item->setFields([
+                'QUANTITY'             => $item->getQuantity(),
+                'PRICE'                => $item->getPrice(),
+                'CUSTOM_PRICE'         => 'Y',
+                'CURRENCY'             => $currency,
+                'NAME'                 => $prod->getTitle(),
+                'IGNORE_CALLBACK_FUNC' => 'Y',
+            ]);
+            
+            $basket_props = $basket_item->getPropertyCollection();
+            $basket_props->setProperty($props);
+            $basket_props->save();
+            
+            $basket->save();
             
             // Суммирование цены.
             $price += $item->getCost();   
@@ -472,12 +522,25 @@ class Basket
             'USER_DESCRIPTION' => $this->getParam('COMMENTS'),
         ];
         
-        // Сохранение заказа.
-        $oid = \CSaleOrder::add($fields);
+        // Создание заказа.
+        $order = \Bitrix\Sale\Order::create(\Bitrix\Main\Context::getCurrent()->getSite(), \Cuser::getID());
         
-        if (!$oid) {
-            throw new \Exception("Cant' create order.");
-        }
+        
+        
+        $order->setPersonTypeId(PERSON_TYPE_DETAULT);
+        // $order->setField('CURRENCY', $currency);
+        $order->setField('PRICE', $infoprices['SUMMARY']);
+        $order->setField('TAX_VALUE', (!$event->hasVAT()) ? ($infoprices['VAT_PRICE']) : (0));
+        $order->setField('USER_DESCRIPTION', $this->getParam('COMMENTS'));
+        
+        // Сохранение позиций заказа.
+        $order->setBasket($basket);
+        
+        $order_props = $order->getPropertyCollection();
+        
+        //$oid = \CSaleOrder::add($fields);
+        
+        
         
         // Сохранение свойств заказа.
         $result = \CSaleOrderProps::GetList();
@@ -600,12 +663,22 @@ class Basket
         ];
         
         foreach ($dataprops as $dataprop) {
-            \CSaleOrderPropsValue::add($dataprop);
+            $order_props->createItem($dataprop);
+            //\CSaleOrderPropsValue::add($dataprop);
         }
         
-        // Сохранение позиций заказа.
-        // \CSaleBasket::OrderBasket($oid, \CSaleBasket::GetBasketUserID());
         
+        // Сохранение заказа.
+        $result = $order->save();
+        
+        if (!$result || !$result->getID()) {
+            throw new \Exception("Cant' create order.");
+        }
+        
+        
+        //\CSaleBasket::OrderBasket($oid, \CSaleBasket::GetBasketUserID());
+        
+        /*
         $baskets = \Bitrix\Sale\Internals\BasketTable::getList([
             'filter' =>
                 [
@@ -615,10 +688,9 @@ class Basket
         ])->fetchAll();
         
         foreach ($baskets as $basket) {
-            var_dump($basket['ID']);
             $result = \Bitrix\Sale\Internals\BasketTable::update($basket['ID'], ['ORDER_ID' => $oid]);
         }
-        
+        */
         
         // Очистка данных.
         if (empty($data)) {
