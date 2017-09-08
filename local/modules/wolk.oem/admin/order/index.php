@@ -1014,18 +1014,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 								<ul>
 									
 									<? foreach ($baskets as $basket) { ?>
-										<? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_LOGOTYPES_ID) { ?>
+										<? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_LOGOTYPES_ID && !empty($basket['PROPS']['LOGO_FILE']['VALUE'])) { ?>
 											<li>
 												<a href="<?= CFile::getPath($basket['PROPS']['LOGO_FILE']['VALUE']) ?>" target="_blank">Логотип</a>
+                                                / <i><?= $basket['NAME'] ?></i>
 												<? if (!empty($basket['PROPS']['LOGO_COMMENTS']['VALUE'])) { ?>
 													<p class="note"><?= $basket['PROPS']['LOGO_COMMENTS']['VALUE'] ?></p>
 												<? } ?>
 											</li>
 										<? } ?>
                                         
-                                        <? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_BANNERS_ID) { ?>
+                                        <? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_BANNERS_ID && !empty($basket['PROPS']['BANNER_FILE']['VALUE'])) { ?>
 											<li>
 												<a href="<?= CFile::getPath($basket['PROPS']['BANNER_FILE']['VALUE']) ?>" target="_blank">Баннер</a>
+                                                / <i><?= $basket['NAME'] ?></i>
 												<? if (!empty($basket['PROPS']['BANNER_COMMENTS']['VALUE'])) { ?>
 													<p class="note"><?= $basket['PROPS']['BANNER_COMMENTS']['VALUE'] ?></p>
 												<? } ?>

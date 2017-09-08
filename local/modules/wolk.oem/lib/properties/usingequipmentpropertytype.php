@@ -2,7 +2,6 @@
 
 namespace Wolk\OEM\Properties;
 
-
 class UsingEquipmentPropertyType extends \CIBlockPropertyElementList
 {
     
@@ -15,13 +14,13 @@ class UsingEquipmentPropertyType extends \CIBlockPropertyElementList
 			'GetPropertyFieldHtml' => [__CLASS__, 'GetPropertyFieldHtml'],
 		];
 	}
+
     
-    
-	public function GetPropertyFieldHtml($property, $value, $strHTMLControlName)
+	public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
     {
-        $settings = \CIBlockPropertyElementList::PrepareSettings($property);
+        $settings = \CIBlockPropertyElementList::PrepareSettings($arProperty);
         
-        if ($settings['size'] > 1) {
+        if ($settings["size"] > 1) {
             $size = ' size="'.$settings["size"].'"';
         } else {
             $size = '';
