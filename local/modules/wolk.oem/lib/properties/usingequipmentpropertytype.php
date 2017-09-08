@@ -12,7 +12,7 @@ class UsingEquipmentPropertyType extends \CIBlockPropertyElementList
 		];
 	}
 
-	public function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
+	public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
         $settings = \CIBlockPropertyElementList::PrepareSettings($arProperty);
         if($settings["size"] > 1)
             $size = ' size="'.$settings["size"].'"';
