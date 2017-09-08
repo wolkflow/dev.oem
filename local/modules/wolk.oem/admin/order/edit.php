@@ -7,6 +7,7 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admin_before.php');
 
+
 // подключим языковой файл
 IncludeModuleLangFile(__FILE__);
 
@@ -292,7 +293,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                             <? $product = new Wolk\OEM\Products\Base($bitem['PRODUCT_ID']) ?>
                                             <tr id="position-<?= $product->getID() ?>" class="js-position row-position">
                                                 <td class="td-image">
-                                                    <div class="no_foto">Нет картинки</div>
+                                                    <? $isrc = $product->getImageSrc() ?>
+                                                    <? if (!empty($isrc)) { ?>
+                                                        <img src="<?= $isrc ?>" class="img-thumbnail position-image-preview" />
+                                                    <? } else { ?>
+                                                        <div class="no_foto">Нет картинки</div>
+                                                    <? } ?>
                                                 </td>
                                                 <td class="td-name">
                                                     <?= $product->getTitle() ?> 
@@ -310,7 +316,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                     <span class="js-cost"><?= ($bitem['PRICE'] * $bitem['QUANTITY']) ?></span>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="js-comment form-control" name="PRODUCTS[COMMENTS][<?= $product->getID() ?>]" value="<?= $bitem['COMMENTS'] ?>" />
+                                                    <input type="text" class="js-comment form-control" name="PRODUCTS[NOTES][<?= $product->getID() ?>]" value="<?= $bitem['NOTES'] ?>" />
                                                 </td>
                                                 <td class="td-props">
                                                     <div class="modal fade" tabindex="-1" role="dialog">
@@ -320,7 +326,20 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">×</span></button>
                                                                     <h4 class="modal-title">Свойства продукции</h4>
                                                                 </div>
-                                                                <div class="modal-body"></div>
+                                                                <div class="modal-body">
+                                                                    <? // Свойства продукции.
+                                                                        $pvals = json_decode($bitem['PROPS']['PARAMS']['VALUE'], true);
+                                                                        $props = $product->getSection()->getProperties();
+                                                                        foreach ($props as $prop) {
+                                                                            $propfile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/wolk.oem/admin/order/props/' . strtolower($prop) . '.php';
+                                                                            
+                                                                            $pval = $pvals[$prop];
+                                                                            if (is_readable($propfile)) {
+                                                                                include ($propfile);
+                                                                            }
+                                                                        }
+                                                                    ?>
+                                                                </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
                                                                 </div>
@@ -328,7 +347,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                         </div>
                                                     </div>
                                                     <div class="btn-group" role="group">
-                                                        <button type="button" class="btn btn-primary js-props" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>
+                                                        <button type="button" class="btn btn-primary <?= (!empty($props)) ? ('js-props') : ('disabled') ?>" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>
                                                         <button type="button" class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></button>
                                                     </div>
                                                 </td>
@@ -373,7 +392,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" id="form-vat-id" name="VAT" value="1" <?= ($odata['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') ? ('checked="checked"') : ('0') ?>" />
+                                            <input type="checkbox" id="form-vat-id" name="VAT" value="1" <?= ($odata['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') ? ('checked="checked"') : ('0') ?> />
                                             Включен НДС
                                         </label>
                                     </div>
@@ -384,15 +403,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 <table class="table table-bordered table-condensed table-prices">
                                     <tr>
                                         <td>Итого:</td>
-                                        <td id="js-order-price-summ-id"><?= $odata['PRICES']['TOTAL'] ?></td>
+                                        <td id="js-order-price-summ-id"><?= number_format($odata['PRICES']['TOTAL_WITH_SUR'], 2, '.', '') ?></td>
                                     </tr>
                                     <tr>
                                         <td>НДС:</td>
-                                        <td id="js-order-price-vat-id"><?= $odata['PRICES']['TAX'] ?></td>
+                                        <td id="js-order-price-vat-id"><?= number_format($odata['PRICES']['TAX'], 2, '.', '') ?></td>
                                     </tr>
                                     <tr class="info">
                                         <td>Итого с НДС:</td>
-                                        <td id="js-order-price-total-id"><?= $odata['PRICES']['TOTAL'] ?></td>
+                                        <td id="js-order-price-total-id"><?= number_format($odata['PRICES']['TOTAL'], 2, '.', '') ?></td>
                                     </tr>
                                 </table>
                             </div>
@@ -742,7 +761,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         
         html += '</div></td>';
         */ ?>
-        html += '<td><input type="text" class="js-comment form-control" name="PRODUCTS[COMMENTS][' + element.ID + ']" value="" /></td>';
+        html += '<td><input type="text" class="js-comment form-control" name="PRODUCTS[NOTES][' + element.ID + ']" value="" /></td>';
         html += '<td class="td-props">';
         html += element.PRODUCT.HTML;
         html += '<div class="btn-group" role="group">';
@@ -833,8 +852,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     }
     
     .td-image .position-image-preview {
-        max-height: 50px;
-        max-width:  50px;
+        height: 70px;
+        max-width: 70px;
     }
     
     .table tr.row-position td, .table tr.row-position th {

@@ -318,6 +318,7 @@ class Order
 			'BASKET'         => (float) $summary,
 			'TAX'            => (float) $this->data['TAX_VALUE'],
 			'SURCHARGE'      => (float) $surcharge,
+            'TOTAL_WITH_SUR' => (float) $summary + $surcharge,
 			'TOTAL_WITH_VAT' => (float) $this->data['PRICE'] - $surcharge,
 			'TOTAL'          => (float) $this->data['PRICE'],
 		];

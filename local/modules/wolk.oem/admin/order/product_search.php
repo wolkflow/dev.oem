@@ -593,10 +593,6 @@ while ($item = $result->GetNext()) {
     // Свойства продукта.
     $item['PRODUCT']['PROPS'] = $section->getProperties();
     
-    //echo '<pre>';
-    //print_r($item);
-    //echo '</pre>';
-    
     
     $html = '<div class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -609,7 +605,7 @@ while ($item = $result->GetNext()) {
     
     foreach ($item['PRODUCT']['PROPS'] as &$prop) {
         $propfile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/wolk.oem/admin/order/props/' . strtolower($prop) . '.php';
-        echo $propfile;
+        
         if (is_readable($propfile)) {
             $prophtml = getfilehtml($propfile);
             
@@ -627,7 +623,6 @@ while ($item = $result->GetNext()) {
         </div>
     </div>';
     
-    //var_dump($html);
     
     $item['PRODUCT']['HTML'] = $html;
     

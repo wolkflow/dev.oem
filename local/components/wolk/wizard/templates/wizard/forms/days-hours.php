@@ -6,8 +6,8 @@
 
 <div class="serviceItem__row">
     <div class="js-days-hours-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-        <input type="hidden" name="dates" class="js-product-days-hours-dates" value="" />
-        <input type="hidden" name="times" class="js-product-days-hours-times" value="" />
+        <input type="hidden" name="DATES" class="js-product-days-hours-dates" value="" />
+        <input type="hidden" name="TIMES" class="js-product-days-hours-times" value="" />
         
         <? // Установка даты // ?>
         <div class="serviceItem__left">
@@ -15,7 +15,7 @@
                 <div class="serviceItem__subtitle">
                     <?= Loc::getMessage('DATES') ?>
                 </div>
-                <input name="dates" class="setDate js-field-value js-days-hours-datepicker" value="<?= (!empty($basketitem)) ? ($basketitem->getField('dates')) : ('') ?>" />
+                <input name="DATES" class="setDate js-field-value js-days-hours-datepicker" value="<?= (!empty($basketitem)) ? ($basketitem->getField('dates')) : ('') ?>" />
             </div>
         </div>
         

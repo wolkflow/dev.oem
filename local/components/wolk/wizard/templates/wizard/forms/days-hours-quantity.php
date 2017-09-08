@@ -6,8 +6,8 @@
 
 
 <div class="js-product-block js-product-block-<?= $section->getID() ?>" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>">
-    <input type="hidden" name="dates" class="js-product-days-hours-quantity-dates" value="" />
-    <input type="hidden" name="times" class="js-product-days-hours-quantity-times" value="" />
+    <input type="hidden" name="DATES" class="js-product-days-hours-quantity-dates" value="" />
+    <input type="hidden" name="TIMES" class="js-product-days-hours-quantity-times" value="" />
     
     <? if (!$section->asListShow() && count($products) == 1) { ?>
         

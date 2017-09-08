@@ -56,9 +56,10 @@ $MESS['COMMENTS'] = 'Комментарии';
 $MESS['ADDITIONAL_INFO'] = 'Дополнительная информация о вашем заказе';
 $MESS['CONFIGURATION'] = 'Ваша конфигурация';
 $MESS['SYSTEM_STAND'] = 'Системный стенд';
+$MESS['AREA']  = 'Площадь';
 $MESS['WIDTH'] = 'Ширина';
 $MESS['DEPTH'] = 'Глубина';
-$MESS['TYPE'] = 'Тип';
+$MESS['TYPE']  = 'Тип';
 $MESS['EXHIBITION'] = 'Выставка';
 $MESS['LOCATION'] = 'Место';
 
