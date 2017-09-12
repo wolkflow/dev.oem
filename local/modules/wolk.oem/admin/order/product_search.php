@@ -6,7 +6,7 @@ CModule::IncludeModule("wolk.oem");
 IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/iblock/admin/iblock_element_search.php');
 
 
-function getfilehtml($file)
+function getfilehtml($file, $pid, $pbid)
 {
 	ob_start();
 	include ($file);
@@ -581,50 +581,58 @@ while ($item = $result->GetNext()) {
             break;
     }
     
-    $item['PRODUCT'] = [];
+    $item['BASKET_ID'] = $basketID;
     
-    
-    // Раздел продукции.
-    $section = new Wolk\OEM\Products\Section($item['IBLOCK_SECTION_ID']);
-    
-    // Тип цены.
-    $item['PRODUCT']['PRICETYPE'] = $section->getPriceType();
-    
-    // Свойства продукта.
-    $item['PRODUCT']['PROPS'] = $section->getProperties();
-    
-    
-    $html = '<div class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Свойства продукции</h4>
-                        </div>
-                        <div class="modal-body">';
-    
-    foreach ($item['PRODUCT']['PROPS'] as &$prop) {
-        $propfile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/wolk.oem/admin/order/props/' . strtolower($prop) . '.php';
+    if ($IBLOCK_ID == IBLOCK_PRODUCTS_ID) {
         
-        if (is_readable($propfile)) {
-            $prophtml = getfilehtml($propfile);
+        $item['PRODUCT'] = [];
+        
+        // Раздел продукции.
+        $section = new Wolk\OEM\Products\Section($item['IBLOCK_SECTION_ID']);
+        
+        // Тип цены.
+        $item['PRODUCT']['PRICETYPE'] = $section->getPriceType();
+        
+        // Свойства продукта.
+        $item['PRODUCT']['PROPS'] = array_filter($section->getProperties());
+        
+        $html = '';
+        if (!empty($item['PRODUCT']['PROPS'])) {
+            $html = '<div class="modal fade" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Свойства продукции</h4>
+                                </div>
+                                <div class="modal-body">';
             
-            if (!empty($prophtml)) {
-                $html .= $prophtml . '<ht/>';
+            foreach ($item['PRODUCT']['PROPS'] as $prop) {
+                $propfile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/wolk.oem/admin/order/props/' . strtolower($prop) . '.php';
+                
+                if (is_readable($propfile)) {
+                    $pid  = $item['ID'];
+                    $pbid = $basketID;
+                    
+                    $prophtml = getfilehtml($propfile, $pid, $pbid);
+                    if (!empty($prophtml)) {
+                        $html .= $prophtml . '<ht/>';
+                    }
+                }
             }
+            
+            $html .= '  </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>';
         }
+        
+        $item['PRODUCT']['HTML'] = $html;
     }
     
-    $html .= '  </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>';
-    
-    
-    $item['PRODUCT']['HTML'] = $html;
     
 	$row->AddActions(array(
 		array(

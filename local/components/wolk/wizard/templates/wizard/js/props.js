@@ -18,8 +18,6 @@ $(document).ready(function() {
 
     // СВОЙСТВО: Файл.
     $(document).on('change', '.js-param-x-upload', function(event) {
-        //event.preventDefault();
-
         if ($(this).get(0).files == undefined) {
             return;
         }
@@ -60,19 +58,7 @@ $(document).ready(function() {
                 } else {
                     // Ошибка загрузки файла.
                 }
-            },
-            /*
-            xhr: function() {
-                var request = $.ajaxSettings.xhr();
-
-                request.upload.onprogress = function(exhr) {
-                    if (exhr.lengthComputable) {
-                        var progress = Math.floor((exhr.loaded / exhr.total) * 100);
-                    }
-                }
-                return request;
             }
-            */
         });
     });
 

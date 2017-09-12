@@ -1,4 +1,4 @@
 <div class="form-group">
     <label class="control-label">Комментарий:</label>
-    <textarea class="form-control"><?= $pval ?></textarea>
+    <textarea name="PRODUCTS[<?= $pbid ?>][<?= $pid ?>][PROPS][COMMENT]" class="form-control"><?= $pval ?></textarea>
  </div>

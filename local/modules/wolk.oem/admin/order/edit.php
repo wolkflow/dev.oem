@@ -88,6 +88,59 @@ if (isset($_GET['dbg'])) {
     echo '<pre>'; print_r($odata); echo '</pre>';
 }
 
+// Создание или изменение заказа.
+if (!empty($_POST) && $_POST['action'] == 'order-make') {
+    $data = array();
+    
+    /*
+    
+    [PARAMS] => Array
+                (
+                    [WIDTH] => 4
+                    [DEPTH] => 6
+                    [SFORM] => corner
+                    [COMMENTS] => TEST
+                    [STANDNUM] => 6
+                    [PAVILION] => 2
+                )
+    [BASKETS] =>
+    
+     [150485725559b24ca74f55a] => Array
+        (
+            [id] => 150485725559b24ca74f55a
+            [pid] => 645
+            [sid] => 66
+            [quantity] => 3
+            [kind] => product
+            [params] => Array
+                (
+                    [FORM] => Array
+                        (
+                            [HANGING-STRUCTURE] => 
+                        )
+
+                )
+
+            [fields] => Array
+                (
+                )
+
+            [included] => 
+        )
+        */
+    
+    if (empty($oid)) {
+        
+    } else {
+        
+    }
+}
+
+echo '<pre>';
+print_r($_POST);
+print_r(Wolk\Core\Utils\File::getReStructUploadFiles());
+echo '</pre>';
+
 $APPLICATION->SetAdditionalCSS('/assets/bootstrap/css/bootstrap.min.css');
 
 Bitrix\Main\Page\Asset::getInstance()->addJs('https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js');
@@ -111,8 +164,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                     <? } ?>
                 </div>
                 <div class="panel-body">
-                    <form method="POST" id="js-order-make-form-id">
+                    <form method="POST" id="js-order-make-form-id" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="order-make" />
+                        <input type="hidden" name="ID" value="<?= $oid ?>" />
                         <div class="form-group">
                             <label class="control-label" for="form-event-id">Выставка:</label>
                             <select class="form-control" id="form-event-id" name="EVENT">
@@ -290,7 +344,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                     <tbody>
                                         <? foreach ($odata['BASKETS'] as $bitem) { ?>
                                             <? if ($bitem['PROPS']['STAND']['VALUE'] == 'Y' || $bitem['PROPS']['INCLUDING']['VALUE'] == 'Y') { continue; } ?>
+                                            
                                             <? $product = new Wolk\OEM\Products\Base($bitem['PRODUCT_ID']) ?>
+                                            
                                             <tr id="position-<?= $product->getID() ?>" class="js-position row-position">
                                                 <td class="td-image">
                                                     <? $isrc = $product->getImageSrc() ?>
@@ -302,21 +358,21 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                 </td>
                                                 <td class="td-name">
                                                     <?= $product->getTitle() ?> 
-                                                    <input type="hidden" name="PRODUCTS[IDS][<?= $product->getID() ?>]" value="<?= $product->getID() ?>" />
+                                                    <input type="hidden" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][IDS]" value="<?= $product->getID() ?>" />
                                                 </td>
                                                 <td class="td-quantity">
                                                     <div class="col-xs-2">
-                                                        <input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[QUANTITY][<?= $product->getID() ?>]" value="<?= $bitem['QUANTITY'] ?>" />
+                                                        <input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][QUANTITY]" value="<?= $bitem['QUANTITY'] ?>" />
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="js-price form-control input-text-small" name="PRODUCTS[PRICE][<?= $product->getID() ?> ?>]" value="<?= $bitem['PRICE'] ?>" />
+                                                    <input type="text" class="js-price form-control input-text-small" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][PRICE]" value="<?= number_format($bitem['PRICE'], 2, '.', '') ?>" />
                                                 </td>
                                                 <td>
-                                                    <span class="js-cost"><?= ($bitem['PRICE'] * $bitem['QUANTITY']) ?></span>
+                                                    <span class="js-cost"><?= number_format(($bitem['PRICE'] * $bitem['QUANTITY']), 2, '.', '') ?></span>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="js-comment form-control" name="PRODUCTS[NOTES][<?= $product->getID() ?>]" value="<?= $bitem['NOTES'] ?>" />
+                                                    <input type="text" class="js-comment form-control" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][NOTES]" value="<?= $bitem['NOTES'] ?>" />
                                                 </td>
                                                 <td class="td-props">
                                                     <div class="modal fade" tabindex="-1" role="dialog">
@@ -333,6 +389,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                                         foreach ($props as $prop) {
                                                                             $propfile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/wolk.oem/admin/order/props/' . strtolower($prop) . '.php';
                                                                             
+                                                                            $pid  = $bitem['PRODUCT_ID'];
+                                                                            $pbid = $bitem['ID'];
                                                                             $pval = $pvals[$prop];
                                                                             if (is_readable($propfile)) {
                                                                                 include ($propfile);
@@ -370,10 +428,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <hr/>
                         
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-11">
                                 <div class="form-group">
                                     <label class="control-label" for="form-comments-id">Комментарий к заказу:</label>
-                                    <textarea class="form-control" id="form-comments-id" name="COMMENTS" rows="5"><?= $odata['ORDER']['USER_DESCRIPTION'] ?></textarea>
+                                    <textarea class="form-control" id="form-comments-id" name="COMMENTS" rows="8"><?= $odata['ORDER']['USER_DESCRIPTION'] ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -443,7 +501,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">Создать</a>
+                                    <input type="submit" value="Сохранить" />
+                                    <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">Сохранить</a>
                                 </div>
                             </div>
                         </div>
@@ -585,8 +644,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             var language  = $('#form-language-id').val();
             var currency  = $('#form-currency-id').val();
             var typestand = $('.js-form-type-stand:checked').val();
+            var basketid  = (new Date()).getTime();
             
-            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_product_search.php?lang=ru&IBLOCK_ID=<?= IBLOCK_PRODUCTS_ID ?>&func=SetElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand, 900, 600);
+            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_product_search.php?lang=ru&IBLOCK_ID=<?= IBLOCK_PRODUCTS_ID ?>&func=SetElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand + '&bid=' + basketid, 900, 600);
         });
         
         
@@ -682,12 +742,45 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 			});
 		});
         
+        
         // Всплывающее окно для своства.
         $(document).on('click', '.js-props', function() {
             var $wrap = $(this).closest('td');
             
             $wrap.find('.modal').modal();
         });
+        
+        
+        // Модальные окна.
+        $(document).on('click', '[data-modal]', function(e) {
+            e.preventDefault();
+            $($(this).data('modal')).modal();
+            return false;
+        });
+        
+        
+        // СВОЙСТВО: Выбор цвета.
+        $(document).on('click', '.js-colors-palette .js-color-item', function(e) {
+            var $that    = $(this);
+            var $parent  = $that.parent('li');
+            var $wrapper = $that.closest('.js-param-block');
+
+            // Данные свойства для корзины.
+            var $input_value = $wrapper.find('.js-param-x-value');
+            var $input_color = $wrapper.find('.js-param-x-color');
+            
+            if ($parent.hasClass('active')) {
+                $parent.removeClass('active');
+                $input_value.val('');
+                $input_color.val('');
+            } else {
+                $parent.closest('.js-colors-palette').find('li').removeClass('active');
+                $parent.addClass('active');
+                $input_value.val($that.data('id'));
+                $input_color.val($that.css('background'));
+            }
+        });
+        
     });
     
     
@@ -730,42 +823,29 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     function SetElement(element)
     {
         element = JSON.parse(element);
-        
+        console.log(element);
         var html = '<tr id="position-' + element.ID + '" class="js-position row-position">';
+        var code = element.BASKET_ID;
+        var name = '[' + code + '][' + element.ID + ']';
         
         if (element.PICTURE) {
             html += '<td class="td-image"><img src="' + element.PICTURE + '" class="img-thumbnail position-image-preview" /></td>';
         } else {
             html += '<td class="td-image"><div class="no_foto">Нет картинки</div></td>';
         }
-        html += '<td class="td-name">' + element.NAME + ' <input type="hidden" name="PRODUCTS[IDS][' + element.ID + ']" value="' + element.ID + '" /></td>';
-        html += '<td class="td-quantity"><div class="col-xs-2"><input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[QUANTITY][' + element.ID + ']" value="1" /></div></td>';
-        html += '<td><input type="text" class="js-price form-control input-text-small" name="PRODUCTS[PRICE][' + element.ID + ']" value="' + (element.PRICE).toFixed(2) + '" /></td>';
+        html += '<td class="td-name">' + element.NAME + ' <input type="hidden" name="PRODUCTS' + name + '[IDS]" value="' + element.ID + '" /></td>';
+        html += '<td class="td-quantity"><div class="col-xs-2"><input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS' + name + '[QUANTITY]" value="1" /></div></td>';
+        html += '<td><input type="text" class="js-price form-control input-text-small" name="PRODUCTS' + name + '[PRICE]" value="' + (element.PRICE).toFixed(2) + '" /></td>';
         html += '<td><span class="js-cost">' + (element.PRICE).toFixed(2) + '</span></td>';
-        
-        <? /*
-        html += '<td><div class="js-basket-props">';
-        
-        if (element.PRODUCT.PROPS.length > 0) {
-            html += '<div class="btn-group-vertical btn-group-xs" role="group" aria-label="Свойства">';
-            for (let i in element.PRODUCT.PROPS) {
-                let property = element.PRODUCT.PROPS[i];
-                
-                html += '<div class="js-basket-prop-wrap">';
-                html += '<button type="button" class="js-basket-prop btn btn-info" data-prop="' + property.CODE + '">' + property.CODE + '</button>';
-                html += property.HTML;
-                html += '</div>';
-            }
-            html += '</div>';
-        }
-        
-        html += '</div></td>';
-        */ ?>
-        html += '<td><input type="text" class="js-comment form-control" name="PRODUCTS[NOTES][' + element.ID + ']" value="" /></td>';
+        html += '<td><input type="text" class="js-comment form-control" name="PRODUCTS' + name + '[NOTES]" value="" /></td>';
         html += '<td class="td-props">';
         html += element.PRODUCT.HTML;
         html += '<div class="btn-group" role="group">';
-        html += '<button type="button" class="btn btn-primary js-props" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>';
+        if (element.PRODUCT.HTML.length) {
+            html += '<button type="button" class="btn btn-primary js-props" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>';
+        } else {
+            html += '<button type="button" class="btn btn-primary disabled" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>';
+        }
         html += '<button type="button" class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></button>';
         html += '</div>';
         html += '</td>';

@@ -18,11 +18,13 @@
             <? if (!empty($value)) { ?>
                 <? $file = CFile::getByID($value); ?>
                 <? $path = CFile::getPath($value); ?>
-                <? if (in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['png', 'jpeg', 'jpg', 'gif'])) { ?>
-                    <img width="56" height="56" src="<?= $path ?>" />
-                <? } else { ?>
-                    <img width="56" height="56" src="/local/templates/.default/build/images/download.png" />
-                <? } ?>
+                <a href="<?= $path ?>" target="_blank">
+                    <? if (in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['png', 'jpeg', 'jpg', 'gif'])) { ?>
+                        <img width="56" height="56" src="<?= $path ?>" />
+                    <? } else { ?>
+                        <img width="56" height="56" src="/local/templates/.default/build/images/download.png" />
+                    <? } ?>
+                </a>
             <? } ?>
         </div>
         <input type="file" class="styler js-param-x-upload" />
