@@ -48,7 +48,7 @@ class Sale
      */
     public function OnSaleOrderSaved(\Bitrix\Main\Event $event)
 	{
-        if (defined('ADMIN_SECTION')) {
+        if (defined('ADMIN_SECTION') && !defined('NO_ORDER_RECALC')) {
             $order = $event->getParameter('ENTITY');
             
             if (is_object($order)) {

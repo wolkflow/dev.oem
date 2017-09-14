@@ -19,9 +19,11 @@ $arChildParams = array(
 	"CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
 );
 
-foreach ($arParams as $key => $val)
-	if(strpos($key, "STATUS_COLOR_") !== false && strpos($key, "~") !== 0)
+foreach ($arParams as $key => $val) {
+	if (strpos($key, "STATUS_COLOR_") !== false && strpos($key, "~") !== 0) {
 		$arChildParams[$key] = $val;
+	}
+}
 
 $APPLICATION->IncludeComponent(
 	"bitrix:sale.personal.order.list",
@@ -29,4 +31,4 @@ $APPLICATION->IncludeComponent(
 	$arChildParams,
 	$component
 );
-?>
+

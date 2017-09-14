@@ -11,10 +11,11 @@ use \Bitrix\Main\Application;
 
 class Order
 {
-	const PROP_SKETCH          = 'sketch';
+	const PROP_SKETCH          = 'SKETCH';
+    const PROP_SKETCH_SCENE    = 'SKETCH_SCENE';
 	const PROP_SKETCH_IMAGE    = 'SKETCH_IMAGE';
-	const PROP_PAVILLION       = 'pavillion';
-	const PROP_STANDNUM		   = 'standNum';
+	const PROP_PAVILLION       = 'PAVILION';
+	const PROP_STANDNUM		   = 'STANDNUM';
 	const PROP_LANGUAGE        = 'LANGUAGE';
 	const PROP_INVOICE		   = 'INVOICE';
 	const PROP_INVOICE_DATE    = 'INVOICE_DATE';
@@ -450,5 +451,341 @@ class Order
 		];
 		
 		return $prices;
+    }
+    
+    
+    
+    
+    
+    /**
+     * Создание и изменение заказа.
+     */
+    public static function make($data)
+    {
+        // Пользователь.
+        $uid = (int) $data['UID'];
+        
+        // Контекст.
+        $context = new \Wolk\OEM\Context($data['EID'], $data['TYPESTAND'], $data['LANGUAGE']);
+        
+        // Текущая корзина.
+        $products = (array) $data['PRODUCTS'];
+        
+        // Мероприятие.
+        $event = new \Wolk\OEM\Event($data['EID']);
+                
+        // Валюта заказа.
+        $currency = (!empty($data['CURRENCY'])) ? (strval($data['CURRENCY'])) : ('EUR');
+        
+        // Итоговая сумма.
+        $price = 0;
+        
+        
+        // Удаление старых корзин.
+        if (!empty($data['OID'])) {
+            $obasket = \Bitrix\Sale\Order::load($data['OID'])->getBasket();
+            $bresult = \Bitrix\Sale\Internals\BasketTable::getList(['filter' => ['ORDER_ID' => $data['OID']]]);
+            
+            while ($basket = $bresult->fetch()) {
+                $obasket->getItemById($basket['ID'])->delete();
+            }
+            $obasket->save();
+        } else {
+            $salebasket = new \CSaleBasket();
+            $salebasket->DeleteAll($uid);
+        }
+        
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        
+        // Сохранение стенда.
+        $stand = null;
+        if (!empty($data['SID'])) {
+            $stand = new \Wolk\OEM\Stand($data['SID']);
+        }
+        
+        if (!empty($stand)) {
+            // Тип продукции.
+            $note = 'STAND.' . strtoupper($context->getType());
+            
+            $fields = [
+                'PRODUCT_ID'     => $stand->getID(),
+                'QUANTITY'       => floatval($data['STANDWIDTH']) * floatval($data['STANDDEPTH']),
+                'PRICE'          => floatval($data['STANDPRICE']),
+                'CUSTOM_PRICE'   => 'Y',
+                'CURRENCY'       => $currency,
+                'LID'            => SITE_DEFAULT,
+                'NAME'           => $stand->getTitle($context->getLang()),
+                'SET_PARENT_ID'  => 0,
+                'TYPE'           => 0,
+                'FUSER_ID'       => $uid,
+                'RECOMMENDATION' => $note,
+            ];
+            
+            $props = [[
+                'NAME'  => 'Стенд',
+                'CODE'  => 'STAND',
+                'VALUE' => 'Y'
+            ]];
+            
+            // Добавление корзины.
+            $result = \Bitrix\Sale\Internals\BasketTable::add($fields);
+            
+            if (is_object($result)) {                    
+                // Корзина пользователя.
+                $basket = \Bitrix\Sale\Basket::loadItemsForFUser($uid, SITE_DEFAULT);
+                
+                $basket_item = $basket->getItemByID($result->getID());
+                $basket_prop = $basket_item->getPropertyCollection();
+                $basket_prop->setProperty($props);
+                $basket_prop->save();
+            }
+            
+            
+            // Общая стоимость продукции.
+            $price += ($fields['PRICE'] * $fields['QUANTITY']);
+        }
+        
+        
+        // Сохранение продукции.
+        foreach ($products as $product) {
+            
+            // Продукиця.
+            $element = new \Wolk\OEM\Products\Base($product['ID']);
+            
+            if (empty($element)) {
+                continue;
+            }
+            
+            $note = 'PRODUCT.' . (($product['INCLUDED']) ? ('BASE') : ('SALE'));
+            
+            $fields = [
+                'PRODUCT_ID'     => $element->getID(),
+                'QUANTITY'       => floatval($product['QUANTITY']),
+                'PRICE'          => floatval($product['PRICE']),
+                'CUSTOM_PRICE'   => 'Y',
+                'CURRENCY'       => $currency,
+                'LID'            => SITE_DEFAULT,
+                'NAME'           => $element->getTitle($context->getLang()),
+                'SET_PARENT_ID'  => 0,
+                'TYPE'           => 0,
+                'FUSER_ID'       => $uid,
+                'RECOMMENDATION' => $note,
+            ];
+            
+            $props = [];
+            
+            // Поля заказа продукции.
+            $props []= [
+                'NAME'  => 'Поля заказа продукции',
+                'CODE'  => 'FIELDS',
+                'VALUE' => json_encode(array())
+            ];
+            
+            // Свойства продукции.
+            $props []= [
+                'NAME'  => 'Свойства продукции',
+                'CODE'  => 'PARAMS',
+                'VALUE' => json_encode((array) $product['PROPS'])
+            ];
+            
+            // Продукция включена в стенд.
+            if ($product['INCLUDED']) {
+                $props []= [
+                    'NAME'  => 'Стандартная комплектация',
+                    'CODE'  => 'INCLUDING',
+                    'VALUE' => 'Y'
+                ];
+            }
+            
+            // Добавление корзины.
+            $result = \Bitrix\Sale\Internals\BasketTable::add($fields);
+            
+            if (is_object($result)) {
+                // Корзина пользователя.
+                $basket = \Bitrix\Sale\Basket::loadItemsForFUser($uid, SITE_DEFAULT);
+                
+                $basket_item = $basket->getItemByID($result->getID());
+                $basket_prop = $basket_item->getPropertyCollection();
+                $basket_prop->setProperty($props);
+                $basket_prop->save();
+            }
+            
+            // Суммирование цены.
+            $price += ($fields['PRICE'] * $fields['QUANTITY']);  
+        }
+        
+        
+        // Цены.
+        $infoprices = Order::getFullPriceInfo($price, $data['SURCHARGE'], $data['VAT']);
+        
+        $fields = [
+            'LID'              => SITE_DEFAULT,
+            'USER_ID'          => $uid,
+            'PERSON_TYPE_ID'   => PERSON_TYPE_DETAULT,
+            'DELIVERY_ID'      => DELIVERY_DETAULT,
+            'PAYED'            => 'N',
+            'CANCELED'         => 'N',
+            'STATUS_ID'        => 'N',
+            'DISCOUNT_VALUE'   => '',
+            'PRICE'            => $infoprices['SUMMARY'],
+            'TAX_VALUE'        => (!$data['VAT']) ? ($infoprices['VAT_PRICE']) : (0),
+            'CURRENCY'         => $currency,
+            'USER_DESCRIPTION' => $data['COMMENTS'],
+        ];
+        
+        
+        // Созданеи заказа.
+        if (empty($data['OID'])) {
+            $oid = \CSaleOrder::add($fields);
+        } else {
+            $oid = \CSaleOrder::update($data['OID'], $fields);
+            
+            if ($oid) {
+                \CSaleOrderPropsValue::deleteByOrder($oid);
+            }
+        }
+        
+        
+        // Сохранение свойств заказа.
+        $result = \CSaleOrderProps::GetList();
+        $props = [];
+        while ($prop = $result->Fetch()) {
+            $props[$prop['CODE']] = $prop;
+        }
+        $dataprops = [];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['EVENT_ID']['ID'],
+            'NAME'           => 'ID мероприятия',
+            'CODE'           => 'EVENT_ID',
+            'VALUE'          => $event->getID(),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['EVENT_NAME']['ID'],
+            'NAME'           => 'Название мероприятия',
+            'CODE'           => 'EVENT_NAME',
+            'VALUE'          => $event->getTitle(),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['STAND_TYPE']['ID'],
+            'NAME'           => 'Тип стенда',
+            'CODE'           => 'STAND_TYPE',
+            'VALUE'          => $data['STAND_TYPE'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['WIDTH']['ID'],
+            'NAME'           => 'Ширина стенда',
+            'CODE'           => 'WIDTH',
+            'VALUE'          => $data['STANDWIDTH'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['DEPTH']['ID'],
+            'NAME'           => 'Глубина стенда',
+            'CODE'           => 'DEPTH',
+            'VALUE'          => $data['STANDDEPTH'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SURCHARGE']['ID'],
+            'NAME'           => 'Процент наценки',
+            'CODE'           => 'SURCHARGE',
+            'VALUE'          => $infoprices['SURCHARGE_PERCENT'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SURCHARGE_PRICE']['ID'],
+            'NAME'           => 'Сумма наценки',
+            'CODE'           => 'SURCHARGE_PRICE',
+            'VALUE'          => $infoprices['SURCHARGE_PRICE'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['LANGUAGE']['ID'],
+            'NAME'           => 'Язык заказа',
+            'CODE'           => 'LANGUAGE',
+            'VALUE'          => $context->getLang(),
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SKETCH']['ID'],
+            'NAME'           => 'Скетч',
+            'CODE'           => 'SKETCH',
+            'VALUE'          => $data['SKETCH_SCENE'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SKETCH_IMAGE']['ID'],
+            'NAME'           => 'Изображение скетча',
+            'CODE'           => 'SKETCH_IMAGE',
+            'VALUE'          => $data['SKETCH_IMAGE'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['STANDNUM']['ID'],
+            'NAME'           => 'Номер стенда',
+            'CODE'           => 'STANDNUM',
+            'VALUE'          => $data['STANDNUM'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['PAVILION']['ID'],
+            'NAME'           => 'Павильон',
+            'CODE'           => 'PAVILION',
+            'VALUE'          => $data['PAVILION'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['TYPE']['ID'],
+            'NAME'           => 'Тип заказа',
+            'CODE'           => 'TYPE',
+            'VALUE'          => $data['TYPE'],
+        ];
+        
+        $dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['TYPESTAND']['ID'],
+            'NAME'           => 'Тип застройки',
+            'CODE'           => 'TYPESTAND',
+            'VALUE'          => $context->getType(),
+        ];
+        
+        // INCLUDE_VAT
+        
+        foreach ($dataprops as $dataprop) {
+            \CSaleOrderPropsValue::add($dataprop);
+        }
+        
+        if (!$oid) {
+            throw new \Exception("Can't create order.");
+        }
+        
+        $baskets = \Bitrix\Sale\Internals\BasketTable::getList([
+            'filter' => ['FUSER_ID' => $uid, 'ORDER_ID' => null]
+        ])->fetchAll();
+        
+        foreach ($baskets as $basket) {
+            $result = \Bitrix\Sale\Internals\BasketTable::update($basket['ID'], ['ORDER_ID' => $oid]);
+        }
+        
+        return (new self($oid));
     }
 }

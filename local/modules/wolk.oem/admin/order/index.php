@@ -136,14 +136,20 @@ if (!empty($_POST)) {
 
         // Сохранение данных заказа.
         case 'data':
-			$status = (string) $_POST['STATUS'];
-            $bill   = (string) $_POST['BILL'];
+			$status  = (string) $_POST['STATUS'];
+			$comment = (String) $_POST['COMMENTS'];
+            $bill    = (string) $_POST['BILL'];
 			
 			$result = null;
 			
 			if ($status != $oemorder->getStatus()) {
-				$bxorder->setField('STATUS_ID', $status)->isSuccess();
+				$bxorder->setField('COMMENTS', $comment);
+				$bxorder->setField('STATUS_ID', $status);
+				
 				$result = $bxorder->save()->isSuccess();
+				
+				
+				
                 
 				// $bxorder = Bitrix\Sale\Order::load($ID);
 				
@@ -711,6 +717,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                                         </option>
                                                     <? } ?>
                                                 </select>
+											</td>
+										</tr>
+										<tr>
+                                            <td class="adm-detail-content-cell-l">Комментарий к заказу:</td>
+                                            <td class="adm-detail-content-cell-r">
+												<textarea name="COMMENTS" cols="45" rows="5"><?= $order['COMMENTS'] ?></textarea>
                                             </td>
                                         </tr>
                                         <tr>

@@ -1,4 +1,4 @@
-/*
+fpagesubsubtitle/*
  * Retina helper mixins for Compass
  * http://www.joelambert.co.uk
  *
@@ -423,6 +423,9 @@ input[type="password"] {
   text-transform: uppercase;
   position: relative;
   padding-bottom: 15px;
+}
+.pagesubsubtitle a {
+	text-decoration: none;
 }
 .pagesubsubtitle:after {
   content: "";

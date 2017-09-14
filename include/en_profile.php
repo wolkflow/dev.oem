@@ -5,7 +5,7 @@
 			Personal information
 		</div>
 	</a>
-    <a href="/personal/orders-history.php">
+    <a href="/personal/orders/">
 		<div rel="history" class="double pagetitle__button active">
 			Order history
 		</div>

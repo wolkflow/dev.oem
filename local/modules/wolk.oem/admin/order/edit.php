@@ -7,6 +7,9 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admin_before.php');
 
+// Не пересчитывать заказ при создании из формы.
+define('NO_ORDER_RECALC', 'Y');
+
 
 // подключим языковой файл
 IncludeModuleLangFile(__FILE__);
@@ -26,7 +29,7 @@ if (in_array(GROUP_MANAGERS_ID, $groups)) {
 }
 
 
-$oid = (int) $_REQUEST['OID'];
+$oid = (int) $_REQUEST['ID'];
 
 $oemorder = null;
 if (!empty($oid)) {
@@ -90,56 +93,42 @@ if (isset($_GET['dbg'])) {
 
 // Создание или изменение заказа.
 if (!empty($_POST) && $_POST['action'] == 'order-make') {
-    $data = array();
     
-    /*
+    $fields = array(
+        'OID'        => $oid,
+        'UID'        => $_POST['USER'],
+        'EID'        => $_POST['EVENT'],
+        'SID'        => $_POST['STAND'],
+        'STANDPRICE' => $_POST['STANDPRICE'],
+        'STANDWIDTH' => $_POST['STANDWIDTH'],
+        'STANDDEPTH' => $_POST['STANDDEPTH'],
+        'PRODUCTS'   => $_POST['PRODUCTS'],
+        'TYPESTAND'  => $_POST['TYPESTAND'],
+        'CURRENCY'   => $_POST['CURRENCY'],
+        'LANGUAGE'   => $_POST['LANGUAGE'],
+        'TYPE'       => $_POST['TYPE'],
+        'STANDNUM'   => $_POST['STANDNUM'],
+        'PAVILION'   => $_POST['PAVILION'],
+        'SURCHARGE'  => $_POST['SURCHARGE'],
+        'COMMENTS'   => $_POST['COMMENTS'],
+    );
     
-    [PARAMS] => Array
-                (
-                    [WIDTH] => 4
-                    [DEPTH] => 6
-                    [SFORM] => corner
-                    [COMMENTS] => TEST
-                    [STANDNUM] => 6
-                    [PAVILION] => 2
-                )
-    [BASKETS] =>
+    $files = Wolk\Core\Utils\File::getReStructUploadFiles();
     
-     [150485725559b24ca74f55a] => Array
-        (
-            [id] => 150485725559b24ca74f55a
-            [pid] => 645
-            [sid] => 66
-            [quantity] => 3
-            [kind] => product
-            [params] => Array
-                (
-                    [FORM] => Array
-                        (
-                            [HANGING-STRUCTURE] => 
-                        )
-
-                )
-
-            [fields] => Array
-                (
-                )
-
-            [included] => 
-        )
-        */
-    
-    if (empty($oid)) {
-        
-    } else {
-        
+    foreach ($fields['PRODUCTS'] as $i => &$product) {
+        $file = $files['PRODUCTS'][$i]['PROPS']['FILE'];
+        if (!empty($file['tmp_name'])) {
+            $product['PROPS']['FILE'] = CFile::SaveFile($file, 'temp');
+        }
     }
+    
+    
+    $order = Wolk\OEM\Order::make($fields);
+    
+    LocalRedirect('/bitrix/admin/wolk_oem_order_edit.php?OID=' . $order->getID());
 }
 
-echo '<pre>';
-print_r($_POST);
-print_r(Wolk\Core\Utils\File::getReStructUploadFiles());
-echo '</pre>';
+
 
 $APPLICATION->SetAdditionalCSS('/assets/bootstrap/css/bootstrap.min.css');
 
@@ -284,6 +273,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                         <? if (!empty($odata['STAND'])) { ?>
                                             <tr>
                                                 <td id="js-stand-title-id">
+                                                    <input type="hidden" name="STAND" value="<?= $odata['STAND']['PRODUCT_ID'] ?>" />
                                                     <?= $odata['STAND']['NAME'] ?>
                                                 </td>
                                                 <td>
@@ -358,21 +348,21 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                 </td>
                                                 <td class="td-name">
                                                     <?= $product->getTitle() ?> 
-                                                    <input type="hidden" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][IDS]" value="<?= $product->getID() ?>" />
+                                                    <input type="hidden" name="PRODUCTS[<?= $bitem['ID'] ?>][ID]" value="<?= $product->getID() ?>" />
                                                 </td>
                                                 <td class="td-quantity">
                                                     <div class="col-xs-2">
-                                                        <input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][QUANTITY]" value="<?= $bitem['QUANTITY'] ?>" />
+                                                        <input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS[<?= $bitem['ID'] ?>][QUANTITY]" value="<?= $bitem['QUANTITY'] ?>" />
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="js-price form-control input-text-small" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][PRICE]" value="<?= number_format($bitem['PRICE'], 2, '.', '') ?>" />
+                                                    <input type="text" class="js-price form-control input-text-small" name="PRODUCTS[<?= $bitem['ID'] ?>][PRICE]" value="<?= number_format($bitem['PRICE'], 2, '.', '') ?>" />
                                                 </td>
                                                 <td>
                                                     <span class="js-cost"><?= number_format(($bitem['PRICE'] * $bitem['QUANTITY']), 2, '.', '') ?></span>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="js-comment form-control" name="PRODUCTS[<?= $bitem['ID'] ?>][<?= $product->getID() ?>][NOTES]" value="<?= $bitem['NOTES'] ?>" />
+                                                    <input type="text" class="js-comment form-control" name="PRODUCTS[<?= $bitem['ID'] ?>][NOTES]" value="<?= $bitem['NOTES'] ?>" />
                                                 </td>
                                                 <td class="td-props">
                                                     <div class="modal fade" tabindex="-1" role="dialog">
@@ -383,6 +373,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                                     <h4 class="modal-title">Свойства продукции</h4>
                                                                 </div>
                                                                 <div class="modal-body">
+                                                                    <input type="hidden" name="PRODUCTS[<?= $bitem['ID'] ?>][PROPS][INCLUDED]" value="<?= $bitem['PROPS']['INCLUDING'] ?>" />
+                                                                    
                                                                     <? // Свойства продукции.
                                                                         $pvals = json_decode($bitem['PROPS']['PARAMS']['VALUE'], true);
                                                                         $props = $product->getSection()->getProperties();
@@ -450,7 +442,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" id="form-vat-id" name="VAT" value="1" <?= ($odata['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') ? ('checked="checked"') : ('0') ?> />
+                                            <input type="checkbox" id="form-vat-id" name="VAT" value="1" <?= ($odata['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') ? ('checked="checked"') : ('') ?> />
                                             Включен НДС
                                         </label>
                                     </div>
@@ -644,7 +636,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             var language  = $('#form-language-id').val();
             var currency  = $('#form-currency-id').val();
             var typestand = $('.js-form-type-stand:checked').val();
-            var basketid  = (new Date()).getTime();
+            var basketid  = 'n' + (new Date()).getTime();
             
             jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_product_search.php?lang=ru&IBLOCK_ID=<?= IBLOCK_PRODUCTS_ID ?>&func=SetElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand + '&bid=' + basketid, 900, 600);
         });
@@ -823,17 +815,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     function SetElement(element)
     {
         element = JSON.parse(element);
-        console.log(element);
+        
         var html = '<tr id="position-' + element.ID + '" class="js-position row-position">';
         var code = element.BASKET_ID;
-        var name = '[' + code + '][' + element.ID + ']';
+        var name = '[' + code + ']';
         
         if (element.PICTURE) {
             html += '<td class="td-image"><img src="' + element.PICTURE + '" class="img-thumbnail position-image-preview" /></td>';
         } else {
             html += '<td class="td-image"><div class="no_foto">Нет картинки</div></td>';
         }
-        html += '<td class="td-name">' + element.NAME + ' <input type="hidden" name="PRODUCTS' + name + '[IDS]" value="' + element.ID + '" /></td>';
+        html += '<td class="td-name">' + element.NAME + ' <input type="hidden" name="PRODUCTS' + name + '[ID]" value="' + element.ID + '" /></td>';
         html += '<td class="td-quantity"><div class="col-xs-2"><input type="text" class="js-quantity form-control input-text-small" name="PRODUCTS' + name + '[QUANTITY]" value="1" /></div></td>';
         html += '<td><input type="text" class="js-price form-control input-text-small" name="PRODUCTS' + name + '[PRICE]" value="' + (element.PRICE).toFixed(2) + '" /></td>';
         html += '<td><span class="js-cost">' + (element.PRICE).toFixed(2) + '</span></td>';
@@ -863,7 +855,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     {
         element = JSON.parse(element);
         
-        $('#js-stand-title-id').html('<input type="hidden" value="' + element.ID + '" name="STAND" />' + element.NAME);
+        $('#js-stand-title-id').html('<input type="hidden" name="STAND" value="' + element.ID + '" />' + element.NAME);
         $('#js-stand-price-id').prop('disabled', false).val(element.PRICE.toFixed(2));
         $('#js-stand-width-id').prop('disabled', false).val(1);
         $('#js-stand-depth-id').prop('disabled', false).val(1);

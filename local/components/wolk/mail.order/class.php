@@ -67,7 +67,7 @@ class MailOrderComponent extends \CBitrixComponent
 		$this->arResult['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($this->arParams['ID']);
 		$this->arResult['USER']    = CUser::getByID($this->arResult['ORDER']['USER_ID'])->Fetch();
 		
-		$event = CIBlockElement::getByID($this->arResult['PROPS']['eventId']['VALUE'])->GetNextElement();
+		$event = CIBlockElement::getByID($this->arResult['PROPS']['EVENT_ID']['VALUE'])->GetNextElement();
 		
 		$this->arResult['EVENT'] = $event->getFields();
 		$this->arResult['EVENT']['PROPS'] = $event->getProperties();
