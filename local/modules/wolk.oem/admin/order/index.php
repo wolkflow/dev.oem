@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Bitrix\Sale\Helpers\Admin\OrderEdit;
 use Bitrix\Main\Localization\Loc;

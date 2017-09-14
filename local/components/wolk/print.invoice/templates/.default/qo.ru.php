@@ -1,4 +1,4 @@
-﻿<? $logo = CFile::ResizeImageGet($arResult['EVENT']['PROPS']['LANG_LOGO_'.$arResult['LANGUAGE']]['VALUE'], ['width' => 168, 'height' => 68], BX_RESIZE_IMAGE_PROPORTIONAL_ALT)['src'] ?>
+<? $logo = CFile::ResizeImageGet($arResult['EVENT']['PROPS']['LANG_LOGO_'.$arResult['LANGUAGE']]['VALUE'], ['width' => 168, 'height' => 68], BX_RESIZE_IMAGE_PROPORTIONAL_ALT)['src'] ?>
 
 <table class="qo-wrapper">
     <tr>

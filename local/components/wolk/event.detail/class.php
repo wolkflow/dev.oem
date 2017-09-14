@@ -1,4 +1,4 @@
-﻿<?
+<?
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
