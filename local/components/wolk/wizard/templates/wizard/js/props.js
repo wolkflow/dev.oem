@@ -42,17 +42,18 @@ $(document).ready(function() {
             contentType: false, // важно - убираем форматирование данных по умолчанию
             processData: false, // важно - убираем преобразование строк по умолчанию
             beforeSend: function() {
-                $image.hide();
-                $image.html('');
+                $image.html('').hide();
             },
             success: function(response) {
                 if (response.status) {
                     if (response.data['isimg']) {
                         $image.append('<img width="56" height="56" src="' + response.data['path'] + '" />');
+						$image.append('<span class="file-remove js-param-x-remove">&times;</span>');
                         $image.show();
                     } else {
                         $image.append('<a href="' + response.data['path'] + '" target="_blank"><img width="56" height="56" src="/local/templates/.default/build/images/download.png" /></a>');
-                        $image.show();
+                        $image.append('<span class="file-remove js-param-x-remove">&times;</span>');
+						$image.show();
                     }
                     $input.val(response.data['file']);
                 } else {
@@ -61,6 +62,17 @@ $(document).ready(function() {
             }
         });
     });
+	
+	$(document).on('click', '.js-param-x-remove', function(event) {
+        var $that  = $(this);
+        var $block = $that.closest('.js-param-block');
+		
+		$block.find('.js-param-x-file').val('');
+		$block.find('.js-param-x-upload').val('');
+		$block.find('.js-param-x-upload .jq-file__name').html('');
+		$block.find('.js-param-x-image').html('').hide();
+	});
+	
 
 
     // СВОЙСТВО: Выбор цвета.

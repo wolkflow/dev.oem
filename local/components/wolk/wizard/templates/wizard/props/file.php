@@ -14,7 +14,7 @@
         <div class="serviceItem__subtitle">
             <?= Loc::getMessage('FILE') ?>
         </div>
-        <div class="preview-image js-param-x-image" <?= (empty($value)) ? ('"style="display: none;"') : ('') ?>>
+        <div class="preview-image js-param-x-image" <?= (empty($value)) ? ('style="display: none;"') : ('') ?>>
             <? if (!empty($value)) { ?>
                 <? $file = CFile::getByID($value); ?>
                 <? $path = CFile::getPath($value); ?>

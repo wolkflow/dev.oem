@@ -1523,3 +1523,19 @@ float: left}
 }
 .ordercontainer__changebutton.changeallorder {text-align: right}
 .footerLinks          {clear: both;padding-bottom: 24px;}
+
+.preview-image {
+	position: relative;
+}
+
+.file-remove {
+	cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+    position: absolute;
+    z-index: 10;
+    display: block;
+    right: 5px;
+	top: 0px;
+}
+
