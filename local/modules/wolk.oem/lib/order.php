@@ -87,11 +87,19 @@ class Order
 	}
 	
 	
+	public function getUserID()
+	{
+		$this->load();
+		
+		return intval($this->data['USER_ID']);
+	}
+	
+	
 	public function getUser()
 	{
 		$this->load();
 		
-		return (\CUser::getByID($this->data['USER_ID'])->Fetch());
+		return (\CUser::getByID($this->getUserID())->Fetch());
 	}
 	
 	
@@ -283,6 +291,35 @@ class Order
 		$title = Loc::getMessage('ORDER_STATUS_'.$status, Loc::loadLanguageFile(__FILE__, $lang), $lang); 
 		
 		return $title;
+	}
+	
+	
+	/**
+	 * Ссылка на редактирование заказа.
+	 */
+	public function getLinkEdit($step = 2)
+	{
+		$link = '/wizard/#EVENT#/#TYPE#/#STEP#/#WIDTH#x#DEPTH#/#STAND#/?OID=' . $this->getID();
+		$data = $this->getFullData();
+		
+		$event = strtolower($data['EVENT']['CODE']);
+		$step  = intval($step);
+		$type  = strtolower($data['ORDER']['PROPS']['TYPESTAND']['VALUE']);
+		$width = $data['ORDER']['PROPS']['WIDTH']['VALUE'];
+		$depth = $data['ORDER']['PROPS']['DEPTH']['VALUE'];
+		$stand = strtolower($data['ORDER']['PROPS']['STAND_TYPE']['VALUE']);
+		
+		if (empty($stand)) {
+			$stand = 'row';
+		}
+		
+		$link = str_replace(
+			['#EVENT#', '#TYPE#', '#STEP#', '#WIDTH#', '#DEPTH#', '#STAND#'],
+			[$event, $type, $step, $width, $depth, $stand],
+			$link
+		);
+		
+		return $link;
 	}
 	
 	
@@ -677,7 +714,7 @@ class Order
             'ORDER_PROPS_ID' => $props['STAND_TYPE']['ID'],
             'NAME'           => 'Тип стенда',
             'CODE'           => 'STAND_TYPE',
-            'VALUE'          => $data['STAND_TYPE'],
+            'VALUE'          => ($data['STAND_TYPE']) ?: ('row'),
         ];
         
         $dataprops []= [

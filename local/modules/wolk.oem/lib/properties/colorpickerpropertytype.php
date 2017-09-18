@@ -1,8 +1,12 @@
-<?php namespace Wolk\OEM\Properties;
+<?php
+
+namespace Wolk\OEM\Properties;
+
 
 class ColorpickerPropertyType
 {
-	public static function GetUserTypeDescription() {
+	public static function GetUserTypeDescription()
+	{
 		return array(
 			'PROPERTY_TYPE'        => 'S',
 			'USER_TYPE'            => 'colorpicker',
@@ -10,8 +14,10 @@ class ColorpickerPropertyType
 			'GetPropertyFieldHtml' => array(__CLASS__, 'GetPropertyFieldHtml')
 		);
 	}
+	
 
-	public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
+	public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
+	{
 		global $APPLICATION;
 		\CJSCore::init('jquery');
 		$replacedName = str_replace(array('[', ']', ':'), '_', $strHTMLControlName['VALUE']);

@@ -320,6 +320,12 @@ switch ($action) {
         }
         jsonresponse(true);
         break;
+		
+	
+	// Просмотр заказа.
+	case ('show-order'):
+		jsonresponse(true, '', ['html' => gethtmlremote('order.show.php')]);
+		break;
     
     
     default:

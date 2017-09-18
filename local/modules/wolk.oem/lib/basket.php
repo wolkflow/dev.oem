@@ -646,8 +646,6 @@ class Basket
         }
         
         // Привязка корзин к заказу.
-        // \CSaleBasket::OrderBasket($oid, \CSaleBasket::GetBasketUserID());
-        
         $baskets = \Bitrix\Sale\Internals\BasketTable::getList([
             'filter' => ['FUSER_ID' => \CSaleBasket::GetBasketUserID(), 'ORDER_ID' => null]
         ])->fetchAll();
@@ -659,7 +657,7 @@ class Basket
         
         // Очистка данных.
         if (empty($data)) {
-            // $this->clear();
+            $this->clear();
         } else {
             $this->data = $dump;
         }

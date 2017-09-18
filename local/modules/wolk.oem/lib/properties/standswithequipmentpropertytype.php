@@ -6,7 +6,8 @@ use Wolk\OEM\EventsStandsSizesTable;
 
 class StandsWithEquipmentPropertyType
 {
-	public static function GetUserTypeDescription() {
+	public static function GetUserTypeDescription()
+	{
 		return [
 			'PROPERTY_TYPE'        => 'E',
 			'USER_TYPE'            => 'standsWithEquipment',
@@ -18,18 +19,24 @@ class StandsWithEquipmentPropertyType
 		];
 	}
 
-	public function ConvertToDB($arProperty, $value) {
+	
+	public static function ConvertToDB($arProperty, $value)
+	{
 		$value['DESCRIPTION'] = serialize($value['DESCRIPTION']);
 		$value['VALUE'] = $value['VALUE']['STAND'];
 
 		return $value;
 	}
+	
 
-	public function ConvertFromDB($arProperty, $value) {
+	public static function ConvertFromDB($arProperty, $value)
+	{
 		return $value;
 	}
 
-	public function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
+	
+	public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
+	{
 		$valueId = intval(preg_replace('#PROP\['.$arProperty['ID'].'\]\[([\d]+)\]\[VALUE\]#', '$1', $strHTMLControlName['VALUE']));
 		$standWidth = $standDepth = null;
 		if($valueId) {
@@ -135,7 +142,7 @@ JS
 		return $equipment;
 	}
 
-	public function PrepareSettings($arProperty) {
+	public static function PrepareSettings($arProperty) {
 		$size = 0;
 		if(is_array($arProperty["USER_TYPE_SETTINGS"])) {
 			$size = intval($arProperty["USER_TYPE_SETTINGS"]["size"]);
@@ -172,7 +179,7 @@ JS
 		];
 	}
 
-	function GetOptionsHtml($arProperty, $values, &$bWasSelect) {
+	public static function GetOptionsHtml($arProperty, $values, &$bWasSelect) {
 		$options = "";
 		$settings = self::PrepareSettings($arProperty);
 		$bWasSelect = false;
@@ -227,7 +234,7 @@ JS
 		return $options;
 	}
 
-	function GetElements($IBLOCK_ID) {
+	public static function GetElements($IBLOCK_ID) {
 		static $cache = [];
 		$IBLOCK_ID = intval($IBLOCK_ID);
 
@@ -259,7 +266,7 @@ JS
 		return $cache[$IBLOCK_ID];
 	}
 
-	function GetSections($IBLOCK_ID) {
+	public static function GetSections($IBLOCK_ID) {
 		static $cache = [];
 		$IBLOCK_ID = intval($IBLOCK_ID);
 

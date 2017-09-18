@@ -1,3 +1,29 @@
+$(document).ready(function() {
+	$('.js-order-show').on('click', function(e) {
+		var oid = $(this).data('oid');
+		
+		var data = {
+			'oid': oid,
+			'action': 'show-order'
+		}
+		
+		$.ajax({
+			url: '/remote/',
+			data: data,
+			type: 'post',
+			dataType: 'json',
+			success: function(response) {
+				if (response.status) {
+					$('#js-order-title-id .js-order-number').html(oid);
+					$('#js-order-content-id').html(response.data['html']);
+					$('#js-order-modal-id').arcticmodal();
+				}
+			}
+		});
+	});
+});
+
+
 $(function () {
     var vm = new Vue({
         el: 'body',

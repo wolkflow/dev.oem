@@ -45,7 +45,7 @@ JS
                     
                     <div class="profilecontainer__changebutton">
 						<? if ($order['ORDER']['PROPS']['TYPE']['VALUE'] != 'QUICK') { ?>
-							<a @click.prevent="loadOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?ORDER_ID=<?= $order['ORDER']['ID'] ?>">
+							<a href="javascript:void(0)" class="js-order-show" data-oid="<?= $order['ORDER']['ID'] ?>">
 								<? if ($order['ORDER']['STATUS_ID'] == 'N') { ?>
 									<?= Loc::getMessage('сhangeview_order') ?>
 								<? } else { ?>
@@ -53,7 +53,7 @@ JS
 								<? } ?>
 							</a>
 						<? } else { ?>
-							<a @click.prevent="getQuickOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?ORDER_ID=<?= $order['ORDER']['ID'] ?>">
+							<a href="javascript:void(0)" class="js-order-show" data-oid="<?= $order['ORDER']['ID'] ?>">
 								<?= Loc::getMessage('view_order') ?>
 							</a>
 						<? } ?>
@@ -64,6 +64,21 @@ JS
     <? } ?>
 </div>
 
+
+<div class="hide">
+    <div class="modal modalFull modalOrder" id="js-order-modal-id">
+        <div class="modalClose arcticmodal-close"></div>
+        <div id="js-order-title-id" class="modalTitle">
+			<?= Loc::getMessage('сhangeview_order') ?>
+			<span class="js-order-number"></span>
+		</div>
+        <div id="js-order-content-id" class="modalContent">
+		</div>
+	</div>
+</div>
+
+
+<? /*
 <div class="hide">
     <div class="modal modalFull modalOrder" id="order-detail">
         <div class="modalClose arcticmodal-close"></div>
@@ -74,29 +89,6 @@ JS
             <div class="ordercontainer">
                 <div class="ordercontainer__columnscontainer">
                     <div class="ordercontainer__column right">
-						<? /*
-                        <div class="pagesubtitle">
-                            <?= Loc::getMessage('standard equipment') ?>
-                            <div class="pagesubtitle__addbutton" v-show="status == 'N'">
-                                <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'"></a>
-                            </div>
-                        </div>
-                        <div class="ordercontainer__itemscontainer">
-                            <div class="ordercontainer__item" v-for="eq in selectedStand.EQUIPMENT">
-                                <div class="ordercontainer__itemtotalprice">
-                                    {{ eq.COST_FORMATTED }}
-                                </div>
-                                <div class="ordercontainer__itemname">
-                                    {{ eq.NAME }} | {{ eq.PRICE_FORMATTED }} &times; {{ parseInt(eq.QUANTITY) }}
-                                </div>
-                                <div class="ordercontainer__changebutton" v-show="status == 'N'">
-                                    <a :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'">
-                                        <?= Loc::getMessage('change') ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-						*/ ?>
                         <div class="pagesubtitle">
 							<?= Loc::getMessage('additional equipment') ?>
                             <div class="pagesubtitle__addbutton" v-show="status == 'N'">
@@ -168,20 +160,7 @@ JS
                 </div>
 				<div class="ordercontainer__changebutton changeallorder" v-show="status == 'N'">
 					<a class="changebutton" :href="'/events/'+ curEvent.CODE + '/?ORDER_ID='+ orderId + '&step=2'"><?= Loc::getMessage('change_order') ?></a>
-					<? /*
-                    <form action="/events/{{ curEvent.CODE }}/">
-                        <input type="hidden" name="ORDER_ID" :value="orderId">
-                        <select name="step" onchange="this.form.submit()" v-styler class="styler">
-                            <option></option>
-                            <option value="6"><?=Loc::getMessage('Change order')?></option>
-                            <option value="1"><?=Loc::getMessage('Stand Type')?></option>
-                            <option value="2"><?=Loc::getMessage('Standard Equipment')?></option>
-                            <option value="3"><?=Loc::getMessage('Additional Equipment')?></option>
-                            <option value="4"><?=Loc::getMessage('Services')?></option>
-                        </select>
-                    </form>
-					*/ ?>
-                </div>
+				</div>
             </div>
             <div class="ordertotalcontainer">
                 <div class="ordertotalcontainer__standandpavillion">
@@ -311,3 +290,4 @@ JS
         </div>
     </div>
 </div>
+*/ ?>

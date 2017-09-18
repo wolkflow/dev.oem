@@ -2,6 +2,7 @@
 
 namespace Wolk\OEM\Properties;
 
+
 class UsingEquipmentPropertyType extends \CIBlockPropertyElementList
 {
     
@@ -14,7 +15,7 @@ class UsingEquipmentPropertyType extends \CIBlockPropertyElementList
 			'GetPropertyFieldHtml' => [__CLASS__, 'GetPropertyFieldHtml'],
 		];
 	}
-
+	
     
 	public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
     {
