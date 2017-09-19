@@ -143,15 +143,16 @@
 			<? } ?>
 		</div>
 	</div>
-</div>
 	
-<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
-	<div class="ordercontainer__changebutton changeallorder">
-		<a class="changebutton" href="<?= $arResult['ORDER']['LINK'] ?>">
-			<?= Loc::getMessage('CHANGE_ORDER') ?>
-		</a>
-	</div>
-<? } ?>
+	<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
+		<div class="ordercontainer__changebutton changeallorder">
+			<a class="changebutton" href="<?= $arResult['ORDER']['LINK'] ?>">
+				<?= Loc::getMessage('CHANGE_ORDER') ?>
+			</a>
+		</div>
+	<? } ?>
+</div>
+
 <div class="ordertotalcontainer">
 	<? if ($arResult['ORDER']['PROPS']['FILE']['VALUE']) { ?>
 		<?= $arResult['ORDER']['PROPS']['FILE']['VALUE'] ?>
