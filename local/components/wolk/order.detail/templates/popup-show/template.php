@@ -2,10 +2,6 @@
 
 <? use Bitrix\Main\Localization\Loc; ?>
 
-<pre>
-	<? // print_r($arResult) ?>
-</pre>
-
 <div class="ordercontainer">
 	<div class="ordercontainer__columnscontainer">
 		
@@ -36,7 +32,7 @@
 								</div>
 								<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
 									<div class="ordercontainer__changebutton">
-										<a href="<?= $arResult['ORDER']['LINK'] ?>"><?= Loc::getMessage('change') ?></a>
+										<a href="<?= $arResult['ORDER']['LINK'] ?>"><?= Loc::getMessage('CHANGE') ?></a>
 									</div>
 								<? } ?>
 							</div>
@@ -87,11 +83,11 @@
 		
 		<div class="ordercontainer__column">
 			<div class="pagesubtitle">
-				<?= Loc::getMessage('stand type') ?>
+				<?= Loc::getMessage('STAND_TYPE') ?>
 			</div>
 			<div class="ordercontainer__itemscontainer">
 				<div class="pagesubsubtitle">
-					<?= Loc::getMessage('system stand') ?>
+					<?= Loc::getMessage('SYSTEM_STAND') ?>
 				</div>
 				<div class="last ordercontainer__item">
 					<div class="ordercontainer__itemtotalprice">
@@ -113,7 +109,7 @@
 			
 			<? if (!empty($arResult['ITEMS'][Wolk\OEM\Products\Section::TYPE_SERVICES])) { ?>
 				<div class="pagesubtitle">
-					<?= Loc::getMessage('services') ?>
+					<?= Loc::getMessage('SERVICES') ?>
 					<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
 						<div class="pagesubtitle__addbutton">
 							<a href="<?= $arResult['ORDER']['LINK'] ?>"></a>
@@ -126,7 +122,7 @@
 							<?= $section['SELF']->getTitle() ?>
 						</div>
 						<? foreach ($section['ITEMS'] as $item) { ?>
-							<div class="ordercontainer__item" v-for="item in items">
+							<div class="ordercontainer__item">
 								<div class="ordercontainer__itemtotalprice">
 									<?= FormatCurrency($item['BASKET']['PRICE'] * $item['BASKET']['QUANTITY'], $arResult['ORDER']['CURRENCY']) ?>
 								</div>
@@ -137,7 +133,7 @@
 								</div>
 								<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
 									<div class="ordercontainer__changebutton">
-										<a href="<?= $arResult['ORDER']['LINK'] ?>"><?= Loc::getMessage('change') ?></a>
+										<a href="<?= $arResult['ORDER']['LINK'] ?>"><?= Loc::getMessage('CHANGE') ?></a>
 									</div>
 								<? } ?>
 							</div>
@@ -147,58 +143,67 @@
 			<? } ?>
 		</div>
 	</div>
-	<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
-		<div class="ordercontainer__changebutton changeallorder">
-			<a class="changebutton" href="<?= $arResult['ORDER']['LINK'] ?>">
-				<?= Loc::getMessage('change_order') ?>
-			</a>
-		</div>
+</div>
+	
+<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
+	<div class="ordercontainer__changebutton changeallorder">
+		<a class="changebutton" href="<?= $arResult['ORDER']['LINK'] ?>">
+			<?= Loc::getMessage('CHANGE_ORDER') ?>
+		</a>
+	</div>
+<? } ?>
+<div class="ordertotalcontainer">
+	<? if ($arResult['ORDER']['PROPS']['FILE']['VALUE']) { ?>
+		<?= $arResult['ORDER']['PROPS']['FILE']['VALUE'] ?>
 	<? } ?>
-	<div class="ordertotalcontainer">
-	<div class="ordertotalcontainer__standandpavillion">
-		<div class="ordertotalcontainer__standcontainer">
-			<div class="ordertotalcontainer__title">
-				<?= ucfirst(Loc::getMessage('STAND')) ?> №
-			</div>
-			<div class="ordertotalcontainer__number">
-				<input disabled type="text" value="<?= $arResult['ORDER']['PROPS']['STANDNUM']['VALUE'] ?>" />
-			</div>
+</div>
+
+<div class="ordertotalcontainer__standandpavillion">
+	<div class="ordertotalcontainer__standcontainer">
+		<div class="ordertotalcontainer__title">
+			<?= ucfirst(Loc::getMessage('STANDNUM')) ?> №
 		</div>
-		<div class="ordertotalcontainer__pavillioncontainer">
-			<div class="ordertotalcontainer__title">
-				<?= ucfirst(Loc::getMessage('PAVILION')) ?>
-			</div>
-			<div class="ordertotalcontainer__number">
-				<input disabled type="text" value="<?= $arResult['ORDER']['PROPS']['PAVILION']['VALUE'] ?>" />
-			</div>
+		<div class="ordertotalcontainer__number">
+			<input disabled type="text" value="<?= $arResult['ORDER']['PROPS']['STANDNUM']['VALUE'] ?>" />
 		</div>
 	</div>
-
-	<div class="ordertotalcontainer">
-		<div class="ordertotalcontainer__total">
-			<?= Loc::getMessage('TOTAL') ?>: 
-			<span><?= number_format($arResult['PRICES']['TOTAL_WITH_SUR'], 2, '.', '') ?></span>
+	<div class="ordertotalcontainer__pavillioncontainer">
+		<div class="ordertotalcontainer__title">
+			<?= ucfirst(Loc::getMessage('PAVILION')) ?>
 		</div>
-		<div class="ordertaxcontainer__total">
-			<?= Loc::getMessage('TAX') ?>: 
-			<span><?= number_format($arResult['PRICES']['TAX'], 2, '.', '') ?></span>
-		</div>
-		<div class="ordertotalcontainer__total">
-			<?= Loc::getMessage('TOTAL_WITH_VAT') ?>: 
-			<span><?= number_format($arResult['PRICES']['TOTAL'], 2, '.', '') ?></span>
-		</div>
-		<div class="ordertotalcontainer__surcharge">
-			<?= Loc::getMessage('SURCHARGE') ?>: 
-			<span><?= number_format($arResult['PRICES']['SURCHARGE'], 2, '.', '') ?> % (<?= $arResult['ORDER']['PROPS']['SURCHARGE']['VALUE']?>)</span>
-		</div>
-		<div class="ordertotalcontainer__surchargetotal">
-			<div class="ordertotalcontainer__surchargetotaltitle">
-				<?= Loc::getMessage('TOTAL_WITH_SURCHARGE') ?>:
-			</div>
-			<div class="ordertotalcontainer__surchargetotalcount">
-				<?= number_format($arResult['PRICES']['TOTAL'], 2, '.', '') ?>
-			</div>
+		<div class="ordertotalcontainer__number">
+			<input disabled type="text" value="<?= $arResult['ORDER']['PROPS']['PAVILION']['VALUE'] ?>" />
 		</div>
 	</div>
 </div>
 
+<div class="ordertotalcontainer">
+	<div class="ordertotalcontainer__total">
+		<?= Loc::getMessage('TOTAL') ?>: 
+		<span><?= FormatCurrency($arResult['PRICES']['BASKET'], $arResult['ORDER']['CURRENCY']) ?></span>
+	</div>
+	
+	<? if ($arResult['PRICES']['SURCHARGE'] > 0) { ?>
+		<div class="ordertotalcontainer__surcharge">
+			<?= Loc::getMessage('SURCHARGE') ?>: 
+			<span><?= $arResult['ORDER']['PROPS']['SURCHARGE']['VALUE'] ?>% (<?= FormatCurrency($arResult['PRICES']['SURCHARGE'], $arResult['ORDER']['CURRENCY']) ?>)</span>
+		</div>
+		<div class="ordertaxcontainer__total">
+			<?= Loc::getMessage('TOTAL_WITH_SURCHARGE') ?>:
+			<span><?= FormatCurrency($arResult['PRICES']['TOTAL_WITH_SUR'], $arResult['ORDER']['CURRENCY']) ?></span>
+		</div>
+	<? } ?>
+	
+	<div class="ordertaxcontainer__total">
+		<?= Loc::getMessage('VAT') ?>: 
+		<span><?= FormatCurrency($arResult['PRICES']['TAX'], $arResult['ORDER']['CURRENCY']) ?></span>
+	</div>
+	<div class="ordertotalcontainer__surchargetotal">
+		<div class="ordertotalcontainer__surchargetotaltitle">
+			<?= Loc::getMessage('TOTAL_WITH_VAT') ?>:
+		</div>
+		<div class="ordertotalcontainer__surchargetotalcount">
+			<?= FormatCurrency($arResult['PRICES']['TOTAL'], $arResult['ORDER']['CURRENCY']) ?>
+		</div>
+	</div>
+</div>

@@ -1210,7 +1210,7 @@ float: left}
 
 .ordertotalcontainer__total,
 .ordertaxcontainer__total,
-.ordertotalcontainer__surcharge {width: 540px;min-height: 26px;}
+.ordertotalcontainer__surcharge {width: 540px; min-height: 26px; margin: 4px 0;}
 .ordertotalcontainer__total span,
 .ordertaxcontainer__total span,
 .ordertotalcontainer__surcharge span{float: right;}
@@ -1221,7 +1221,7 @@ float: left}
   font-weight: bold;
   color: #ff3f25;
   text-transform: uppercase;
-  margin: 17px 0;
+  /*margin: 17px 0;*/
 }
 .ordertotalcontainer__surchargetotal {
   position: relative;
@@ -1233,6 +1233,7 @@ float: left}
   line-height: 48px;
   width: 380px;
   text-align: right;
+  margin-top: 17px;
 }
 .ordertotalcontainer__surchargetotaltitle {
   position: absolute;

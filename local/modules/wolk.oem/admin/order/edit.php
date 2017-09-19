@@ -87,45 +87,66 @@ if (!empty($oemorder)) {
     }
 }
 
-if (isset($_GET['dbg'])) {
-    echo '<pre>'; print_r($odata); echo '</pre>';
-}
+
+$errors = [];
+
 
 // Создание или изменение заказа.
 if (!empty($_POST) && $_POST['action'] == 'order-make') {
     
     $fields = array(
-        'OID'        => $oid,
-        'UID'        => $_POST['USER'],
-        'EID'        => $_POST['EVENT'],
-        'SID'        => $_POST['STAND'],
+        'OID'        => (int) $oid,
+        'UID'        => (int) $_POST['USER'],
+        'EID'        => (int) $_POST['EVENT'],
+        'SID'        => (int) $_POST['STAND'],
         'STANDPRICE' => $_POST['STANDPRICE'],
         'STANDWIDTH' => $_POST['STANDWIDTH'],
         'STANDDEPTH' => $_POST['STANDDEPTH'],
         'PRODUCTS'   => $_POST['PRODUCTS'],
-        'TYPESTAND'  => $_POST['TYPESTAND'],
-        'CURRENCY'   => $_POST['CURRENCY'],
-        'LANGUAGE'   => $_POST['LANGUAGE'],
-        'TYPE'       => $_POST['TYPE'],
-        'STANDNUM'   => $_POST['STANDNUM'],
-        'PAVILION'   => $_POST['PAVILION'],
+        'TYPESTAND'  => (string) $_POST['TYPESTAND'],
+        'CURRENCY'   => (string) $_POST['CURRENCY'],
+        'LANGUAGE'   => (string) $_POST['LANGUAGE'],
+        'TYPE'       => (string) $_POST['TYPE'],
+        'STANDNUM'   => (string) $_POST['STANDNUM'],
+        'PAVILION'   => (string) $_POST['PAVILION'],
         'SURCHARGE'  => $_POST['SURCHARGE'],
         'COMMENTS'   => $_POST['COMMENTS'],
     );
-    
-    $files = Wolk\Core\Utils\File::getReStructUploadFiles();
-    
-    foreach ($fields['PRODUCTS'] as $i => &$product) {
-        $file = $files['PRODUCTS'][$i]['PROPS']['FILE'];
-        if (!empty($file['tmp_name'])) {
-            $product['PROPS']['FILE'] = CFile::SaveFile($file, 'temp');
-        }
-    }
-    
-    
-    $order = Wolk\OEM\Order::make($fields);
-    
-    LocalRedirect('/bitrix/admin/wolk_oem_order_edit.php?OID=' . $order->getID());
+	
+	if (empty($fields['EID'])) {
+		$errors['EVENT'] = 'Не укаазна выставка';
+	}
+	if (empty($fields['UID'])) {
+		$errors['USER'] = 'Не укаазн участник';
+	}
+	if (empty($fields['CURRENCY'])) {
+		$errors['CURRENCY'] = 'Не укаазна валюта';
+	}
+	if (empty($fields['LANGUAGE'])) {
+		$errors['LANGUAGE'] = 'Не укаазн язык';
+	}
+	if ($fields['TYPE'] != 'QUICK' && $fields['TYPESTAND'] != 'INDIVIDUAL') {
+		if (empty($fields['SID'])) {
+			$errors['STAND'] = 'Не выбран стенд';
+		}
+	}
+	
+	if (empty($errors)) {
+		
+		// Загруженные файлы.
+		$files = Wolk\Core\Utils\File::getReStructUploadFiles();
+		
+		foreach ($fields['PRODUCTS'] as $i => &$product) {
+			$file = $files['PRODUCTS'][$i]['PROPS']['FILE'];
+			if (!empty($file['tmp_name'])) {
+				$product['PROPS']['FILE'] = CFile::SaveFile($file, 'temp');
+			}
+		}
+		
+		$order = Wolk\OEM\Order::make($fields);
+		
+		LocalRedirect('/bitrix/admin/wolk_oem_order_edit.php?OID=' . $order->getID());
+	}
 }
 
 
@@ -139,7 +160,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 
 ?>
 
-<div id="js-error-message-id" class="alert alert-danger hidden" role="alert"></div>
+<? if (!empty($errors)) { ?>
+	<div id="js-error-message-id" class="alert alert-danger" role="alert">
+		<?= implode('<br/>', $errors) ?>
+	</div>
+<? } ?>
 
 <div class="container-fluid" id="js-order-form-od">
     <div class="row">
@@ -451,16 +476,24 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                             <div class="col-md-6">
                                 <label class="control-label">Сумма заказа:</label>
                                 <table class="table table-bordered table-condensed table-prices">
-                                    <tr>
-                                        <td>Итого:</td>
+                                    <tr class="bold">
+                                        <td class="bold">Всего:</td>
+                                        <td id="js-order-price-baskets-id"><?= number_format($odata['PRICES']['BASKET'], 2, '.', '') ?></td>
+                                    </tr>
+									<tr>
+                                        <td class="bold">Наценка:</td>
+                                        <td id="js-order-price-surcharge-id"><?= number_format($odata['PRICES']['SURCHARGE'], 2, '.', '') ?></td>
+                                    </tr>
+									<tr>
+                                        <td class="bold">Итого:</td>
                                         <td id="js-order-price-summ-id"><?= number_format($odata['PRICES']['TOTAL_WITH_SUR'], 2, '.', '') ?></td>
                                     </tr>
                                     <tr>
-                                        <td>НДС:</td>
+                                        <td class="bold">НДС:</td>
                                         <td id="js-order-price-vat-id"><?= number_format($odata['PRICES']['TAX'], 2, '.', '') ?></td>
                                     </tr>
-                                    <tr class="info">
-                                        <td>Итого с НДС:</td>
+                                    <tr class="info bold">
+                                        <td class="bold">Итого с НДС:</td>
                                         <td id="js-order-price-total-id"><?= number_format($odata['PRICES']['TOTAL'], 2, '.', '') ?></td>
                                     </tr>
                                 </table>
@@ -493,7 +526,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="submit" value="Сохранить" />
                                     <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">Сохранить</a>
                                 </div>
                             </div>
@@ -704,6 +736,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 		
         // Отправка формы заказа.
 		$('#js-submit-id').on('click', function() {
+			$(this).closest('form').submit();
+			/*
 			var $errmessage = $('#js-error-message-id');
 			
 			$.ajax({
@@ -732,6 +766,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                     alert(response);
                 }
 			});
+			*/
 		});
         
         
@@ -778,6 +813,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     
     function CalcPrices()
     {
+		var price = 0;
+		var sur   = 0;
         var vat   = 0;
         var summ  = 0;
         var total = 0;
@@ -785,14 +822,18 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         var includevat = $('#form-vat-id').is(':checked');
         
         // Стоимость стенда.
-        summ += parseFloat($('#js-stand-cost-id').text());
+        price += parseFloat($('#js-stand-cost-id').text());
         
         $('#js-positions-id tbody .js-cost').each(function() {
-            summ += parseFloat($(this).text());
+            price += parseFloat($(this).text());
         });
+		
+		// Стоимость без наценок.
+		summ = price;
         
         // Наценка.
         if (surcharge > 0) {
+			sur  = summ * surcharge / 100;
             summ = summ * (1 + surcharge / 100);
         }
         
@@ -805,6 +846,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             total = summ + vat;
         }
         
+		$('#js-order-price-baskets-id').html(price.toFixed(2));
+		$('#js-order-price-surcharge-id').html(sur.toFixed(2));
         $('#js-order-price-summ-id').html(summ.toFixed(2));
         $('#js-order-price-vat-id').html(vat.toFixed(2));
         $('#js-order-price-total-id').html(total.toFixed(2));
@@ -946,7 +989,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         font-weight: bold;
     }
     
-    .table-prices td {
+	.table-prices td {
+		font-size: 16px;
+	}
+    .table-prices tr.bold td, .table-prices td.bold {
+		
         font-weight: 600;
     }
     .table-prices td:nth-child(1) {

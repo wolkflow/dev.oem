@@ -70,7 +70,7 @@ class OrderDetailComponent extends \CBitrixComponent
 		
 		
 		$this->arResult['STAND'] = array(
-			'SFORM' => $this->arResult['ORDER']['PROPS']['STAND_TYPE']['VALUE'],
+			'SFORM' => $this->arResult['ORDER']['PROPS']['SFORM']['VALUE'],
 			'WIDTH' => $this->arResult['ORDER']['PROPS']['WIDTH']['VALUE'],
 			'DEPTH' => $this->arResult['ORDER']['PROPS']['DEPTH']['VALUE'],
 		);

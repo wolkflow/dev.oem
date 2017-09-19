@@ -542,10 +542,10 @@ class Basket
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['STAND_TYPE']['ID'],
+            'ORDER_PROPS_ID' => $props['SFORM']['ID'],
             'NAME'           => 'Тип стенда',
-            'CODE'           => 'STAND_TYPE',
-            'VALUE'          => $this->getParam('STAND_TYPE'),
+            'CODE'           => 'SFORM',
+            'VALUE'          => $this->getParam('SFORM'),
         ];
         
         $dataprops []= [
@@ -662,4 +662,18 @@ class Basket
             $this->data = $dump;
         }
     }
+	
+	
+	
+	/**
+	 * Загрузка корзины из заказа.
+	 */
+	public function load(\Wolk\OEM\Order $order)
+	{
+		$data = $order->getFullData();
+		
+		// Установка ID заказа.
+		$this->setOrderID($order->getID());
+	}
+	
 }

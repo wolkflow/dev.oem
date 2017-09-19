@@ -299,7 +299,7 @@ class Order
 	 */
 	public function getLinkEdit($step = 2)
 	{
-		$link = '/wizard/#EVENT#/#TYPE#/#STEP#/#WIDTH#x#DEPTH#/#STAND#/?OID=' . $this->getID();
+		$link = '/wizard/#EVENT#/#TYPE#/#STEP#/#WIDTH#x#DEPTH#/#SFORM#/?OID=' . $this->getID();
 		$data = $this->getFullData();
 		
 		$event = strtolower($data['EVENT']['CODE']);
@@ -307,15 +307,15 @@ class Order
 		$type  = strtolower($data['ORDER']['PROPS']['TYPESTAND']['VALUE']);
 		$width = $data['ORDER']['PROPS']['WIDTH']['VALUE'];
 		$depth = $data['ORDER']['PROPS']['DEPTH']['VALUE'];
-		$stand = strtolower($data['ORDER']['PROPS']['STAND_TYPE']['VALUE']);
+		$sform = strtolower($data['ORDER']['PROPS']['SFORM']['VALUE']);
 		
 		if (empty($stand)) {
 			$stand = 'row';
 		}
 		
 		$link = str_replace(
-			['#EVENT#', '#TYPE#', '#STEP#', '#WIDTH#', '#DEPTH#', '#STAND#'],
-			[$event, $type, $step, $width, $depth, $stand],
+			['#EVENT#', '#TYPE#', '#STEP#', '#WIDTH#', '#DEPTH#', '#SFORM#'],
+			[$event, $type, $step, $width, $depth, $sform],
 			$link
 		);
 		
@@ -711,10 +711,10 @@ class Order
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['STAND_TYPE']['ID'],
+            'ORDER_PROPS_ID' => $props['SFORM']['ID'],
             'NAME'           => 'Тип стенда',
-            'CODE'           => 'STAND_TYPE',
-            'VALUE'          => ($data['STAND_TYPE']) ?: ('row'),
+            'CODE'           => 'SFORM',
+            'VALUE'          => ($data['SFORM']) ?: ('row'),
         ];
         
         $dataprops []= [

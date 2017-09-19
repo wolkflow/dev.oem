@@ -12,6 +12,7 @@ use Wolk\Core\Helpers\ArrayHelper;
 
 use Wolk\OEM\Event;
 use Wolk\OEM\Context;
+use Wolk\OEM\Order;
 use Wolk\OEM\Basket;
 use Wolk\OEM\BasketItem;
 
@@ -91,6 +92,12 @@ class WizardComponent extends \CBitrixComponent
             $arParams['DEPTH'] = $params['DEPTH'];
             $arParams['SFORM'] = $params['SFORM'];
         }
+		
+		
+		// Загрузка данных
+		if (!empty($arParams['OID']) && $basket->getOrderID() != $arParams['OID']) {
+			$this->getBasket()->load(new Wolk\OEM\Order($arParams['OID']));
+		}
         
         return $arParams;
 	}
