@@ -89,7 +89,7 @@ class BasketComponent extends \CBitrixComponent
             $this->arResult['STAND']->loadPrice($this->getContext());
             $this->arResult['PRICE'] = $this->arResult['STAND']->getCost();
         }
-        
+		
         // Записив корзине.
         $this->arResult['ITEMS'] = $this->arResult['BASKET']->getList();
         

@@ -15,6 +15,8 @@
     $sform = $request->get('SFORM');
     
     $eid  = Wolk\Core\Helpers\IBlockElement::getIDByCode(IBLOCK_EVENTS_ID, $code);
+	
+	$oid = $request->get('OID');
 ?>
 
 <?  // Конструкторстенда.
@@ -22,6 +24,8 @@
         "wolk:wizard", 
         "wizard", 
         array(
+			"OID"  => $oid,
+		
             "EID"  => $eid,
             "CODE" => $code,
             "STEP" => $step,

@@ -13,6 +13,14 @@ function ResetParams($block)
     $block.find('.modal').attr('id', 'js-color-popup-' + uniqid + '-id');
 }
 
+function calendarClose(block) {
+    block.animate({'top': '250%', 'opacity': 0}, 200, function () {
+        block.fadeOut(1, function () {
+            block.removeClass('open')
+        });
+    });
+    console.log('close');
+}
 
 $(document).ready(function() {
 
@@ -104,4 +112,119 @@ $(document).ready(function() {
         }, 200);
     });
 
+
+
+    // УТИЛИТА: Показать календарь
+    $(document).on('click', '.setDate', function () {
+        var block = $(this).parent().find('.calendarPopupBlock');
+        if(block.hasClass('open')) {
+            calendarClose(block)
+        } else {
+            $(block).fadeIn(1, function () {
+                $(block).animate({'top': '100%', 'opacity': 1}, 200, function () {
+                    $(block).addClass('open')
+                });
+            });
+        }
+    });
+
+    // Календарь
+    // Первый запуск
+    $('.calendarPopupBlock').each(function () {
+        var $that = $(this);
+        var calendar = $that.find('.calendar'),
+            minDate = calendar.attr('data-min-date'),
+            maxDate = calendar.data('data-max-date');
+
+        calendar.multiDatesPicker({
+            minDate: minDate,
+            maxDate: maxDate
+        });
+    });
+
+    // Смена типа выбора мульти, или ренж
+    $(document).on('change', '.changeMode', function () {
+        var changeMode = $(this),
+            calendar = changeMode.parents('.calendarPopupBlock').find('.calendar'),
+            minDate = calendar.attr('data-min-date'),
+            maxDate = calendar.attr('data-max-date'),
+            startDate = calendar.parent().find('.start-date'),
+            endDate = calendar.parent().find('.end-date');
+
+        if(changeMode.is(':checked')) {
+            calendar.datepicker('destroy');
+            // http://jsfiddle.net/sWbfk/
+            $(calendar).datepicker({
+                minDate: minDate,
+                maxDate: maxDate,
+                beforeShowDay: function(date) {
+                    var date1 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, startDate.val());
+                    var date2 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, endDate.val());
+                    var isHightlight = date1 && ((date.getTime() == date1.getTime()) || (date2 && date >= date1 && date <= date2));
+                    return [true, isHightlight ? "dp-highlight" : ""];
+                },
+                onSelect: function(dateText, inst) {
+                    var date1 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, startDate.val());
+                    var date2 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, endDate.val());
+                    var selectedDate = $.datepicker.parseDate($.datepicker._defaults.dateFormat, dateText);
+                    if (!date1 || date2) {
+                        startDate.val(dateText);
+                        endDate.val("");
+                    } else if (selectedDate < date1) {
+                        endDate.val(startDate.val());
+                        startDate.val(dateText);
+                    } else {
+                        endDate.val(dateText);
+                    }
+                    $(this).datepicker();
+                }
+            });
+        }
+        else {
+            calendar.datepicker('destroy');
+            calendar.multiDatesPicker({
+                minDate: minDate,
+                maxDate: maxDate
+            });
+        }
+    });
+
+    // Сбрасываем и прячем календарь
+    $(document).on('click', '.calendarReset', function () {
+        var calendar = $(this).parents('.calendarPopupContent').find('.calendar'),
+            minDate = calendar.attr('data-min-date'),
+            maxDate = calendar.attr('data-max-date'),
+            block = $(this).parents('.calendarPopupWrapper').find('.calendarPopupBlock'),
+            changeMode = $(this).parents('.calendarPopupContent').find('.changeMode');
+
+        calendar.multiDatesPicker('resetDates');
+        $.datepicker._clearDate(calendar);
+        calendar.datepicker('destroy');
+        calendar.multiDatesPicker({
+            minDate: minDate,
+            maxDate: maxDate
+        });
+        calendarClose(block)
+        changeMode.prop('checked', false)
+    });
+
+    // Сохраняем результат и закрываем календарь
+    $(document).on('click', '.calendarSave', function () {
+        var block = $(this).parents('.calendarPopupWrapper').find('.calendarPopupBlock');
+
+        calendarClose(block)
+    });
+
+    // Закрытие календаря
+    $(document).keydown(function(eventObject){
+        if (eventObject.which == 27 && $(".calendarPopupBlock").hasClass("open")) {
+            calendarClose($(".calendarPopupBlock"));
+        }
+    });
+    $(document).on("mouseup click tap", function (e) {
+        var container = $(".calendarPopupBlock.open");
+        if (container.length && container.has(e.target).length === 0){
+            calendarClose($('.calendarPopupBlock.open'))
+        }
+    });
 });

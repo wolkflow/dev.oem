@@ -94,9 +94,14 @@ class WizardComponent extends \CBitrixComponent
         }
 		
 		
-		// Загрузка данных
-		if (!empty($arParams['OID']) && $basket->getOrderID() != $arParams['OID']) {
-			$this->getBasket()->load(new Wolk\OEM\Order($arParams['OID']));
+		// Загрузка данных.
+		// TODO: Проверка на принадлежность заказа!
+		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
+			$order = new Wolk\OEM\Order($arParams['OID']);
+			if ($order->getUserID() != CUser::getID()) {
+				LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
+			}
+			$this->getBasket()->load($order);
 		}
         
         return $arParams;
@@ -115,6 +120,15 @@ class WizardComponent extends \CBitrixComponent
 		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
 			return;
 		}
+		
+		// Шаги.
+        $this->arResult['STEPS']    = $this->getSteps();
+		$this->arResult['STEP']     = $this->getStep();
+        $this->arResult['PREV']     = $this->getPrevStep();
+        $this->arResult['LINKS']    = [
+            'PREV' => $this->getPrevStepLink(),
+            'NEXT' => $this->getNextStepLink(),
+        ];
         
         // Проверка валидности сессии.
         if ($this->getStepNumber() > 1 && empty($_SESSION[self::SESSCODE][$this->getEventCode()])) {
@@ -123,15 +137,6 @@ class WizardComponent extends \CBitrixComponent
         
         // Запрос.
         $request = \Bitrix\Main\Context::getCurrent()->getRequest();
-        
-        // Шаги.
-        $this->arResult['STEPS']    = $this->getSteps();
-        $this->arResult['STEP']     = $this->getStep();
-        $this->arResult['PREV']     = $this->getPrevStep();
-        $this->arResult['LINKS']    = [
-            'PREV' => $this->getPrevStepLink(),
-            'NEXT' => $this->getNextStepLink(),
-        ];
         
         // Обработка данных предыдущего шага.
         if ($request->isPost()) {
@@ -230,13 +235,7 @@ class WizardComponent extends \CBitrixComponent
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
 		
-        
-        /*
-        echo '<pre>';
-        print_r($_SESSION[self::SESSCODE]);
-        echo '</pre>';
-        */
-        
+                
 		return $this->arResult;
     }
     

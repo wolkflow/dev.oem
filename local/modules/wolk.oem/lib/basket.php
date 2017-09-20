@@ -672,60 +672,62 @@ class Basket
 	{
 		$data = $order->getFullData();
 		
-		
-		
+		// Данные для импорта заказа в текущую корзину.
 		$fields = array(
 			'PARAMS' => array(
-				'WIDTH'    => $data['PROPS']['WIDTH']['VALUE'],
-				'DEPTH'    => $data['PROPS']['DEPTH']['VALUE'],
-				'SFORM'    => $data['PROPS']['SFORM']['VALUE'],
+				'WIDTH'    => $data['ORDER']['PROPS']['WIDTH']['VALUE'],
+				'DEPTH'    => $data['ORDER']['PROPS']['DEPTH']['VALUE'],
+				'SFORM'    => $data['ORDER']['PROPS']['SFORM']['VALUE'],
 				'COMMENTS' => $data['ORDER']['COMMENTS'],
-				'STANDNUM' => $data['PROPS']['STANDNUM']['VALUE'],
-				'PAVILION' => $data['PROPS']['PAVILION']['VALUE'],
+				'STANDNUM' => $data['ORDER']['PROPS']['STANDNUM']['VALUE'],
+				'PAVILION' => $data['ORDER']['PROPS']['PAVILION']['VALUE'],
 			),
 			'SKETCH' => array(
-				'SKETCH_SCENE' => $data['PROPS']['SKETCH_SCENE']['VALUE'],
-				'SKETCH_IMAGE' => $data['PROPS']['SKETCH_IMAGE']['VALUE'],
+				'SKETCH_SCENE' => $data['ORDER']['PROPS']['SKETCH_SCENE']['VALUE'],
+				'SKETCH_IMAGE' => $data['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'],
 			),
-			'STAND' => array(
-				'id'  => uniqid(),
-				'pid' => '',
-				'sid' => '',
-				'quantity' => '',
-				'kind'     => 'stand'
-				'params'   => array('width' => '', 'depth' => ''),
-				'fields'   => array(),
-				'included' => '',
-			)
+			'ORDERID' => $order->getID(),
 		);
 		
+		
+		// Позиции в корзине.
 		foreach ($data['BASKETS'] as $basket) {
+			
 			$item = array(
-				'id'  => uniqid(),
+				'id'  => uniqid(time()),
 				'pid' => $basket['PRODUCT_ID'],
-				'sid' => '',
+				'sid' => 0,
 				'quantity' => $basket['QUANTITY'],
-				'kind'     => 'stand'
-				'params'   => json_decode($basket['PROPS']['PARAMS']['VALUE'], true),
-				'fields'   => json_decode($basket['PROPS']['FIELDS']['VALUE'], true),
+				'kind'     => '',
+				'params'   => (array) json_decode($basket['PROPS']['PARAMS']['VALUE'], true),
+				'fields'   => (array) json_decode($basket['PROPS']['FIELDS']['VALUE'], true),
 				'included' => ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y'),
 			);
 			
 			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
+				$item['kind'] = self::KIND_STAND;
+				
+				$fields['STAND'] = $item;
 			} else {
+				$product = new Product($item['pid']);
+				
+				$item['sid']  = $product->getSectionID();
+				$item['kind'] = self::KIND_PRODUCT;
+				
+				$fields['PRODUCTS'][$item['id']] = $item;
 			}
 		}
 		
 		
+		// Сохранение данных в сессии.
 		$this->setData($fields);
 		$this->putSession();
 		
-		// Установка ID заказа.
-		$this->setOrderID($order->getID());
-		
-		echo '<pre>';
-		print_r($this->getData());
-		echo '</pre>';
+		//echo '<pre>';
+		//print_r($data['PROPS']);
+		//echo '<hr/>';
+		//print_r($this->getData());
+		//echo '</pre>';
 	}
 	
 }

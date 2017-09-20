@@ -17,6 +17,7 @@ $asset->addJs('/local/templates/.default/build/js/jquery.tooltipster.min.js');
 $asset->addJs('/local/templates/.default/build/js/jquery.airStickyBlock.min.js');
 $asset->addJs('/local/templates/.default/build/js/jquery.inputmask.bundle.js');
 $asset->addJs('/local/templates/.default/build/js/jquery-ui.multidatespicker.js');
+$asset->addJs('/local/templates/.default/build/js/jquery-ui.multidatespicker.js');
 //$asset->addJs('/local/templates/.default/build/js/jquery.pickmeup.min.js');
 
 
