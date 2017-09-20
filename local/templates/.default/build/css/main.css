@@ -1647,3 +1647,6 @@ label.styler input[type=checkbox]:checked + span::before {
   border-radius: 3px;
   background: #654b24;
 }
+.itemCount {
+  width: 200px;
+}

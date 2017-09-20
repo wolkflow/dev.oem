@@ -532,9 +532,6 @@ class Order
             $salebasket->DeleteAll($uid);
         }
         
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
         
         // Сохранение стенда.
         $stand = null;

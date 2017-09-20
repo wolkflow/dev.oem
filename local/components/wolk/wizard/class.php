@@ -58,10 +58,6 @@ class WizardComponent extends \CBitrixComponent
 
         // Форма стенда.
         $arParams['SFORM'] = strtolower((string) $arParams['SFORM']);
-
-        if (empty($arParams['SFORM'])) {
-            $arParams['SFORM'] = self::DEFAULT_STAND_FORM;
-        }
         
         // ID заказа.
         $arParams['OID'] = (int) $arParams['OID'];
@@ -91,6 +87,11 @@ class WizardComponent extends \CBitrixComponent
             $arParams['WIDTH'] = $params['WIDTH'];
             $arParams['DEPTH'] = $params['DEPTH'];
             $arParams['SFORM'] = $params['SFORM'];
+        }
+		
+		
+        if (empty($arParams['SFORM'])) {
+            $arParams['SFORM'] = self::DEFAULT_STAND_FORM;
         }
 		
 		
@@ -700,6 +701,10 @@ class WizardComponent extends \CBitrixComponent
         if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
             $fields []= $this->arParams['SFORM'];
         }
+		
+		if ($this->getBasket()->getOrderID() > 0) {
+			$fields []= $this->getBasket()->getOrderID();
+		}
         
         $link = '/wizard/' . implode('/', $fields) . '/';
         
@@ -726,6 +731,10 @@ class WizardComponent extends \CBitrixComponent
         if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
             $fields []= $this->arParams['SFORM'];
         }
+		
+		if ($this->getBasket()->getOrderID() > 0) {
+			$fields []= $this->getBasket()->getOrderID();
+		}
         
         $link = '/wizard/' . implode('/', $fields) . '/';
         
@@ -749,6 +758,10 @@ class WizardComponent extends \CBitrixComponent
             $fields []= $this->arParams['SFORM'];
         }
         
+		if ($this->getBasket()->getOrderID() > 0) {
+			$fields []= $this->getBasket()->getOrderID();
+		}
+		
         $link = '/wizard/' . implode('/', $fields) . '/';
         
         return $link;

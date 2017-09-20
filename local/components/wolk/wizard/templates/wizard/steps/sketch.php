@@ -94,7 +94,6 @@
     </div>
 </form>
 
-
 <script>
     $(document).ready(function() {
         $(document).on('click', '#js-sketch-save-id', function(e) {

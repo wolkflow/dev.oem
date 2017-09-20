@@ -261,6 +261,7 @@ switch ($action) {
     
     // Создание заказа.
     case ('place-order'):
+		$oid      = (int)    $request->get('oid');
         $eid      = (int)    $request->get('eid');
         $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');

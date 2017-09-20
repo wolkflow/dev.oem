@@ -32,6 +32,12 @@ $arUrlRewrite = array(
 	),
     
     
+	array(
+		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/([\\d]+)x([\\d]+)/([^\/]+)/([\\d]+)/#",
+		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&WIDTH=$4&DEPTH=$5&SFORM=$6&OID=$7",
+		"ID" => "",
+		"PATH" => "/wizard/index.php",
+	),
     array(
 		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/([\\d]+)x([\\d]+)/([^\/]+)/#",
 		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&WIDTH=$4&DEPTH=$5&SFORM=$6&",

@@ -334,6 +334,14 @@ class Basket
         if (!empty($data)) {
             $this->data = $data;
         }
+		
+		
+		// Редактирование текущего заказа.
+		$oid = $this->getOrderID();
+		
+		if ($oid > 0) {
+			$order = new Order($oid);
+		}
         
         
         // Текущая корзина.
