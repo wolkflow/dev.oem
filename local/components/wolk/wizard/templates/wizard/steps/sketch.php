@@ -157,8 +157,8 @@
     
     var loadsketch = function() {
 
-        var gridX = parseInt(<?= (int) ($arResult['WIDTH']) ?: 5 ?>);
-        var gridY = parseInt(<?= (int) ($arResult['DEPTH']) ?: 5 ?>);
+        var gridX = parseFloat(<?= (float) ($arResult['WIDTH']) ?: 5 ?>);
+        var gridY = parseFloat(<?= (float) ($arResult['DEPTH']) ?: 5 ?>);
 
         (window.resizeEditor = function(items) {
             var height =  Math.max(120 + (items.length * 135), $(window).height());

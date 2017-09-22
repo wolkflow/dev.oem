@@ -24,6 +24,8 @@ class WizardComponent extends \CBitrixComponent
     const SESSCODE = 'OEMEVENTS';
     
     const DEFAULT_STAND_FORM = 'row';
+	
+	const SKETCH_SIDE_LENGTH = 5;
     
     protected $context = null;
     protected $basket  = null;
@@ -89,12 +91,6 @@ class WizardComponent extends \CBitrixComponent
             $arParams['SFORM'] = $params['SFORM'];
         }
 		
-		
-        if (empty($arParams['SFORM'])) {
-            $arParams['SFORM'] = self::DEFAULT_STAND_FORM;
-        }
-		
-		
 		// Загрузка данных.
 		// TODO: Проверка на принадлежность заказа!
 		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
@@ -121,6 +117,33 @@ class WizardComponent extends \CBitrixComponent
 		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
 			return;
 		}
+		
+		
+		$reload = false;
+		
+		
+		
+		// Обраотка входных параметров.
+        if (empty($this->arParams['SFORM'])) {
+            $this->arParams['SFORM'] = self::DEFAULT_STAND_FORM;
+        }
+		
+		if (!self::isAllowSketchSideLength($this->arParams['WIDTH'])) {
+			$this->arParams['WIDTH'] = self::roundSketchSideLength($this->arParams['WIDTH']);
+			$reload = true;
+		}
+		if (!self::isAllowSketchSideLength($this->arParams['DEPTH'])) {
+			$this->arParams['DEPTH'] = self::roundSketchSideLength($this->arParams['DEPTH']);
+			$reload = true;
+		}
+		
+		
+		// Перезагрузка с обновленными допустимыми параметрами.
+		if ($reload) {
+			LocalRedirect($this->getStepLink(1));
+		}
+		
+		
 		
 		// Шаги.
         $this->arResult['STEPS']    = $this->getSteps();
@@ -858,5 +881,25 @@ class WizardComponent extends \CBitrixComponent
         }
         return $colors;
     }
+	
+	
+	
+	/**
+	 * Проверка указания длины стороны скетча.
+	 */
+	public static function isAllowSketchSideLength($length)
+	{
+		return ((floatval($length) * 10) % self::SKETCH_SIDE_LENGTH == 0);
+	}
+	
+	
+	/**
+	 * Округление размера скетча.
+	 */
+	public static function roundSketchSideLength($length)
+	{
+		return (ceil(floatval($length) / (self::SKETCH_SIDE_LENGTH / 10)) * (self::SKETCH_SIDE_LENGTH / 10));
+	}
+
 }
 
