@@ -10,7 +10,7 @@
         <input type="hidden" name="TIMES" class="js-product-days-hours-times" value="" />
         
         <? // Установка даты // ?>
-        <div class="serviceItem__left">
+        <div class="setDatetime__left">
             <div class="setDateBlock">
                 <div class="serviceItem__subtitle">
                     <?= Loc::getMessage('DATES') ?>
@@ -20,7 +20,7 @@
         </div>
         
         <? // Установка времени // ?>
-        <div class="serviceItem__right">
+        <div class="setDatetime__right">
             <div class="itemCount">
                 <div class="serviceItem__subtitle">
                     <?= Loc::getMessage('TIMES') ?>

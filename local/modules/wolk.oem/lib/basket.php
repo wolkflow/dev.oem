@@ -455,6 +455,13 @@ class Basket
             ];
             
             $props = [];
+			
+			// ID корзины.
+            $props []= [
+                'NAME'  => 'ID корзины',
+                'CODE'  => 'BID',
+                'VALUE' => $item->getID()
+            ];
             
             // Поля заказа продукции.
             $props []= [
@@ -598,9 +605,9 @@ class Basket
         
         $dataprops []= [
             'ORDER_ID'       => $oid,
-            'ORDER_PROPS_ID' => $props['SKETCH']['ID'],
+            'ORDER_PROPS_ID' => $props['SKETCH_SCENE']['ID'],
             'NAME'           => 'Скетч',
-            'CODE'           => 'SKETCH',
+            'CODE'           => 'SKETCH_SCENE',
             'VALUE'          => $this->getSketch()['SKETCH_SCENE'],
         ];
         
@@ -610,6 +617,18 @@ class Basket
             'NAME'           => 'Изображение скетча',
             'CODE'           => 'SKETCH_IMAGE',
             'VALUE'          => $this->getSketch()['SKETCH_IMAGE'],
+        ];
+		
+		$dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['SKETCH_FILE']['ID'],
+            'NAME'           => 'Файл скетча',
+            'CODE'           => 'SKETCH_FILE',
+            'VALUE'          => \CFile::SaveFile(array(
+				'name'    	  => 'sketch-'.$oid.'.jpg',
+				'description' => 'Изображение скетча для заказа №'.$oid,
+				'content'     => base64_decode($this->getSketch()['SKETCH_IMAGE'])
+			), 'sketches')
         ];
         
         $dataprops []= [
@@ -700,9 +719,10 @@ class Basket
 		
 		// Позиции в корзине.
 		foreach ($data['BASKETS'] as $basket) {
+			$bid = ($basket['PROPS']['BID']['VALUE']) ?: (uniqid(time()));
 			
 			$item = array(
-				'id'  => uniqid(time()),
+				'id'  => $bid,
 				'pid' => $basket['PRODUCT_ID'],
 				'sid' => 0,
 				'quantity' => $basket['QUANTITY'],
@@ -730,12 +750,6 @@ class Basket
 		// Сохранение данных в сессии.
 		$this->setData($fields);
 		$this->putSession();
-		
-		//echo '<pre>';
-		//print_r($data['PROPS']);
-		//echo '<hr/>';
-		//print_r($this->getData());
-		//echo '</pre>';
 	}
 	
 }

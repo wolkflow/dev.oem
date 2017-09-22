@@ -1081,7 +1081,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 		
 		
 		<div style="position: relative; vertical-align: top;">
-            <div style="height:5px;width:100%"></div>
+            <div style="height: 5px; width: 100%;"></div>
             <a id="company-order"></a>
             <div class="adm-container-draggable">
                 <div class="adm-bus-statusorder">

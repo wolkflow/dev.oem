@@ -15,8 +15,9 @@ Loc::loadLanguageFile(__FILE__);
         var jsvars = <?= $APPLICATION->ShowProperty('jsvars', '[]') ?>;
     </script>
 	
-    <? $am = \Bitrix\Main\Page\Asset::getInstance(); ?>
     <?  // Подключение скриптов и стилей.
+		$am = \Bitrix\Main\Page\Asset::getInstance();
+	
         $am->addJs('/local/templates/.default/build/js/vendor.js');
         $am->addJs('/local/templates/.default/javascripts/application.js');
         $am->addCss('/local/templates/.default/build/css/vendor.css');
@@ -32,25 +33,27 @@ Loc::loadLanguageFile(__FILE__);
         $am->addJs('/local/templates/.default/build/js/sticky-kit.min.js');
         $am->addJs("/local/templates/.default/build/js/functions.js");
         $am->addJs("/local/templates/.default/build/js/script.js");
-        
-        $APPLICATION->ShowHead(); 
+		
+        $APPLICATION->ShowHead();
+		
+		$langs = $APPLICATION->availableLang;
     ?>
     <style>
         <? $APPLICATION->ShowViewContent('custom_color_styles') ?>
     </style>
-	<script type="text/javascript" src="/local/templates/.default/javascripts/designer.js"></script>
+	<script type="text/javascript" src="/local/templates/.default/javascripts/designer.min.js"></script>
     <script>
         if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
             var meta = document.getElementById("viewport");
             meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio));
         }
-    </script>
-	<script>
+		
 		function stickyCall() {
 			$("[data-sticky_column]").stick_in_parent({
 				parent: "[data-sticky_parent]"
 			});
 		}
+		
 		$(window).on('load', function(){
 			stickyCall();
 		});
@@ -73,12 +76,14 @@ Loc::loadLanguageFile(__FILE__);
     */ ?>
 </head>
 <body>
+
 <? $APPLICATION->ShowPanel(); ?>
+
 <div class="headersection">
     <div class="layout">
         <div class="headersection__button customizable"><?= Loc::getMessage('language') ?>
             <div class="headersection__languagedropdown">
-                <? $langs = $APPLICATION->availableLang; ?>
+                
                 
                 <? if (strpos($APPLICATION->GetCurPage(false), '/events/') !== false) { ?>
                     <?  // Получение кода элемента.

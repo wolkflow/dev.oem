@@ -13,7 +13,7 @@
     <input class="js-param-required js-param-value js-param-x-value" name="<?= Basket::PARAM_COLOR ?>.ID" type="hidden" value="<?= (!empty($value)) ? ($value['ID']) : ('') ?>" />
     <input class="js-param-required js-param-value js-param-x-color" name="<?= Basket::PARAM_COLOR ?>.COLOR" type="hidden" value="<?= (!empty($value)) ? ($value['COLOR']) : ('') ?>" />
 
-    <div class="serviceItem__col-7 lamColor">
+    <div class="serviceCol serviceColor lamColor">
         <div class="serviceItem__subtitle">
             <?= Loc::getMessage('COLOR') ?>
         </div>

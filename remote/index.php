@@ -316,6 +316,9 @@ switch ($action) {
         // Создание заказа.
         try {
             $basket->order($context);
+			
+			// Очистка сессии.
+			$_SESSION[\Wolk\OEM\Basket::SESSCODE_EVENT][strtoupper($code)] = null;
         } catch (Exceptino $e) {
             jsonresponse(false, $e->getMessag());
         }

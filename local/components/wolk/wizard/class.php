@@ -121,8 +121,6 @@ class WizardComponent extends \CBitrixComponent
 		
 		$reload = false;
 		
-		
-		
 		// Обраотка входных параметров.
         if (empty($this->arParams['SFORM'])) {
             $this->arParams['SFORM'] = self::DEFAULT_STAND_FORM;
@@ -142,7 +140,6 @@ class WizardComponent extends \CBitrixComponent
 		if ($reload) {
 			LocalRedirect($this->getStepLink(1));
 		}
-		
 		
 		
 		// Шаги.

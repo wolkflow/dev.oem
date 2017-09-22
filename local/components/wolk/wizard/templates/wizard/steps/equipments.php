@@ -107,7 +107,7 @@
                 <a href="<?= $arResult['LINKS']['PREV'] ?>" class="button styler prev">
                     <?= Loc::getMessage('PREV') ?>
                 </a>
-                <a href="<?= $arResult['LINKS']['NEXT'] ?>" class="button styler prev">
+                <a href="<?= $arResult['LINKS']['NEXT'] ?>" class="button styler next">
                     <?= Loc::getMessage('NEXT') ?>
                 </a>
             </div>
