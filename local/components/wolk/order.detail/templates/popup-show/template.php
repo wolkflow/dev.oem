@@ -81,31 +81,34 @@
 		</div>
 		*/ ?>
 		
+		
 		<div class="ordercontainer__column">
-			<div class="pagesubtitle">
-				<?= Loc::getMessage('STAND_TYPE') ?>
-			</div>
-			<div class="ordercontainer__itemscontainer">
-				<div class="pagesubsubtitle">
-					<?= Loc::getMessage('SYSTEM_STAND') ?>
+			<? if (!empty($arResult['STAND']['ITEM'])) { ?>
+				<div class="pagesubtitle">
+					<?= Loc::getMessage('STAND_TYPE') ?>
 				</div>
-				<div class="last ordercontainer__item">
-					<div class="ordercontainer__itemtotalprice">
-						<?= FormatCurrency($arResult['STAND']['BASKET']['PRICE'] * $arResult['STAND']['BASKET']['QUANTITY'], $arResult['ORDER']['CURRENCY']) ?>
+				<div class="ordercontainer__itemscontainer">
+					<div class="pagesubsubtitle">
+						<?= Loc::getMessage('SYSTEM_STAND') ?>
 					</div>
-					<div class="ordercontainer__itemname">
-						<?= $arResult['STAND']['ITEM']->getTitle() ?>
-						<?= $arResult['STAND']['WIDTH'] ?> &times; <?= $arResult['STAND']['DEPTH'] ?>
-					</div>
-					<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
-						<div class="ordercontainer__changebutton">
-							<a href="<?= $arResult['ORDER']['LINK'] ?>">
-								<?= Loc::getMessage('CHANGE') ?>
-							</a>
+					<div class="last ordercontainer__item">
+						<div class="ordercontainer__itemtotalprice">
+							<?= FormatCurrency($arResult['STAND']['BASKET']['PRICE'] * $arResult['STAND']['BASKET']['QUANTITY'], $arResult['ORDER']['CURRENCY']) ?>
 						</div>
-					<? } ?>
+						<div class="ordercontainer__itemname">
+							<?= $arResult['STAND']['ITEM']->getTitle() ?>
+							<?= $arResult['STAND']['WIDTH'] ?> &times; <?= $arResult['STAND']['DEPTH'] ?>
+						</div>
+						<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
+							<div class="ordercontainer__changebutton">
+								<a href="<?= $arResult['ORDER']['LINK'] ?>">
+									<?= Loc::getMessage('CHANGE') ?>
+								</a>
+							</div>
+						<? } ?>
+					</div>
 				</div>
-			</div>
+			<? } ?>
 			
 			<? if (!empty($arResult['ITEMS'][Wolk\OEM\Products\Section::TYPE_SERVICES])) { ?>
 				<div class="pagesubtitle">

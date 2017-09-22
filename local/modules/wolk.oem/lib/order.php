@@ -299,7 +299,7 @@ class Order
 	 */
 	public function getLinkEdit($step = 2)
 	{
-		$link = '/wizard/#EVENT#/#TYPE#/#STEP#/#WIDTH#x#DEPTH#/#SFORM#/?OID=' . $this->getID();
+		$link = '/wizard/#EVENT#/#TYPE#/#STEP#/#WIDTH#x#DEPTH#/#SFORM#/#OID#/';
 		$data = $this->getFullData();
 		
 		$event = strtolower($data['EVENT']['CODE']);
@@ -308,14 +308,15 @@ class Order
 		$width = $data['ORDER']['PROPS']['WIDTH']['VALUE'];
 		$depth = $data['ORDER']['PROPS']['DEPTH']['VALUE'];
 		$sform = strtolower($data['ORDER']['PROPS']['SFORM']['VALUE']);
+		$oid   = $this->getID();
 		
 		if (empty($stand)) {
 			$stand = 'row';
 		}
 		
 		$link = str_replace(
-			['#EVENT#', '#TYPE#', '#STEP#', '#WIDTH#', '#DEPTH#', '#SFORM#'],
-			[$event, $type, $step, $width, $depth, $sform],
+			['#EVENT#', '#TYPE#', '#STEP#', '#WIDTH#', '#DEPTH#', '#SFORM#', '#OID#'],
+			[$event, $type, $step, $width, $depth, $sform, $oid],
 			$link
 		);
 		

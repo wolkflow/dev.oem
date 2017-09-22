@@ -1693,3 +1693,16 @@ div.setDateBlock {
   width: 145px;
   float: left}
 .navButtons .next:hover {background: #999}
+div.preview-image {
+  width: 62px;
+  height: 62px;
+}
+.preview-image.changed {
+  float: left;
+}
+.preview-image img {
+  display: block;
+}
+.preview-image.changed + .jq-file {
+  margin-left: 72px;
+}

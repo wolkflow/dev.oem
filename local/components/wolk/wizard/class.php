@@ -152,7 +152,7 @@ class WizardComponent extends \CBitrixComponent
         ];
         
         // Проверка валидности сессии.
-        if ($this->getStepNumber() > 1 && empty($_SESSION[self::SESSCODE][$this->getEventCode()])) {
+        if ($this->getStepNumber() > 1 && empty($_SESSION[self::SESSCODE][$this->getEventCode()]['BASKET'])) {
             LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
         }
         
