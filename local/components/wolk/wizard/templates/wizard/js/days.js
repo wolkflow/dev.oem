@@ -2,44 +2,43 @@
 /**
  * Функция добавления в корзину.
  */
-window['oem-func-days-cart'] = function($block) {
+window['oem-func-days-cart'] = function($wrapper) {
     var pid = 0;
+	var quantity = 0;
+	
+	var $block    = $wrapper.closest('.js-product-block');
+    var $calendar = $wrapper.find('.js-calendar-content').find('.calendar');
+	var $popup    = $wrapper.find('.js-calendar-popup');
+	var $mode     = $wrapper.find('.js-calendar-mode');
     
-    // Общее количество часов.
-    var quantity = dates.length;
-    
-    if (quantity < 0) {
-        quantity = 0;
-    }
-    
+	
+	// Получение ID продукции.
     if ($block.find('.js-product-select').length) {
         pid = $block.find('.js-product-select option:selected').val();
     } else {
         pid = $block.find('.js-product-select').data('pid');
     }
 	
-	
-	var $that     = $(this);
-	var $block    = $that.closest('.js-product-block');
-	
-	var $calendar = $that.parents('.js-calendar-content').find('.calendar');
-	var $wrapper  = $that.closest('.js-calendar-wrap');
-	var $popup    = $wrapper.find('.js-calendar-popup');
-	var $mode     = $wrapper.find('.js-calendar-mode');
-			
+	// Выбор диапазона или конкретных дат.
 	if ($mode.is(':checked')) {
-		$daymin = $calendar.parent().find('.date-min').val();
-		$daymax = $calendar.parent().find('.date-max').val();
+		var daymin = $calendar.parent().find('.date-min').val();
+		var daymax = $calendar.parent().find('.date-max').val();
+		
+		quantity = getDaysBetween(daymin, daymax, true);
 	} else {
 		$days = $calendar.multiDatesPicker('getDates');
+		
+		quantity = $days.length;
 	}
 	
+	// Закрытие календаря.
 	CalendarClose($popup);
 	
+    if (quantity < 0) {
+        quantity = 0;
+    }
 	
 	
-	
-    
     // Сохранение в корзине.
     PutBasket(pid, quantity, $block);
 }
@@ -77,6 +76,9 @@ window['oem-func-days-clear'] = function($block) {
     $block.find('.js-product-select-price').hide();
     $block.find('.js-product-select-descr').hide();
     
+	$block.find('.js-calendar-reset').trigger('click');
+	
+	/*
     $block.find('.js-days-times option:selected').attr('selected', null);
     $block.find('.js-days-datepicker').multiDatesPicker({
         dateFormat: 'dd.mm.yy',
@@ -86,6 +88,7 @@ window['oem-func-days-clear'] = function($block) {
             var dates;
         }
     });
+	*/
     
     // Сброс всех свойств товара.
     ResetParams($block);
@@ -95,12 +98,14 @@ window['oem-func-days-clear'] = function($block) {
 $(document).ready(function() {
     
     // Добавление нового поля.
-    $(document).on('click', '.js-block-days .js-more-field', function(event) {
+    $(document).on('click', '.js-block-days .js-more-field', function(e) {
         window['oem-func-days-more']($(this));
     });
     
     // Выбор даты.
 	$(document).on('click', '.js-block-days .js-calendar-save', function(e) {
+		var $block = $(this).closest('.js-days-wrapper');
+		
 		window['oem-func-days-cart']($block);
 	});
 	
