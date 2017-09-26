@@ -129,7 +129,7 @@
                         <?= Loc::getMessage('STAND') ?> №
                     </div>
                     <div class="ordertotalcontainer__number">
-                        <input class="js-form-remote-input" type="text" name="STANDNUM" value="0" />
+                        <input class="js-form-remote-input" type="text" name="STANDNUM" value="<?= (!empty($arResult['STANDNUM'])) ? ($arResult['STANDNUM']) : ('0') ?>" />
                     </div>
                 </div>
                 <div class="ordertotalcontainer__pavillioncontainer">
@@ -137,7 +137,7 @@
                         <?= Loc::getMessage('PAVILION') ?>
                     </div>
                     <div class="ordertotalcontainer__number">
-                        <input class="js-form-remote-input" type="text" name="PAVILION" value="0" />
+                        <input class="js-form-remote-input" type="text" name="PAVILION" value="<?= (!empty($arResult['PAVILION'])) ? ($arResult['PAVILION']) : ('0') ?>" />
                     </div>
                 </div>
                 <div class="ordertotalcontainer__placeorder" data-modal="<?= ($USER->IsAuthorized()) ? ('#place-auth') : ('#place-unauth') ?>">

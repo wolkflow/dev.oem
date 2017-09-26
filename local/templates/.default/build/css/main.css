@@ -1549,23 +1549,22 @@ float: left}
   top: 0;
 }
 .calendarPopupBlock {
-  width: 310px;
+  width: 280px;
   position: absolute;
   top: 250%;
   left: 0;
   z-index: 520;
-  background: url(images/ui-bg_fine-grain_10_f8f7f6_60x60.png);
+  background: #f9f9f9;
   opacity: 0;
   display: none;
   padding: 10px;
-  border-radius: 5px;
   margin: 8px 0 0;
 }
 .calendarPopupBlock::before {
   display: block;
   content: '';
   position: absolute;
-  border-bottom: 7px solid #f2f1f0;
+  border-bottom: 7px solid #f9f9f9;
   border-right: 7px solid transparent;
   border-left: 7px solid transparent;
   top: -7px;
@@ -1577,12 +1576,10 @@ float: left}
   top: 60px;
 }
 td.dp-highlight {
-  border: 1px solid #743620;
-  background: #d3c05a url(images/ui-bg_fine-grain_15_d3c05a_60x60.png) 50% 50% repeat;
-  color: #3a3427;
+
 }
 td.dp-highlight a{
-  background: #aaaaaa !important;
+  background: #7f7f7f !important;
   color: white !important;
 }
 .calendarPopupButtons {
@@ -1601,18 +1598,16 @@ div.serviceItem__cost {
   display: inline-block;
   text-decoration: none;
   float: right;
-  padding: 5px 7px;
-  background: #eceadf url(images/ui-bg_fine-grain_10_eceadf_60x60.png) 50% 50% repeat;
-  color: #654b24;
-  border-radius: 6px;
+  padding: 3px 7px;
+  background: #7f7f7f;
+  color: #fff;
+  font-family: "Trebuchet MS", Tahoma, Verdana, Arial, sans-serif;
+  font-size: 0.9em;
   font-weight: 700;
-  border: 1px solid #d4d1bf;
-  font-size: 14px;
 }
 .calendarReset:hover,
 .calendarSave:hover {
-  border: 1px solid #654b24;
-  background: #654b24 url(images/ui-bg_fine-grain_65_654b24_60x60.png) 50% 50% repeat;
+  background: #999;
   color: #ffffff;
 }
 .calendarReset {
@@ -1620,32 +1615,30 @@ div.serviceItem__cost {
 }
 label.styler {
   display: inline-block;
-  padding: 7px 0 0;
+  padding: 4px 0 0;
 }
 label.styler input[type=checkbox] {
   display: none;
 }
 label.styler span {
   display: inline-block;
-  width: 19px;
-  height: 19px;
+  width: 14px;
+  height: 14px;
   border: 1px solid #d4d1bf;
   background: #eceadf;
-  border-radius: 3px;
   margin-right: 5px;
   vertical-align: middle;
   position: relative;
   top: -2px;
 }
 label.styler input[type=checkbox]:checked + span::before {
-  width: 13px;
-  height: 13px;
+  width: 10px;
+  height: 10px;
   display: block;
   content: '';
   position: relative;
-  margin: 3px;
-  border-radius: 3px;
-  background: #654b24;
+  margin: 2px;
+  background: #7f7f7f;
 }
 .itemCount {
   width: 200px;
@@ -1705,4 +1698,7 @@ div.preview-image {
 }
 .preview-image.changed + .jq-file {
   margin-left: 72px;
+}
+[hidden] {
+  display: none !important;
 }

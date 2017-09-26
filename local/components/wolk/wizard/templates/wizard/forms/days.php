@@ -31,24 +31,26 @@
 		<input type="hidden" name="TIMES" class="js-product-days-times" value="" />
 		<? // Установка даты // ?>
 		<div class="serviceItem__left">
-			<div class="setDateBlock calendarPopupWrapper">
+			<div class="setDateBlock calendarPopupWrapper js-calendar-wrap">
 				<div class="serviceItem__subtitle">
 					<?= Loc::getMessage('DATES') ?>
 				</div>
 				<div class="setDate"></div>
-				<div class="calendarPopupBlock">
-					<div class="calendarPopupContent">
+				<div class="calendarPopupBlock js-calendar-popup">
+					<div class="calendarPopupContent js-calendar-content">
 						<div class="calendarPopupButtons">
 							<label class="styler">
-								<input type="checkbox" class="changeMode">
-								<span></span>Date range
+								<input type="checkbox" class="changeMode js-calendar-mode" />
+								<span></span><?= Loc::getMessage('DATERANGE') ?>
 							</label>
-							<a href="javascript:void(0)" class="calendarReset">Clear</a>
-							<a href="javascript:void(0)" class="calendarSave">Ok</a>
+							<a href="javascript:void(0)" class="calendarReset js-calendar-reset">
+								<?= Loc::getMessage('CANCEL') ?>
+							</a>
+							<a href="javascript:void(0)" class="calendarSave js-calendar-save">OK</a>
 						</div>
-						<input type="hidden" class="start-date">
-						<input type="hidden" class="end-date">
-						<div class="calendar" data-min-date="0" data-max-date="10/02/2017"></div>
+						<input type="text" class="start-date" hidden />
+						<input type="text" class="end-date" hidden />
+						<div class="calendar" date-min="0" date-max="10/02/2017"></div>
 					</div>
 				</div>
 			</div>

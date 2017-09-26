@@ -122,4 +122,5 @@ $MESS['CONFIRM_EMAIL'] = 'Подтверждение e-mail';
 $MESS['USER_CONFIRM_PASSWORD'] = 'Подтверждение пароля';
 $MESS['VAT_ID'] = 'Vat ID';
 
-
+$MESS['DATERANGE'] = 'Диапазон';
+$MESS['CANCEL'] = 'Отмена';

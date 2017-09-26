@@ -5,8 +5,6 @@
 window['oem-func-days-cart'] = function($block) {
     var pid = 0;
     
-    var dates = $block.find('.js-days-datepicker').multiDatesPicker('getDates');
-
     // Общее количество часов.
     var quantity = dates.length;
     
@@ -19,6 +17,28 @@ window['oem-func-days-cart'] = function($block) {
     } else {
         pid = $block.find('.js-product-select').data('pid');
     }
+	
+	
+	var $that     = $(this);
+	var $block    = $that.closest('.js-product-block');
+	
+	var $calendar = $that.parents('.js-calendar-content').find('.calendar');
+	var $wrapper  = $that.closest('.js-calendar-wrap');
+	var $popup    = $wrapper.find('.js-calendar-popup');
+	var $mode     = $wrapper.find('.js-calendar-mode');
+			
+	if ($mode.is(':checked')) {
+		$daymin = $calendar.parent().find('.date-min').val();
+		$daymax = $calendar.parent().find('.date-max').val();
+	} else {
+		$days = $calendar.multiDatesPicker('getDates');
+	}
+	
+	CalendarClose($popup);
+	
+	
+	
+	
     
     // Сохранение в корзине.
     PutBasket(pid, quantity, $block);
@@ -80,6 +100,11 @@ $(document).ready(function() {
     });
     
     // Выбор даты.
+	$(document).on('click', '.js-block-days .js-calendar-save', function(e) {
+		window['oem-func-days-cart']($block);
+	});
+	
+	/*
     $('.js-block-days .js-days-datepicker').each(function() {
         var $that  = $(this);
         var $block = $that.closest('.js-product-block');
@@ -92,6 +117,6 @@ $(document).ready(function() {
                 window['oem-func-days-cart']($block);
             }
         });
-    });
-    
+    });  
+	*/
 });

@@ -566,6 +566,12 @@ class WizardComponent extends \CBitrixComponent
             $this->arResult['STEPLINKS'][$step] = $this->getStepLink($n);
         }
         
+		
+		// Данные по стенду.
+		$this->arResult['STANDNUM'] = $oembasket->getParam('STANDNUM');
+		$this->arResult['PAVILION'] = $oembasket->getParam('PAVILION');
+		
+		
         // Мероприятие.
         $event = $this->getEvent();
         

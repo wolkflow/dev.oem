@@ -335,12 +335,23 @@ class Basket
             $this->data = $data;
         }
 		
+		$order = null;
 		
 		// Редактирование текущего заказа.
 		$oid = $this->getOrderID();
 		
 		if ($oid > 0) {
 			$order = new Order($oid);
+			
+			$obasket = \Bitrix\Sale\Order::load($order->getID())->getBasket();
+            $bresult = \Bitrix\Sale\Internals\BasketTable::getList(['filter' => ['ORDER_ID' => $order->getID()]]);
+            
+            while ($basket = $bresult->fetch()) {
+                $obasket->getItemById($basket['ID'])->delete();
+            }
+            $obasket->save();
+			
+			unset($basket, $obasket, $bresult);
 		}
         
         
@@ -504,7 +515,9 @@ class Basket
             
             
             // Суммирование цены.
-            $price += $item->getCost();   
+			if (!$item->isIncluded()) {
+				$price += $item->getCost(); 
+			}
         }
         
         
@@ -525,10 +538,22 @@ class Basket
             'CURRENCY'         => $currency,
             'USER_DESCRIPTION' => $this->getParam('COMMENTS'),
         ];
-        
+		        
         
         // Созданеи заказа.
-        $oid = \CSaleOrder::add($fields);
+        if (empty($oid)) {
+            $oid = \CSaleOrder::add($fields);
+        } else {
+            $oid = \CSaleOrder::update($oid, $fields);
+            
+            if ($oid) {
+                \CSaleOrderPropsValue::deleteByOrder($oid);
+            }
+        }
+		
+		if (!$oid) {
+            throw new \Exception("Can't create order.");
+        }
         
         
         // Сохранение свойств заказа.
@@ -668,10 +693,6 @@ class Basket
             \CSaleOrderPropsValue::add($dataprop);
         }
         
-        if (!$oid) {
-            throw new \Exception("Can't create order.");
-        }
-        
         // Привязка корзин к заказу.
         $baskets = \Bitrix\Sale\Internals\BasketTable::getList([
             'filter' => ['FUSER_ID' => \CSaleBasket::GetBasketUserID(), 'ORDER_ID' => null]
@@ -705,9 +726,9 @@ class Basket
 				'WIDTH'    => $data['ORDER']['PROPS']['WIDTH']['VALUE'],
 				'DEPTH'    => $data['ORDER']['PROPS']['DEPTH']['VALUE'],
 				'SFORM'    => $data['ORDER']['PROPS']['SFORM']['VALUE'],
-				'COMMENTS' => $data['ORDER']['COMMENTS'],
 				'STANDNUM' => $data['ORDER']['PROPS']['STANDNUM']['VALUE'],
 				'PAVILION' => $data['ORDER']['PROPS']['PAVILION']['VALUE'],
+				'COMMENTS' => $data['ORDER']['USER_DESCRIPTION'],
 			),
 			'SKETCH' => array(
 				'SKETCH_SCENE' => $data['ORDER']['PROPS']['SKETCH_SCENE']['VALUE'],

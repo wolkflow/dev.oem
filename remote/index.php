@@ -7,6 +7,10 @@ define('NO_AGENT_STATISTIC', true);
 define('NO_AGENT_CHECK', true);
 define('DisableEventsCheck', true);
 
+// Не пересчитывать заказ при создании из формы.
+define('NO_ORDER_RECALC', 'Y');
+
+
 use Bitrix\Main\Localization\Loc;
 
 require ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');

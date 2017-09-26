@@ -13,13 +13,13 @@ function ResetParams($block)
     $block.find('.modal').attr('id', 'js-color-popup-' + uniqid + '-id');
 }
 
-function calendarClose(block) {
-    block.animate({'top': '250%', 'opacity': 0}, 200, function () {
-        block.fadeOut(1, function () {
-            block.removeClass('open')
+function CalendarClose(block)
+{
+    block.animate({'top': '250%', 'opacity': 0}, 200, function() {
+        block.fadeOut(1, function() {
+            block.removeClass('open');
         });
     });
-    console.log('close');
 }
 
 $(document).ready(function() {
@@ -50,6 +50,7 @@ $(document).ready(function() {
             contentType: false, // важно - убираем форматирование данных по умолчанию
             processData: false, // важно - убираем преобразование строк по умолчанию
             beforeSend: function() {
+				$image.removeClass('changed');
                 $image.html('').hide();
             },
             success: function(response) {
@@ -63,6 +64,7 @@ $(document).ready(function() {
                         $image.append('<span class="file-remove js-param-x-remove">&times;</span>');
 						$image.show();
                     }
+					$image.addClass('changed')
                     $input.val(response.data['file']);
                 } else {
                     // Ошибка загрузки файла.
@@ -74,11 +76,14 @@ $(document).ready(function() {
 	$(document).on('click', '.js-param-x-remove', function(event) {
         var $that  = $(this);
         var $block = $that.closest('.js-param-block');
+		var $image = $block.find('.js-param-x-image');
 		
 		$block.find('.js-param-x-file').val('');
 		$block.find('.js-param-x-upload').val('');
 		$block.find('.js-param-x-upload .jq-file__name').html('');
 		$block.find('.js-param-x-image').html('').hide();
+		
+		$image.removeClass('changed');
 	});
 	
 
@@ -130,11 +135,11 @@ $(document).ready(function() {
 
     // Календарь
     // Первый запуск
-    $('.calendarPopupBlock').each(function () {
+    $('.js-calendar-popup').each(function () {
         var $that = $(this);
         var calendar = $that.find('.calendar'),
-            minDate = calendar.attr('data-min-date'),
-            maxDate = calendar.data('data-max-date');
+            minDate = calendar.attr('date-min'),
+            maxDate = calendar.data('date-max');
 
         calendar.multiDatesPicker({
             minDate: minDate,
@@ -143,15 +148,15 @@ $(document).ready(function() {
     });
 
     // Смена типа выбора мульти, или ренж
-    $(document).on('change', '.changeMode', function () {
+    $(document).on('change', '.js-calendar-mode', function () {
         var changeMode = $(this),
-            calendar = changeMode.parents('.calendarPopupBlock').find('.calendar'),
-            minDate = calendar.attr('data-min-date'),
-            maxDate = calendar.attr('data-max-date'),
-            startDate = calendar.parent().find('.start-date'),
-            endDate = calendar.parent().find('.end-date');
+            calendar   = changeMode.parents('.js-calendar-popup').find('.calendar'),
+            minDate    = calendar.attr('date-min'),
+            maxDate    = calendar.attr('date-max'),
+            startDate  = calendar.parent().find('.start-date'),
+            endDate    = calendar.parent().find('.end-date');
 
-        if(changeMode.is(':checked')) {
+        if (changeMode.is(':checked')) {
             calendar.datepicker('destroy');
             // http://jsfiddle.net/sWbfk/
             $(calendar).datepicker({
@@ -179,8 +184,7 @@ $(document).ready(function() {
                     $(this).datepicker();
                 }
             });
-        }
-        else {
+        } else {
             calendar.datepicker('destroy');
             calendar.multiDatesPicker({
                 minDate: minDate,
@@ -190,12 +194,12 @@ $(document).ready(function() {
     });
 
     // Сбрасываем и прячем календарь
-    $(document).on('click', '.calendarReset', function () {
-        var calendar = $(this).parents('.calendarPopupContent').find('.calendar'),
-            minDate = calendar.attr('data-min-date'),
-            maxDate = calendar.attr('data-max-date'),
-            block = $(this).parents('.calendarPopupWrapper').find('.calendarPopupBlock'),
-            changeMode = $(this).parents('.calendarPopupContent').find('.changeMode');
+    $(document).on('click', '.js-calendar-reset', function () {
+        var calendar = $(this).parents('.js-calendar-content').find('.calendar'),
+            minDate  = calendar.attr('date-min'),
+            maxDate  = calendar.attr('date-max'),
+            block    = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup'),
+            mode     = $(this).parents('.js-calendar-content').find('.js-calendar-mode');
 
         calendar.multiDatesPicker('resetDates');
         $.datepicker._clearDate(calendar);
@@ -204,27 +208,28 @@ $(document).ready(function() {
             minDate: minDate,
             maxDate: maxDate
         });
-        calendarClose(block)
-        changeMode.prop('checked', false)
+        CalendarClose(block);
+        mode.prop('checked', false);
     });
 
     // Сохраняем результат и закрываем календарь
-    $(document).on('click', '.calendarSave', function () {
-        var block = $(this).parents('.calendarPopupWrapper').find('.calendarPopupBlock');
+    $(document).on('click', '.js-calendar-save', function(e) {
+        //var block = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup');
 
-        calendarClose(block)
+        //CalendarClose(block);
     });
 
     // Закрытие календаря
-    $(document).keydown(function(eventObject){
-        if (eventObject.which == 27 && $(".calendarPopupBlock").hasClass("open")) {
-            calendarClose($(".calendarPopupBlock"));
+    $(document).keydown(function(e) {
+        if (e.which == 27 && $(".s-calendar-popup").hasClass("open")) {
+            calendarClose($(".js-calendar-popup"));
         }
     });
-    $(document).on("mouseup click tap", function (e) {
-        var container = $(".calendarPopupBlock.open");
+	
+    $(document).on("mouseup click tap", function(e) {
+        var container = $(".s-calendar-popup.open");
         if (container.length && container.has(e.target).length === 0){
-            calendarClose($('.calendarPopupBlock.open'))
+            CalendarClose($('.js-calendar-popup.open'))
         }
     });
 });
