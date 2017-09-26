@@ -123,7 +123,7 @@ $(document).ready(function() {
     $(document).on('click', '.setDate', function () {
         var block = $(this).parent().find('.calendarPopupBlock');
         if(block.hasClass('open')) {
-            calendarClose(block)
+            CalendarClose(block)
         } else {
             $(block).fadeIn(1, function () {
                 $(block).animate({'top': '100%', 'opacity': 1}, 200, function () {
@@ -154,7 +154,8 @@ $(document).ready(function() {
             minDate    = calendar.attr('date-min'),
             maxDate    = calendar.attr('date-max'),
             startDate  = calendar.parent().find('.start-date'),
-            endDate    = calendar.parent().find('.end-date');
+            endDate    = calendar.parent().find('.end-date'),
+            dates      = calendar.parents('.setDateBlock').find('.dates');
 
         if (changeMode.is(':checked')) {
             calendar.datepicker('destroy');
@@ -182,6 +183,7 @@ $(document).ready(function() {
                         endDate.val(dateText);
                     }
                     $(this).datepicker();
+                    dates.text(startDate.val() +' - '+ endDate.val())
                 }
             });
         } else {
@@ -217,17 +219,21 @@ $(document).ready(function() {
         //var block = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup');
 
         //CalendarClose(block);
+        var block = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup'),
+            calendar = block.find('.calendar');
+        var dates = calendar.multiDatesPicker('getDates');
+        console.log(dates);
     });
 
     // Закрытие календаря
     $(document).keydown(function(e) {
-        if (e.which == 27 && $(".s-calendar-popup").hasClass("open")) {
-            calendarClose($(".js-calendar-popup"));
+        if (e.which == 27 && $(".js-calendar-popup").hasClass("open")) {
+            CalendarClose($(".js-calendar-popup"));
         }
     });
 	
     $(document).on("mouseup click tap", function(e) {
-        var container = $(".s-calendar-popup.open");
+        var container = $(".js-calendar-popup.open");
         if (container.length && container.has(e.target).length === 0){
             CalendarClose($('.js-calendar-popup.open'))
         }

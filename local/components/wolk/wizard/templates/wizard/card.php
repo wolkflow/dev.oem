@@ -42,10 +42,6 @@
 
             <? // Обработка свойств товара. // ?>
             <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props.php') ?>
-            
-            <div class="equipmentcontainer__itemsize">
-                <?= $section->getDescription() ?>
-            </div>
         </div>
         
     <? } else { ?>

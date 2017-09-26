@@ -124,3 +124,9 @@ $MESS['VAT_ID'] = 'Vat ID';
 
 $MESS['DATERANGE'] = 'Диапазон';
 $MESS['CANCEL'] = 'Отмена';
+
+$MESS['SUCCESS'] = 'Успешно!';
+$MESS['ORDER_PLACED'] = 'Заказ оформлен';
+$MESS['HOME'] = 'На главную';
+$MESS['REVIEW_ORDER'] = 'Посмотреть заказа';
+

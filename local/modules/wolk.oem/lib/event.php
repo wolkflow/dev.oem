@@ -297,58 +297,68 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	}
     
     
-    public function getCurrencyStandsContext(Context $context)
+    public function getCurrencyContext(Context $context)
     {
         $this->load();
         
         $type = $context->getType();
         $lang = $context->getLang();
         
-        return ((string) $this->data['PROPS']['LANG_STANDS_' . $type . '_CURRENCY_' . $lang]['VALUE']);
+        return ((string) $this->data['PROPS']['LANG_' . $type . '_CURRENCY_' . $lang]['VALUE']);
     }
-    
-    
-    public function getCurrencyProductsContext(Context $context)
+	
+	
+	public function getCurrencyStandsContext(Context $context)
+	{
+		return $this->getCurrencyContext($context);
+	}
+	
+	
+	public function getCurrencyProductsContext(Context $context)
+	{
+		return $this->getCurrencyContext($context);
+	}
+	
+	
+	public function getCurrencyStandard($lang = LANG_EN_UP)
     {
         $this->load();
         
-        $type = $context->getType();
-        $lang = $context->getLang();
-        
-        return ((string) $this->data['PROPS']['LANG_PRODUCTS_' . $type . '_CURRENCY_' . $lang]['VALUE']);
+        return (string) $this->data['PROPS']['LANG_STANDARD_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
     }
     
     
+    public function getCurrencyIndividual($lang = LANG_EN_UP)
+    {
+        $this->load();
+        
+        return (string) $this->data['PROPS']['LANG_INDIVIDUAL_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+    }
+    
+	
     public function getCurrencyStandsStandard($lang = LANG_EN_UP)
     {
-        $this->load();
-        
-        return (string) $this->data['PROPS']['LANG_STANDS_STANDARD_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+        return $this->getCurrencyStandard($lang);
     }
     
     
     public function getCurrencyStandsIndividual($lang = LANG_EN_UP)
     {
-        $this->load();
-        
-        return (string) $this->data['PROPS']['LANG_STANDS_INDIVIDUAL_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+        return $this->getCurrencyIndividual($lang);
     }
     
     
     public function getCurrencyProductsStandard($lang = LANG_EN_UP)
     {
-        $this->load();
-        
-        return (string) $this->data['PROPS']['LANG_PRODUCTS_STANDARD_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+        return $this->getCurrencyStandard($lang);
     }
     
     
     public function getCurrencyProductsIndividual($lang = LANG_EN_UP)
     {
-        $this->load();
-        
-        return (string) $this->data['PROPS']['LANG_PRODUCTS_INDIVIDUAL_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+        return $this->getCurrencyIndividual($lang);
     }
+	
     
     
 	

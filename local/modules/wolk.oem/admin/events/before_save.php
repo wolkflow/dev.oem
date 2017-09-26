@@ -30,45 +30,26 @@ if (!$request->isPost() || !empty($dontsave)) {
 $ID = (int) $request->get('ID');
 
 // Валюты цен на стенды.
-$currencies_stands = (array) $request->get('CURRENCY_STANDS');
+$currencies = (array) $request->get('CURRENCIES');
 
-// Валюты цен на продукцию.
-$currencies_products = (array) $request->get('CURRENCY_PRODUCTS');
 
 
 // Проверка наличия ошибок в данных.
 if (!empty($ID)) {
-    if (empty($currencies_stands[StandPrice::TYPE_STANDARD]['RU'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартных стендов (RU)');
+    if (empty($currencies[StandPrice::TYPE_STANDARD]['RU'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной застройки (RU)');
     }
 
-    if (empty($currencies_stands[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартных стендов (EN)');
+    if (empty($currencies[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной застройки (EN)');
     }
 
-    if (empty($currencies_stands[StandPrice::TYPE_STANDARD]['RU'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальных стендов (RU)');
+    if (empty($currencies[StandPrice::TYPE_STANDARD]['RU'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной застройки (RU)');
     }
 
-    if (empty($currencies_stands[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальных стендов (EN)');
-    }
-
-
-    if (empty($currencies_products[ProductPrice::TYPE_STANDARD]['RU'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной продукции (RU)');
-    }
-
-    if (empty($currencies_products[ProductPrice::TYPE_INDIVIDUAL]['EN'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной продукции (EN)');
-    }
-
-    if (empty($currencies_products[ProductPrice::TYPE_STANDARD]['RU'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной продукции (RU)');
-    }
-
-    if (empty($currencies_products[ProductPrice::TYPE_INDIVIDUAL]['EN'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной продукции (EN)');
+    if (empty($currencies[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
+        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной застройки (EN)');
     }
 }
 
@@ -95,11 +76,8 @@ function BXIBlockAfterSave(&$arFields)
     $prices_products = (array) $request->get('PRICES_PRODUCTS');
     
     
-    // Валюты цен на стенды.
-    $currencies_stands = (array) $request->get('CURRENCY_STANDS');
-    
-    // Валюты цен на продукцию.
-    $currencies_products = (array) $request->get('CURRENCY_PRODUCTS');
+    // Валюты цен.
+    $currencies = (array) $request->get('CURRENCIES');
     
     
     // Сохранение цен на выбранные стенды.
@@ -116,7 +94,7 @@ function BXIBlockAfterSave(&$arFields)
                         StandPrice::FIELD_STAND    => $stand,
                         StandPrice::FIELD_TYPE     => $type,
                         StandPrice::FIELD_LANG     => $lang,
-                        StandPrice::FIELD_CURRENCY => ($currencies_stands[$type][$lang]) ?: (CURRENCY_DEFAULT),
+                        StandPrice::FIELD_CURRENCY => ($currencies[$type][$lang]) ?: (CURRENCY_DEFAULT),
                         StandPrice::FIELD_PRICE    => (float) $price,
                     ];
                     
@@ -130,7 +108,7 @@ function BXIBlockAfterSave(&$arFields)
                 }
                 
                 // Сохранение валюты для цен.
-                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_STANDS_'.$type.'_CURRENCY_'.$lang, $currencies_stands[$type][$lang]);
+                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_STANDS_'.$type.'_CURRENCY_'.$lang, $currencies[$type][$lang]);
             }
         }
     }
@@ -150,7 +128,7 @@ function BXIBlockAfterSave(&$arFields)
                         ProductPrice::FIELD_PRODUCT  => $product,
                         ProductPrice::FIELD_TYPE     => $type,
                         ProductPrice::FIELD_LANG     => $lang,
-                        ProductPrice::FIELD_CURRENCY => ($currencies_products[$type][$lang]) ?: (CURRENCY_DEFAULT),
+                        ProductPrice::FIELD_CURRENCY => ($currencies[$type][$lang]) ?: (CURRENCY_DEFAULT),
                         ProductPrice::FIELD_PRICE    => (float) $price,
                     ];
                     
@@ -164,7 +142,7 @@ function BXIBlockAfterSave(&$arFields)
                 }
                 
                 // Сохранение валюты для цен.
-                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_PRODUCTS_'.$type.'_CURRENCY_'.$lang, $currencies_products[$type][$lang]);
+                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_PRODUCTS_'.$type.'_CURRENCY_'.$lang, $currencies[$type][$lang]);
             }
         }
     }

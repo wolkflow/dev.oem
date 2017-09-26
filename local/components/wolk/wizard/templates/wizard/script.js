@@ -307,6 +307,7 @@ $(document).ready(function() {
     });
     
     
+	// Создание заказа.
     $('.js-remote-order-form').on('submit', function(e) {
         e.preventDefault();
         
@@ -335,7 +336,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.status) {
-                    $('#modal-order-success').arcticmodal();
+                    $('#modal-order-success').arcticmodal({closeOnOverlayClick: false});
                 } else {
                     $form.find('.errortext').html(response.message);
                 }

@@ -331,6 +331,7 @@ class Basket
     {   
         // Замены данных корзины текущими данными для заказа.
         $dump = $this->getData();
+		
         if (!empty($data)) {
             $this->data = $data;
         }
@@ -360,7 +361,7 @@ class Basket
         
         // Мероприятие.
         $event = new Event($context->getEventID());
-                
+        
         // Валюта заказа.
         $currency = $event->getCurrencyStandsContext($context);
         
@@ -373,8 +374,8 @@ class Basket
         // Сохранение стенда.
         $item = $this->getStand();
         
-        
         if (!empty($item)) {
+			
             // Получение цены.
             $item->loadPrice($context);
             
@@ -391,7 +392,7 @@ class Basket
                     'PRICE'          => $item->getPrice(),
                     'CUSTOM_PRICE'   => 'Y',
                     'CURRENCY'       => $currency,
-                    'LID'            => SITE_ID,
+                    'LID'            => SITE_DEFAULT,
                     'NAME'           => $stand->getTitle(),
                     'SET_PARENT_ID'  => 0,
                     'TYPE'           => 0,
@@ -408,7 +409,7 @@ class Basket
                 // Добавление корзины.
                 $result = \Bitrix\Sale\Internals\BasketTable::add($fields);
                 
-                if (is_object($result)) {                    
+                if (is_object($result)) {
                     // Корзина пользователя.
                     $basket = \Bitrix\Sale\Basket::loadItemsForFUser(
                        \Bitrix\Sale\Fuser::getId(), 
@@ -420,7 +421,6 @@ class Basket
                     $basket_prop->setProperty($props);
                     $basket_prop->save();
                 }
-                
                 
                 // Общая стоимость продукции.
                 $price += $item->getCost();
@@ -447,6 +447,7 @@ class Basket
             if ($kind == self::KIND_STAND) {
                 $note = 'STAND.' . strtoupper($context->getType());
             }
+			
             if ($kind == self::KIND_PRODUCT) {
                 $note = 'PRODUCT.' . (($item->isIncluded()) ? ('BASE') : ('SALE'));
             }
@@ -457,7 +458,7 @@ class Basket
                 'PRICE'          => $item->getPrice(),
                 'CUSTOM_PRICE'   => 'Y',
                 'CURRENCY'       => $currency,
-                'LID'            => SITE_ID,
+                'LID'            => SITE_DEFAULT,
                 'NAME'           => $prod->getTitle(),
                 'SET_PARENT_ID'  => 0,
                 'TYPE'           => 0,
@@ -500,8 +501,8 @@ class Basket
             // Добавление корзины.
             $result = \Bitrix\Sale\Internals\BasketTable::add($fields);
             
+			// Корзина пользователя.
             if (is_object($result)) {
-                // Корзина пользователя.
                 $basket = \Bitrix\Sale\Basket::loadItemsForFUser(
                    \Bitrix\Sale\Fuser::getId(), 
                    \Bitrix\Main\Context::getCurrent()->getSite()
@@ -512,7 +513,6 @@ class Basket
                 $basket_prop->setProperty($props);
                 $basket_prop->save();
             }
-            
             
             // Суммирование цены.
 			if (!$item->isIncluded()) {
@@ -525,8 +525,8 @@ class Basket
         $infoprices = Order::getFullPriceInfo($price, $event->getSurcharge(), $event->hasVAT());
         
         $fields = [
-            'LID'              => SITE_ID,
-            'USER_ID'          => \Cuser::getID(),
+            'LID'              => SITE_DEFAULT,
+            'USER_ID'          => \CUser::getID(),
             'PERSON_TYPE_ID'   => PERSON_TYPE_DETAULT,
             'DELIVERY_ID'      => DELIVERY_DETAULT,
             'PAYED'            => 'N',
@@ -538,7 +538,6 @@ class Basket
             'CURRENCY'         => $currency,
             'USER_DESCRIPTION' => $this->getParam('COMMENTS'),
         ];
-		        
         
         // Созданеи заказа.
         if (empty($oid)) {
@@ -558,7 +557,7 @@ class Basket
         
         // Сохранение свойств заказа.
         $result = \CSaleOrderProps::GetList();
-        $props = [];
+        $props  = [];
         while ($prop = $result->Fetch()) {
             $props[$prop['CODE']] = $prop;
         }
@@ -701,7 +700,6 @@ class Basket
         foreach ($baskets as $basket) {
             $result = \Bitrix\Sale\Internals\BasketTable::update($basket['ID'], ['ORDER_ID' => $oid]);
         }
-        
         
         // Очистка данных.
         if (empty($data)) {

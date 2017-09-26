@@ -149,6 +149,76 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 ////////////////////
 ?>
 
+<? $tabControl->BeginCustomField('CURRENCIES_STANDARD', 'Валюты (стандартные)'); ?>
+    <tr>
+        <td class="adm-detail-content-cell-l">
+			Используемая валюта (RU)
+		</td>
+		<td class="adm-detail-content-cell-r">
+			<select name="CURRENCIES[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>]" class="js-currency-standard-<?= LANG_RU ?>">
+				<option value="">- не выбрано -</option>
+				<? foreach ($currencies as $id => $currency) { ?>
+					<option <? if ($id == $event->getCurrencyStandard(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
+						<?= $currency ?>
+					</option>
+				<? } ?>
+			</select>
+		</td>
+	</tr>
+	<tr>
+        <td class="adm-detail-content-cell-l">
+			Используемая валюта (EN)
+		</td>
+		<td class="adm-detail-content-cell-r">
+			<select name="CURRENCIES[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>]" class="js-currency-standard-<?= LANG_EN ?>">
+				<option value="">- не выбрано -</option>
+				<? foreach ($currencies as $id => $currency) { ?>
+					<option <? if ($id == $event->getCurrencyStandard(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
+						<?= $currency ?>
+					</option>
+				<? } ?>
+			</select>
+		</td>
+	</tr>
+<? $tabControl->EndCustomField('CURRENCIES_STANDARD', ''); ?>
+
+
+
+<? $tabControl->BeginCustomField('CURRENCIES_INDIVIDUAL', 'Валюты (индивидуальные)'); ?>
+    <tr>
+        <td class="adm-detail-content-cell-l">
+			Используемая валюта (RU)
+		</td>
+		<td class="adm-detail-content-cell-r">
+			<select name="CURRENCIES[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>]" class="js-currency-individual-<?= LANG_RU ?>">
+				<option value="">- не выбрано -</option>
+				<? foreach ($currencies as $id => $currency) { ?>
+					<option <? if ($id == $event->getCurrencyIndividual(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
+						<?= $currency ?>
+					</option>
+				<? } ?>
+			</select>
+		</td>
+	</tr>
+	<tr>
+        <td class="adm-detail-content-cell-l">
+			Используемая валюта (EN)
+		</td>
+		<td class="adm-detail-content-cell-r">
+			<select name="CURRENCIES[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>]" class="js-currency-individual-<?= LANG_EN ?>">
+				<option value="">- не выбрано -</option>
+				<? foreach ($currencies as $id => $currency) { ?>
+					<option <? if ($id == $event->getCurrencyIndividual(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
+						<?= $currency ?>
+					</option>
+				<? } ?>
+			</select>
+		</td>
+	</tr>
+<? $tabControl->EndCustomField('CURRENCIES_INDIVIDUAL', ''); ?>
+
+
+
 <? $tabControl->BeginCustomField('STANDS_PRICES_STANDARD', 'Цены на стенды (стандартные)'); ?>
     <tr>
         <td>
@@ -164,7 +234,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        var currency = $wrap.find('.js-prices-stands-currency-standard-' + from).val();
+                        //var currency = $wrap.find('.js-prices-stands-currency-standard-' + from).val();
                         
                         $wrap.find('.js-prices-stands-standard-' + from).each(function() {
                             var value = $(this).val();
@@ -172,11 +242,11 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             
                             $wrap.find('.js-prices-stands-standard-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        $wrap.find('.js-prices-stands-currency-standard-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                        //$wrap.find('.js-prices-stands-currency-standard-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
                     });
                 });
             </script>
-        
+			
             <table class="js-prices-wrapper">
                 <thead>
 					<tr>
@@ -223,31 +293,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                     <tr>
 					<tr>
 						<td>
-                            Используемая валюта
-                        </td>
-						<td>
-							<select name="CURRENCY_STANDS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>]" class="js-prices-stands-currency-standard-<?= LANG_RU ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyStandsStandard(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-						<td>
-							<select name="CURRENCY_STANDS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>]" class="js-prices-stands-currency-standard-<?= LANG_EN ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyStandsStandard(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
@@ -286,7 +331,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        var currency = $wrap.find('.js-prices-stands-currency-individual-' + from).val();
+                        //var currency = $wrap.find('.js-prices-stands-currency-individual-' + from).val();
                         
                         $wrap.find('.js-prices-stands-individual-' + from).each(function() {
                             var value = $(this).val();
@@ -294,7 +339,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             
                             $wrap.find('.js-prices-stands-individual-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        $wrap.find('.js-prices-stands-currency-individual-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                        //$wrap.find('.js-prices-stands-currency-individual-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
                     });
                 });
             </script>
@@ -345,31 +390,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                     <tr>
 					<tr>
 						<td>
-                            Используемая валюта
-                        </td>
-						<td>
-							<select name="CURRENCY_STANDS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>]" class="js-prices-stands-currency-individual-<?= LANG_RU ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyStandsIndividual(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-						<td>
-							<select name="CURRENCY_STANDS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>]" class="js-prices-stands-currency-individual-<?= LANG_EN ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyStandsIndividual(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
@@ -408,7 +428,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        var currency = $wrap.find('.js-prices-products-currency-standard-' + from).val();
+                        //var currency = $wrap.find('.js-prices-products-currency-standard-' + from).val();
                         
                         $wrap.find('.js-prices-products-standard-' + from).each(function() {
                             var value = $(this).val();
@@ -416,7 +436,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             
                             $wrap.find('.js-prices-products-standard-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        $wrap.find('.js-prices-products-currency-standard-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                        //$wrap.find('.js-prices-products-currency-standard-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
                     });
                 });
             </script>
@@ -467,31 +487,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                     <tr>
 					<tr>
 						<td>
-                            Используемая валюта
-                        </td>
-						<td>
-							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>]" class="js-prices-products-currency-standard-<?= LANG_RU ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyProductsStandard(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-						<td>
-							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>]" class="js-prices-products-currency-standard-<?= LANG_EN ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyProductsStandard(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
@@ -515,7 +510,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 
 
 
-
 <? $tabControl->BeginCustomField('PRODUCTS_PRICES_INDIVIDUAL', 'Цены на продукцию (индивидуальные)'); ?>
     <tr>
         <td>
@@ -531,7 +525,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        var currency = $wrap.find('.js-prices-products-currency-individual-' + from).val();
+                        //var currency = $wrap.find('.js-prices-products-currency-individual-' + from).val();
                         
                         $wrap.find('.js-prices-products-individual-' + from).each(function() {
                             var value = $(this).val();
@@ -539,7 +533,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             
                             $wrap.find('.js-prices-products-individual-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        $wrap.find('.js-prices-products-currency-individual-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                        //$wrap.find('.js-prices-products-currency-individual-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
                     });
                 });
             </script>
@@ -590,31 +584,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                     <tr>
 					<tr>
 						<td>
-                            Используемая валюта
-                        </td>
-						<td>
-							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>]" class="js-prices-products-currency-individual-<?= LANG_RU ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyProductsIndividual(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-						<td>
-							<select name="CURRENCY_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>]" class="js-prices-products-currency-individual-<?= LANG_EN ?>">
-								<option value="">- не выбрано -</option>
-								<? foreach ($currencies as $id => $currency) { ?>
-									<option <? if ($id == $event->getCurrencyProductsIndividual(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-                                        <?= $currency ?>
-                                    </option>
-								<? } ?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
@@ -635,7 +604,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
         </td>
     </tr>
 <? $tabControl->EndCustomField('PRODUCTS_PRICES_INDIVIDUAL', ''); ?>
-
 
     
 <? 

@@ -53,6 +53,7 @@
 						<div class="calendar" date-min="0" date-max="10/02/2017"></div>
 					</div>
 				</div>
+				<div class="dates"></div>
 			</div>
 		</div>
 	</div>

@@ -36,8 +36,7 @@ window['oem-func-days-cart'] = function($wrapper) {
 	
     if (quantity < 0) {
         quantity = 0;
-    }
-	
+    }	
 	
     // Сохранение в корзине.
     PutBasket(pid, quantity, $block);
@@ -51,13 +50,20 @@ window['oem-func-days-more'] = function($that) {
     var $wrapper = $that.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
     var $block   = $wrapper.find('.js-product-block').first().clone();
+    var minDate = $block.find('.calendar').attr('date-min'),
+        maxDate = $block.find('.calendar').attr('date-max');
 
     // Сброс параметров.
     window['oem-func-days-clear']($block);
 
     // Добавление блока.
     $section.append($block);
-
+    $block.find('.calendar').remove();
+    $block.find('.calendarPopupContent').append('<div class="calendar" date-min="'+minDate+'" date-max="'+maxDate+'" />');
+    $block.find('.calendar').multiDatesPicker({
+        minDate: minDate,
+        maxDate: maxDate
+    });
     $block.find('.js-product-select .js-option-noselect').trigger('click');
 }
 
@@ -78,18 +84,6 @@ window['oem-func-days-clear'] = function($block) {
     
 	$block.find('.js-calendar-reset').trigger('click');
 	
-	/*
-    $block.find('.js-days-times option:selected').attr('selected', null);
-    $block.find('.js-days-datepicker').multiDatesPicker({
-        dateFormat: 'dd.mm.yy',
-        minDate:    0,
-        autoclose:  true,
-        onSelect:   function(date) {
-            var dates;
-        }
-    });
-	*/
-    
     // Сброс всех свойств товара.
     ResetParams($block);
 }
@@ -108,20 +102,4 @@ $(document).ready(function() {
 		
 		window['oem-func-days-cart']($block);
 	});
-	
-	/*
-    $('.js-block-days .js-days-datepicker').each(function() {
-        var $that  = $(this);
-        var $block = $that.closest('.js-product-block');
-        
-        $that.multiDatesPicker({
-            dateFormat: 'dd.mm.yy',
-            minDate: 0,
-            autoclose: true,
-            onSelect: function(date) {
-                window['oem-func-days-cart']($block);
-            }
-        });
-    });  
-	*/
 });

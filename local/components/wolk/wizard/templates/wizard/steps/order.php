@@ -195,9 +195,7 @@
 
 
 <? // --- Модальные окна --- // ?>
-
 <div class="hide">
-
 
     <? // Окно: залогинен // ?>
     <div class="modal placeOrder placeOrder__login" id="place-auth">
@@ -379,7 +377,7 @@
             <?= Loc::getMessage('HOME') ?>
         </a>
         <br>
-        <a href="/personal/orders-history.php">
+        <a href="/personal/orders/">
             <?= Loc::getMessage('REVIEW_ORDER') ?>
         </a>
         <div class="clear"></div>
