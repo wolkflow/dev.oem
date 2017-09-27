@@ -92,17 +92,21 @@ switch ($action) {
         break;
     
     
-    // Создание сцены изображения.
+    // Создание сцены изображения в корзине.
     case ('render'):
         $objs = (string) $request->get('objs');
         $view = (string) $request->get('view');
         $code = (string) $request->get('code');
         
+		
+		$objects = json_decode($objs, true)['objects'];
+		print_r($objects); break;
+		
         $oembasket = new \Wolk\OEM\Basket($code);
         
         $baskets = $oembasket->getList(true);
         $objects = json_decode($objs, true)['objects'];
-
+		
         foreach ($objects as &$object) {
             $basket  = $baskets[$object['id']];
             $element = $basket->getElement();
@@ -154,8 +158,8 @@ switch ($action) {
         
         jsonresponse(true, '', ['path' => $path]);
         break;
-    
-        
+		
+	    
     // Созхранение продукции в корзину.
     case ('put-basket'):
         $index    = (int)    $request->get('index');

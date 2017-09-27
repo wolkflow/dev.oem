@@ -41,47 +41,7 @@
 				<? } ?>
 			<? } ?>
 		</div>
-	
-		<? /*
-		<div class="ordercontainer__column right">
-			<div class="pagesubtitle">
-				<?= Loc::getMessage('additional equipment') ?>
-				<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
-					<div class="pagesubtitle__addbutton">
-						<a href="<?= $arResult['ORDER']['LINK'] ?>"></a>
-					</div>
-				<? } ?>
-			</div>
-			<? foreach ($arResult['BASKETS'] as $basket) { ?>
-				<? if ($basket['PROPS']['INCLUDED']['VALUE'] == 'Y' || $basket['PROPS']['STAND']['VALUE'] == 'Y') { continue; } ?>
-				<? $product = new Wolk\OEM\Products\Base($basket['PRODUCT_ID']) ?>
-				<div class="ordercontainer__itemscontainer">
-					<div v-if="!$.isEmptyObject(items)" class="pagesubsubtitle">
-						{{ options.SECTIONS[sectionId].NAME }}
-					</div>
-					<div class="ordercontainer__item" v-for="item in items">
-						<div class="ordercontainer__itemtotalprice">
-							<?= FormatCurrency($basket['PRICE'] * $basket['QUANTITY'], $arResult['ORDER']['CURRENCY']) ?>
-						</div>
-						<div class="ordercontainer__itemname">
-							<?= $product->getTitle() ?> | <?= FormatCurrency($basket['PRICE'], $arResult['ORDER']['CURRENCY']) ?>
-							&times;
-							<?= $basket['QUANTITY'] ?>
-						</div>
-						<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
-							<div class="ordercontainer__changebutton">
-								<a href="<?= $arResult['ORDER']['LINK'] ?>">
-									<?= Loc::getMessage('CHANGE') ?>
-								</a>
-							</div>
-						<? } ?>
-					</div>
-				</div>
-			<? } ?>
-		</div>
-		*/ ?>
-		
-		
+				
 		<div class="ordercontainer__column">
 			<? if (!empty($arResult['STAND']['ITEM'])) { ?>
 				<div class="pagesubtitle">
@@ -157,9 +117,15 @@
 					<?= Loc::getMessage('SKETCH') ?>
 				</div>
 				<div class="last ordercontainer__item">
-					<div class="ordercontainer__itemtotalprice">
-						<img src="<?= CFile::getPath($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) ?>" width="70" height="70" />
-					</div>
+					<? $src = CFile::getPath($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) ?>
+					<a href="<?= $src ?>" target="_blank">
+						<img src="<?= $src ?>" width="70" height="70" />
+					</a>
+					
+					<? $renders = array_filter($arResult['ORDER']['PROPS']['RENDERS']['VALUE']) ?>
+					<? foreach ($renders as $render) { ?>
+						
+					<? } ?>
 					<div class="ordercontainer__itemname">
 						<?= Loc::getMessage('SKETCH_RENDERS_NOTE') ?>
 					</div>
