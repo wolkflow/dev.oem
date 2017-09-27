@@ -4,31 +4,13 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 <? use Wolk\Oem\Basket; ?>
 
-<?php
-/**
-?>
-<div class="serviceItem__row">
-    <div class="js-days-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-        <input type="hidden" name="DATES" class="js-product-days-dates" value="" />
-        <input type="hidden" name="TIMES" class="js-product-days-times" value="" />
+<? $dates = (!empty($basketitem)) ? ($basketitem->getField('DATES')) : ([]) ?>
+<? $range = (strpos($dates, '-') !== false) ?>
 
-        <? // Установка даты // ?>
-        <div class="serviceItem__left">
-            <div class="setDateBlock">
-                <div class="serviceItem__subtitle">
-                    <?= Loc::getMessage('DATES') ?>
-                </div>
-                <input name="DATES" class="setDate js-field-value js-days-datepicker" value="<?= (!empty($basketitem)) ? ($basketitem->getField('dates')) : ('') ?>" />
-            </div>
-        </div>
-    </div>
-</div>
-*/
-?>
 <div class="serviceItem__row">
 	<div class="js-days-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-		<input type="hidden" name="DATES" class="js-product-days-dates" value="" />
-		<input type="hidden" name="TIMES" class="js-product-days-times" value="" />
+		<input type="hidden" name="DATES" class="js-product-days-dates js-field-value" value="<?= $dates ?>" />
+		
 		<? // Установка даты // ?>
 		<div class="serviceItem__left">
 			<div class="setDateBlock calendarPopupWrapper js-calendar-wrap">
@@ -40,7 +22,7 @@
 					<div class="calendarPopupContent js-calendar-content">
 						<div class="calendarPopupButtons">
 							<label class="styler">
-								<input type="checkbox" class="changeMode js-calendar-mode" />
+								<input type="checkbox" class="changeMode js-calendar-mode" data-checked="<?= ($range) ? ('1') : ('0') ?>" />
 								<span></span><?= Loc::getMessage('DATERANGE') ?>
 							</label>
 							<a href="javascript:void(0)" class="calendarReset js-calendar-reset">
@@ -48,12 +30,19 @@
 							</a>
 							<a href="javascript:void(0)" class="calendarSave js-calendar-save">OK</a>
 						</div>
-						<input type="text" class="start-date" hidden />
-						<input type="text" class="end-date" hidden />
-						<div class="calendar" date-min="0" date-max="10/02/2017"></div>
+						<?  // Установка дат.
+							$mindate = '';
+							$maxdate = '';
+							if ($range) {
+								list($mindate, $maxdate) = array_map('trim', explode('-', $dates));
+							}
+						?>
+						<input type="text" class="min-date" hidden value="<?= $mindate ?>" />
+						<input type="text" class="max-date" hidden value="<?= $maxdate ?>" />
+						<div class="calendar" data-date-min="0" data-date-max="15.11.17"></div>
 					</div>
 				</div>
-				<div class="dates"></div>
+				<div class="dates"><?= $dates ?></div>
 			</div>
 		</div>
 	</div>

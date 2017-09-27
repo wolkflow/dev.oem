@@ -1,4 +1,5 @@
-fpagesubsubtitle/*
+/*fpagesubsubtitle!**/
+/*
  * Retina helper mixins for Compass
  * http://www.joelambert.co.uk
  *
@@ -8,11 +9,11 @@ fpagesubsubtitle/*
  */
 /* line 3, ../_sass/main.sass */
 body {
+  font-family: 'GothamPro', Arial, Helvetica, sans-serif;
   background-image: url('../images/main-bg.jpg?1446648862');
   background-attachment: fixed;
-  font-family: "GothamPro";
   color: #333333;
-	background-size: cover;
+  background-size: cover;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
   body {

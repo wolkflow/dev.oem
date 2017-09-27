@@ -1,3 +1,44 @@
+/**
+ * Получение даты в формате dd.mm.yyyy.
+ */
+Date.getDateFormat = function (date) {
+	return ('0' + date.getDate()).slice(-2)  + "." + ('0' + (date.getMonth() + 1)).slice(-2) + "." + date.getFullYear();
+}
+
+/**
+ * Количество часов между датами.
+ */
+Date.getHoursBetween = function (date1, date2) {
+    var one_hour = 1000 * 60 * 60;
+
+    var date1_ms = date1.getTime();
+    var date2_ms = date2.getTime();
+	
+    var difference_ms = parseInt(date2_ms - date1_ms);
+	
+    return Math.round(difference_ms / one_hour);
+};
+
+
+/**
+ * Количество дней между датами.
+ */
+Date.getDaysBetween = function (date1, date2, including) {
+    var one_day = 1000 * 60 * 60 * 24;
+	
+    var date1_ms = date1.getTime();
+    var date2_ms = date2.getTime();
+
+    var difference_ms = parseInt(date2_ms - date1_ms);
+
+    if (including) {
+        return Math.round(difference_ms / one_day) + 1;
+    } else {
+        return Math.round(difference_ms / one_day);
+    }
+};
+
+
 function ResetParams($block)
 {
     // Общий сброс значений свойств.
@@ -133,28 +174,32 @@ $(document).ready(function() {
         }
     });
 
-    // Календарь
-    // Первый запуск
-    $('.js-calendar-popup').each(function () {
+    // Календарь: первый запуск.
+    $('.js-calendar-popup').each(function() {
         var $that = $(this);
         var calendar = $that.find('.calendar'),
-            minDate = calendar.attr('date-min'),
-            maxDate = calendar.data('date-max');
-
+            minDate  = calendar.attr('data-date-min'),
+            maxDate  = calendar.attr('data-date-max');
+		var $mode = $that.find('.js-calendar-mode');
+		
         calendar.multiDatesPicker({
             minDate: minDate,
             maxDate: maxDate
         });
+		
+		if ($mode.data('checked')) {
+			$mode.trigger('click');
+		}
     });
 
     // Смена типа выбора мульти, или ренж
-    $(document).on('change', '.js-calendar-mode', function () {
+    $(document).on('change', '.js-calendar-mode', function() {
         var changeMode = $(this),
             calendar   = changeMode.parents('.js-calendar-popup').find('.calendar'),
-            minDate    = calendar.attr('date-min'),
-            maxDate    = calendar.attr('date-max'),
-            startDate  = calendar.parent().find('.start-date'),
-            endDate    = calendar.parent().find('.end-date'),
+            minDate    = calendar.attr('data-date-min'),
+            maxDate    = calendar.attr('data-date-max'),
+            startDate  = calendar.parent().find('.min-date'),
+            endDate    = calendar.parent().find('.max-date'),
             dates      = calendar.parents('.setDateBlock').find('.dates');
 
         if (changeMode.is(':checked')) {
@@ -164,15 +209,15 @@ $(document).ready(function() {
                 minDate: minDate,
                 maxDate: maxDate,
                 beforeShowDay: function(date) {
-                    var date1 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, startDate.val());
-                    var date2 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, endDate.val());
+                    var date1 = $.datepicker.parseDate('mm/dd/yy', startDate.val());
+                    var date2 = $.datepicker.parseDate('mm/dd/yy', endDate.val());
                     var isHightlight = date1 && ((date.getTime() == date1.getTime()) || (date2 && date >= date1 && date <= date2));
                     return [true, isHightlight ? "dp-highlight" : ""];
                 },
                 onSelect: function(dateText, inst) {
-                    var date1 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, startDate.val());
-                    var date2 = $.datepicker.parseDate($.datepicker._defaults.dateFormat, endDate.val());
-                    var selectedDate = $.datepicker.parseDate($.datepicker._defaults.dateFormat, dateText);
+                    var date1 = $.datepicker.parseDate('mm/dd/yy', startDate.val());
+                    var date2 = $.datepicker.parseDate('mm/dd/yy', endDate.val());
+                    var selectedDate = $.datepicker.parseDate('mm/dd/yy', dateText);
                     if (!date1 || date2) {
                         startDate.val(dateText);
                         endDate.val("");
@@ -194,11 +239,11 @@ $(document).ready(function() {
         }
     });
 
-    // Сбрасываем и прячем календарь
+    // Сбрасываем и прячем календарь.
     $(document).on('click', '.js-calendar-reset', function () {
         var calendar = $(this).parents('.js-calendar-content').find('.calendar'),
-            minDate  = calendar.attr('date-min'),
-            maxDate  = calendar.attr('date-max'),
+            minDate  = calendar.attr('data-date-min'),
+            maxDate  = calendar.attr('data-date-max'),
             block    = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup'),
             mode     = $(this).parents('.js-calendar-content').find('.js-calendar-mode');
 
@@ -213,25 +258,7 @@ $(document).ready(function() {
         mode.prop('checked', false);
     });
 
-    // Сохраняем результат и закрываем календарь
-    $(document).on('click', '.js-calendar-save', function(e) {
-        //CalendarClose(block);
-
-        var block = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup'),
-            changeMode  = block.find($('.js-calendar-mode')),
-            calendar    = block.find('.calendar'),
-            dates       = block.parent().find('.dates'),
-            startDate   = block.find('.start-date'),
-            endDate     = block.find('.end-date');
-
-        if (changeMode.is(':checked')) {
-            dates.text(startDate.val() +' - '+ endDate.val())
-        } else {
-            dates.text(calendar.multiDatesPicker('getDates'));
-        }
-    });
-
-    // Закрытие календаря
+    // Закрытие календаря.
     $(document).keydown(function(e) {
         if (e.which == 27 && $(".js-calendar-popup").hasClass("open")) {
             CalendarClose($(".js-calendar-popup"));

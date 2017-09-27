@@ -10,7 +10,7 @@ window['oem-func-days-cart'] = function($wrapper) {
     var $calendar = $wrapper.find('.js-calendar-content').find('.calendar');
 	var $popup    = $wrapper.find('.js-calendar-popup');
 	var $mode     = $wrapper.find('.js-calendar-mode');
-    
+    var $note     = $wrapper.find('.dates');
 	
 	// Получение ID продукции.
     if ($block.find('.js-product-select').length) {
@@ -21,15 +21,32 @@ window['oem-func-days-cart'] = function($wrapper) {
 	
 	// Выбор диапазона или конкретных дат.
 	if ($mode.is(':checked')) {
-		var daymin = $calendar.parent().find('.date-min').val();
-		var daymax = $calendar.parent().find('.date-max').val();
+		var daymin = $wrapper.find('.min-date').val();
+		var daymax = $wrapper.find('.max-date').val();
 		
-		quantity = getDaysBetween(daymin, daymax, true);
+		// Комментарий.
+		$note.text(Date.getDateFormat(new Date(daymin)) + ' - ' + Date.getDateFormat(new Date(daymax)));
+		
+		// Общее количество.
+		quantity = Date.getDaysBetween(new Date(daymin), new Date(daymax), true);
+		
+		console.log(quantity, daymin, daymax, new Date(daymin), new Date(daymax));
 	} else {
-		$days = $calendar.multiDatesPicker('getDates');
+		var days = $calendar.multiDatesPicker('getDates');
 		
-		quantity = $days.length;
+		for (let i in days) {
+			days[i] = Date.getDateFormat(new Date(days[i]));
+		}
+		
+		// Комментарий.
+		$note.text(days.join(', '));
+		
+		// Общее количество.
+		quantity = days.length;
 	}
+	
+	// Протсавление дополнительных параметров.
+	$wrapper.find('.js-product-days-dates').val($note.text());
 	
 	// Закрытие календаря.
 	CalendarClose($popup);
@@ -50,8 +67,8 @@ window['oem-func-days-more'] = function($that) {
     var $wrapper = $that.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
     var $block   = $wrapper.find('.js-product-block').first().clone();
-    var minDate = $block.find('.calendar').attr('date-min'),
-        maxDate = $block.find('.calendar').attr('date-max');
+    var mindate = $block.find('.calendar').attr('date-min'),
+        maxdate = $block.find('.calendar').attr('date-max');
 
     // Сброс параметров.
     window['oem-func-days-clear']($block);
@@ -61,8 +78,8 @@ window['oem-func-days-more'] = function($that) {
     $block.find('.calendar').remove();
     $block.find('.calendarPopupContent').append('<div class="calendar" date-min="'+minDate+'" date-max="'+maxDate+'" />');
     $block.find('.calendar').multiDatesPicker({
-        minDate: minDate,
-        maxDate: maxDate
+        minDate: mindate,
+        maxDate: maxdate
     });
     $block.find('.js-product-select .js-option-noselect').trigger('click');
 }

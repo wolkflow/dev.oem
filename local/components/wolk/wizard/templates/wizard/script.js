@@ -13,40 +13,6 @@ function ShowError(title, message)
 
 
 /**
- * Количество часов между датами.
- */
-Date.getHoursBetween = function (date1, date2) {
-    var one_hour = 1000 * 60 * 60;
-
-    var date1_ms = date1.getTime();
-    var date2_ms = date2.getTime();
-	
-    var difference_ms = parseInt(date2_ms - date1_ms);
-	
-    return Math.round(difference_ms / one_hour);
-};
-
-
-/**
- * Количество дней между датами.
- */
-Date.getDaysBetween = function (date1, date2, including) {
-    var one_day = 1000 * 60 * 60 * 24;
-	
-    var date1_ms = date1.getTime();
-    var date2_ms = date2.getTime();
-
-    var difference_ms = parseInt(date2_ms - date1_ms);
-
-    if (including) {
-        return Math.round(difference_ms / one_day) + 1;
-    } else {
-        return Math.round(difference_ms / one_day);
-    }
-};
-
-
-/**
  * Добавление позиции.
  */
 function PutBasket(pid, quantity, $block)
