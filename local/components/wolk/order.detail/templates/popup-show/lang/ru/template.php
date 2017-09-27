@@ -17,3 +17,6 @@ $MESS['SURCHARGE'] = 'Наценка';
 $MESS['TOTAL_WITH_SURCHARGE'] = 'Итого с наценкой';
 $MESS['VAT'] = 'НДС';
 $MESS['TOTAL_WITH_VAT'] = 'Итого с НДС';
+
+$MESS['SKETCH_RENDERS'] = 'Скетч';
+$MESS['SKETCH_RENDERS_NOTE'] = 'Размещение объектов на стенде';

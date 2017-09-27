@@ -187,6 +187,7 @@ $(document).ready(function() {
             maxDate: maxDate
         });
 		
+		
 		if ($mode.data('checked')) {
 			$mode.trigger('click');
 		}
@@ -265,10 +266,10 @@ $(document).ready(function() {
         }
     });
 	
-    $(document).on("mouseup click tap", function(e) {
-        var container = $(".js-calendar-popup.open");
-        if (container.length && container.has(e.target).length === 0){
-            CalendarClose($('.js-calendar-popup.open'))
-        }
-    });
+    // $(document).on("mouseup click tap", function(e) {
+    //     var container = $(".js-calendar-popup.open");
+    //     if (container.length && container.has(e.target).length === 0){
+    //         CalendarClose($('.js-calendar-popup.open'))
+    //     }
+    // });
 });

@@ -1121,6 +1121,10 @@ float: left}
   width: 420px;
   padding-top: 30px;
 }
+.ordercontainer__columns {
+  width: auto;
+  padding-top: 30px;
+}
 .ordercontainer__column.left {
   float: left;
 }

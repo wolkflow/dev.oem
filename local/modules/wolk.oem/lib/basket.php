@@ -561,13 +561,14 @@ class Basket
         while ($prop = $result->Fetch()) {
             $props[$prop['CODE']] = $prop;
         }
-        $dataprops = [];
         
+		$dataprops = [];
+		        
         $dataprops []= [
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['EVENT_ID']['ID'],
             'NAME'           => 'ID мероприятия',
-            'CODE'           => 'EVENT_ID',
+            'CODE'           => $props['EVENT_ID']['CODE'],
             'VALUE'          => $event->getID(),
         ];
         
@@ -575,7 +576,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['EVENT_NAME']['ID'],
             'NAME'           => 'Название мероприятия',
-            'CODE'           => 'EVENT_NAME',
+            'CODE'           => $props['EVENT_NAME']['CODE'],
             'VALUE'          => $event->getTitle(),
         ];
         
@@ -583,7 +584,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SFORM']['ID'],
             'NAME'           => 'Тип стенда',
-            'CODE'           => 'SFORM',
+            'CODE'           => $props['SFORM']['CODE'],
             'VALUE'          => $this->getParam('SFORM'),
         ];
         
@@ -591,7 +592,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['WIDTH']['ID'],
             'NAME'           => 'Ширина стенда',
-            'CODE'           => 'WIDTH',
+            'CODE'           => $props['WIDTH']['CODE'],
             'VALUE'          => $this->getParam('WIDTH'),
         ];
         
@@ -599,7 +600,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['DEPTH']['ID'],
             'NAME'           => 'Глубина стенда',
-            'CODE'           => 'DEPTH',
+            'CODE'           => $props['DEPTH']['CODE'],
             'VALUE'          => $this->getParam('DEPTH'),
         ];
         
@@ -607,7 +608,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SURCHARGE']['ID'],
             'NAME'           => 'Процент наценки',
-            'CODE'           => 'SURCHARGE',
+            'CODE'           => $props['SURCHARGE']['CODE'],
             'VALUE'          => $infoprices['SURCHARGE_PERCENT'],
         ];
         
@@ -615,7 +616,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SURCHARGE_PRICE']['ID'],
             'NAME'           => 'Сумма наценки',
-            'CODE'           => 'SURCHARGE_PRICE',
+            'CODE'           => $props['SURCHARGE_PRICE']['CODE'],
             'VALUE'          => $infoprices['SURCHARGE_PRICE'],
         ];
         
@@ -623,7 +624,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['LANGUAGE']['ID'],
             'NAME'           => 'Язык заказа',
-            'CODE'           => 'LANGUAGE',
+            'CODE'           => $props['LANGUAGE']['CODE'],
             'VALUE'          => $context->getLang(),
         ];
         
@@ -631,7 +632,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH_SCENE']['ID'],
             'NAME'           => 'Скетч',
-            'CODE'           => 'SKETCH_SCENE',
+            'CODE'           => $props['SKETCH_SCENE']['CODE'],
             'VALUE'          => $this->getSketch()['SKETCH_SCENE'],
         ];
         
@@ -639,7 +640,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH_IMAGE']['ID'],
             'NAME'           => 'Изображение скетча',
-            'CODE'           => 'SKETCH_IMAGE',
+            'CODE'           => $props['SKETCH_IMAGE']['CODE'],
             'VALUE'          => $this->getSketch()['SKETCH_IMAGE'],
         ];
 		
@@ -647,7 +648,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH_FILE']['ID'],
             'NAME'           => 'Файл скетча',
-            'CODE'           => 'SKETCH_FILE',
+            'CODE'           => $props['SKETCH_FILE']['CODE'],
             'VALUE'          => \CFile::SaveFile(array(
 				'name'    	  => 'sketch-'.$oid.'.jpg',
 				'description' => 'Изображение скетча для заказа №'.$oid,
@@ -659,7 +660,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['STANDNUM']['ID'],
             'NAME'           => 'Номер стенда',
-            'CODE'           => 'STANDNUM',
+            'CODE'           => $props['STANDNUM']['CODE'],
             'VALUE'          => $this->getParam('STANDNUM'),
         ];
         
@@ -667,7 +668,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['PAVILION']['ID'],
             'NAME'           => 'Павильон',
-            'CODE'           => 'PAVILION',
+            'CODE'           =>  $props['PAVILION']['CODE'],
             'VALUE'          => $this->getParam('PAVILION'),
         ];
         
@@ -675,7 +676,7 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['TYPE']['ID'],
             'NAME'           => 'Тип заказа',
-            'CODE'           => 'TYPE',
+            'CODE'           => $props['TYPE']['CODE'],
             'VALUE'          => 'COMMON',
         ];
         
@@ -683,7 +684,16 @@ class Basket
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['TYPESTAND']['ID'],
             'NAME'           => 'Тип застройки',
-            'CODE'           => 'TYPESTAND',
+            'CODE'           => $props['TYPESTAND']['CODE'],
+            'VALUE'          => $context->getType(),
+        ];
+		
+		
+		$dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['RENDERS']['ID'],
+            'NAME'           => 'Рендеры',
+            'CODE'           => $props['RENDERS']['CODE'],
             'VALUE'          => $context->getType(),
         ];
         
@@ -764,7 +774,6 @@ class Basket
 				$fields['PRODUCTS'][$item['id']] = $item;
 			}
 		}
-		
 		
 		// Сохранение данных в сессии.
 		$this->setData($fields);

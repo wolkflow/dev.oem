@@ -147,6 +147,27 @@
 		</div>
 	</div>
 	
+	<? if ($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) { ?>
+		<div class="ordercontainer__columns">
+			<div class="pagesubtitle">
+				<?= Loc::getMessage('SKETCH_RENDERS') ?>
+			</div>
+			<div class="ordercontainer__itemscontainer">
+				<div class="pagesubsubtitle">
+					<?= Loc::getMessage('SKETCH') ?>
+				</div>
+				<div class="last ordercontainer__item">
+					<div class="ordercontainer__itemtotalprice">
+						<img src="<?= CFile::getPath($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) ?>" width="70" height="70" />
+					</div>
+					<div class="ordercontainer__itemname">
+						<?= Loc::getMessage('SKETCH_RENDERS_NOTE') ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	<? } ?>
+	
 	<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
 		<div class="ordercontainer__changebutton changeallorder">
 			<a class="changebutton" href="<?= $arResult['ORDER']['LINK'] ?>">
@@ -156,11 +177,7 @@
 	<? } ?>
 </div>
 
-<div class="ordertotalcontainer">
-	<? if ($arResult['ORDER']['PROPS']['FILE']['VALUE']) { ?>
-		<?= $arResult['ORDER']['PROPS']['FILE']['VALUE'] ?>
-	<? } ?>
-</div>
+
 
 <div class="ordertotalcontainer__standandpavillion">
 	<div class="ordertotalcontainer__standcontainer">

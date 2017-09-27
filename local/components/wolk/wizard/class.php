@@ -92,13 +92,15 @@ class WizardComponent extends \CBitrixComponent
         }
 		
 		// Загрузка данных.
-		// TODO: Проверка на принадлежность заказа!
 		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
 			$order = new Wolk\OEM\Order($arParams['OID']);
 			if ($order->getUserID() != CUser::getID()) {
 				LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
 			}
-			$this->getBasket()->load($order);
+			
+			if ($order->getUserID() != CUser::getID()) {
+				$this->getBasket()->load($order);
+			}
 		}
         
         return $arParams;
