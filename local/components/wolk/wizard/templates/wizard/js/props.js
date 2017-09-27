@@ -183,7 +183,6 @@ $(document).ready(function() {
                         endDate.val(dateText);
                     }
                     $(this).datepicker();
-                    dates.text(startDate.val() +' - '+ endDate.val())
                 }
             });
         } else {
@@ -216,13 +215,20 @@ $(document).ready(function() {
 
     // Сохраняем результат и закрываем календарь
     $(document).on('click', '.js-calendar-save', function(e) {
-        //var block = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup');
-
         //CalendarClose(block);
+
         var block = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup'),
-            calendar = block.find('.calendar');
-        var dates = calendar.multiDatesPicker('getDates');
-        console.log(dates);
+            changeMode  = block.find($('.js-calendar-mode')),
+            calendar    = block.find('.calendar'),
+            dates       = block.parent().find('.dates'),
+            startDate   = block.find('.start-date'),
+            endDate     = block.find('.end-date');
+
+        if (changeMode.is(':checked')) {
+            dates.text(startDate.val() +' - '+ endDate.val())
+        } else {
+            dates.text(calendar.multiDatesPicker('getDates'));
+        }
     });
 
     // Закрытие календаря

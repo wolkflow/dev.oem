@@ -5,7 +5,7 @@
 <? $component = $this->getComponent() ?>
 
 <? use Bitrix\Main\Localization\Loc; ?>
-<? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\Core\Helpers\Text as TextHelper; ?>
 
 <div class="breadcrumbs">
     <div class="breadcrumbs__container">

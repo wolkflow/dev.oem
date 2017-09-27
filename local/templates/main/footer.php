@@ -1,8 +1,10 @@
-<?if(\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
-    ?></div><?
-    die;
-}
+<? if (\Bitrix\Main\Context::getCurrent()->getServer()->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') { ?>
+	</div>
+	<? die(); ?>
+<? } ?>
+<? 
 use Bitrix\Main\Localization\Loc;
+
 Loc::loadLanguageFile(__FILE__);
 
 $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();
@@ -24,14 +26,6 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 				<?= Loc::getMessage('rules') ?>
 			</a>
 		</div>
-		<? /*
-		<a href="" data-modal="#termsConditions" class="footersection__terms">
-			<?= Loc::getMessage('Terms & Conditions') ?>
-		</a>
-		<a href="" data-modal="#generalInfo" class="footersection__information">
-			<?= Loc::getMessage('General Information') ?>
-		</a>
-		*/ ?>
 		
 		<div class="footerLogo">
 			<a href="/">
@@ -52,50 +46,6 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 		</div>
 	</div>
 	
-	<? /*
-	<!-- Окно: Условия -->
-	<div class="modal modalContact" id="termsConditions">
-		<div class="modalClose arcticmodal-close"></div>
-		<div class="modalTitle"><?= Loc::getMessage('Terms & Conditions') ?></div>
-
-		<div class="modalContent">
-			<div class="generalInfoContent">
-				<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-					'AREA_FILE_SHOW' => 'file',
-					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/terms_conditions.php',
-					'EDIT_TEMPLATE' => 'html'
-				]); ?>
-			</div>
-		</div>
-	</div>
-	
-
-	<!-- Окно: Инфо -->
-	<div class="modal modalContact" id="generalInfo">
-		<div class="modalClose arcticmodal-close"></div>
-		<div class="modalTitle"><?= Loc::getMessage('General Information') ?></div>
-
-		<div class="modalContent">
-			<!--
-				Класс блока ниже generalInfoContent отвечает за инициализацию слайдера. Каждый входящий див - слайд.
-				<div class="generalInfoContent">
-					<div>Slide 1</div>
-					<div>Slide 2</div>
-					<div>Slide 3</div>
-				</div>
-			 -->
-			<div class="generalInfoContent">
-				<? $APPLICATION->IncludeComponent('bitrix:main.include', '', [
-					'AREA_FILE_SHOW' => 'file',
-					'PATH' => SITE_TEMPLATE_PATH.'/lang/'.$curlang.'/include/general_information.php',
-					'EDIT_TEMPLATE' => 'html'
-				]); ?>
-			</div>
-		</div>
-	</div>
-	*/ ?>
-	
-    
     <? // Окно "Правила" // ?>
 	<div class="modal modalContact" id="rules">
 		<div class="modalClose arcticmodal-close"></div>

@@ -124,6 +124,23 @@ input[type="password"] {
 	border: 0;
 	text-decoration: none;
 }
+.headersection__button a.auth {
+	float: right;
+	position: relative;
+	line-height: 30px;
+	background: #7f7f7f;
+	color: #fff;
+	font-size: 11px;
+	text-align: center;
+	text-transform: uppercase;
+	cursor: pointer;
+	font-weight: bold;
+	border: 0;
+	text-decoration: none;
+	width: auto;
+	padding: 0 10px;
+    margin-left: 10px;
+}
 .headersection__button a:hover,
 .headersection__button.active a {
 	background: #999
@@ -1663,6 +1680,18 @@ div.jq-selectbox__select {
 .serviceItem__bottom {
   min-height: 37px;
 }
+.setDate {
+  float: left;
+}
+.dates {
+  margin-left: 70px;
+  font-size: 13px;
+  color: #999;
+  display: flex;
+  justify-content: center;
+  flex-flow: column wrap;
+  height: 60px;
+}
 div.setDateBlock {
   margin-left: 0;
 }
@@ -1673,7 +1702,8 @@ div.setDateBlock {
 .setDatetime__right {
   margin-left: 70px;
 }
-.navButtons .next {  display: block;
+.navButtons .next {
+  display: block;
   text-decoration: none;
   line-height: 60px;
   text-align: center;
@@ -1684,20 +1714,27 @@ div.setDateBlock {
   font-size: 17px;
   cursor: pointer;
   width: 145px;
-  float: left}
+  float: left;
+  margin-left: 10px;
+}
 .navButtons .next:hover {background: #999}
 div.preview-image {
   width: 62px;
-  height: 62px;
+  height: 60px;
 }
 .preview-image.changed {
   float: left;
+  margin-right: 10px;
 }
 .preview-image img {
   display: block;
+  height: 54px;
 }
 .preview-image.changed + .jq-file {
-  margin-left: 72px;
+  width: 468px;
+}
+.preview-image.changed + .jq-file div.jq-file__name {
+  width: 398px;
 }
 [hidden] {
   display: none !important;

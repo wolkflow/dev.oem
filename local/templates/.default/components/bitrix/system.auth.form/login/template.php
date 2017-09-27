@@ -82,8 +82,17 @@ if ($arResult['SHOW_ERRORS'] == 'Y' && $arResult['ERROR'])
     <?if($arResult["NEW_USER_REGISTRATION"] == "Y"):?>
         <noindex>
             <p></p>
-                <a class="headersection__languagedropdownbutton"
-                    href="<?=$arResult["AUTH_REGISTER_URL"]?>?backurl=<?=$APPLICATION->GetCurPage(false)?>" rel="nofollow"><?=GetMessage("AUTH_REGISTER")?></a>
+			<a 
+				class="headersection__languagedropdownbutton auth"
+				href="<?= $arResult["AUTH_REGISTER_URL"] ?>?backurl=<?= $APPLICATION->GetCurPage(false) ?>" 
+				rel="nofollow"
+			><?= GetMessage("AUTH_REGISTER") ?></a>
+			<a 
+				class="headersection__languagedropdownbutton auth"
+				href="<?= $arResult["AUTH_FORGOT_PASSWORD_URL"] ?>?backurl=<?= $APPLICATION->GetCurPage(false) ?>" 
+				rel="nofollow"
+			><?= GetMessage("AUTH_FORGOT_PASS") ?></a>
+
         </noindex>
     <?endif?>
         <!--<noindex><a href="<?/*=$arResult["AUTH_FORGOT_PASSWORD_URL"]*/?>" rel="nofollow"><?/*=GetMessage("AUTH_FORGOT_PASSWORD_2")*/?></a></noindex>-->

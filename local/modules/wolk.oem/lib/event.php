@@ -7,6 +7,9 @@ use Wolk\OEM\Prices\Stand   as StandPrice;
 use Wolk\OEM\Prices\Product as ProductPrice;
 
 
+/**
+ * Класс реализающий объект "Мероприятие" (выставка).
+ */
 class Event extends \Wolk\Core\System\IBlockEntity
 {
     const IBLOCK_ID = IBLOCK_EVENTS_ID;
@@ -22,34 +25,12 @@ class Event extends \Wolk\Core\System\IBlockEntity
     protected $preselect;
 	
     
+	
     public function __construct($id = null, $data = [])
     {
 		parent::__construct($id, $data);
     }
 	
-    /*
-    public function getContext()
-    {
-        return $this->context;
-    }
-    
-    
-    public function getType()
-	{
-		return $this->getContext()->getType();
-	}
-    
-	
-	public function getLang()
-	{
-        $language = $this->getContext()->getLang();
-        if (empty($language))) {
-            $language = LANG_EN_UP;
-        }
-		return $language;
-	}
-	*/
-    
     
     /**
      * Получение кода мероприятия.
@@ -97,6 +78,9 @@ class Event extends \Wolk\Core\System\IBlockEntity
     }
 	
 	
+	/**
+	 * Получение списка контактов.
+	 */
 	public function getContacts($lang = null)
     {
 		$this->load();
@@ -361,7 +345,6 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	
     
     
-	
 	/**
 	 * Получение списка ID услуг и оборудования мероприятия.
 	 */
@@ -557,110 +540,18 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return $this->prices['products'];
     }
     
+		
 	
 	/**
-	 * Получение списка цен на обррудование и услуги мероприятия.
-	
-    public function getEquipmentsPrices()
-    {
-		if (empty($this->prices['equipments'])) {
-			$prices = \Wolk\OEM\EventEquipmentPricesTable::getList([
-				'filter' =>
-					[
-						'EVENT_ID' => $this->getID(),
-						'SITE_ID'  => $this->getLang()
-					]
-			])->fetchAll();
-
-			foreach ($prices as $price) {
-				$this->prices['equipments'][$price['EQUIPMENT_ID']] = (float) $price['PRICE'];
-			}
-		}
-		return $this->prices['equipments'];
-    }
+	 * Получение количества бесплатных символов для фризовой панели.
 	 */
-	
-	/*
-	public function getServices()
+	public function getPayLimitSymbolsPanel()
 	{
-		$sections = [];
-
-		$services = $this->getEventServices($event);
-
-
-		$this->arResult['EVENT']['ALL_SERVICES'] += $services;
-
-
-		$arServices = [];
-		foreach ($services as $arService) {
-			$arServices[$arService['IBLOCK_SECTION_ID']][$arService['ID']] = $arService;
-		}
-
-		$servicesSections = \Bitrix\Iblock\SectionTable::getList([
-			'order' => ['SORT' => 'ASC', 'ID' => 'ASC'],
-			'filter' =>
-				[
-					'ID' => array_keys($arServices)
-				]
-		])->fetchAll();
-
-		$filter = [
-			['LOGIC' => 'OR'],
-			[
-				'ID' => array_keys($arServices)
-			]
-		];
-
-		foreach ($servicesSections as $serviceSection) {
-			$filter[] = [
-				'<LEFT_MARGIN'  => $serviceSection['LEFT_MARGIN'],
-				'>RIGHT_MARGIN' => $serviceSection['RIGHT_MARGIN'],
-			];
-		}
-
-		$obSections = CIBlockSection::GetTreeList([
-				'IBLOCK_ID' => OPTIONS_IBLOCK_ID,
-				'ACTIVE'    => 'Y',
-			] + $filter, [
-			'ID',
-			'NAME',
-			'CODE',
-			'SORT',
-			'DEPTH_LEVEL',
-			'IBLOCK_SECTION_ID',
-			'UF_SUBTITLE_' . $this->curLang,
-			'UF_NAME_' . $this->curLang,
-			'UF_SORT'
-		]);
-
-		while ($arSection = $obSections->Fetch()) {
-			$arSection['NAME'] = $arSection['UF_NAME_' . $this->curLang] ?: $arSection['NAME'];
-			$arSection['SUBTITLE'] = $arSection['UF_SUBTITLE_' . $this->curLang] ?: $arSection['UF_SUBTITLE'];
-			
-			if ($arSection['IBLOCK_SECTION_ID']) {
-				if (array_key_exists($arSection['ID'], $arServices)) {
-					$arSection['ITEMS'] = $arServices[$arSection['ID']];
-				}
-				$sections[$arSection['IBLOCK_SECTION_ID']]['SECTIONS'][$arSection['ID']] = $arSection;
-				$sections[$arSection['ID']] = &$sections[$arSection['IBLOCK_SECTION_ID']]['SECTIONS'][$arSection['ID']];
-			} else {
-				$arSections[$arSection['ID']] = $arSection;
-				$sections[$arSection['ID']] = &$arSections[$arSection['ID']];
-			}
-		}
+		$this->load();
 		
-		foreach ($arSections as &$section) {
-			foreach ($section['SECTIONS'] as &$subsection) {
-				if (isset($subsection['SECTIONS'])) {
-					uasort($subsection['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
-				}
-			}
-			uasort($section['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
-		}
-
-        return $arSections;
+		return intval($this->data['PROPS']['PAY_LIMIT_SYMBOLS_PANEL']['VALUE']);
 	}
-	*/
+	
 	
 	
 	/**
@@ -706,6 +597,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
         }
         return 0;
     }
+	
     
     
     /**

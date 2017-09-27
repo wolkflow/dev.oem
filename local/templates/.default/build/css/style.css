@@ -210,7 +210,10 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 .commentsForm textarea	{border: 1px solid #acacac;width: 465px;height: 229px;resize: vertical;overflow: auto;padding: 11px 14px;font-family: "GothamPro", Arial, Helvetica, sans-serif;font-size: 13px;background: transparent;box-sizing: border-box;-moz-box-sizing: border-box}
 
 .sketchAfterRight		{padding-top: 55px}
+/*
 .pagetitle				{font-size: 26px;line-height: 30px;margin-bottom: 28px;text-transform: uppercase}
+*/
+.pagetitle				{line-height: 30px;margin-bottom: 28px;text-transform: uppercase}
 .sketchAfterRight .reviewconfigurationcontainer {border: 3px solid #7f7f7f;padding: 13px 20px 0;text-transform: uppercase;line-height: 41px;margin: 1px 0 0;}
 
 .headersection__loginform .errortext	{font-size: 13px;color: #ff3f25;background: #fff;box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.30);position: absolute;left: -210px;width: 185px;padding: 20px;top: 50%;margin-top: -41px}

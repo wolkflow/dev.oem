@@ -4,6 +4,7 @@ $MESS["AUTH_LOGIN"] = "Логин";
 $MESS["AUTH_EMAIL"] = "Электронный адрес";
 $MESS["AUTH_PASSWORD"] = "Пароль";
 $MESS["AUTH_REMEMBER_ME"] = "Запомнить меня на этом компьютере";
+$MESS["AUTH_FORGOT_PASS"] = "Забыли пароль";
 $MESS["AUTH_FORGOT_PASSWORD_2"] = "Забыли свой пароль?";
 $MESS["AUTH_REGISTER"] = "Регистрация";
 $MESS["AUTH_LOGOUT_BUTTON"] = "Выйти";

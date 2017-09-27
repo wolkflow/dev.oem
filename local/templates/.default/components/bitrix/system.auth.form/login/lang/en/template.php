@@ -4,6 +4,7 @@ $MESS["AUTH_LOGIN"] = "Login";
 $MESS["AUTH_EMAIL"] = "Email address";
 $MESS["AUTH_PASSWORD"] = "Password";
 $MESS["AUTH_REMEMBER_ME"] = "Remember me on this computer";
+$MESS["AUTH_FORGOT_PASS"] = "Forgot password";
 $MESS["AUTH_FORGOT_PASSWORD_2"] = "Forgot your password?";
 $MESS["AUTH_REGISTER"] = "Register";
 $MESS["AUTH_LOGOUT_BUTTON"] = "Logout";
@@ -23,4 +24,3 @@ $MESS["auth_form_comp_otp_remember_title"] = "Remember one-time password on this
 $MESS["auth_form_comp_otp_remember"] = "Remember password";
 $MESS["auth_form_comp_auth"] = "Log in";
 $MESS['AUTH_HEAD_TEXT'] = 'If you have an account, please type-in your credentials and press “Login”.'
-?>
