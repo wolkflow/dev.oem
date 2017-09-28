@@ -32,7 +32,7 @@ window['oem-func-days-hours-cart'] = function($block) {
     if (hours != 0) {
         hours = Math.abs(hours);
     }
-	
+		
 	
 	// Выбор диапазона или конкретных дат.
 	if ($mode.is(':checked')) {
@@ -60,9 +60,7 @@ window['oem-func-days-hours-cart'] = function($block) {
 	
 	// Закрытие календаря.
 	CalendarClose($popup);
-	
-	console.log(days, hours);
-	
+		
 	// Протсавление дополнительных параметров.
 	$block.find('.js-product-days-hours-dates').val($note.text());
 	$block.find('.js-product-days-hours-times').val($timemin.val() + ' - ' + $timemax.val());
