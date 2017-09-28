@@ -60,25 +60,25 @@ window['oem-func-days-cart'] = function($block) {
 /**
  * Функция добавления товарной позиции.
  */
-window['oem-func-days-more'] = function($that) {
-    var $wrapper = $that.closest('.js-product-wrapper');
+window['oem-func-days-more'] = function($block) {
+    var $wrapper = $block.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
-    var $block   = $wrapper.find('.js-product-block').first().clone();
-    var mindate = $block.find('.calendar').attr('date-min'),
-        maxdate = $block.find('.calendar').attr('date-max');
+    var $clone   = $wrapper.find('.js-product-block').first().clone();
+    var mindate  = $clone.find('.calendar').attr('data-date-min'),
+        maxdate  = $clone.find('.calendar').attr('data-date-max');
 
     // Сброс параметров.
-    window['oem-func-days-clear']($block);
+    window['oem-func-days-clear']($clone);
 
     // Добавление блока.
-    $section.append($block);
-    $block.find('.calendar').remove();
-    $block.find('.calendarPopupContent').append('<div class="calendar" date-min="'+minDate+'" date-max="'+maxDate+'" />');
-    $block.find('.calendar').multiDatesPicker({
+    $section.append($clone);
+    $clone.find('.calendar').remove();
+    $clone.find('.calendarPopupContent').append('<div class="calendar" data-date-min="' + mindate + '" data-date-max="' + maxdate+ '" />');
+    $clone.find('.calendar').multiDatesPicker({
         minDate: mindate,
         maxDate: maxdate
     });
-    $block.find('.js-product-select .js-option-noselect').trigger('click');
+    $clone.find('.js-product-select .js-option-noselect').trigger('click');
 }
 
 
@@ -104,11 +104,6 @@ window['oem-func-days-clear'] = function($block) {
 
 
 $(document).ready(function() {
-    
-    // Добавление нового поля.
-    $(document).on('click', '.js-block-days .js-more-field', function(e) {
-        window['oem-func-days-more']($(this));
-    });
     
     // Выбор даты.
 	$(document).on('click', '.js-block-days .js-calendar-save', function(e) {

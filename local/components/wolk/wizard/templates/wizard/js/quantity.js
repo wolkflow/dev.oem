@@ -40,18 +40,20 @@ window['oem-func-quantity-cart'] = function($block) {
 /**
  * Функция добавления товарной позиции.
  */
-window['oem-func-quantity-more'] = function($that) {
-    var $wrapper = $that.closest('.js-product-wrapper');
+window['oem-func-quantity-more'] = function($block) {
+    var $wrapper = $block.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
-    var $block   = $wrapper.find('.js-product-block').first().clone();
+    var $clone   = $wrapper.find('.js-product-block').first().clone();
     
     // Сброс параметров.
-    window['oem-func-quantity-clear']($block);
+    window['oem-func-quantity-clear']($clone);
     
+	$clone.find('.jq-selectbox__select:first').remove();
+	
     // Добавление блока.
-    $section.append($block);
+    $section.append($clone);
 
-    $block.find('.js-product-select .js-option-noselect').trigger('click');
+    $clone.find('.js-product-select .js-option-noselect').trigger('click');
 }
 
 
@@ -75,12 +77,6 @@ window['oem-func-quantity-clear'] = function($block) {
 
 $(document).ready(function() {
     
-    // Добавление нового поля.
-    $(document).on('click', '.js-block-quantity .js-more-field', function(event) {
-        window['oem-func-quantity-more']($(this));
-    });
-
-
     // Уменьшение количества товара.
     $(document).on('click', '.js-pricetype-quantity .js-quantity-dec', function(event) {
 		var $block   = $(this).closest('.js-product-block');

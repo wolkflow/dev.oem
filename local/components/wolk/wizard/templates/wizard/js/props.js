@@ -188,7 +188,7 @@ $(document).ready(function() {
 		
 		var dates_field = $wrap.find('.js-calendar-dates').data('field');
 		var dates_array = $wrap.find('.js-calendar-dates').data('dates');
-		console.log(dates_field, dates_array);
+		
 		var rangeMin = calendar.parent().find('.min-date');
 		var rangeMax = calendar.parent().find('.max-date');
 		
@@ -230,6 +230,7 @@ $(document).ready(function() {
             calendar.multiDatesPicker();
         }
     });
+	
 
     // Смена типа выбора мульти, или ренж
     $(document).on('change', '.js-calendar-mode', function() {
@@ -277,30 +278,17 @@ $(document).ready(function() {
             });
         }
     });
-
+	
+	
     // Сбрасываем и прячем календарь.
     $(document).on('click', '.js-calendar-reset', function() {
 		var calendar = $(this).parents('.js-calendar-content').find('.calendar');
 		var block    = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup');
-        /*
-		var calendar = $(this).parents('.js-calendar-content').find('.calendar'),
-            minDate  = calendar.attr('data-date-min'),
-            maxDate  = calendar.attr('data-date-max'),
-            block    = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup'),
-            mode     = $(this).parents('.js-calendar-content').find('.js-calendar-mode');
-
-        calendar.multiDatesPicker('resetDates');
-        $.datepicker._clearDate(calendar);
-        calendar.datepicker('destroy');
-        calendar.multiDatesPicker({
-            minDate: minDate,
-            maxDate: maxDate
-        });
-		*/
+        
         CalendarClose(block);
-        //mode.prop('checked', false);
     });
-
+	
+	
     // Закрытие календаря.
     $(document).keydown(function(e) {
         if (e.which == 27 && $(".js-calendar-popup").hasClass("open")) {

@@ -153,14 +153,23 @@ $(document).ready(function() {
     // Стилизация.
     $('.styler').styler();
 
+	
     // Загрузка формы.
-    $(document).on('click', '.js-submit', function(event) {
+    $(document).on('click', '.js-submit', function(e) {
         $(this).closest('form').submit();
+    });
+	
+	
+	// Добавление нового поля.
+    $(document).on('click', '.js-more-field', function(e) {
+		var $block = $(this).closest('.js-product-wrapper').find('.js-product-block');
+		
+        window['oem-func-' + $block.data('price-type') + '-more']($block);
     });
 
 
     // Удаление из корзины.
-    $(document).on('click', '.js-basket-remove', function(event) {
+    $(document).on('click', '.js-basket-remove', function(e) {
         var bid = $(this).data('bid');
         var sid = $(this).data('sid');
 
