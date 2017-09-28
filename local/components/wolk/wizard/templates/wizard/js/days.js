@@ -2,15 +2,14 @@
 /**
  * Функция добавления в корзину.
  */
-window['oem-func-days-cart'] = function($wrapper) {
+window['oem-func-days-cart'] = function($block) {
     var pid = 0;
 	var quantity = 0;
 	
-	var $block    = $wrapper.closest('.js-product-block');
-    var $calendar = $wrapper.find('.js-calendar-content').find('.calendar');
-	var $popup    = $wrapper.find('.js-calendar-popup');
-	var $mode     = $wrapper.find('.js-calendar-mode');
-    var $note     = $wrapper.find('.dates');
+    var $calendar = $block.find('.js-calendar-content').find('.calendar');
+	var $popup    = $block.find('.js-calendar-popup');
+	var $mode     = $block.find('.js-calendar-mode');
+    var $note     = $block.find('.dates');
 	
 	// Получение ID продукции.
     if ($block.find('.js-product-select').length) {
@@ -21,16 +20,14 @@ window['oem-func-days-cart'] = function($wrapper) {
 	
 	// Выбор диапазона или конкретных дат.
 	if ($mode.is(':checked')) {
-		var daymin = $wrapper.find('.min-date').val();
-		var daymax = $wrapper.find('.max-date').val();
+		var daymin = $block.find('.min-date').val();
+		var daymax = $block.find('.max-date').val();
 		
 		// Комментарий.
 		$note.text(Date.getDateFormat(new Date(daymin)) + ' - ' + Date.getDateFormat(new Date(daymax)));
 		
 		// Общее количество.
 		quantity = Date.getDaysBetween(new Date(daymin), new Date(daymax), true);
-		
-		console.log(quantity, daymin, daymax, new Date(daymin), new Date(daymax));
 	} else {
 		var days = $calendar.multiDatesPicker('getDates');
 		
@@ -46,7 +43,7 @@ window['oem-func-days-cart'] = function($wrapper) {
 	}
 	
 	// Протсавление дополнительных параметров.
-	$wrapper.find('.js-product-days-dates').val($note.text());
+	$block.find('.js-product-days-dates').val($note.text());
 	
 	// Закрытие календаря.
 	CalendarClose($popup);
@@ -115,7 +112,7 @@ $(document).ready(function() {
     
     // Выбор даты.
 	$(document).on('click', '.js-block-days .js-calendar-save', function(e) {
-		var $block = $(this).closest('.js-days-wrapper');
+		var $block = $(this).closest('.js-product-block');
 		
 		window['oem-func-days-cart']($block);
 	});

@@ -32,7 +32,7 @@ class ForgotPassComponent extends \CBitrixComponent
 		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
 			return;
 		}
-        
+		
         
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();

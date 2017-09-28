@@ -22,6 +22,17 @@
 						<div class="pagesubsubtitle">
 							<?= GetMessage("RECOVER_FIELD_EMAIL") ?>
 						</div>
+						
+						<div class="hide js-restore-success">
+							<?= GetMessage("RECOVER_SUCCESS") ?>
+						</div>
+						<div class="hide js-restore-error-is-empty">
+							<?= GetMessage("RECOVER_ERROR_EMAIL_IS_EMPTY") ?>
+						</div>
+						<div class="hide js-restore-error-not-found">
+							<?= GetMessage("RECOVER_ERROR_EMAIL_NOT_FOUND") ?>
+						</div>
+						
 						<div class="profilecontainer__itemscontainer">
 							<div class="profilecontainer__item">
 								<div class="profilecontainer__itemname">

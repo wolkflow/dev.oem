@@ -188,7 +188,7 @@ $(document).ready(function() {
 		
 		var dates_field = $wrap.find('.js-calendar-dates').data('field');
 		var dates_array = $wrap.find('.js-calendar-dates').data('dates');
-		
+		console.log(dates_field, dates_array);
 		var rangeMin = calendar.parent().find('.min-date');
 		var rangeMax = calendar.parent().find('.max-date');
 		

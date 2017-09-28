@@ -8,9 +8,9 @@
 <? $range = (strpos($field, '-') !== false) ?>
 <?	// Массив дат.
 	if ($range) {
-		$dates = array_map('trim', explode('-', $field));
+		$dates = array_map('trim', array_filter(explode('-', $field)));
 	} else {
-		$dates = array_map('trim', explode(',', $field));
+		$dates = array_map('trim', array_filter(explode(',', $field)));
 	}
 	$dates = array_map(function($item) { return (date('m/d/Y', strtotime($item))); }, $dates);
 ?>
