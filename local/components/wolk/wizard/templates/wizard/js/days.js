@@ -57,6 +57,7 @@ window['oem-func-days-cart'] = function($wrapper) {
 	
     // Сохранение в корзине.
     PutBasket(pid, quantity, $block);
+    console.log('s');
 }
 
 

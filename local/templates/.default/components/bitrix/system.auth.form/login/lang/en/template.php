@@ -23,4 +23,4 @@ $MESS["auth_form_comp_otp"] = "One-time password:";
 $MESS["auth_form_comp_otp_remember_title"] = "Remember one-time password on this computer";
 $MESS["auth_form_comp_otp_remember"] = "Remember password";
 $MESS["auth_form_comp_auth"] = "Log in";
-$MESS['AUTH_HEAD_TEXT'] = 'If you have an account, please type-in your credentials and press “Login”.'
+$MESS['AUTH_HEAD_TEXT'] = 'If you have an account, please type-in your credentials and press “Login”.';

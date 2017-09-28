@@ -92,21 +92,17 @@ switch ($action) {
         break;
     
     
-    // Создание сцены изображения в корзине.
+    // Создание сцены изображения.
     case ('render'):
         $objs = (string) $request->get('objs');
         $view = (string) $request->get('view');
         $code = (string) $request->get('code');
         
-		
-		$objects = json_decode($objs, true)['objects'];
-		print_r($objects); break;
-		
         $oembasket = new \Wolk\OEM\Basket($code);
         
         $baskets = $oembasket->getList(true);
         $objects = json_decode($objs, true)['objects'];
-		
+
         foreach ($objects as &$object) {
             $basket  = $baskets[$object['id']];
             $element = $basket->getElement();
@@ -158,8 +154,8 @@ switch ($action) {
         
         jsonresponse(true, '', ['path' => $path]);
         break;
-		
-	    
+    
+        
     // Созхранение продукции в корзину.
     case ('put-basket'):
         $index    = (int)    $request->get('index');
@@ -333,6 +329,36 @@ switch ($action) {
         jsonresponse(true);
         break;
 		
+		
+	// Восстановление пароля.
+    case ('restore-password'):
+        $email = (string) $request->get('email');
+        
+        if (empty($email)) {
+            jsonresponse(false, '', ['error' => 'email-is-empty']);
+        }
+        
+        $password = randString(8, array(
+            'abcdefghijklnmopqrstuvwxyz',
+            'ABCDEFGHIJKLNMOPQRSTUVWXYZ',
+            '0123456789',
+        ));
+        
+        $res = CUser::getList(($b = "ID"), ($o = "ASC"), array('=EMAIL' => $email));
+        
+		if (!($user = $res->fetch())) {
+			jsonresponse(false, '', ['error' => 'email-not-found']);
+		}
+        
+        // Отправка нового пароля.
+        \CEvent::Send('RESTORE_PASSWORD', SITE_DEFAULT, array('EMAIL' => $email, 'PASSWORD' => $password));
+        
+        $cuser = new \CUser();
+        $cuser->Update($user['ID'], array('PASSWORD' => $password));
+        
+		jsonresponse(true);
+        break;
+	
 	
 	// Просмотр заказа.
 	case ('show-order'):

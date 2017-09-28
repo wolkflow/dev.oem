@@ -181,16 +181,51 @@ $(document).ready(function() {
             minDate  = calendar.attr('data-date-min'),
             maxDate  = calendar.attr('data-date-max');
 		var $mode = $that.find('.js-calendar-mode');
-		
-        calendar.multiDatesPicker({
-            minDate: minDate,
-            maxDate: maxDate
-        });
-		
-		
-		if ($mode.data('checked')) {
-			$mode.trigger('click');
-		}
+		// var dates = $that.parents('.js-days-wrapper').find('.js-product-days-dates').val();
+		var received = '09/28/2017, 10/02/2017',
+            startDate  = calendar.parent().find('.min-date'),
+            endDate    = calendar.parent().find('.max-date'),
+            dates      = calendar.parents('.setDateBlock').find('.dates');
+
+		if ($mode.attr('data-checked') === '1') {
+			$mode.prop('checked', true);
+            startDate.val();    // Сюда стартовую дату .val(09/28/2017) или через точку.
+            endDate.val();      // Сюда финальную дату
+            console.log(received);
+            $(calendar).datepicker({
+                minDate: minDate,
+                maxDate: maxDate,
+                beforeShowDay: function(date) {
+                    var date1 = $.datepicker.parseDate('mm/dd/yy', startDate.val());
+                    var date2 = $.datepicker.parseDate('mm/dd/yy', endDate.val());
+                    var isHightlight = date1 && ((date.getTime() == date1.getTime()) || (date2 && date >= date1 && date <= date2));
+                    return [true, isHightlight ? "dp-highlight" : ""];
+                },
+                onSelect: function(dateText, inst) {
+                    var date1 = $.datepicker.parseDate('mm/dd/yy', startDate.val());
+                    var date2 = $.datepicker.parseDate('mm/dd/yy', endDate.val());
+                    var selectedDate = $.datepicker.parseDate('mm/dd/yy', dateText);
+                    if (!date1 || date2) {
+                        startDate.val(dateText);
+                        endDate.val("");
+                    } else if (selectedDate < date1) {
+                        endDate.val(startDate.val());
+                        startDate.val(dateText);
+                    } else {
+                        endDate.val(dateText);
+                    }
+                    $(this).datepicker();
+                }
+            });
+		} else {
+            calendar.multiDatesPicker({
+                minDate: minDate,
+                maxDate: maxDate
+            });
+            calendar.multiDatesPicker('value', received);
+            calendar.multiDatesPicker();
+
+        }
     });
 
     // Смена типа выбора мульти, или ренж
@@ -265,11 +300,4 @@ $(document).ready(function() {
             CalendarClose($(".js-calendar-popup"));
         }
     });
-	
-    // $(document).on("mouseup click tap", function(e) {
-    //     var container = $(".js-calendar-popup.open");
-    //     if (container.length && container.has(e.target).length === 0){
-    //         CalendarClose($('.js-calendar-popup.open'))
-    //     }
-    // });
 });
