@@ -82,18 +82,20 @@ window['oem-func-days-hours-cart'] = function($block) {
 /**
  * Функция добавления товарной позиции.
  */
-window['oem-func-days-hours-more'] = function($that) {
-    var $wrapper = $that.closest('.js-product-wrapper');
+window['oem-func-days-hours-more'] = function($block) {
+    var $wrapper = $block.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
-    var $block   = $wrapper.find('.js-product-block').first().clone();
-
+    var $clone   = $wrapper.find('.js-product-block').first().clone();
+	
+	$clone.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
+	
     // Сброс параметров.
-    window['oem-func-days-hours-clear']($block);
-
+    window['oem-func-days-hours-clear']($clone);
+	
     // Добавление блока.
-    $section.append($block);
-
-    $block.find('.js-product-select .js-option-noselect').trigger('click');
+    $section.append($clone);
+	
+    $clone.find('.js-product-select .js-option-noselect').trigger('click');
 }
 
 

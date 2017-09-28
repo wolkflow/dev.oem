@@ -66,6 +66,8 @@ window['oem-func-days-more'] = function($block) {
     var $clone   = $wrapper.find('.js-product-block').first().clone();
     var mindate  = $clone.find('.calendar').attr('data-date-min'),
         maxdate  = $clone.find('.calendar').attr('data-date-max');
+		
+	$clone.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
 
     // Сброс параметров.
     window['oem-func-days-clear']($clone);
@@ -91,6 +93,9 @@ window['oem-func-days-clear'] = function($block) {
     $block.find('.styler').styler();
     $block.find('.js-product-select .js-option-noselect').trigger('click');
     
+	$block.find('input.js-param-value').val('');
+	$block.find('textarea.js-param-value').html('');
+	
     $block.find('.js-product-price').html('');
     $block.find('.js-product-descr').html('');
     $block.find('.js-product-select-price').hide();

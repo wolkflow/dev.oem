@@ -1744,3 +1744,26 @@ div.preview-image {
 [hidden] {
   display: none !important;
 }
+
+
+
+
+
+
+
+
+.js-product-block {
+	margin-top: 15px;
+}
+
+.js-product-block:first-child {
+	margin-top: 0px;
+}
+
+
+.js-product-block {
+	/*
+	background: url(../images/globals/serviceItem__title_right.png) 0 95% no-repeat;
+    padding-bottom: 5px;
+	*/
+}

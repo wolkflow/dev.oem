@@ -45,11 +45,11 @@ window['oem-func-quantity-more'] = function($block) {
     var $section = $wrapper.find('.js-product-section');
     var $clone   = $wrapper.find('.js-product-block').first().clone();
     
+	$clone.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
+	
     // Сброс параметров.
     window['oem-func-quantity-clear']($clone);
-    
-	$clone.find('.jq-selectbox__select:first').remove();
-	
+    	
     // Добавление блока.
     $section.append($clone);
 
