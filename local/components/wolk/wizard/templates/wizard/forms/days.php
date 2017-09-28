@@ -4,12 +4,20 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 <? use Wolk\Oem\Basket; ?>
 
-<? $dates = (!empty($basketitem)) ? ($basketitem->getField('DATES')) : ([]) ?>
-<? $range = (strpos($dates, '-') !== false) ?>
+<? $field = (!empty($basketitem)) ? ($basketitem->getField('DATES')) : ('') ?>
+<? $range = (strpos($field, '-') !== false) ?>
+<?	// Массив дат.
+	if ($range) {
+		$dates = array_map('trim', explode('-', $field));
+	} else {
+		$dates = array_map('trim', explode(',', $field));
+	}
+	$dates = array_map(function($item) { return (date('m/d/Y', strtotime($item))); }, $dates);
+?>
 
 <div class="serviceItem__row">
 	<div class="js-days-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-		<input type="hidden" name="DATES" class="js-product-days-dates js-field-value" value="<?= $dates ?>" />
+		<input type="hidden" name="DATES" class="js-product-days-dates js-field-value" value="<?= $field ?>" />
 		
 		<? // Установка даты // ?>
 		<div class="serviceItem__left">
@@ -34,7 +42,7 @@
 							$mindate = '';
 							$maxdate = '';
 							if ($range) {
-								list($mindate, $maxdate) = array_map('trim', explode('-', $dates));
+								list($mindate, $maxdate) = $dates;
 							}
 						?>
 						<input type="text" class="min-date" hidden value="<?= $mindate ?>" />
@@ -42,7 +50,9 @@
 						<div class="calendar" data-date-min="0" data-date-max="15.11.17"></div>
 					</div>
 				</div>
-				<div class="dates"><?= $dates ?></div>
+				<div class="dates js-calendar-dates" data-field="<?= implode(', ', $dates) ?>" data-dates='<?= json_encode($dates) ?>'>
+					<?= $field ?>
+				</div>
 			</div>
 		</div>
 	</div>

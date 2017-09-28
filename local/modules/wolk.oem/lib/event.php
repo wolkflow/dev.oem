@@ -42,6 +42,15 @@ class Event extends \Wolk\Core\System\IBlockEntity
     
 	
 	/**
+     * Получение даты окончания мероприятия.
+     */
+    public function getDateFinish()
+	{
+		return $this->get('DATE_ACTIVE_TO');
+	}
+	
+	
+	/**
 	 * Локализованное название мероприятия.
 	 */
     public function getTitle($lang = null)

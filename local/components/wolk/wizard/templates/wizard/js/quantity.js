@@ -61,7 +61,6 @@ window['oem-func-quantity-more'] = function($that) {
 window['oem-func-quantity-clear'] = function($block) {
     $block.attr('data-bid', '');
     $block.find('.js-quantity').val(0).data('value', 0);
-    $block.find('.jq-selectbox__select,.jq-selectbox__dropdown').remove();
     $block.find('.styler').styler();
     
     $block.find('.js-product-price').html('');

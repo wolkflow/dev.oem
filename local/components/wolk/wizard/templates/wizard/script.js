@@ -133,7 +133,6 @@ function RemoveBasket(bid, sid, $block)
                     $block.remove();
                 } else {
                     // Очистка данных в блоке.
-                    console.log('Remove basket: ' + $block.data('price-type'));
                     window['oem-func-' + $block.data('price-type') + '-clear']($block);
                     
                     $block.attr('data-bid', '');

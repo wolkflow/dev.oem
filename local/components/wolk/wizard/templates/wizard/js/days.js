@@ -57,7 +57,6 @@ window['oem-func-days-cart'] = function($wrapper) {
 	
     // Сохранение в корзине.
     PutBasket(pid, quantity, $block);
-    console.log('s');
 }
 
 
@@ -91,7 +90,7 @@ window['oem-func-days-more'] = function($that) {
  */
 window['oem-func-days-clear'] = function($block) {
     $block.attr('data-bid', '');
-    $block.find('.jq-selectbox__select,.jq-selectbox__dropdown').remove();
+    //$block.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
     $block.find('.styler').styler();
     $block.find('.js-product-select .js-option-noselect').trigger('click');
     
