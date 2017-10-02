@@ -48,7 +48,9 @@
 						?>
 						<input type="text" class="min-date" hidden value="<?= $mindate ?>" />
 						<input type="text" class="max-date" hidden value="<?= $maxdate ?>" />
-						<div class="calendar" data-date-min="0" data-date-max="15.11.17"></div>
+						<? $finish = $arResult['EVENT']->getDateFinish() ?>
+						<? $finish = (!empty($finish)) ? (date('m/d/y', strtotime($finish . ' +3 days'))) : (date('d.m.y', strtotime('+1 year'))) ?>
+						<div class="calendar" data-date-min="<?= strtotime('-3 days') ?>" data-date-max="<?= $finish ?>"></div>
 					</div>
 				</div>
 				<div class="dates js-calendar-dates" data-field="<?= implode(', ', $dates) ?>" data-dates='<?= json_encode($dates) ?>'>

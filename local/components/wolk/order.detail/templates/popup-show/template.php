@@ -114,7 +114,7 @@
 			</div>
 			<div class="ordercontainer__itemscontainer">
 				<div class="pagesubsubtitle">
-					<?= Loc::getMessage('SKETCH') ?>
+					<?= Loc::getMessage('SKETCH_RENDERS_NOTE') ?>
 				</div>
 				<div class="last ordercontainer__item">
 					<? $src = CFile::getPath($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) ?>

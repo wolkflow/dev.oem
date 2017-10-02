@@ -183,14 +183,16 @@ $(document).ready(function() {
 		var $wrap = $that.closest('.js-product-block');
 		var $mode = $that.find('.js-calendar-mode');
         var calendar = $that.find('.calendar'),
-            minDate  = calendar.attr('data-date-min'),
-            maxDate  = calendar.attr('data-date-max');
+            minDate  = new Date(calendar.attr('data-date-min')),
+            maxDate  = new Date(calendar.attr('data-date-max'));
 		
 		var dates_field = $wrap.find('.js-calendar-dates').data('field');
 		var dates_array = $wrap.find('.js-calendar-dates').data('dates');
 		
 		var rangeMin = calendar.parent().find('.min-date');
 		var rangeMax = calendar.parent().find('.max-date');
+		
+		console.log(maxDate);
 		
 		if ($mode.attr('data-checked') === '1') {
 			$mode.prop('checked', true);
@@ -236,12 +238,12 @@ $(document).ready(function() {
     $(document).on('change', '.js-calendar-mode', function() {
         var changeMode = $(this),
             calendar   = changeMode.parents('.js-calendar-popup').find('.calendar'),
-            minDate    = calendar.attr('data-date-min'),
-            maxDate    = calendar.attr('data-date-max'),
+            minDate    = new Date(calendar.attr('data-date-min')),
+            maxDate    = new Date(calendar.attr('data-date-max')),
             rangeMin   = calendar.parent().find('.min-date'),
             rangeMax   = calendar.parent().find('.max-date'),
             dates      = calendar.parents('.setDateBlock').find('.dates');
-
+		
         if (changeMode.is(':checked')) {
             calendar.datepicker('destroy');
             // http://jsfiddle.net/sWbfk/
@@ -273,7 +275,7 @@ $(document).ready(function() {
         } else {
             calendar.datepicker('destroy');
             calendar.multiDatesPicker({
-                minDate: minDate,
+				minDate: minDate,
                 maxDate: maxDate
             });
         }
@@ -291,8 +293,8 @@ $(document).ready(function() {
 	
     // Закрытие календаря.
     $(document).keydown(function(e) {
-        if (e.which == 27 && $(".js-calendar-popup").hasClass("open")) {
-            CalendarClose($(".js-calendar-popup"));
+        if (e.which == 27 && $('.js-calendar-popup').hasClass('open')) {
+            CalendarClose($('.js-calendar-popup'));
         }
     });
 });
