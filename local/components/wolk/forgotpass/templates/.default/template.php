@@ -6,7 +6,7 @@
 
 <div class="profilepage">
 	<form method="post" name="regform" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="recover" />
+		<input type="hidden" name="action" value="restore-password" />
 		
 		<div class="pagetitle">
 			<?= Loc::getMessage("RECOVER_PASSWORD") ?>
@@ -23,14 +23,17 @@
 							<?= GetMessage("RECOVER_FIELD_EMAIL") ?>
 						</div>
 						
-						<div class="hide js-restore-success">
-							<?= GetMessage("RECOVER_SUCCESS") ?>
+						<div class="hide js-alert js-restore-success">
+							<br/><?= GetMessage("RECOVER_SUCCESS") ?>
 						</div>
-						<div class="hide js-restore-error-is-empty">
-							<?= GetMessage("RECOVER_ERROR_EMAIL_IS_EMPTY") ?>
+						<div class="hide js-alert js-restore-error-email-is-empty">
+							<br/><?= GetMessage("RECOVER_ERROR_EMAIL_IS_EMPTY") ?>
 						</div>
-						<div class="hide js-restore-error-not-found">
-							<?= GetMessage("RECOVER_ERROR_EMAIL_NOT_FOUND") ?>
+						<div class="hide js-alert js-restore-error-email-not-found">
+							<br/><?= GetMessage("RECOVER_ERROR_EMAIL_NOT_FOUND") ?>
+						</div>
+						<div class="hide js-alert js-restore-error-password-not-change">
+							<br/><?= GetMessage("RECOVER_ERROR_PASSWORD_NOT_CHANGE") ?>
 						</div>
 						
 						<div class="profilecontainer__itemscontainer">

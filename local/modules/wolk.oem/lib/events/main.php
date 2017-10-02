@@ -53,7 +53,9 @@ class Main
     {
         global $USER;
         if (!$USER->IsAdmin()) {
-            $fields['LOGIN'] = $fields['EMAIL'];
+			if (isset($fields['EMAIL'])) {
+				$fields['LOGIN'] = $fields['EMAIL'];
+			}
         }
     }
 	

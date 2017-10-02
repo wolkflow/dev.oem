@@ -10,13 +10,15 @@ define('DisableEventsCheck', true);
 // Не пересчитывать заказ при создании из формы.
 define('NO_ORDER_RECALC', 'Y');
 
+// Директория для ajax-скриптов.
+define('DIR_REMOTE', $_SERVER['DOCUMENT_ROOT'] . '/remote/include/');
+
+
+
 
 use Bitrix\Main\Localization\Loc;
 
 require ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
-
-// Директория для ajax-скриптов.
-define ('DIR_REMOTE', $_SERVER['DOCUMENT_ROOT'] . '/remote/include/');
 
 
 /**
@@ -54,7 +56,7 @@ Bitrix\Main\Loader::includeModule('catalog');
 Bitrix\Main\Loader::includeModule('sale');
 
 
-global $USER;
+global $USER, $APPLICATION;
 
 // Запрос.
 $request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
@@ -64,6 +66,10 @@ $token = (string) $request->get('TOKEN');
 
 // Язык.
 $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+
+// Загрузка языковых файлов.
+IncludeFileLangFile(__FILE__);
+
 
 
 // Обработка действий.
@@ -332,7 +338,7 @@ switch ($action) {
 		
 	// Восстановление пароля.
     case ('restore-password'):
-        $email = (string) $request->get('email');
+        $email = (string) $request->get('EMAIL');
         
         if (empty($email)) {
             jsonresponse(false, '', ['error' => 'email-is-empty']);
@@ -344,18 +350,35 @@ switch ($action) {
             '0123456789',
         ));
         
-        $res = CUser::getList(($b = "ID"), ($o = "ASC"), array('=EMAIL' => $email));
+        $res = \CUser::getList(($b = "ID"), ($o = "ASC"), array('=EMAIL' => $email));
         
 		if (!($user = $res->fetch())) {
 			jsonresponse(false, '', ['error' => 'email-not-found']);
 		}
+		
+		// Сохранение пароля пользователя.
+        $cuser  = new \CUser();
+        $result = $cuser->Update($user['ID'], array('PASSWORD' => $password));
         
-        // Отправка нового пароля.
-        \CEvent::Send('RESTORE_PASSWORD', SITE_DEFAULT, array('EMAIL' => $email, 'PASSWORD' => $password));
-        
-        $cuser = new \CUser();
-        $cuser->Update($user['ID'], array('PASSWORD' => $password));
-        
+		if (!$result) {
+			jsonresponse(false, '', ['error' => 'password-not-change']);
+		}
+		
+		// Поля.
+		$fields = $user;
+		$fields['PASSWORD'] = $password;
+		
+        // Отправка нового пароля.		
+		$html = $APPLICATION->IncludeComponent(
+			'wolk:mail.user',
+			'restore-password',
+			['ID' => $fields['ID'], 'FIELDS' => $fields]
+		);
+		
+		// Отправка сообщения о подтвеерждении регистрации.
+		$event = new \CEvent();
+		$event->Send('RESTORE_PASSWORD', SITE_DEFAULT, ['EMAIL' => $fields['EMAIL'], 'HTML' => $html, 'THEME' => getMessage('MESSAGE_THEME_RESTORE_PASSWORD')]);
+		
 		jsonresponse(true);
         break;
 	

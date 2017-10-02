@@ -10,7 +10,14 @@ $GLOBALS['JSVARS'] = array(
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Loader;
 
+
+// Константы.
 include($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/constants.php');
+
+
+// Функции.
+include($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/functions.php');
+
 
 /*
  * Подключение обработчкиов событий.
@@ -35,6 +42,8 @@ if (Loader::includeModule('wolk.oem')) {
     
     $em->addEventHandler('sale', 'OnSaleOrderSaved', ['\Wolk\OEM\Events\Sale', 'OnSaleOrderSaved']);
 }
+
+
 
 Loader::registerAutoLoadClasses(
     null,
