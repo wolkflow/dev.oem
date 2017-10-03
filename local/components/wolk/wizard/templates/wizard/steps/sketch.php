@@ -7,7 +7,7 @@
 
 <div class="pagetitle">
     <?= Loc::getMessage('TITLE_SKETCH') ?>
-    <div class="active pagetitle__button customizable">
+    <div class="active pagetitle__button customizable" data-modal="#js-sketch-help-id">
         <?= Loc::getMessage('SKETCH_HELP') ?>
     </div>
 </div>
@@ -93,6 +93,18 @@
         <div class="clear"></div>
     </div>
 </form>
+
+<div class="hide">
+    <div class="modal" id="js-sketch-help-id">
+        <div class="modalClose arcticmodal-close"></div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('SKETCH_HELP_HEAD') ?>
+		</div>
+		<div class="modalBody">
+			<?= Loc::getMessage('SKETCH_HELP_TEXT') ?>
+		</div>
+	</div>
+</div>
 
 <script>
     $(document).ready(function() {
