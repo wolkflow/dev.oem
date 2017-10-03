@@ -694,7 +694,7 @@ class Basket
             'ORDER_PROPS_ID' => $props['RENDERS']['ID'],
             'NAME'           => 'Рендеры',
             'CODE'           => $props['RENDERS']['CODE'],
-            'VALUE'          => $context->getType(),
+            'VALUE'          => [],
         ];
         
         

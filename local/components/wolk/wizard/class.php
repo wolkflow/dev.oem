@@ -97,10 +97,7 @@ class WizardComponent extends \CBitrixComponent
 			if ($order->getUserID() != CUser::getID()) {
 				LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
 			}
-			
-			if ($order->getUserID() != CUser::getID()) {
-				$this->getBasket()->load($order);
-			}
+			$this->getBasket()->load($order);
 		}
         
         return $arParams;
