@@ -176,6 +176,15 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 #timetable td + td + td + td {width: auto}
 
 
+.pretty table	{width: 100%}
+.pretty td		{border: 1px solid #d0d0d0;padding: 22px 10px 22px 28px;font-size: 13px;color: #333}
+.pretty td 		{font-weight: 400;width: 115px}
+.pretty td + td  {width: 95px;}
+.pretty td + td + td {width: 110px}
+.pretty td + td + td + td {width: auto}
+
+
+
 .colorsArray:after	{display: block;content: '';position: relative;clear: both}
 .colorsArray ul,
 .colorsArray li		{list-style: none;margin: 0;padding: 0}

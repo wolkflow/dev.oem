@@ -935,7 +935,7 @@ class EventDetailComponent extends BaseListComponent
 			$standsOfferIds = [];
             $equipmentIds = [];
 			
-            $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC'], [
+            $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC', 'SORT' => 'ASC'], [
                 'IBLOCK_ID'           => STANDS_OFFERS_IBLOCK_ID,
                 'ACTIVE'              => 'Y',
                 'PROPERTY_CML2_LINK'  => $props['STANDS']['VALUE'],
@@ -967,7 +967,7 @@ class EventDetailComponent extends BaseListComponent
 			
 			// Дополнение незагруженных стендов (по площади).
             if ($obStandOffers->SelectedRowsCount() < count($props['STANDS']['VALUE'])) {
-                $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC'], [
+                $obStandOffers = CIBlockElement::getList(['PROPERTY_AREA_MAX' => 'DESC', 'SORT' => 'ASC'], [
                     'IBLOCK_ID'          => STANDS_OFFERS_IBLOCK_ID,
                     'ACTIVE'             => 'Y',
                     'PROPERTY_CML2_LINK' => $props['STANDS']['VALUE'],
@@ -1106,8 +1106,13 @@ class EventDetailComponent extends BaseListComponent
         }
         $arEvent['STANDS'] = $arStands;
 		
+		unset($arStands);
+
+		// Сортировка стендов.
+		uasort($arEvent['STANDS'], function($s1, $s2) { return ($s1['SORT'] - $s2['SORT']); } );
+		
 		if (isset($_GET['dbg'])) {
-			echo (count($arStands));
+			print_r($arEvent['STANDS']);
 		}
 		
         if ($eventCurrency = $arEvent['PROPS']['LANG_CURRENCY_' . $this->curLang]['VALUE']) {
