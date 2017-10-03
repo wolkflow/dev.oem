@@ -91,6 +91,7 @@ class WizardComponent extends \CBitrixComponent
             $arParams['SFORM'] = $params['SFORM'];
         }
 		
+		
 		// Загрузка данных.
 		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
 			$order = new Wolk\OEM\Order($arParams['OID']);
@@ -120,7 +121,6 @@ class WizardComponent extends \CBitrixComponent
 		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
 			return;
 		}
-		
 		
 		$reload = false;
 		
