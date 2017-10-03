@@ -76,7 +76,7 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             <div class="modalClose arcticmodal-close"></div>
                             <div class="modalTitle"><?= $document['TITLE'] ?></div>
                             <div class="modalContent">
-                                <div class="generalInfoContent">
+                                <div class="generalInfoContent pretty">
                                     <?= $document['HTML'] ?>
                                 </div>
                             </div>
