@@ -118,16 +118,14 @@
 				</div>
 				<div class="last ordercontainer__item">
 					<? $src = CFile::getPath($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) ?>
-					<a href="<?= $src ?>" target="_blank">
-						<img src="<?= $src ?>" width="70" height="70" />
-					</a>
+					<a href="<?= $src ?>" target="_blank"><img src="<?= $src ?>" width="70" height="70" /></a>
 					
-					<? $renders = array_filter($arResult['ORDER']['PROPS']['RENDERS']['VALUE']) ?>
+					<? $renders = array_filter($arResult['RENDERS']) ?>
 					<? foreach ($renders as $render) { ?>
-						
+						<a href="<?= $render ?>" target="_blank"><img src="<?= $render ?>" width="70" height="70" /></a>
 					<? } ?>
 					<div class="ordercontainer__itemname">
-						<?= Loc::getMessage('SKETCH_RENDERS_NOTE') ?>
+						<? // Loc::getMessage('SKETCH_RENDERS_NOTE') ?>
 					</div>
 				</div>
 			</div>

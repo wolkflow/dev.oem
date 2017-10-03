@@ -14,6 +14,84 @@ class Render
     const DEFAULT_WIDTH    = 1280;
     const DEFAULT_HEIGHT   = 1024;
     const DEFAULT_DISTANCE = 2;
+	
+	
+	
+	/**
+	 * Генерация стенда из заказа.
+	 */
+	public static function order(Order $order)
+	{
+		// Данные заказа.
+		$data = $order->getData();
+		
+		// Корзины.
+		$baskets = [];
+		foreach ($order->getBaskets() as $basket) {
+			if ($basket['PROPS']['STAND']['VALUE'] == 'Y' || empty($basket['PROPS']['BID']['VALUE'])) { 
+				continue;
+			}
+			$baskets[$basket['PROPS']['BID']['VALUE']] = $basket;
+		}
+		
+		// Углы поворота.
+        $rotates = array(0, 30, 90, 120);
+		
+		// Код мероприятия.s
+		$code = $data['PROPS']['EVENT_CODE']['VALUE'];
+		
+		
+		// Данные скетча.
+		$sketch = $data['PROPS']['SKETCH_SCENE']['VALUE'];
+		
+		if (empty($sketch)) {
+			return false;
+		}
+		$sketch = json_decode($sketch, true);
+		
+		// Объекты на сцене.
+		$objects = $sketch['objects'];
+		
+		foreach ($objects as &$object) {
+			$pid = $baskets[$object['id']]['PRODUCT_ID'];
+			
+			if ($pid <= 0) {
+				continue;
+			}
+			$product = new \Wolk\OEM\Products\Base($pid);
+			
+			$object['path'] = $product->getModelPath();
+		}
+		
+		$scene = [
+            'width'      => $data['PROPS']['WIDTH']['VALUE'],
+            'length'     => $data['PROPS']['DEPTH']['VALUE'],
+            'type'       => $data['PROPS']['SFORM']['VALUE'],
+            'owner_name' => '',
+            'objects'    => $objects,
+        ];
+        
+        $distance = 1;
+        if ($params['WIDTH'] <= 3 && $params['DEPTH'] <= 3) {
+            $distance = 2;
+        }
+		
+		$paths = array();
+		foreach ($rotates as $rotate) {
+			
+			// Рендер сцены.
+			$paths []= \Wolk\OEM\Render::render(
+				$order->getID() . '-' . $rotate, 
+				json_encode($scene), 
+				'out-'.uniqid(), 
+				1280, 
+				1024, 
+				$distance, 
+				$rotate
+			);
+		}
+		return $paths;
+	}
     
     
     /**

@@ -442,6 +442,44 @@ class Order
             return false;
         }
     }
+	
+	
+	/**
+	 * Получение списка рендеров заказа.
+	 */
+	public function getRenders()
+	{
+		$data = $this->getData();
+		
+		$renders = array_filter((array) unserialize($data['PROPS']['RENDERS']['VALUE']));
+		
+		if (empty($renders)) {
+			$renders = \Wolk\OEM\Render::order($this);
+			
+			$result = \CSaleOrderProps::GetList([], ['CODE' => 'RENDERS'], false, false, []);
+			if ($prop = $result->Fetch()) {
+				// Данные свойств.
+				$dataprop = [
+					'ORDER_ID'       => $this->getID(),
+					'ORDER_PROPS_ID' => $prop['ID'],
+					'NAME'           => 'Рендеры',
+					'CODE'           => $prop['CODE'],
+					'VALUE'          => $renders,
+				];
+				
+				$result = \CSaleOrderPropsValue::GetList(
+					[], 
+					['ORDER_ID' => $dataprop['ORDER_ID'], 'ORDER_PROPS_ID' => $dataprop['ORDER_PROPS_ID'], 'CODE' => $dataprop['CODE']]
+				);
+				if ($propval = $result->Fetch()) {
+					\CSaleOrderPropsValue::Update($propval['ID'], array('VALUE' => $renders));
+				} else {
+					\CSaleOrderPropsValue::Add($dataprop);
+				}
+			}
+		}
+		return $renders;
+	}
     
     
     
@@ -801,6 +839,14 @@ class Order
             'NAME'           => 'Тип застройки',
             'CODE'           => 'TYPESTAND',
             'VALUE'          => $context->getType(),
+        ];
+		
+		$dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['RENDERS']['ID'],
+            'NAME'           => 'Рендеры',
+            'CODE'           => $props['RENDERS']['CODE'],
+            'VALUE'          => [],
         ];
         
         // INCLUDE_VAT
