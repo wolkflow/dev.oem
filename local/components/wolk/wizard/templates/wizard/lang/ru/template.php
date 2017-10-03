@@ -130,3 +130,35 @@ $MESS['ORDER_PLACED'] = 'Заказ оформлен';
 $MESS['HOME'] = 'На главную';
 $MESS['REVIEW_ORDER'] = 'Посмотреть заказа';
 
+$MESS['FORM_COMPANY'] = 'Название компании';
+$MESS['FORM_PAVILION'] = 'Павильон №';
+$MESS['FORMM_HALL'] = 'Зал №';
+$MESS['FORM_STAND'] = 'Стенд №';
+$MESS['FORM_SIZE'] = 'Размер';
+$MESS['FORM_SIZE_DIMENSION'] = 'мм';
+$MESS['FORM_SIZE_HOLDER'] = 'Д x Ш x В';
+$MESS['FORM_METARIAL'] = 'Материал';
+$MESS['FORM_WEIGHT'] = 'Вес';
+$MESS['FORM_WEIGHT_DIMENSION'] = 'кг';
+$MESS['FORM_LIST'] = 'Список размещения оборудования на структуру';
+$MESS['FORM_LIST_HOLDER'] = 'Просьба указать вес каждого элемента (освещения, рекламного оборудования, элементов декора)';
+$MESS['FORM_MATERIAL'] = 'Материал';
+$MESS['FORM_WEIGHT_POINT'] = 'Вес на одну точку';
+$MESS['FORM_WEIGHT_POINT_DIMENSION'] = 'кг';
+$MESS['FORM_HEIGHT'] = 'Высота';
+$MESS['FORM_HEIGHT_DIMENSION'] = 'мм';
+$MESS['FORM_WEIGHT_TOTAL'] = 'Итоговый вес';
+$MESS['FORM_WEIGHT_TOTAL_DIMENSION'] = 'кг';
+$MESS['FORM_ASSIGNEE_PROJECT'] = 'Ответственный за проект структуры';
+$MESS['FORM_ASSIGNEE_MOUNTING'] = 'Ответственный за монтажные работы';
+$MESS['FORM_PHONE'] = 'Номер телефона';
+
+
+ 
+
+
+
+
+
+
+

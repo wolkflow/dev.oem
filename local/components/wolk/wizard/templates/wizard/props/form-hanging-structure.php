@@ -10,35 +10,51 @@
 
 <div class="js-param-block" data-code="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>">
     <div class="serviceItem__row">
-        <div class="serviceItem__subtitle"><?= Loc::getMessage('company_name') ?></div>
+        <div class="serviceItem__subtitle">
+			<?= Loc::getMessage('FORM_COMPANY') ?>
+		</div>
         <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.COMPANY" value="<?= (!empty($value)) ? ($value['COMPANY']) : ('') ?>" />
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__col-3">
-            <div class="serviceItem__subtitle"><?= Loc::getMessage('pavillion') ?> №</div>
+            <div class="serviceItem__subtitle">
+				<?= Loc::getMessage('FORM_PAVILION') ?>
+			</div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.PAVILION" value="<?= (!empty($value)) ? ($value['PAVILION']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-3">
-            <div class="serviceItem__subtitle"><?= Loc::getMessage('hall') ?> №</div>
+            <div class="serviceItem__subtitle">
+				<?= Loc::getMessage('FORMM_HALL') ?>
+			</div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.HALL" value="<?= (!empty($value)) ? ($value['STANDNUM']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-3">
-            <div class="serviceItem__subtitle"><?= Loc::getMessage('stand') ?> №</div>
+            <div class="serviceItem__subtitle">
+				<?= Loc::getMessage('FORM_STAND') ?>
+			</div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.STAND" value="<?= (!empty($value)) ? ($value['STAND']) : ('') ?>" />
         </div>
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__col-3">
-            <div class="serviceItem__subtitle"><?= Loc::getMessage('size') ?> <span>(mm)</span></div>
-            <input type="text" class="styler js-param-value" placeholder="L x W x H" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.SIZE" value="<?= (!empty($value)) ? ($value['SIZE']) : ('') ?>" />
+            <div class="serviceItem__subtitle">
+				<?= Loc::getMessage('FORM_SIZE') ?>
+				<span>(<?= Loc::getMessage('FORM_SIZE_DIMENSION') ?>)</span>
+			</div>
+            <input type="text" class="styler js-param-value" placeholder="<?= Loc::getMessage('FORM_SIZE_HOLDER') ?>" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.SIZE" value="<?= (!empty($value)) ? ($value['SIZE']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-3">
-            <div class="serviceItem__subtitle"><?= Loc::getMessage('material') ?></div>
+            <div class="serviceItem__subtitle">
+				<?= Loc::getMessage('FORM_MATERIAL') ?>
+			</div>
             <input type="text" class="style js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.MATERIAL" value="<?= (!empty($value)) ? ($value['MATERIAL']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-3">
             <div class="serviceItem__subtitle">
-                <?= Loc::getMessage('weight') ?> <span>(kg)</span>
+				<div class="serviceItem__subtitle">
+					<?= Loc::getMessage('FORM_WEIGHT') ?>
+					<span>(<?= Loc::getMessage('FORM_WEIGHT_DIMENSION') ?>)</span>
+				</div>
                 <i class="tip" title="Tip"></i>
             </div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.WEIGHT" value="<?= (!empty($value)) ? ($value['WEIGHT']) : ('') ?>" />
@@ -46,35 +62,42 @@
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__subtitle">
-            <?= Loc::getMessage('List of the equipment placing on the structure') ?>
+            <?= Loc::getMessage('FORM_LIST') ?>
         </div>
-        <textarea class="styler js-param-value" placeholder="<?= Loc::getMessage('placeholder_list_equipment') ?>" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.LIST"><?= (!empty($value)) ? ($value['LIST']) : ('') ?></textarea>
+        <textarea class="styler js-param-value" placeholder="<?= Loc::getMessage('FORM_LIST_HOLDER') ?>" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.LIST"><?= (!empty($value)) ? ($value['LIST']) : ('') ?></textarea>
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__col-2">
             <div class="serviceItem__subtitle">
-                <?= Loc::getMessage('material') ?>
+                <?= Loc::getMessage('FORM_MATERIAL') ?>
             </div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.ONMATERIAL" value="<?= (!empty($value)) ? ($value['ONMATERIAL']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-2">
             <div class="serviceItem__subtitle">
-                <?= Loc::getMessage('Weight per point') ?> <span>(kg)</span>
-            </div>
+				<?= Loc::getMessage('FORM_WEIGHT_POINT') ?>
+				<span>(<?= Loc::getMessage('FORM_WEIGHT_POINT_DIMENSION') ?>)</span>
+			</div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.POINTWEIGHT" value="<?= (!empty($value)) ? ($value['POINTWEIGHT']) : ('') ?>" />
         </div>
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__col-2">
             <div class="serviceItem__subtitle">
-                <?= Loc::getMessage('height') ?> <span>(mm)</span>
+				<div class="serviceItem__subtitle">
+					<?= Loc::getMessage('FORM_HEIGHT') ?>
+					<span>(<?= Loc::getMessage('FORM_HEIGHT_DIMENSION') ?>)</span>
+				</div>
                 <i class="tip" title="Tip"></i>
             </div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.HEIGHT" value="<?= (!empty($value)) ? ($value['HEIGHT']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-2">
             <div class="serviceItem__subtitle">
-                <?= Loc::getMessage('Total weight') ?>  <span>(kg)</span>
+				<div class="serviceItem__subtitle">
+					<?= Loc::getMessage('FORM_WEIGHT_TOTAL') ?>
+					<span>(<?= Loc::getMessage('FORM_WEIGHT_TOTAL_DIMENSION') ?>)</span>
+				</div>
                 <i class="tip" title="Tip"></i>
             </div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.FULLWEIGHT" value="<?= (!empty($value)) ? ($value['FULLWEIGHT']) : ('') ?>" />
@@ -82,19 +105,19 @@
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__subtitle">
-            <?= Loc::getMessage('Person in charge of the project of the structure') ?>
+            <?= Loc::getMessage('FORM_ASSIGNEE_PROJECT') ?>
         </div>
         <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.PERSON_PROJECT" value="<?= (!empty($value)) ? ($value['PERSON_PROJECT']) : ('') ?>" />
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__subtitle">
-            <?= Loc::getMessage('Person in charge of mounting works') ?>
+            <?= Loc::getMessage('FORM_ASSIGNEE_MOUNTING') ?>
         </div>
         <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.PERSON_MOUNT" value="<?= (!empty($value)) ? ($value['PERSON_MOUNT']) : ('') ?>" />
     </div>
     <div class="serviceItem__row">
         <div class="serviceItem__subtitle">
-            <?= Loc::getMessage('Mobile phone') ?>
+            <?= Loc::getMessage('FORM_PHONE') ?>
         </div>
         <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.PHONE" value="<?= (!empty($value)) ? ($value['PHONE']) : ('') ?>" />
     </div>
