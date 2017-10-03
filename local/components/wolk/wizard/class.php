@@ -98,6 +98,10 @@ class WizardComponent extends \CBitrixComponent
 				LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
 			}
 			$this->getBasket()->load($order);
+			
+			$arParams['WIDTH'] = $this->getBasket()->getParam('WIDTH');
+            $arParams['DEPTH'] = $this->getBasket()->getParam('DEPTH');
+            $arParams['SFORM'] = $this->getBasket()->getParam('SFORM');
 		}
         
         return $arParams;
