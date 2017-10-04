@@ -7,20 +7,23 @@
 <? // Обработка свойств товара. // ?>
 <? foreach ($properties as $property) { ?>
 	<div class="js-property-block">
-		<? if ($property == Basket::PARAM_COLOR) { ?>
-			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
-		<? } ?>
-		<? if ($property == Basket::PARAM_FORM_HANGING_STRUCTURE) { ?>
-			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/form-hanging-structure.php') ?>
-		<? } ?>
-		<? if ($property == Basket::PARAM_FILE) { ?>
-			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
+		<? if ($property == Basket::PARAM_TEXT) { ?>
+			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/text.php') ?>
 		<? } ?>
 		<? if ($property == Basket::PARAM_LINK) { ?>
 			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/link.php') ?>
 		<? } ?>
 		<? if ($property == Basket::PARAM_COMMENT) { ?>
 			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
+		<? } ?>
+		<? if ($property == Basket::PARAM_FILE) { ?>
+			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
+		<? } ?>
+		<? if ($property == Basket::PARAM_COLOR) { ?>
+			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>
+		<? } ?>
+		<? if ($property == Basket::PARAM_FORM_HANGING_STRUCTURE) { ?>
+			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/form-hanging-structure.php') ?>
 		<? } ?>
 	</div>
 <? } ?>

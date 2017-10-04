@@ -288,6 +288,17 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
 		return $this->data['PROPS']['MANAGERS']['VALUE'];
 	}
+	
+	
+	/**
+	 * Получение количества символов, после которых символ становится платным.
+	 */
+	public function getPayLimitSymbols()
+	{
+		$this->load();
+		
+		return intval($this->data['PROPS']['PAY_LIMIT_SYMBOLS_PANEL']['VALUE']);
+	}
     
     
     public function getCurrencyContext(Context $context)

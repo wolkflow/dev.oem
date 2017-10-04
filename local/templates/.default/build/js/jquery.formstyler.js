@@ -668,11 +668,13 @@
 								$('div.jq-selectbox__dropdown:visible').hide();
 								dropdown.show();
 								selectbox.addClass('opened focused');
+								selectbox.parent().addClass('opened');
 								// колбек при открытии селекта
 								opt.onSelectOpened.call(selectbox);
 							} else {
 								dropdown.hide();
 								selectbox.removeClass('opened dropup dropdown');
+                                selectbox.parent().removeClass('opened');
 								// колбек при закрытии селекта
 								if ($('div.jq-selectbox').filter('.opened').length) {
 									opt.onSelectClosed.call(selectbox);

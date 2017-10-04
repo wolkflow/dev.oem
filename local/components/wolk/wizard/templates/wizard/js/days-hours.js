@@ -19,7 +19,7 @@ window['oem-func-days-hours-cart'] = function($block) {
     if ($block.find('.js-product-select').length) {
         pid = $block.find('.js-product-select option:selected').val();
     } else {
-        pid = $block.find('.js-product-select').data('pid');
+        pid = $block.find('.js-product-element').data('pid');
     }
 	
 	

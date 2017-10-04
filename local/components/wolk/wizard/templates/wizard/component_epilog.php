@@ -24,6 +24,7 @@ $asset->addJs('/local/templates/.default/build/js/jquery-ui.multidatespicker.js'
 $asset->addJs($this->GetTemplate()->getFolder().'/js/quantity.js');
 $asset->addJs($this->GetTemplate()->getFolder().'/js/days.js');
 $asset->addJs($this->GetTemplate()->getFolder().'/js/days-hours.js');
+$asset->addJs($this->GetTemplate()->getFolder().'/js/symbols.js');
 
 // Свойства товаров.
 $asset->addJs($this->GetTemplate()->getFolder().'/js/props.js');
