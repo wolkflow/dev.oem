@@ -65,8 +65,6 @@ window['oem-func-days-hours-cart'] = function($block) {
 	$block.find('.js-product-days-hours-dates').val($note.text());
 	$block.find('.js-product-days-hours-times').val($timemin.val() + ' - ' + $timemax.val());
 	
-	console.log(quantity, hours);
-	
 	// Общее количество.
 	quantity = quantity * hours;
 	

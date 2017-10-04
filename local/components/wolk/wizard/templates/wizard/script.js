@@ -26,7 +26,9 @@ function PutBasket(pid, quantity, $block)
     var sid    = $block.closest('.js-product-section').attr('data-sid');
     var action = (empty(bid)) ? ('put-basket') : ('update-basket');
     
-    
+	quantity = parseFloat(quantity);
+	
+    console.log(quantity);
     if (!empty(bid)) {
         if (quantity <= 0) {
             RemoveBasket(bid, sid, $block);
@@ -180,7 +182,7 @@ $(document).ready(function() {
     
     
     // Выбор товара из выпадающего списка.
-    $(document).on('change', '.js-product-select', function(e) {
+    $(document).on('change', 'select.js-product-select', function(e) {
         var $that   = $(this);
         var $block  = $that.closest('.js-product-block');
         var $option = $that.find('option:selected');
