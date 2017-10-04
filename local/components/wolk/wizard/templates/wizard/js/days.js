@@ -77,8 +77,8 @@ window['oem-func-days-more'] = function($block) {
     $clone.find('.calendar').remove();
     $clone.find('.calendarPopupContent').append('<div class="calendar" data-date-min="' + mindate + '" data-date-max="' + maxdate+ '" />');
     $clone.find('.calendar').multiDatesPicker({
-        minDate: mindate,
-        maxDate: maxdate
+        minDate: new Date(mindate),
+        maxDate: new Date(maxdate)
     });
     $clone.find('.js-product-select .js-option-noselect').trigger('click');
 }
@@ -88,6 +88,9 @@ window['oem-func-days-more'] = function($block) {
  * Функция очистки данных.
  */
 window['oem-func-days-clear'] = function($block) {
+	var mindate  = $block.find('.calendar').attr('data-date-min'),
+        maxdate  = $block.find('.calendar').attr('data-date-max');
+	
     $block.attr('data-bid', '');
     //$block.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
     $block.find('.styler').styler();
@@ -101,6 +104,13 @@ window['oem-func-days-clear'] = function($block) {
     $block.find('.js-product-select-price').hide();
     $block.find('.js-product-select-descr').hide();
     
+	$block.find('.calendar').remove();
+    $block.find('.calendarPopupContent').append('<div class="calendar" data-date-min="' + mindate + '" data-date-max="' + maxdate+ '" />');
+    $block.find('.calendar').multiDatesPicker({
+        minDate: new Date(mindate),
+        maxDate: new Date(maxdate)
+    });
+	
 	$block.find('.js-calendar-reset').trigger('click');
 	
     // Сброс всех свойств товара.

@@ -65,6 +65,8 @@ window['oem-func-days-hours-cart'] = function($block) {
 	$block.find('.js-product-days-hours-dates').val($note.text());
 	$block.find('.js-product-days-hours-times').val($timemin.val() + ' - ' + $timemax.val());
 	
+	console.log(quantity, hours);
+	
 	// Общее количество.
 	quantity = quantity * hours;
 	
@@ -101,46 +103,54 @@ window['oem-func-days-hours-more'] = function($block) {
  * Функция очистки данных.
  */
 window['oem-func-days-hours-clear'] = function($block) {
+	var mindate  = $block.find('.calendar').attr('data-date-min'),
+        maxdate  = $block.find('.calendar').attr('data-date-max');
+	
     $block.attr('data-bid', '');
+    //$block.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
     $block.find('.styler').styler();
     $block.find('.js-product-select .js-option-noselect').trigger('click');
     
+	$block.find('input.js-param-value').val('');
+	$block.find('textarea.js-param-value').html('');
+	
+	$block.find('.js-days-hours-time-min option:selected').attr('selected', false);
+    $block.find('.js-days-hours-time-max option:selected').attr('selected', false);
+	$block.find('.js-days-hours-time-min option:first-child').attr('selected', 'selected');
+    $block.find('.js-days-hours-time-max option:first-child').attr('selected', 'selected');
+	$block.find('.js-days-hours-time-min').val('').styler();
+	$block.find('.js-days-hours-time-max').val('').styler();
+	
     $block.find('.js-product-price').html('');
     $block.find('.js-product-descr').html('');
     $block.find('.js-product-select-price').hide();
     $block.find('.js-product-select-descr').hide();
     
-    $block.find('.js-days-hours-times option:selected').attr('selected', null);
-    $block.find('.js-days-hours-datepicker').multiDatesPicker({
-        dateFormat: 'dd.mm.yy',
-        minDate:    0,
-        autoclose:  true,
-        onSelect:   function(date) {
-            var dates;
-        }
+	$block.find('.calendar').remove();
+    $block.find('.calendarPopupContent').append('<div class="calendar" data-date-min="' + mindate + '" data-date-max="' + maxdate+ '" />');
+    $block.find('.calendar').multiDatesPicker({
+        minDate: new Date(mindate),
+        maxDate: new Date(maxdate)
     });
-    
+	
+	$block.find('.js-calendar-reset').trigger('click');
+	
     // Сброс всех свойств товара.
     ResetParams($block);
 }
 
 
 $(document).ready(function() {
-    
-    // Добавление нового поля.
-    $(document).on('click', '.js-block-days-hours .js-more-field', function(event) {
-        window['oem-func-days-hours-more']($(this));
-    });
     	
 	// Выбор даты.
 	$(document).on('click', '.js-block-days-hours .js-calendar-save', function(e) {
 		var $block = $(this).closest('.js-product-block');
 		
-		window['oem-func-days-cart']($block);
+		window['oem-func-days-hours-cart']($block);
 	});
     
     // Выбор времени.
-    $(document).on('change', '.js-days-hours-times', function(event) {
+    $(document).on('change', 'select.js-days-hours-times', function(e) {
         var $block = $(this).closest('.js-product-block');
         
         window['oem-func-days-hours-cart']($block);

@@ -27,9 +27,10 @@ class Basket
     
     
     // Типы параметров.
-    const PARAM_FILE                   = 'FILE';
+	const PARAM_TEXT				   = 'TEXT';
+	const PARAM_LINK                   = 'LINK';
     const PARAM_COMMENT                = 'COMMENT';
-    const PARAM_LINK                   = 'LINK';
+    const PARAM_FILE                   = 'FILE';
     const PARAM_COLOR                  = 'COLOR';
     const PARAM_FORM_HANGING_STRUCTURE = 'FORM-HANGING-STRUCTURE';
     

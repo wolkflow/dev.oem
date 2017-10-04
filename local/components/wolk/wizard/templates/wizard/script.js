@@ -180,7 +180,7 @@ $(document).ready(function() {
     
     
     // Выбор товара из выпадающего списка.
-    $(document).on('change', '.js-product-select', function(event) {
+    $(document).on('change', '.js-product-select', function(e) {
         var $that   = $(this);
         var $block  = $that.closest('.js-product-block');
         var $option = $that.find('option:selected');

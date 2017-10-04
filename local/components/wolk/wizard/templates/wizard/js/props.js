@@ -191,9 +191,7 @@ $(document).ready(function() {
 		
 		var rangeMin = calendar.parent().find('.min-date');
 		var rangeMax = calendar.parent().find('.max-date');
-		
-		console.log(maxDate);
-		
+				
 		if ($mode.attr('data-checked') === '1') {
 			$mode.prop('checked', true);
 			
@@ -234,7 +232,7 @@ $(document).ready(function() {
     });
 	
 
-    // Смена типа выбора мульти, или ренж
+    // Смена типа выбора мульти, или ренж.
     $(document).on('change', '.js-calendar-mode', function() {
         var changeMode = $(this),
             calendar   = changeMode.parents('.js-calendar-popup').find('.calendar'),
@@ -284,10 +282,16 @@ $(document).ready(function() {
 	
     // Сбрасываем и прячем календарь.
     $(document).on('click', '.js-calendar-reset', function() {
-		var calendar = $(this).parents('.js-calendar-content').find('.calendar');
-		var block    = $(this).parents('.js-calendar-wrap').find('.js-calendar-popup');
-        
-        CalendarClose(block);
+		var $calendar = $(this).parents('.js-calendar-content').find('.calendar');
+		var $wrapper  = $(this).parents('.js-calendar-wrap');
+		var $popup    = $wrapper.find('.js-calendar-popup');
+        var $dates    = $wrapper.find('.js-calendar-dates');
+		
+		$dates.html('');
+		$dates.attr('data-field', '');
+		$dates.attr('data-dates', '');
+		
+        CalendarClose($popup);
     });
 	
 	
