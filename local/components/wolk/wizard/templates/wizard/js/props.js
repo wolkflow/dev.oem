@@ -9,14 +9,14 @@ Date.getDateFormat = function (date) {
  * Количество часов между датами.
  */
 Date.getHoursBetween = function (date1, date2) {
-    var one_hour = 1000 * 60 * 60;
+    var hour = 60 * 60 * 1000;
 
     var date1_ms = date1.getTime();
     var date2_ms = date2.getTime();
 	
-    var difference_ms = parseInt(date2_ms - date1_ms);
+    var difference = parseInt(date2_ms - date1_ms);
 	
-    return Math.round(difference_ms / one_hour);
+    return Math.round(difference / hour);
 };
 
 
