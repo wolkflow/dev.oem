@@ -96,7 +96,7 @@ class WizardComponent extends \CBitrixComponent
 		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
 			$order = new Wolk\OEM\Order($arParams['OID']);
 			if ($order->getUserID() != CUser::getID()) {
-				LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
+				LocalRedirect('/events/'.strtolower($arParams['CODE']).'/');
 			}
 			$this->getBasket()->load($order);
 			
