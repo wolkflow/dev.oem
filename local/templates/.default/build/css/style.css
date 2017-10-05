@@ -23,7 +23,7 @@ a:hover				{text-decoration: none}
 .serviceItem__title				{font-weight: 700;font-size: 17px;text-transform: uppercase;padding: 0 0 17px;background: url(../images/globals/serviceItem__title.png) 0 100% no-repeat;margin-bottom: 15px}
 .serviceItem__left				{float: left;width: 320px}
 .serviceItem__left-short		{float: left;width: 155px}
-.serviceItem__subtitle			{font-weight: 700;margin-bottom: 16px;font-size: 17px}
+.serviceItem__subtitle			{font-weight: 700;margin-bottom: 14px; margin-top: 16px; font-size: 17px;}
 .serviceItem__subtitle span		{font-size: 13px;color: #999;display: inline-block;margin-left: 5px;font-weight: 400}
 .serviceItem__right				{margin-left: 340px}
 .serviceItem__right-large		{margin-left: 160px}

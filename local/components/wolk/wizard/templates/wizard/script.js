@@ -28,7 +28,6 @@ function PutBasket(pid, quantity, $block)
     
 	quantity = parseFloat(quantity);
 	
-    console.log(quantity);
     if (!empty(bid)) {
         if (quantity <= 0) {
             RemoveBasket(bid, sid, $block);
@@ -147,6 +146,60 @@ function RemoveBasket(bid, sid, $block)
         }
     });
 }
+
+
+/**
+ * Обновление свойтсва позиции.
+ */
+function UpdateBasketProps($prop)
+{
+	var $wrapper = $('#js-wrapper-id');
+	var $block   = $prop.closest('.js-product-block');
+    
+
+    var bid = $block.attr('data-bid');
+	
+	if (bid.length <= 0) {
+		return
+	}
+	
+	// Проверка заполненности всех свойств товара.
+    var params   = {};
+    var reqprops = false;
+    $prop.find('.js-param-value').each(function() {
+        var $that = $(this);
+        if ($that.attr('name') == undefined) {
+            return;
+        }
+        if ($that.hasClass('js-param-required') && $that.val().length == 0) {
+            reqprops = true;
+        }
+        params[$that.attr('name')] = $that.val();
+    });
+		
+	
+	// Отправка свойства продукции.
+    $.ajax({
+        url: '/remote/',
+        type: 'post',
+        data: {
+            'action':   'update-basket-property',
+            'sessid':   BX.bitrix_sessid(),
+            'bid':      bid,
+            'eid':      $wrapper.data('eid'),
+            'code':     $wrapper.data('code'),
+            'type':     $wrapper.data('type'),
+            'params':   params,
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status) {
+                $('#js-basket-wrapper-id').html(response.data['html']);
+            }
+        }
+    });
+}
+
 
 
 

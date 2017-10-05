@@ -64,6 +64,27 @@ function CalendarClose(block)
 }
 
 $(document).ready(function() {
+	
+	$(document).on('keyup', '.js-property-block .js-param-link', function(e) {
+		// Обновление данных о свойстве продукции.
+		UpdateBasketProps($(this).closest('.js-param-block'));
+	});
+	
+	$(document).on('keyup', '.js-property-block .js-param-text', function(e) {
+		// Обновление данных о свойстве продукции.
+		UpdateBasketProps($(this).closest('.js-param-block'));
+	});
+	
+	$(document).on('keyup', '.js-property-block .js-param-comment', function(e) {
+		// Обновление данных о свойстве продукции.
+		UpdateBasketProps($(this).closest('.js-param-block'));
+	});
+	
+	$(document).on('keyup', '.js-property-block .js-param-form_hanging_structure', function(e) {
+		// Обновление данных о свойстве продукции.
+		UpdateBasketProps($(this).closest('.js-param-block'));
+	});
+	
 
     // СВОЙСТВО: Файл.
     $(document).on('change', '.js-param-x-upload', function(event) {
@@ -107,6 +128,10 @@ $(document).ready(function() {
                     }
 					$image.addClass('changed')
                     $input.val(response.data['file']);
+					
+					
+					// Обновление данных о свойстве продукции.
+					UpdateBasketProps($block);
                 } else {
                     // Ошибка загрузки файла.
                 }
@@ -126,6 +151,9 @@ $(document).ready(function() {
 		$block.find('.js-param-x-image').html('').hide();
 		
 		$image.removeClass('changed');
+		
+		// Обновление данных о свойстве продукции.
+		UpdateBasketProps($(this).closest('.js-param-block'));
 	});
 	
 
@@ -157,6 +185,9 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#' + $modal.attr('id')).arcticmodal('close');
         }, 200);
+		
+		// Обновление данных о свойстве продукции.
+		UpdateBasketProps($wrapper);
     });
 
 

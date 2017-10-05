@@ -291,6 +291,34 @@ class Basket
         $this->putSession();
     }
     
+	
+	public function updateParams($bid,  $params)
+	{
+		$bid    = (string) $bid;
+        $params = (array)  $params;
+        
+		foreach ($params as $code => $param) {
+			$this->data[self::SESSCODE_PRODUCTS][$bid]['params'][$code] = $param;
+		}
+        
+        // Сохранение в сесиию.
+        $this->putSession();
+	}
+	
+	
+	public function updateFields($bid, $feilds)
+	{
+		$bid    = (string) $bid;
+		$feilds = (array)  $feilds;
+        
+		foreach ($feilds as $code => $feild) {
+			$this->data[self::SESSCODE_PRODUCTS][$bid]['feilds'][$code] = $feild;
+		}
+        
+        // Сохранение в сесиию.
+        $this->putSession();
+	}
+	
     
     /**
      * Удаление товара из корзины.

@@ -8,7 +8,7 @@
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
 <? $value  = $params[Basket::PARAM_COLOR] ?>
 
-<div class="js-param-block" data-code="<?= Basket::PARAM_COLOR ?>">
+<div class="js-param-block js-param-color" data-code="<?= Basket::PARAM_COLOR ?>">
 
     <input class="js-param-required js-param-value js-param-x-value" name="<?= Basket::PARAM_COLOR ?>.ID" type="hidden" value="<?= (!empty($value)) ? ($value['ID']) : ('') ?>" />
     <input class="js-param-required js-param-value js-param-x-color" name="<?= Basket::PARAM_COLOR ?>.COLOR" type="hidden" value="<?= (!empty($value)) ? ($value['COLOR']) : ('') ?>" />

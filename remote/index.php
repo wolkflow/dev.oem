@@ -244,6 +244,42 @@ switch ($action) {
         
         jsonresponse(true, '', array('html' => $html, 'item' => $item));
         break;
+		
+		
+	// Обновление параметров товара в корзине.
+    case ('update-basket-property'):
+        $bid      = (string) $request->get('bid');
+        $eid      = (int)    $request->get('eid');
+        $code     = (string) $request->get('code');
+        $type     = (string) $request->get('type');
+        $params   = (array)  $request->get('params');
+        
+        $parameters = [];
+        foreach ($params as $key => $value) {
+            if (strpos($key, '.') !== false) {
+                list($key, $subkey) = explode('.', $key);
+
+                $parameters[$key][$subkey] = $value;
+            } else {
+                $parameters[$key] = $value;
+            }
+        }
+
+        
+        // Контекст конструктора.
+        $context = new Wolk\OEM\Context($eid, $type, $lang);
+        
+        // Корзина.
+        $basket = new \Wolk\OEM\Basket($code);
+        
+        // Изменение количества товара в корзине.
+        $item = $basket->updateParams($bid, $parameters);
+        
+        // Обновление данных в корзине.
+        $html = gethtmlremote('basket.php');
+        
+        jsonresponse(true, '', array('html' => $html, 'item' => $item));
+        break;
         
     
     // Удаление продукции их корзины.

@@ -27,18 +27,19 @@
                 </div>
             </div>
             
-            <? // Подключение формы добавления продукции в корзину. // ?>
-            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$priceform.'.php') ?>
-
             <div class="equipmentcontainer__itemleftside">
                 <div class="equipmentcontainer__itemphotocontainer">
                     <a class="photoZoom" href="<?= $product->getImageSrc() ?>"></a>
-                    <img src="/i?src=<?= $product->getImageSrc() ?>&h=210" class="equipmentcontainer__itemphoto" />
+                    <img src="/i.php?src=<?= $product->getImageSrc() ?>&h=210" class="equipmentcontainer__itemphoto" />
                 </div>
                 <div class="equipmentcontainer__itemsize">
                     <?= $product->getDescription() ?>
                 </div>
             </div>
+			
+            <? // Подключение формы добавления продукции в корзину. // ?>
+            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$priceform.'.php') ?>
+
 
             <? // Обработка свойств товара. // ?>
             <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props.php') ?>

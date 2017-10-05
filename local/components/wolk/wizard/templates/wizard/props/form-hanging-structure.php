@@ -8,7 +8,7 @@
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
 <? $value  = $params[Basket::PARAM_FORM_HANGING_STRUCTURE] ?>
 
-<div class="js-param-block" data-code="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>">
+<div class="js-param-block js-param-form_hanging_structure" data-code="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>">
     <div class="serviceItem__row">
         <div class="serviceItem__subtitle">
 			<?= Loc::getMessage('FORM_COMPANY') ?>
