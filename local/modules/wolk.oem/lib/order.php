@@ -481,8 +481,24 @@ class Order
 		}
 		return $renders;
 	}
-    
-    
+    	
+	
+	/**
+	 * Получение надписи на фризовой панели.
+	 */
+	public function getFasciaBaskets()
+    {
+		$props = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
+		$items = [];
+		$baskets = $this->getBaskets();
+		foreach ($baskets as $basket) {
+			if (in_array($basket['PRODUCT_ID'], $props['FASCIA']) {
+				$items []= $basket;
+			}
+		}
+		return $items;
+	}
+	
     
     
     /**

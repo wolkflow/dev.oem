@@ -64,6 +64,12 @@ class BasketItem
         return $this->data['included'];
     }
     
+	
+	public function getType()
+    {
+        return $this->data['type'];
+    }
+	
     
     /**
      * Получение элемента.

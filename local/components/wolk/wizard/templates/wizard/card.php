@@ -40,7 +40,6 @@
             <? // Подключение формы добавления продукции в корзину. // ?>
             <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/forms/'.$priceform.'.php') ?>
 
-
             <? // Обработка свойств товара. // ?>
             <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props.php') ?>
         </div>

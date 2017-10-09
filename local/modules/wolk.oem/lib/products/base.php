@@ -10,9 +10,13 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
 {
 	const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
     const LANG_PREFIX = 'LANG_';
+	
+	const SPECIAL_TYPE_FASCIA  = 'FASCIA';
+	const SPECIAL_TYPE_HANDING = 'HANDING';
     
 	protected $price;
     protected $count;
+	
 	
 	
     public function __construct($id = null, $data = [])
@@ -229,4 +233,33 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
         
         return $section;
     }
+	
+	
+	
+	/**
+	 * Получение ID элементов с уникальными свойствами.
+	 */
+	public static function getSpecialTypeIDs() 
+	{
+		$result = \CIBlockPropertyEnum::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID]);
+		
+		$enums = [];
+		while ($enum = $result->fetch()) {
+			$enums[$enum['XML_ID']] = $enum;
+		}
+		
+		$items = [];
+		foreach ($enums as $enum) {
+			$result = self::getList([
+				'filter' => ['PROPERTY_TYPE' => $enum['ID']],
+				'select' => ['ID']
+			], false);
+			
+			while ($item = $result->getNext()) {
+				$items[$enum['XML_ID']] []= $item['ID'];
+			}
+		}
+		
+		return $items;
+	}
 }

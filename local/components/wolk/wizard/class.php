@@ -446,9 +446,14 @@ class WizardComponent extends \CBitrixComponent
     {
         $baskets = $this->getBasket()->getList(true);
         $objects = [];
-        
+		
         foreach ($baskets as $basket) {
             $element = $basket->getElement();
+			
+			// Проверка типа "Надпись на фризовую панель".
+			if ($basket->getType() == \Wolk\OEM\Products\Base::SPECIAL_TYPE_FASCIA) {
+				$this->arResult['FASCIA'] []= $basket;
+			}
 
             if (empty($element)) {
                 continue;

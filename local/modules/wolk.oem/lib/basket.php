@@ -95,8 +95,8 @@ class Basket
         }
         return $item;
     }
-    
-    
+	
+	    
     public function setParam($key, $value)
     {
         $this->data[self::SESSCODE_PARAMS][strval($key)] = $value;
@@ -235,7 +235,7 @@ class Basket
         if ($kind == self::KIND_PRODUCT) {
             $sid = (new Product($pid))->getSectionID();
         }
-
+		
 
         // Данные для добавления в корзину.
         $item = array(
@@ -249,6 +249,14 @@ class Basket
             'included' => $included,
         );
         
+		$props = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
+		
+		foreach ($props as $prop => $ids) {
+			if (in_array($pid, $ids)) {
+				$item['type'] = $prop;
+			}
+		}
+		
         switch ($kind) {
             case (self::KIND_STAND):
                 $this->data[self::SESSCODE_STAND] = $item;

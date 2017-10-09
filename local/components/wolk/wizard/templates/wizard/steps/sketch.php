@@ -36,6 +36,10 @@
 
     <hr/>
     
+	<pre>
+		<? print_r($arResult) ?>
+	</pre>
+	
     <div class="renders">
         <div id="js-renders-images-id"></div>
         <br/>

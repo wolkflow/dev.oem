@@ -17,9 +17,14 @@ function ShowError(title, message)
  */
 function PutBasket(pid, quantity, $block)
 {
+	if (blockremote == true) {
+		return;
+	}
+	
     if (pid <= 0) {
         return;
     }
+		
     var $wrapper = $('#js-wrapper-id');
 
     var bid    = $block.attr('data-bid');
@@ -69,6 +74,8 @@ function PutBasket(pid, quantity, $block)
         }
         fields[$that.attr('name')] = $that.val();
     });
+	
+	
     
     // Отправка продукции в корзину.
     $.ajax({
@@ -88,6 +95,9 @@ function PutBasket(pid, quantity, $block)
             'fields':   fields
         },
         dataType: 'json',
+		beforeSend: function() {
+			blockremote = true;
+		},
         success: function(response) {
             if (response.status) {
                 $('#js-basket-wrapper-id').html(response.data['html']);
@@ -97,6 +107,7 @@ function PutBasket(pid, quantity, $block)
                     $block.attr('data-bid', response.data['item']['id']);
                 }
             }
+			blockremote = false;
         }
     });
 }
@@ -107,6 +118,14 @@ function PutBasket(pid, quantity, $block)
  */
 function RemoveBasket(bid, sid, $block)
 {
+	if (blockremote == true) {
+		return;
+	}
+	
+	if (bid.length <= 0) {
+		return;
+	}
+	
     var $wrapper = $('#js-wrapper-id');
 
     if (empty($block)) {
@@ -126,6 +145,9 @@ function RemoveBasket(bid, sid, $block)
             'type':   $wrapper.data('type')
         },
         dataType: 'json',
+		beforeSend: function() {
+			blockremote = true;
+		},
         success: function(response) {
             if (response.status) {
                 $('#js-basket-wrapper-id').html(response.data['html']);
@@ -143,6 +165,7 @@ function RemoveBasket(bid, sid, $block)
                 // Сброс всех парамметров.
                 ResetParams($block);
             }
+			blockremote = false;
         }
     });
 }
@@ -153,10 +176,13 @@ function RemoveBasket(bid, sid, $block)
  */
 function UpdateBasketProps($prop)
 {
+	if (blockremote == true) {
+		return;
+	}
+		
 	var $wrapper = $('#js-wrapper-id');
 	var $block   = $prop.closest('.js-product-block');
     
-
     var bid = $block.attr('data-bid');
 	
 	if (bid.length <= 0) {
@@ -192,20 +218,26 @@ function UpdateBasketProps($prop)
             'params':   params,
         },
         dataType: 'json',
+		beforeSend: function() {
+			blockremote = true;
+		},
         success: function(response) {
             if (response.status) {
                 $('#js-basket-wrapper-id').html(response.data['html']);
             }
+			blockremote = false;
         }
     });
 }
 
 
+// Блокировка отправки данных.
+var blockremote = false;
 
 
 $(document).ready(function() {
-
-    // Стилизация.
+	
+	// Стилизация.
     $('.styler').styler();
 
 	

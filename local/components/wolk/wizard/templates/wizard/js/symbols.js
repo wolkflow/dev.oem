@@ -69,11 +69,11 @@ $(document).ready(function() {
     
     // Уменьшение количества товара.
     $(document).on('keyup', '.js-pricetype-symbols input.js-text', function(event) {
-		var $block   = $(this).closest('.js-product-block');
+		var $block = $(this).closest('.js-product-block');
 		
         window['oem-func-symbols-cart']($block);
-        
-		return false;
 	});
 
 });
+
+
