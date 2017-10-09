@@ -186,7 +186,15 @@ $(document).ready(function() {
 		$(this).toggleClass('open');
 	});
 
-
+    $(document).on('click', '.photoZoom', function () {
+        var photo = $('<div class="photoModal" />');
+        photo.html('<img src="' + $(this).attr("href") + '">');
+        photo.prepend('<div class="arcticmodal-close modalClose"></div>');
+        $.arcticmodal({
+            content: photo
+        });
+        return false
+    });
 
 	//window.onload = function() {
 	//	$('.basketcontainer').airStickyBlock({
