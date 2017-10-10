@@ -6,7 +6,6 @@
 
 <div class="js-symbols-wrapper js-product-element itemCount" data-pid="<?= $product->getID() ?>" data-limit="<?= $arResult['EVENT']->getPayLimitSymbols() ?>">
     <div class="serviceItem__subtitle">
-        <?= Loc::getMessage('TEXT') ?>
 		<input type="hidden" class="js-product-element" value="<?= $product->getID() ?>" />
     </div>
 </div>

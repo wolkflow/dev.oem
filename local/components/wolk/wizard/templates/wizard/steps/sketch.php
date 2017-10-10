@@ -21,6 +21,38 @@
     onmouseout="javascript: ru.octasoft.oem.designer.Main.stopDragging();"
 ></div>
 
+
+<? if (!empty($arResult['FASCIA'])) { ?>
+	<div class="fasciacontainer">
+		<? foreach ($arResult['FASCIA'] as $basketitem) { ?>
+			<? $product = $basketitem->getElement() ?>
+			<div class="js-pricetype-symbols">
+				<div class="js-product-block js-product-block-<?= $product->getSectionID() ?>" data-bid="<?= $basketitem->getID() ?>" data-price-type="symbols">
+					<div class="equipmentcontainer__itemcontainer">
+						<div class="js-symbols-wrapper js-product-element itemCount" data-pid="<?= $basketitem->getProductID() ?>" data-limit="<?= $arResult['EVENT']->getPayLimitSymbols() ?>">
+							<div class="serviceItem__subtitle">
+								<input type="hidden" class="js-product-element" value="<?= $basketitem->getProductID() ?>" />
+							</div>
+						</div>
+						<div class="js-property-block">
+							<div class="js-param-block js-param-text" data-code="TEXT">
+								<div class="serviceItem__left">
+									<div class="serviceItem__subtitle">
+										<?= Loc::getMessage('TEXT') ?>        
+									</div>
+									<div class="itemText_custom">
+										<input class="js-param-required js-param-value js-param-x-value js-text styler" name="TEXT" type="text" value="<?= $basketitem->getParam('TEXT') ?>">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<? } ?>
+	</div>
+<? } ?>
+
 <br/>
 
 <form class="js-form" method="post" action="<?= $arResult['LINKS']['NEXT'] ?>" enctype="multipart/form-data">
@@ -42,7 +74,7 @@
         <div id="js-renders-images-id" class="render-images"></div>
         <br/>
         <button id="js-render-id" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler">
-            Рендер
+            <?= Loc::getMessage('RENDER') ?>
         </button>
     </div>
     

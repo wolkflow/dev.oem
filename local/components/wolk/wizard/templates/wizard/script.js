@@ -253,7 +253,7 @@ $(document).ready(function() {
 		
         window['oem-func-' + $block.data('price-type') + '-more']($block);
     });
-
+	
 
     // Удаление из корзины.
     $(document).on('click', '.js-basket-remove', function(e) {
