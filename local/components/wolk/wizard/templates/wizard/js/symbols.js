@@ -17,7 +17,7 @@ window['oem-func-symbols-cart'] = function($block) {
         pid = $block.find('.js-product-element').data('pid');
     }
 	
-	quantity = string.replace(/\s/gi, '').length - limit;
+	quantity = string.replace(/\s/gi, '').length; // - limit;
 	
     if (quantity < 0) {
         quantity = 0;
