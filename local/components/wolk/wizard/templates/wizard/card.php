@@ -28,10 +28,17 @@
             </div>
             
             <div class="equipmentcontainer__itemleftside">
-                <div class="equipmentcontainer__itemphotocontainer">
-                    <a class="photoZoom" href="<?= $product->getImageSrc() ?>"></a>
-                    <img src="/i.php?src=<?= $product->getImageSrc() ?>&h=210" class="equipmentcontainer__itemphoto" />
-                </div>
+				<? $src = $product->getImageSrc() ?>
+				<? if (!empty($src)) { ?>
+					<div class="equipmentcontainer__itemphotocontainer">
+						<a class="photoZoom" href="<?= $src ?>"></a>
+						<img src="/i.php?src=<?= $src ?>&h=210" class="equipmentcontainer__itemphoto" />
+					</div>
+				<? } else { ?>
+					<div>
+						<? // $section->getDescription() // Если нет картинки, можно вывести текст. ?>
+					</div>
+				<? } ?>
                 <div class="equipmentcontainer__itemsize">
                     <?= $product->getDescription() ?>
                 </div>

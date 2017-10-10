@@ -494,8 +494,18 @@ div.lamColor								{width: 200px}
     text-align: center;
 }
 
+.render-images {
+	overflow: hidden;
+}
 
+.render-images .render-image {
+	float: left;
+	position: relative;
+	width: fit-content;
+}
 
-
-
+.render-images .render-image .photoZoom {
+	bottom: 4px;
+	right: 4px;
+}
 

@@ -187,14 +187,15 @@ $(document).ready(function() {
 	});
 
     $(document).on('click', '.photoZoom', function () {
-        var photo = $('<div class="photoModal" />');
-        photo.html('<img src="' + $(this).attr("href") + '">');
-        photo.prepend('<div class="arcticmodal-close modalClose"></div>');
+        var $photo = $('<div class="photoModal" />');
+        $photo.html('<img src="' + $(this).attr("href") + '">');
+        $photo.prepend('<div class="arcticmodal-close modalClose"></div>');
         $.arcticmodal({
-            content: photo
+            content: $photo
         });
-        return false
+        return false;
     });
+	
 
 	//window.onload = function() {
 	//	$('.basketcontainer').airStickyBlock({

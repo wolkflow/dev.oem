@@ -116,13 +116,16 @@ switch ($action) {
             $object['path'] = $element->getModelPath();
         }
         unset($baskets, $element);
+		
+		// Надпись на фризовой панели для рендера.
+		$fascia = reset($oembasket->getFasciaBaskets());
         
         $params = $oembasket->getParams();
         $scene = [
             'width'      => $params['WIDTH'],
             'length'     => $params['DEPTH'],
             'type'       => $params['SFORM'],
-            'owner_name' => 'Test Stand',
+            'owner_name' => (is_object($fascia)) ? ($fascia->getParam('TEXT')) : (''),
             'objects'    => $objects,
         ];
         
@@ -135,21 +138,21 @@ switch ($action) {
         $rotate = 0;
         switch ($view) {
             case (1):
-                $rotate = 0;
+                $rotate = 5;
                 break;
             case (2):
-                $rotate = 30;
-                break;
-            case (3):
                 $rotate = 90;
                 break;
-            case (4):
+            case (3):
                 $rotate = 120;
+                break;
+            case (4):
+                $rotate = 150;
                 break;
         }
         
         // Рендер сцены.
-        $path = Wolk\OEM\Render::render($code . $view, json_encode($scene), 'out-'.uniqid(), 1280, 1024, $distance, $rotate);
+        $path = Wolk\OEM\Render::render($code . '-' . $view, json_encode($scene), 'out-'.uniqid(), 1024, 768, $distance, $rotate);
         
         if ($path === false) {
             jsonresponse(false, '');
@@ -228,13 +231,13 @@ switch ($action) {
                 $parameters[$key] = $value;
             }
         }
-
-        
+		
         // Контекст конструктора.
         $context = new Wolk\OEM\Context($eid, $type, $lang);
         
         // Корзина.
         $basket = new \Wolk\OEM\Basket($code);
+		$basket->setContext($context);
         
         // Изменение количества товара в корзине.
         $item = $basket->update($bid, $pid, $quantity, $parameters, $fields);
@@ -265,13 +268,13 @@ switch ($action) {
             }
         }
 
-        
         // Контекст конструктора.
         $context = new Wolk\OEM\Context($eid, $type, $lang);
         
         // Корзина.
         $basket = new \Wolk\OEM\Basket($code);
-        
+        $basket->setContext($context);
+		
         // Изменение количества товара в корзине.
         $item = $basket->updateParams($bid, $parameters);
         

@@ -14,13 +14,20 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
     const TYPE_EQUIPMENTS = 'EQUIPMENTS';
     const TYPE_SERVICES   = 'SERVICES';
     const TYPE_MARKETINGS = 'MARKETINGS';
+	
+	const PRICETYPE_QUANTITY   = 'QUANTITY';
+	const PRICETYPE_DAYS  	   = 'DAYS';
+	const PRICETYPE_DAYS_HOURS = 'DAYS.HOURS';
+	const PRICETYPE_SYMBOLS    = 'SYMBOLS';
     
+	
     protected static $pricetypes = array();
     protected static $properties = array();
     
     // Временные внутренние данные (в текущем рабочем простаранстве).
     protected $insides = [];
     
+	
     
     public function __construct($id = null, $data = [])
     {

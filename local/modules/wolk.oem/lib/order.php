@@ -492,7 +492,7 @@ class Order
 		$items = [];
 		$baskets = $this->getBaskets();
 		foreach ($baskets as $basket) {
-			if (in_array($basket['PRODUCT_ID'], $props['FASCIA']) {
+			if (in_array($basket['PRODUCT_ID'], $props['FASCIA'])) {
 				$items []= $basket;
 			}
 		}

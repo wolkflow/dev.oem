@@ -35,11 +35,12 @@ class Basket
     const PARAM_FORM_HANGING_STRUCTURE = 'FORM-HANGING-STRUCTURE';
     
     
+    protected $code    = null;
+    protected $data    = array();
+    protected $context = null;
     
-    protected $code = null;
-    protected $data = array();
-    
-    
+	
+	
     public function __construct($event)
     {
         $this->code = mb_strtoupper((string) $event);
@@ -55,6 +56,18 @@ class Basket
         $this->putSession();
     }
     
+	
+	public function getContext()
+	{
+		return $this->context;
+	}
+	
+	
+	public function setContext(Context $context)
+	{
+		$this->context = $context;
+	}
+	
     
     /**
      * Получение кода мероприятия.
@@ -231,10 +244,26 @@ class Basket
         $fields   = (array) $fields;
         $included = (bool) $included;
         
+		$product = new Product($pid);
+		$section = $product->getSection();
+		$context = $this->getContext();
+		
         $sid = 0;
         if ($kind == self::KIND_PRODUCT) {
-            $sid = (new Product($pid))->getSectionID();
+            $sid = $section->getID();
         }
+		
+		// Обработка особенного типа продукции.
+		switch ($section->getPriceType()) {
+			
+			// Обработка количества символов.
+			case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
+				if (!empty($context)) {
+					$event    = new Event($context->getEventID());
+					$quantity = mb_strlen(preg_replace('#\s+#', '', $params[self::PARAM_TEXT])) - $event->getPayLimitSymbols();
+				}
+				break;
+		}
 		
 
         // Данные для добавления в корзину.
@@ -256,6 +285,7 @@ class Basket
 				$item['type'] = $prop;
 			}
 		}
+		
 		
         switch ($kind) {
             case (self::KIND_STAND):
@@ -286,10 +316,28 @@ class Basket
         $quantity = (float) $quantity;
         $params   = (array) $params;
         $fields   = (array) $fields;
+		
+		$product = new Product($pid);
+		$section = $product->getSection();
+		$context = $this->getContext();
+		
+		// Обработка особенного типа продукции.
+		switch ($section->getPriceType()) {
+			
+			// Обработка количества символов.
+			case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
+				if (!empty($context)) {
+					$event    = new Event($context->getEventID());
+					$quantity = mb_strlen(preg_replace('#\s+#', '', $params[self::PARAM_TEXT])) - $event->getPayLimitSymbols();
+				}
+				break;
+		}
+		
         
         if ($quantity <= 0) {
             return;
         }
+		
         $this->data[self::SESSCODE_PRODUCTS][$bid]['pid']      = $pid;
         $this->data[self::SESSCODE_PRODUCTS][$bid]['quantity'] = $quantity;
         $this->data[self::SESSCODE_PRODUCTS][$bid]['params']   = $params;
@@ -356,6 +404,23 @@ class Basket
     {
         return $_SESSION[self::SESSCODE_EVENT][$this->getEventCode()][self::SESSCODE_BASKET];
     }
+	
+	
+	/**
+	 * Получение надписи на фризовой панели.
+	 */
+	public function getFasciaBaskets()
+    {
+		$props = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
+		
+		$baskets = $this->getList(true);
+		foreach ($baskets as $basket) {
+			if (in_array($basket->getProductID(), $props['FASCIA'])) {
+				$items []= $basket;
+			}
+		}
+		return $items;
+	}
     
     
     /**

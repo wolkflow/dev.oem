@@ -21,6 +21,8 @@
     onmouseout="javascript: ru.octasoft.oem.designer.Main.stopDragging();"
 ></div>
 
+<br/>
+
 <form class="js-form" method="post" action="<?= $arResult['LINKS']['NEXT'] ?>" enctype="multipart/form-data">
     <input id="js-sketch-scene-id" type="hidden" name="SKETCH_SCENE" />
     <input id="js-sketch-image-id" type="hidden" name="SKETCH_IMAGE" />
@@ -35,13 +37,9 @@
     </div>
 
     <hr/>
-    
-	<pre>
-		<? print_r($arResult) ?>
-	</pre>
 	
     <div class="renders">
-        <div id="js-renders-images-id"></div>
+        <div id="js-renders-images-id" class="render-images"></div>
         <br/>
         <button id="js-render-id" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler">
             Рендер
@@ -156,7 +154,7 @@
                     cache: false,
                     success: function(response) {
                         if (response.status) {
-                            $('#js-renders-images-id').append('<a target="_blank" href="' + response.data['path'] + '"><img src="' + response.data['path'] + '" width="100" height="100" /></a>');
+                            $('#js-renders-images-id').append('<div class="render-image"><img src="' + response.data['path'] + '" width="100" height="100" /><a class="photoZoom" href="' + response.data['path'] + '"></a></div>');
                         } else {
                             // Ошибка загрузки файла.
                         }
