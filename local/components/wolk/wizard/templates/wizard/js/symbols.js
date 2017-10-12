@@ -52,6 +52,8 @@ window['oem-func-symbols-more'] = function($block) {
  * Функция очистки данных.
  */
 window['oem-func-symbols-clear'] = function($block) {
+	$block.attr('data-bid', '');
+	
 	$block.find('.js-text').val('');
     $block.find('.styler').styler();
     

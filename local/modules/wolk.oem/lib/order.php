@@ -454,7 +454,7 @@ class Order
 		
 		$renders = array_filter((array) unserialize($data['PROPS']['RENDERS']['VALUE']));
 		
-		if (empty($renders)) {
+		if (1 || empty($renders)) {
 			$renders = \Wolk\OEM\Render::order($this);
 			
 			$result = \CSaleOrderProps::GetList([], ['CODE' => 'RENDERS'], false, false, []);

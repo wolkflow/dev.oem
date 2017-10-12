@@ -368,7 +368,7 @@
     <? // Окно: заказ офрмлен // ?>
     <div class="modal modalSuccessOrder" id="modal-order-success">
         <div class="modalTitle">
-			<?= Loc::getMessage('SUCCESS') ?>!
+			<?= Loc::getMessage('SUCCESS') ?>
 		</div>
         <p>
 			<?= Loc::getMessage('ORDER_PLACED') ?>
@@ -389,7 +389,7 @@
     <div class="modal modalError" id="modal-order-error">
         <div class="modalClose arcticmodal-close"></div>
         <div class="modalTitle">
-			<?= Loc::getMessage('ERROR') ?>!
+			<?= Loc::getMessage('ERROR') ?>
 		</div>
         <div class="modalContent">
 			<?= Loc::getMessage('ORDER_PLACE_ERROR') ?>

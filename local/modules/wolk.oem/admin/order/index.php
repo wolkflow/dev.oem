@@ -596,7 +596,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
         <span class="adm-detail-toolbar-btn-l"></span><span class="adm-detail-toolbar-btn-text">Список заказов</span><span class="adm-detail-toolbar-btn-r"></span>
     </a>
     <div class="adm-detail-toolbar-right" style="top: 0px;">
-        <a href="/bitrix/admin/sale_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit" title="Редактировать заказа в Битркисе">Редактировать состав</a>
+        <a href="/bitrix/admin/wolk_oem_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit">Редактировать заказ</a>
 
 		<a href="<?= $orderprint->getURL() ?>" target="_blank" class="adm-btn adm-btn-edit">Распечатать заказ</a>
 		<a href="/bitrix/admin/wolk_oem_image.php?action=sketch-download&ID=<?= $ID ?>" target="_blank" id="js-sketch-image-download-id" class="adm-btn adm-btn-edit">Распечатать скетч</a>

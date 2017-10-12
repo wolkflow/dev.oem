@@ -141,7 +141,7 @@
 	<? } ?>
 </div>
 
-
+<br/>
 
 <div class="ordertotalcontainer__standandpavillion">
 	<div class="ordertotalcontainer__standcontainer">

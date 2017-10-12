@@ -63,16 +63,34 @@ class Render
 			$object['path'] = $product->getModelPath();
 		}
 		
+		// Надпись на фризовой панели.
+		$owner = '';
+		
+		// Корзины с продукцией "надпись на фриз".
+		$fascias = (array) $order->getFasciaBaskets();
+		if (!empty($fascias)) {
+			foreach ($fascias as $fascia) {
+				$params = json_decode($fascia['PROPS']['PARAMS']['VALUE'], true);
+				
+				if (!empty($params['TEXT'])) {
+					$owner = $params['TEXT'];
+					break;
+				}
+			}
+		}
+		
+		// Сцена для рендера.
 		$scene = [
             'width'      => $data['PROPS']['WIDTH']['VALUE'],
             'length'     => $data['PROPS']['DEPTH']['VALUE'],
             'type'       => $data['PROPS']['SFORM']['VALUE'],
-            'owner_name' => '',
+            'owner_name' => $owner,
             'objects'    => $objects,
         ];
         
+		// Установка нужной дистанции камеры, в зависимости от размеров стенда.
         $distance = 1;
-        if ($params['WIDTH'] <= 3 && $params['DEPTH'] <= 3) {
+        if ($params['WIDTH'] > 3 && $params['DEPTH'] > 3) {
             $distance = 2;
         }
 		
