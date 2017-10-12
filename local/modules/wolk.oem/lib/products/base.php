@@ -240,24 +240,46 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
 	 */
 	public static function getSpecialTypeIDs() 
 	{
-		$result = \CIBlockPropertyEnum::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID]);
+		// Пользовательское свойство.
+		$result = \CUserTypeEntity::GetList([], ['ENTITY_ID' => 'IBLOCK_'.IBLOCK_PRODUCTS_ID.'_SECTION', 'FIELD_NAME' => 'UF_SPECIAL']);
+		$ufield = $result->fetch();
 		
-		$enums = [];
+		// Варианты пользовательского свойства - список.
+		$result = \CUserFieldEnum::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID, 'USER_FIELD_ID' => $ufield['ID']]);
+		$enums  = [];
 		while ($enum = $result->fetch()) {
 			$enums[$enum['XML_ID']] = $enum;
 		}
 		
+		
+		// Разделы с пользовательским свойством.
+		foreach ($enums as &$enum) {
+			$result = \CIBlockSection::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID, 'UF_SPECIAL' => $enum['ID']], false, ['ID', 'NAME', 'UF_SPECIAL']);
+			while ($section = $result->getNext()) {
+				$enum['SIDS'] []= (int) $section['ID'];
+			}
+			$enum['SIDS'] = array_unique($enum['SIDS']);
+		}
+		
+		
 		$items = [];
 		foreach ($enums as $enum) {
+			if (empty($enum['SIDS'])) {
+				continue;
+			}
+			
 			$result = self::getList([
-				'filter' => ['PROPERTY_TYPE' => $enum['ID']],
+				'filter' => ['SECTION_ID' => reset($enum['SIDS'])],
 				'select' => ['ID']
 			], false);
 			
-			while ($item = $result->getNext()) {
-				$items[$enum['XML_ID']] []= $item['ID'];
+			while ($item = $result->fetch()) {
+				$items[$enum['XML_ID']] []= (int) $item['ID'];
 			}
+			$items[$enum['XML_ID']] = array_unique($items[$enum['XML_ID']]);
 		}
+		
+		print_r($items);
 		
 		return $items;
 	}

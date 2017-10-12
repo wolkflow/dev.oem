@@ -1,30 +1,27 @@
-<?
+<?php
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 
-// https://habrahabr.ru/post/190364/
-// https://habrahabr.ru/sandbox/23506/
-
 /**
- * Class PrintOrderComponent
+ * Class OrderPrintComponent
  */
-class PrintOrderComponent extends \CBitrixComponent
+class OrderPrintComponent extends \CBitrixComponent
 {
 	
 	/** 
-	 * Óñòàíîâêà íàñòðîåê.
+	 * Ð£ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº.
 	 */
     public function onPrepareComponentParams($arParams)
     {
-		// ID çàêàçà.
-		$arParams['ORDER_ID'] = (int) $arParams['ORDER_ID'];
+		// ID Ð·Ð°ÐºÐ°Ð·Ð°.
+		$arParams['OID'] = (int) $arParams['OID'];
 		
-		// Ïóòü ê ôàéëó.
+		// ÐŸÑƒÑ‚ÑŒ Ðº Ñ„Ð°Ð¹Ð»Ñƒ.
 		$arParams['PATH'] = (string) $arParams['PATH'];
 		
-		// ßçûê.
+		// Ð¯Ð·Ñ‹Ðº.
 		$arParams['LANG'] = (string) $arParams['LANG'];
 		
 		if (empty($arParams['LANG'])) {
@@ -36,58 +33,64 @@ class PrintOrderComponent extends \CBitrixComponent
 	
 	
 	/**
-	 * Âûïîëíåíèå êîìïîíåíòà.
+	 * Ð’Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð°.
 	 */
 	public function executeComponent()
     {
 		if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
-			ShowError('Ìîäóëü wolk.core íå óñòàíâîëåí.');
+			ShowError('ÐœÐ¾Ð´ÑƒÐ»ÑŒ wolk.core Ð½Ðµ ÑƒÑÑ‚Ð°Ð½Ð²Ð¾Ð»ÐµÐ½.');
+			return;
+		}
+		
+		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+			ShowError('ÐœÐ¾Ð´ÑƒÐ»ÑŒ wolk.oem Ð½Ðµ ÑƒÑÑ‚Ð°Ð½Ð²Ð¾Ð»ÐµÐ½.');
 			return;
 		}
 
 		if (!\Bitrix\Main\Loader::includeModule('iblock')) {
-			ShowError('Ìîäóëü iblock íå óñòàíâîëåí.');
+			ShowError('ÐœÐ¾Ð´ÑƒÐ»ÑŒ iblock Ð½Ðµ ÑƒÑÑ‚Ð°Ð½Ð²Ð¾Ð»ÐµÐ½.');
 			return;
 		}
 
 		if (!\Bitrix\Main\Loader::includeModule('sale')) {
-			ShowError('Ìîäóëü sale íå óñòàíâîëåí.');
+			ShowError('ÐœÐ¾Ð´ÑƒÐ»ÑŒ sale Ð½Ðµ ÑƒÑÑ‚Ð°Ð½Ð²Ð¾Ð»ÐµÐ½.');
 			return;
 		}
 		
-		// Íàñòðîéêè ëîêàëèçàöèè.
+		
+		// ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ð»Ð¾ÐºÐ°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ð¸.
 		$site = \CSite::GetByID(SITE_DEFAULT)->Fetch();
 		
 		$this->arResult['SERVER_NAME'] = $site['SERVER_NAME'];
 		$this->arResult['LANGUAGE']    = strtoupper($this->arParams['LANG']);
 		
-		// Çàêàç.
-		$this->arResult['ORDER']   = CSaleOrder::getByID($this->arParams['ORDER_ID']);
-		$this->arResult['PROPS']   = Wolk\Core\Helpers\SaleOrder::getProperties($this->arParams['ORDER_ID']);
-		$this->arResult['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($this->arParams['ORDER_ID']);
-		$this->arResult['USER']    = CUser::getByID($this->arResult['ORDER']['USER_ID'])->Fetch();
+		
+		// Ð—Ð°ÐºÐ°Ð·.
+		$this->arResult['OEMORDER'] = new \Wolk\OEM\Order($this->arParams['OID']);
+		
+		// Ð”Ð°Ð½Ð½Ñ‹Ðµ Ð·Ð°ÐºÐ°Ð·Ð°.
+		$this->arResult['ORDER'] = $this->arResult['OEMORDER']->getFullData();
 		
 		
-		// Êóðñ ïåðåñ÷åòà çàêàçà.
-		$rate     = (!empty($this->arResult['PROPS']['RATE']['VALUE'])) 
-					? (floatval($this->arResult['PROPS']['RATE']['VALUE'])) 
-					: (1);
-		$currency = (!empty($this->arResult['PROPS']['RATE_CURRENCY']['VALUE'])) 
-					? (strval($this->arResult['PROPS']['RATE_CURRENCY']['VALUE'])) 
-					: ($this->arResult['ORDER']['CURRENCY']);
+		// ÐšÑƒÑ€Ñ Ð¿ÐµÑ€ÐµÑÑ‡ÐµÑ‚Ð° Ð·Ð°ÐºÐ°Ð·Ð°.
+		$this->arResult['RATE'] = (!empty($this->arResult['ORDER']['PROPS']['RATE']['VALUE'])) 
+								? (floatval($this->arResult['ORDER']['PROPS']['RATE']['VALUE'])) 
+								: (1);
 		
-        // Íàöåíêà.
-        $surcharge       = (float) $this->arResult['PROPS']['SURCHARGE']['VALUE_ORIG'];
-        $surcharge_price = (float) $this->arResult['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
-        
-		$event = CIBlockElement::getByID($this->arResult['PROPS']['EVENT_ID']['VALUE'])->GetNextElement();
+		// Ð’Ð°Ð»ÑŽÑ‚Ð° Ð¿ÐµÑ€ÐµÑÑ‡ÐµÑ‚Ð° Ð·Ð°ÐºÐ°Ð·Ð°.
+		$this->arResult['RATE_CURRENCY'] = (!empty($this->arResult['ORDER']['PROPS']['RATE_CURRENCY']['VALUE'])) 
+									     ? (strval($this->arResult['ORDER']['PROPS']['RATE_CURRENCY']['VALUE'])) 
+									     : ($this->arResult['ORDER']['CURRENCY']);
 		
-		$this->arResult['EVENT'] = $event->getFields();
-		$this->arResult['EVENT']['PROPS'] = $event->getProperties();
-		$this->arResult['EVENT']['LOGO']  = CFile::ResizeImageGet($this->arResult['EVENT']['PROPS']['LANG_LOGO_'.$this->arResult['LANGUAGE']]['VALUE'], ['width' => 168, 'height' => 68], BX_RESIZE_IMAGE_PROPORTIONAL_ALT)['src'];
+		// ÐœÐµÑ€Ð¾Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ðµ.
+		$event = new \Wolk\OEM\Event($this->arResult['PROPS']['EVENT_ID']['VALUE']);
+		
+		// Ð”Ð°Ð½Ð½Ñ‹Ðµ Ð¼ÐµÑ€Ð¾Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ñ.
+		$this->arResult['EVENT'] = $event->getData();
 		
 		
-		// Êîëè÷åñòâî ïîçèöèé ñ íåíóëåâîé ñòîèìîñòüþ.
+		/*
+		// ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ð¹ Ñ Ð½ÐµÐ½ÑƒÐ»ÐµÐ²Ð¾Ð¹ ÑÑ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒÑŽ.
 		$count   = 0;
 		$summary = 0;
 		foreach ($this->arResult['BASKETS'] as &$basket) {
@@ -110,7 +113,7 @@ class PrintOrderComponent extends \CBitrixComponent
 				$basket['ITEM']['IMAGE'] = CFile::getPath($basket['ITEM']['PREVIEW_PICTURE']);
 			}
 			
-			// ßâëÿåòñÿ ëè òîâàð ñòåíäîì.
+			// Ð¯Ð²Ð»ÑÐµÑ‚ÑÑ Ð»Ð¸ Ñ‚Ð¾Ð²Ð°Ñ€ ÑÑ‚ÐµÐ½Ð´Ð¾Ð¼.
 			$basket['IS_STAND'] = ($basket['TYPE'] == 0);
 		}
 		unset($element, $basket);
@@ -130,21 +133,19 @@ class PrintOrderComponent extends \CBitrixComponent
 		}
 		
 		
-		// Êîíâåðòèðîâàíèå öåíû.
+		// ÐšÐ¾Ð½Ð²ÐµÑ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ñ†ÐµÐ½Ñ‹.
 		foreach ($this->arResult['PRICES'] as &$price) {
 			$price *= $rate;
 		}
 		
-		// Êîíâåðòèðîâàíèå âàëþòû.
+		// ÐšÐ¾Ð½Ð²ÐµÑ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð²Ð°Ð»ÑŽÑ‚Ñ‹.
 		$this->arResult['ORDER']['CURRENCY'] = $currency;
+		*/
 		
 		
-		// Ïîäêëþ÷åíèå øàáëîíà.
+		
+		// ÐŸÐ¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð°.
 		$this->includeComponentTemplate();
 	}
 	
 }
-
-
-
-

@@ -148,7 +148,7 @@ $(document).ready(function() {
 	});
     
     // Выбор времени.
-    $(document).on('change', 'select.js-days-hours-times', function(e) {
+    $(document).on('change', '.js-block-days-hours select.js-days-hours-times', function(e) {
         var $block = $(this).closest('.js-product-block');
         
         window['oem-func-days-hours-cart']($block);

@@ -4,106 +4,101 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 <? use Wolk\Oem\Basket; ?>
 
+<? $quanty = intval((!empty($basketitem)) ? ($basketitem->getField('QUANTITY')) : ('')) ?>
+<? $field  = (!empty($basketitem)) ? ($basketitem->getField('DATES')) : ('') ?>
+<? $range  = (strpos($field, '-') !== false) ?>
+<?	// Массив дат.
+	if ($range) {
+		$dates = array_map('trim', array_filter(explode('-', $field)));
+	} else {
+		$dates = array_map('trim', array_filter(explode(',', $field)));
+	}
+	$dates = array_map(function($item) { return (date('m/d/Y', strtotime($item))); }, $dates);
+?>
 
-<div class="js-product-block js-product-block-<?= $section->getID() ?>" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>">
-    <input type="hidden" name="DATES" class="js-product-days-hours-quantity-dates" value="" />
-    <input type="hidden" name="TIMES" class="js-product-days-hours-quantity-times" value="" />
-    
-    <? if (!$section->asListShow() && count($products) == 1) { ?>
-        
-        <? $product = reset($products) ?>
-        
-        
-    <? } else { ?>
-        
-        <div class="serviceItem__block">
-            <div class="serviceItem__row">
-                <div class="serviceItem__left">
-                    <div class="serviceItem__subtitle">
-                        <?= $section->getListTitle() ?>
-                    </div>
-                    <select class="js-product-select styler">
-                        <? if (count($products) > 1) { ?>
-                            <option class="js-option-noselect" value="" <?= (empty($basketitem)) ? ('selected') : ('') ?>>
-                                <?= Loc::getMessage('NOT_SELECTED') ?>
-                            </option>
-                        <? } ?>
-                        <? foreach ($products as $product) { ?>
-                            <option value="<?= $product->getID() ?>" <?= (!empty($basketitem) && $basketitem->getProductID() == $product->getID()) ? ('selected') : ('') ?> data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>" data-descr="<?= $product->getDescription() ?>">
-                                <?= $product->getTitle() ?>
-                                <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
-                            </option>
-                        <? } ?>
-                    </select>
-                </div>
-                
-                <div class="js-product-select-price" style="margin-top: 10px; display: none;">
-                    <div class="serviceItem__cost">
-                        <div class="serviceItem__subtitle">
-                            <?= Loc::getMessage('PRICE') ?>
-                        </div>
-                        <div class="js-product-price serviceItem__cost-value"></div>
-                    </div>
-                </div>
-                
-                <div class="js-product-select-descr" style="margin-top: 10px; display: none;">
-                    <div class="serviceItem__cost">
-                        <div class="js-product-descr serviceItem__cost-value"></div>
-                    </div>
-                </div>
-                
-                <div class="equipmentcontainer__itemsize">
-                    <?= $section->getDescription() ?>
-                </div>
-            </div>
-            
-            <div class="serviceItem__row">
-                <div class="js-days-hours-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-                    
-                    <? // Установка даты // ?>
-                    <div class="serviceItem__left">
-                        <div class="setDateBlock">
-                            <div class="serviceItem__subtitle">
-                                <?= Loc::getMessage('DATES') ?>
-                            </div>
-                            <input name="dates" class="setDate js-field-value js-days-hours-datepicker" value="<?= (!empty($basketitem)) ? ($basketitem->getField('dates')) : ('') ?>" />
-                        </div>
-                    </div>
-                    
-                    <? // Установка времени // ?>
-                    <div class="serviceItem__right">
-                        <div class="itemCount">
-                            <div class="serviceItem__subtitle">
-                                <?= Loc::getMessage('TIMES') ?>
-                            </div>
-                            <div class="setTime">
-                                <select name="timemin" class="styler js-field-value js-days-hours-times js-days-hours-time-min">
-                                    <? for ($time = 8; $time <= 20; $time++) { ?>
-                                        <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
-                                        <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemin')) ? ('selected') : ('') ?>>
-                                            <?= $hour ?>
-                                        </option>
-                                    <? } ?>
-                                </select>
-                                <span class="setTime__divider"></span>
-                                <select name="timemax" class="styler js-field-value js-days-hours-times js-days-hours-time-max">
-                                    <? for ($time = 8; $time <= 20; $time++) { ?>
-                                        <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
-                                        <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemax')) ? ('selected') : ('') ?>>
-                                            <?= $hour ?>
-                                        </option>
-                                    <? } ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="serviceItem__row">
+    <div class="js-days-hours-wrapper" data-pid="<?= $product->getID() ?>">
+        <input type="hidden" name="DATES"    class="js-product-days-hours-quantity-dates js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('DATES')) : ('') ?>" />
+        <input type="hidden" name="TIMES"    class="js-product-days-hours-quantity-times js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('TIMES')) : ('') ?>" />
+        <input type="hidden" name="QUANTITY" class="js-product-days-hours-quantity-quantity js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('QUANTITY')) : ('') ?>" />
 
-            <? // Обработка свойств товара. // ?>
-            <? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props.php') ?>
+	    <? // Установка времени // ?>
+	    <div class="setDatetime__right">
+		    <div class="itemCount">
+			    <div class="serviceItem__subtitle">
+                    <?= Loc::getMessage('TIMES') ?>
+			    </div>
+			    <div class="setTime">
+				    <select name="timemin" class="styler js-field-value js-days-hours-quantity-times js-days-hours-quantity-time-min">
+                        <? for ($time = 8; $time <= 20; $time++) { ?>
+                            <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
+						    <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemin')) ? ('selected') : ('') ?>>
+                                <?= $hour ?>
+						    </option>
+                        <? } ?>
+				    </select>
+				    <span class="setTime__divider"></span>
+				    <select name="timemax" class="styler js-field-value js-days-hours-quantity-times js-days-hours-quantity-time-max">
+                        <? for ($time = 8; $time <= 20; $time++) { ?>
+                            <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
+						    <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemax')) ? ('selected') : ('') ?>>
+                                <?= $hour ?>
+						    </option>
+                        <? } ?>
+				    </select>
+			    </div>
+		    </div>
+	    </div>
+
+        <? // Установка даты // ?>
+        <div class="setDatetime">
+            <div class="setDateBlock calendarPopupWrapper js-calendar-wrap">
+				<div class="serviceItem__subtitle">
+					<?= Loc::getMessage('DATES') ?>
+				</div>
+				<div class="setDate"></div>
+				<div class="calendarPopupBlock js-calendar-popup">
+					<div class="calendarPopupContent js-calendar-content">
+						<div class="calendarPopupButtons">
+							<label class="styler">
+								<input type="checkbox" class="changeMode js-calendar-mode" data-checked="<?= ($range) ? ('1') : ('0') ?>" />
+								<span></span><?= Loc::getMessage('DATERANGE') ?>
+							</label>
+							<a href="javascript:void(0)" class="calendarReset js-calendar-reset">
+								<?= Loc::getMessage('CANCEL') ?>
+							</a>
+							<a href="javascript:void(0)" class="calendarSave js-calendar-save">OK</a>
+						</div>
+						<?  // Установка дат.
+							$mindate = '';
+							$maxdate = '';
+							if ($range) {
+								list($mindate, $maxdate) = $dates;
+							}
+						?>
+						<input type="text" class="min-date" hidden value="<?= $mindate ?>" />
+						<input type="text" class="max-date" hidden value="<?= $maxdate ?>" />
+						<? $finish = $arResult['EVENT']->getDateFinish() ?>
+						<? $finish = (!empty($finish)) ? (date('m/d/y', strtotime($finish . ' +3 days'))) : (date('d.m.y', strtotime('+1 year'))) ?>
+						<div class="calendar" data-date-min="<?= strtotime('-3 days') ?>" data-date-max="<?= $finish ?>"></div>
+					</div>
+				</div>
+				<div class="dates js-calendar-dates" data-field="<?= implode(', ', $dates) ?>" data-dates='<?= json_encode($dates) ?>'>
+					<?= $field ?>
+				</div>
+			</div>
         </div>
-    
-    <? } ?>
-    
+        
+
+		
+		<? // Установка количества // ?>
+		<div class="itemCount">
+			<div class="serviceItem__subtitle">
+				<?= Loc::getMessage('QUANTITY') ?>
+			</div>
+			<div class="js-quantity-dec itemCount__button itemCount__down"></div>
+			<div class="js-quantity-inc itemCount__button itemCount__up"></div>
+			<input type="text" class="js-quantity js-days-hours-quantity-quantity itemCount__input styler" data-value="<?= $quanty ?>" value="<?= $quanty ?>" />
+		</div>
+    </div>
 </div>

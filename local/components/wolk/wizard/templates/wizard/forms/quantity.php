@@ -13,5 +13,5 @@
 
     <? $value = (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('0') ?>
     
-    <input id="<?= $product->getID() ?>" type="text" class="js-quantity itemCount__input styler" data-value="<?= $value ?>" value="<?= $value ?>" />
+    <input type="text" class="js-quantity itemCount__input styler" data-value="<?= $value ?>" value="<?= $value ?>" />
 </div>

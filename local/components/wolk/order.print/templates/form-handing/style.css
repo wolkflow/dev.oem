@@ -1,0 +1,273 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+main {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+b,
+strong {
+  font-weight: 700;
+}
+i,
+em {
+  font-style: italic;
+}
+body {
+  font: 400 11pt / normal Arial, helvetica, sans-serif;
+  color: #000;
+  padding: 10px;
+}
+.f4a-string {
+  border-bottom: 1px solid #000;
+}
+.f4a-string span {
+  background: #fff;
+  position: relative;
+  padding: 2px 5px 2px 0;
+}
+.f4a-date {
+  float: right;
+  width: 120px;
+  font-size: 12pt;
+}
+.f4a-company {
+  font-size: 12pt;
+  clear: both;
+  text-align: center;
+  font-weight: 700;
+  padding: 20px 0;
+}
+.f4a-company_name {
+  text-align: right;
+  margin: 0 0 20px;
+}
+.f4a-company span {
+  font-size: 11pt;
+  display: block;
+}
+.f4a-data {
+  padding: 0 40px;
+}
+.f4a-data li {
+  border-bottom: 1px solid #000;
+  margin: 0 0 16px;
+  clear: both;
+}
+.f4a-data li::after {
+  display: block;
+  clear: both;
+  content: '';
+}
+.f4a-data li span {
+  background: #fff;
+  position: relative;
+  padding: 2px 5px 2px 0;
+}
+.f4a-data li span i {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  font-size: 10pt;
+}
+.f4a-data li span em {
+  font-size: 10pt;
+}
+.f4a-data .col {
+  float: left;
+  width: 31%;
+}
+.f4a-double {
+  margin-bottom: 45px !important;
+}
+.f4a-double-p {
+  padding-bottom: 20px !important;
+}
+.float-left {
+  float: left;
+}
+.text-center {
+  text-align: center;
+}
+.width100p {
+  display: block;
+  width: 100%;
+  margin-bottom: 25px;
+}
+.f4a-note {
+  font: 700 11pt/1.5 'Times New Roman', serif;
+  padding: 5px 10px;
+  border: 1px solid #000;
+  margin: 0 0 20px;
+}
+.f10 {
+  font-size: 10pt;
+}
+.f4a-wrapper {
+  position: relative;
+}
+.f4a-bottom {
+  position: relative;
+  font-size: 10pt;
+  padding: 60px 20px 0;
+}
+.f4a-sign {
+  float: left;
+  width: 30%;
+  border-bottom: 1px solid #000;
+  position: relative;
+}
+.f4a-sign span {
+  background: #fff;
+  position: relative;
+  padding: 2px 5px 2px 0;
+}
+.f4a-sign i {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+.f4a-mp {
+  margin-left: 60%;
+  padding: 20px 0 0;
+}
+.f4a-agreed {
+  float: right;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #000;
+}
+.f4a-bottom_en .f4a-sign {
+  padding-bottom: 40px;
+  margin-left: 10%;
+}
+.f4a-bottom_en .f4a-sign i {
+  position: static;
+}
+.f4a-bottom_en .f4a-agreed {
+  padding-bottom: 40px;
+  margin-right: 10%;
+}

@@ -454,7 +454,7 @@ class Order
 		
 		$renders = array_filter((array) unserialize($data['PROPS']['RENDERS']['VALUE']));
 		
-		if (1 || empty($renders)) {
+		if (empty($renders)) {
 			$renders = \Wolk\OEM\Render::order($this);
 			
 			$result = \CSaleOrderProps::GetList([], ['CODE' => 'RENDERS'], false, false, []);
@@ -493,6 +493,23 @@ class Order
 		$baskets = $this->getBaskets();
 		foreach ($baskets as $basket) {
 			if (in_array($basket['PRODUCT_ID'], $props['FASCIA'])) {
+				$items []= $basket;
+			}
+		}
+		return $items;
+	}
+	
+	
+	/**
+	 * Получение форм подвесных конструкций.
+	 */
+	public function getFormHandingBaskets()
+    {
+		$props = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
+		$items = [];
+		$baskets = $this->getBaskets();
+		foreach ($baskets as $basket) {
+			if (in_array($basket['PRODUCT_ID'], $props['FORM-HANDING'])) {
 				$items []= $basket;
 			}
 		}

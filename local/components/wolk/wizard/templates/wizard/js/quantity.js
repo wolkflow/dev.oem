@@ -78,28 +78,24 @@ window['oem-func-quantity-clear'] = function($block) {
 $(document).ready(function() {
     
     // Уменьшение количества товара.
-    $(document).on('click', '.js-pricetype-quantity .js-quantity-dec', function(event) {
+    $(document).on('click', '.js-block-quantity .js-quantity-dec', function(event) {
 		var $block   = $(this).closest('.js-product-block');
 		var $input   = $block.find('input');
         
         $input.data('value', parseInt($input.val()) - 1);
         
         window['oem-func-quantity-cart']($block);
-        
-		return false;
 	});
 
 
     // Увеличение количества товара.
-    $(document).on('click', '.js-pricetype-quantity .js-quantity-inc', function(event) {
+    $(document).on('click', '.js-block-quantity .js-quantity-inc', function(event) {
         var $block   = $(this).closest('.js-product-block');
 		var $input   = $block.find('input');
         
         $input.data('value', parseInt($input.val()) + 1);
         
         window['oem-func-quantity-cart']($block);
-
-		return false;
 	});
 
 });
