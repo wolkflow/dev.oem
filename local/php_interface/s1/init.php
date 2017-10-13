@@ -5,6 +5,7 @@ $APPLICATION->availableLang = [
     'ru' => 'Русский',
     'en' => 'English'
 ];
+
 $curLang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 if (isset($_GET['set_lang']) && array_key_exists($_GET['set_lang'], $APPLICATION->availableLang)) {
     $newLang = $_GET['set_lang'];

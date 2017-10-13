@@ -44,19 +44,19 @@
 			<tbody>
 				<tr>
 					<td>Номер стенда</td>
-					<td><?= $arResult['PROPS']['standNum']['VALUE'] ?></td>
+					<td><?= $arResult['PROPS']['STANDNUM']['VALUE'] ?></td>
 				</tr>
 				<tr>
 					<td>Ширина стенда (м)</td>
-					<td><?= $arResult['PROPS']['width']['VALUE'] ?></td>
+					<td><?= $arResult['PROPS']['WIDTH']['VALUE'] ?></td>
 				</tr>
 				<tr>
 					<td>Глубина стенда (м)</td>
-					<td><?= $arResult['PROPS']['depth']['VALUE'] ?></td>
+					<td><?= $arResult['PROPS']['DEPTH']['VALUE'] ?></td>
 				</tr>
 				<tr>
 					<td>Полщадь стенда (м<sup>2</sup>)</td>
-					<td><?= ($arResult['PROPS']['width']['VALUE'] * $arResult['PROPS']['depth']['VALUE']) ?></td>
+					<td><?= ($arResult['PROPS']['WIDTH']['VALUE'] * $arResult['PROPS']['DEPTH']['VALUE']) ?></td>
 				</tr>
 			</tbody>
 		</table>

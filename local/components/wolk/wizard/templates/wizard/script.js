@@ -323,6 +323,7 @@ $(document).ready(function() {
         }
     });
     
+	
     // Окно входа и регистрации - соглашение.
     $('#js-order-place-checkbox-unauth-id').on('change', function() {
         var $block = $(this).closest('.js-modal-block');
@@ -369,9 +370,15 @@ $(document).ready(function() {
     
     
 	// Создание заказа.
+	var orderblock = false;
     $('.js-remote-order-form').on('submit', function(e) {
         e.preventDefault();
-        
+		
+		if (orderblock) {
+			return;
+		}
+        orderblock = true;
+		
         var $wrapper = $('#js-wrapper-id');
         var $form = $(this);
         
@@ -401,7 +408,11 @@ $(document).ready(function() {
                 } else {
                     $form.find('.errortext').html(response.message);
                 }
-            }
+				orderblock = false;
+            },
+			error: function(xhr, status, error) {
+				orderblock = false;
+			}
         });
         return false;
     });

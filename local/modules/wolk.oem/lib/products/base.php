@@ -237,50 +237,55 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
     	
 	/**
 	 * Получение ID элементов с уникальными свойствами.
+	 *
+	 * TODO: cache.
 	 */
 	public static function getSpecialTypeIDs() 
 	{
-		// Пользовательское свойство.
-		$result = \CUserTypeEntity::GetList([], ['ENTITY_ID' => 'IBLOCK_'.IBLOCK_PRODUCTS_ID.'_SECTION', 'FIELD_NAME' => 'UF_SPECIAL']);
-		$ufield = $result->fetch();
+		$cache = new \CPHPCache();
 		
-		// Варианты пользовательского свойства - список.
-		$result = \CUserFieldEnum::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID, 'USER_FIELD_ID' => $ufield['ID']]);
-		$enums  = [];
-		while ($enum = $result->fetch()) {
-			$enums[$enum['XML_ID']] = $enum;
-		}
-		
-		
-		// Разделы с пользовательским свойством.
-		foreach ($enums as &$enum) {
-			$result = \CIBlockSection::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID, 'UF_SPECIAL' => $enum['ID']], false, ['ID', 'NAME', 'UF_SPECIAL']);
-			while ($section = $result->getNext()) {
-				$enum['SIDS'] []= (int) $section['ID'];
-			}
-			$enum['SIDS'] = array_unique($enum['SIDS']);
-		}
-		
-		
-		$items = [];
-		foreach ($enums as $enum) {
-			if (empty($enum['SIDS'])) {
-				continue;
+		if ($cache->InitCache(3600 * 4, 'get-special-type-ids', '/products/')) {
+			 $items = $cache->GetVars();
+		} else {
+			// Пользовательское свойство.
+			$result = \CUserTypeEntity::GetList([], ['ENTITY_ID' => 'IBLOCK_'.IBLOCK_PRODUCTS_ID.'_SECTION', 'FIELD_NAME' => 'UF_SPECIAL']);
+			$ufield = $result->fetch();
+			
+			// Варианты пользовательского свойства - список.
+			$result = \CUserFieldEnum::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID, 'USER_FIELD_ID' => $ufield['ID']]);
+			$enums  = [];
+			while ($enum = $result->fetch()) {
+				$enums[$enum['XML_ID']] = $enum;
 			}
 			
-			$result = self::getList([
-				'filter' => ['SECTION_ID' => reset($enum['SIDS'])],
-				'select' => ['ID']
-			], false);
-			
-			while ($item = $result->fetch()) {
-				$items[$enum['XML_ID']] []= (int) $item['ID'];
+			// Разделы с пользовательским свойством.
+			foreach ($enums as &$enum) {
+				$result = \CIBlockSection::GetList([], ['IBLOCK_ID' => IBLOCK_PRODUCTS_ID, 'UF_SPECIAL' => $enum['ID']], false, ['ID', 'NAME', 'UF_SPECIAL']);
+				while ($section = $result->getNext()) {
+					$enum['SIDS'] []= (int) $section['ID'];
+				}
+				$enum['SIDS'] = array_unique($enum['SIDS']);
 			}
-			$items[$enum['XML_ID']] = array_unique($items[$enum['XML_ID']]);
+			unset($result, $enum);
+			
+			$items = [];
+			foreach ($enums as $enum) {
+				if (empty($enum['SIDS'])) {
+					continue;
+				}
+				
+				$result = self::getList([
+					'filter' => ['SECTION_ID' => $enum['SIDS']],
+					'select' => ['ID']
+				], false);
+				
+				while ($item = $result->fetch()) {
+					$items[$enum['XML_ID']] []= (int) $item['ID'];
+				}
+				$items[$enum['XML_ID']] = array_unique($items[$enum['XML_ID']]);
+			}
+			$cache->EndDataCache($items);
 		}
-		
-		print_r($items);
-		
 		return $items;
 	}
 }

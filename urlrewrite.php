@@ -12,6 +12,14 @@ $arUrlRewrite = array(
 		"ID" => "",
 		"PATH" => "/bitrix/services/ymarket/index.php",
 	),
+	
+	array(
+		"CONDITION" => "#^/print/order/form-handing/([\\d]+)/([^\\/]+)/#",
+		"RULE" => "ID=\$1&LANG=$2&",
+		"ID" => "",
+		"PATH" => "/print/order/form-handing/index.php",
+	),
+	
 	array(
 		"CONDITION" => "#^/printsketch/([\\d]+)/#",
 		"RULE" => "ID=\$1",

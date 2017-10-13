@@ -10,13 +10,17 @@ class OrderPrint
 {
 	const PATH = '/upload/orders/';
 	
-	protected $order_id	= null;
+	const TYPE_ORDER = 'ORDER'; // Заказ.
+	const TYPE_HFROM = 'HFORM'; // Форма подвесной конструкции.
+	
+	
+	protected $oid = null;
 	
 	
 	
-	public function __construct($order_id)
+	public function __construct($oid, $type = '')
 	{
-		$this->order_id = (int) $order_id;
+		$this->oid = (int) $oid;
 	}
 	
 	
@@ -31,7 +35,7 @@ class OrderPrint
 	
 	public function getOrderID()
 	{
-		return $this->order_id;
+		return $this->oid;
 	}
 
 	

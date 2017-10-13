@@ -599,10 +599,12 @@ class Basket
                     'VALUE' => 'Y'
                 ];
             }
+			
             
             // Добавление корзины.
             $result = \Bitrix\Sale\Internals\BasketTable::add($fields);
             
+			
 			// Корзина пользователя.
             if (is_object($result)) {
                 $basket = \Bitrix\Sale\Basket::loadItemsForFUser(

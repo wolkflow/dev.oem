@@ -2,10 +2,17 @@
 
 <? use Bitrix\Main\Localization\Loc; ?>
 
+<?	// Проверка наличия заполненной формы в составе заказа.
+	if (empty($arResult['FORM'])) { 
+		return; 
+	}
+?>
+
 <div class="f4a-wrapper">
 	<div class="f4a-header">
 		<div class="f4a-date f4a-string">
-			<span>Дата</span>
+			<span><?= Loc::getMessage('DATE') ?></span>
+			<?= date('d.m.Y', strtotime($arResult['ORDER']['DATE_INSERT'])) ?>
 		</div>
 		<div class="f4a-company">
 			<div class="f4a-company_name">
@@ -20,78 +27,91 @@
 		<ul>
 			<li>
 				<span><?= Loc::getMessage('EXHIBITION') ?></span>
+				<?= $arResult['EVENT']['PROPS']['LANG_TITLE_' . $arResult['LANGUAGE']]['VALUE'] ?>
 			</li>
 			<li class="f4a-double">
-				<span>Название фирмы <i>(заказчик)</i></span>
+				<span><?= Loc::getMessage('COMPANY') ?><i><?= Loc::getMessage('CUSTOMER') ?></i></span>
+				<?= $arResult['FORM']['COMPANY'] ?>
 			</li>
 			<li>
 				<div class="col">
-					<span>Павильон №</span>
+					<span><?= Loc::getMessage('PAVILION') ?></span>
+					<?= $arResult['FORM']['PAVILION'] ?>
 				</div>
 				<div class="col">
-					<span>Зал №</span>
+					<span><?= Loc::getMessage('HALL') ?></span>
+					<?= $arResult['FORM']['HALL'] ?>
 				</div>
 				<div class="col">
-					<span>Стенд № -</span>
+					<span><?= Loc::getMessage('STAND') ?></span>
+					<?= $arResult['FORM']['STAND'] ?>
 				</div>
 			</li>
 			<li>
-				<span>Габариты конструкции</span>
+				<span><?= Loc::getMessage('SIZE') ?></span>
+				<?= $arResult['FORM']['SIZE'] ?>
 			</li>
 			<li>
-				<span>Материалы</span>
+				<span><?= Loc::getMessage('MATERIALS') ?></span>
+				<?= $arResult['FORM']['MATERIAL'] ?>
 			</li>
 			<li>
-				<span>Вес конструкции</span>
+				<span><?= Loc::getMessage('WEIGHT') ?></span>
+				<?= $arResult['FORM']['WEIGHT'] ?>
 			</li>
 			<li class="f4a-double-p">
-				<span class="width100p">Перечень и общий вес навешиваемого на конструкцию оборудования
-					<i>(осветительной техники, рекламных носителей, декоративной облицовки)</i>
+				<span class="width100p">
+					<?= Loc::getMessage('LIST') ?>
+					<i><?= Loc::getMessage('LIST_NOTE') ?></i>
 				</span>
+				<?= $arResult['FORM']['LIST'] ?>
 			</li>
 			<li>
-				<span>Общий вес снаряженной конструкции</span>
+				<span><?= Loc::getMessage('FULLWEIGHT') ?></span>
+				<?= $arResult['FORM']['FULLWEIGHT'] ?>
 			</li>
 			<li>
-				<span>Расчетное количество точек подвески</span>
+				<span><?= Loc::getMessage('POINTS') ?></span>
+				
 			</li>
 			<li>
-				<span>Расчетная нагрузка на каждую точку подвески </span>
+				<span><?= Loc::getMessage('POINTWEIGHT') ?></span>
+				<?= $arResult['FORM']['POINTWEIGHT'] ?>
 			</li>
 			<li>
-				<span>Расчетная высота подвески от пола <em>(по верхней точке конструкции)</em></span>
+				<span><?= Loc::getMessage('HEIGHT') ?><em><?= Loc::getMessage('HEIGHT_NOTE') ?></em></span>
+				<?= $arResult['FORM']['HEIGHT'] ?>
 			</li>
 			<li>
-				<span><b>Ответственный за проектирование </b></span>
+				<span><b><?= Loc::getMessage('PERSON_PROJECT') ?></b></span>
+				<?= $arResult['FORM']['PERSON_PROJECT'] ?>
 			</li>
 			<li>
-				<span class="width100p"><b>Ответственный за монтаж и технику безопасности <em>(Фамилия, должность, телефон)</em></b></span>
+				<span class="width100p"><b><?= Loc::getMessage('PERSON_MOUNT') ?><em><?= Loc::getMessage('PERSON_MOUNT_NOTE') ?></em></b></span>
+				<?= $arResult['FORM']['PERSON_MOUNT'] ?>
 			</li>
 		</ul>
 	</div>
 
 	<div class="f4a-note">
-		<p>Ответственность за сборку и прочность конструкции, а также за организацию точек крепления на конструкции несёт Фирма заказчик.<br>
-			Ответственность за качество и эксплуатацию собственных лебедок несет Фирма заказчик.<br>
-			Навеска дополнительного оборудования (осветительной техники, рекламных носителей, декоративной облицовки) на подвешенную конструкцию ЗАПРЕЩЕНА!  Использование уже подвешенной конструкции для организации страховки других элементов экспозиции ЗАПРЕЩЕНА!<br>
-			Стоимость заказа на подвес,  полученного во время монтажа выставки,  увеличивается на 100%</p>
+		<p><?= Loc::getMessage('RESPONSIBILITY') ?></p>
 	</div>
 
-	<p class="text-center f10"><b>C порядком выполнения заказа по подвесу и снятию конструкций внутри павильона ознакомлен, согласен.</b></p>
+	<p class="text-center f10"><b><?= Loc::getMessage('ORDER') ?></b></p>
 
 	<div class="f4a-bottom">
 		<div class="f4a-sign">
-			<span>Подпись руководителя</span>
-			<i>предприятия (заказчика)</i>
+			<span><?= Loc::getMessage('SIGNATURE') ?></span>
+			<i><?= Loc::getMessage('CUSTOMER') ?></i>
 		</div>
 
 		<div class="f4a-mp">
-			М.П.
+			<?= Loc::getMessage('PLACE') ?>
 		</div>
 
 		<div class="f4a-agreed">
-			Согласовано<br>
-			ЗАО «Экспоконста»
+			<?= Loc::getMessage('AGREED') ?><br>
+			<?= Loc::getMessage('PLC') ?>
 		</div>
 	</div>
 </div>
