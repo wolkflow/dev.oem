@@ -508,7 +508,22 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 }
             });
 		});
-
+		
+		
+		// Генерация формы подвесной конструкции.
+		$('#js-order-form-print-id').on('click', function (event) {
+			$.ajax({
+                url: '/bitrix/admin/wolk_oem_remote.php',
+                data: {'action': 'order-form-print', 'oid': <?= $ID ?>},
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status) {
+						$('#js-order-form-link-id').attr('href', response.data['link']).show();
+                    }
+                }
+            });
+		});
+		
 
 		// Сохранение скетча.
 		$('#js-sketch-button-id').on('click', function (event) {
@@ -732,7 +747,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                             </td>
                                         </tr>
 										<tr>
-                                            <td class="adm-detail-content-cell-l">Комментарий к заказу:</td>
+                                            <td class="adm-detail-content-cell-l">Комментарий к заказу от пользователя:</td>
                                             <td class="adm-detail-content-cell-r">
 												<div>
 													<?= ($order['USER_DESCRIPTION']) ?: ('&mdash;') ?>
@@ -856,6 +871,41 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 </div>
             </div>
         </div>
+		
+		
+		<? $baskets = $oemorder->getFormHandingBaskets() ?>
+		<? if (!empty($baskets)) { ?>
+			<? $print = new \Wolk\OEM\Prints\Form($oemorder->getID()); ?>
+			<div style="position: relative; vertical-align: top;">
+				<div style="height: 5px; width: 100%;"></div>
+				<a id="company-order"></a>
+				<div class="adm-container-draggable">
+					<div class="adm-bus-statusorder">
+						<div class="adm-bus-component-container">
+							<div class="adm-bus-component-title-container">
+								<div class="adm-bus-component-title">
+									Форма подвесных конструкций.
+								</div>
+							</div>
+							<div class="adm-bus-component-content-container">
+								<div class="adm-bus-table-container">
+									<input id="js-order-form-print-id" type="button" value="Печать формы" />
+									<? if ($print->isExists()) { ?>
+										<a id="js-order-form-link-id" href="<?= $print->getPathPDF() ?>" class="adm-btn" target="_blank">
+											Скачать PDF
+										<a/>
+									<? } else { ?>
+										<a id="js-order-form-link-id" href="" style="display: none;" class="adm-btn" target="_blank">
+											Скачать PDF
+										<a/>
+									<? } ?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<? } ?>
 
 
         <div style="position: relative; vertical-align: top;">

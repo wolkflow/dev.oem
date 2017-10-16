@@ -90,8 +90,32 @@ switch ($action) {
 		}
 				
 		jsonresponse(true, '', ['link' => $orderprint->getOrderPrint()]);
-		break;	
-        
+		break;
+		
+		
+	/*
+	 * Печать формы подвесной конструкции заказа.
+	 */
+	case ('order-form-print'):
+		$oid = (int) $_REQUEST['oid'];
+		$bid = (int) $_REQUEST['bid'];
+		
+		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+			jsonresponse(false, 'Ошибка выполнения: модуль не установлен');
+		}
+		
+		$order = new Wolk\OEM\Order($oid);
+		$print = new Wolk\OEM\Prints\Form($order->getID(), $order->getLanguage());
+		
+		// Печать заказа.
+		$result = $print->make();
+		
+		if ($result !== 0) {
+			jsonresponse(false, 'Ошибка создания документа заказа');
+		}		
+		jsonresponse(true, '', ['link' => $print->getPathPDF()]);
+		break;
+		
         
     // Выбор пользователя.
     case ('select-user'):

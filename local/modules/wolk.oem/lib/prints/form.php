@@ -38,6 +38,15 @@ class Form
 	
 	
 	/**
+	 * Проверка наличия файла PDF.
+	 */
+	public function isExists()
+	{
+		return ($this->getPathPDF() !== null);
+	}
+	
+	
+	/**
 	 * Получение пути к файлу.
 	 */
 	public function getPath()
@@ -87,7 +96,6 @@ class Form
 			$args['--javascript-delay'] = $delay;
 		}
 		$path = $_SERVER['DOCUMENT_ROOT'] . $this->getPath();
-		
 		
 		unlink($path);
 		
