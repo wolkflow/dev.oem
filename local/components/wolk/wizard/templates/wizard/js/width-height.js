@@ -8,7 +8,7 @@ window['oem-func-width-height-cart'] = function($block) {
 	var $width   = $block.find('input.js-width');
 	var $height  = $block.find('input.js-height');
    
-    var quantity = parseInt($height.val()) * parseInt($quanty.val());
+    var quantity = parseInt($width.val()) * parseInt($height.val());
     if (quantity < 0) {
         quantity = 0;
     }
