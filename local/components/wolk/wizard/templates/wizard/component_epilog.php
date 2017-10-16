@@ -22,8 +22,14 @@ $asset->addJs('/local/templates/.default/build/js/jquery-ui.multidatespicker.js'
 
 // Типы товаров.
 $asset->addJs($this->GetTemplate()->getFolder().'/js/quantity.js');
+$asset->addJs($this->GetTemplate()->getFolder().'/js/square.js');
+$asset->addJs($this->GetTemplate()->getFolder().'/js/width-height.js');
+$asset->addJs($this->GetTemplate()->getFolder().'/js/width-height-quantity.js');
 $asset->addJs($this->GetTemplate()->getFolder().'/js/days.js');
+// $asset->addJs($this->GetTemplate()->getFolder().'/js/hours.js');
 $asset->addJs($this->GetTemplate()->getFolder().'/js/days-hours.js');
+// $asset->addJs($this->GetTemplate()->getFolder().'/js/hours-quantity.js');
+// $asset->addJs($this->GetTemplate()->getFolder().'/js/days-quantity.js');
 $asset->addJs($this->GetTemplate()->getFolder().'/js/days-hours-quantity.js');
 $asset->addJs($this->GetTemplate()->getFolder().'/js/symbols.js');
 

@@ -59,12 +59,14 @@ $MESS['COMMENTS'] = 'Комментарии';
 $MESS['ADDITIONAL_INFO'] = 'Дополнительная информация о вашем заказе';
 $MESS['CONFIGURATION'] = 'Ваша конфигурация';
 $MESS['SYSTEM_STAND'] = 'Системный стенд';
-$MESS['AREA']  = 'Площадь';
-$MESS['WIDTH'] = 'Ширина';
-$MESS['DEPTH'] = 'Глубина';
-$MESS['TYPE']  = 'Тип';
+$MESS['TYPE'] = 'Тип';
 $MESS['EXHIBITION'] = 'Выставка';
 $MESS['LOCATION'] = 'Место';
+$MESS['AREA'] = 'Площадь';
+$MESS['WIDTH'] = 'Ширина';
+$MESS['DEPTH'] = 'Глубина';
+$MESS['HEIGHT'] = 'Высота';
+$MESS['SQUARE'] = 'Площадь';
 
 
 // Свойства.
@@ -132,6 +134,9 @@ $MESS['SUCCESS'] = 'Успешно!';
 $MESS['ORDER_PLACED'] = 'Заказ оформлен';
 $MESS['HOME'] = 'На главную';
 $MESS['REVIEW_ORDER'] = 'Посмотреть заказа';
+
+$MESS['MEASURE_MM'] = 'мм';
+$MESS['MEASURE_M2'] = 'м<sup>2</sup>';
 
 $MESS['FORM_COMPANY'] = 'Название компании';
 $MESS['FORM_PAVILION'] = 'Павильон №';

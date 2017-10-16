@@ -605,6 +605,15 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
     </tr>
 <? $tabControl->EndCustomField('PRODUCTS_PRICES_INDIVIDUAL', ''); ?>
 
+<script>
+	function CheckLangFields(element) {
+		if (element.checked) {
+			$(element).closest('.edit-table').find("input, textarea, select").not(element).attr('disabled', false);
+		} else {
+			$(element).closest('.edit-table').find("input, textarea, select").not(element).attr('disabled', true);
+		}
+	}
+</script>
     
 <? 
 // стандартный файл-обработчик Битрикс.
