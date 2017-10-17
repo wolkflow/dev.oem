@@ -82,7 +82,6 @@
     <div style="clear:both;"></div>
 </div>
 
-
 <aside class="siteAside" data-sticky_column>
     <div class="basketcontainer">
         <div class="basketcontainer__title customizable_border">
@@ -91,16 +90,16 @@
         <div class="basketcontainer__itemscontainer customizable_border">
             <div id="js-basket-wrapper-id">
                 <?  // Корзина.
-                    $APPLICATION->IncludeComponent(
-                        "wolk:basket", 
-                        "side", 
-                        array(
-                            "EID"  => $arResult['EVENT']->getID(),
-                            "CODE" => $arResult['EVENT']->getCode(),
-                            "TYPE" => $arResult['CONTEXT']->getType(),
-                            "LANG" => $arResult['CONTEXT']->getLang(),
-                        )
-                    );
+                $APPLICATION->IncludeComponent(
+                    "wolk:basket",
+                    "side",
+                    array(
+                        "EID"  => $arResult['EVENT']->getID(),
+                        "CODE" => $arResult['EVENT']->getCode(),
+                        "TYPE" => $arResult['CONTEXT']->getType(),
+                        "LANG" => $arResult['CONTEXT']->getLang(),
+                    )
+                );
                 ?>
             </div>
             <div class="navButtons">

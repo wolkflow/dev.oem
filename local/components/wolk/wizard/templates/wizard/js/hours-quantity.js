@@ -79,8 +79,9 @@ window['oem-func-hours-quantity-clear'] = function($block) {
     $block.find('.js-hours-quantity-time-max option:selected').attr('selected', false);
 	$block.find('.js-hours-quantity-time-min option:first-child').attr('selected', 'selected');
     $block.find('.js-hours-quantity-time-max option:first-child').attr('selected', 'selected');
-	$block.find('.js-hours-quantity-time-min').val('').styler();
-	$block.find('.js-hours-quantity-time-max').val('').styler();
+	$block.find('.js-hours-quantity-time-min').val($block.find('.js-hours-quantity-time-min option:first-child').val()).trigger('refresh');
+	$block.find('.js-hours-quantity-time-max').val($block.find('.js-hours-quantity-time-min option:first-child').val()).trigger('refresh');
+	
 	$block.find('.js-hours-quantity-quantity').val('0').styler();
 	
     $block.find('.js-product-price').html('');

@@ -6,7 +6,7 @@
 
 <div class="serviceItem__row">
     <div class="js-hours-wrapper itemCount" data-pid="<?= $product->getID() ?>">
-        <input type="hidden" name="TIMES" class="js-product-days-hours-times js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('TIMES')) : ('') ?>" />
+        <input type="hidden" name="TIMES" class="js-product-hours-times js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('TIMES')) : ('') ?>" />
                 
         <? // Установка времени // ?>
         <div class="setDatetime__right">

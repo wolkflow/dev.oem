@@ -59,19 +59,19 @@ window['oem-func-hours-more'] = function($block) {
  */
 window['oem-func-hours-clear'] = function($block) {
     $block.attr('data-bid', '');
-    //$block.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
+	
     $block.find('.styler').styler();
     $block.find('.js-product-select .js-option-noselect').trigger('click');
     
 	$block.find('input.js-param-value').val('');
 	$block.find('textarea.js-param-value').html('');
 	
-	$block.find('.js-days-hours-time-min option:selected').attr('selected', false);
-    $block.find('.js-days-hours-time-max option:selected').attr('selected', false);
-	$block.find('.js-days-hours-time-min option:first-child').attr('selected', 'selected');
-    $block.find('.js-days-hours-time-max option:first-child').attr('selected', 'selected');
-	$block.find('.js-days-hours-time-min').val('').styler();
-	$block.find('.js-days-hours-time-max').val('').styler();
+	$block.find('.js-hours-time-min option:selected').attr('selected', false);
+    $block.find('.js-hours-time-max option:selected').attr('selected', false);
+	$block.find('.js-hours-time-min option:first-child').attr('selected', 'selected');
+    $block.find('.js-hours-time-max option:first-child').attr('selected', 'selected');
+	$block.find('.js-hours-time-min').val($block.find('.js-hours-time-min option:first-child').val()).trigger('refresh');
+	$block.find('.js-hours-time-max').val($block.find('.js-hours-time-min option:first-child').val()).trigger('refresh');
 	
     $block.find('.js-product-price').html('');
     $block.find('.js-product-descr').html('');
@@ -84,6 +84,7 @@ window['oem-func-hours-clear'] = function($block) {
 
 
 $(document).ready(function() {
+	
     // Выбор времени.
     $(document).on('change', '.js-block-hours select.js-hours-times', function(e) {
         var $block = $(this).closest('.js-product-block');

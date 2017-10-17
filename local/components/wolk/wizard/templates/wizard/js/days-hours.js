@@ -108,8 +108,8 @@ window['oem-func-days-hours-clear'] = function($block) {
     $block.find('.js-days-hours-time-max option:selected').attr('selected', false);
 	$block.find('.js-days-hours-time-min option:first-child').attr('selected', 'selected');
     $block.find('.js-days-hours-time-max option:first-child').attr('selected', 'selected');
-	$block.find('.js-days-hours-time-min').val('').styler();
-	$block.find('.js-days-hours-time-max').val('').styler();
+	$block.find('.js-days-hours-time-min').val($block.find('.js-days-hours-time-min option:first-child').val()).trigger('refresh');
+	$block.find('.js-days-hours-time-max').val($block.find('.js-days-hours-time-min option:first-child').val()).trigger('refresh');
 	
     $block.find('.js-product-price').html('');
     $block.find('.js-product-descr').html('');
