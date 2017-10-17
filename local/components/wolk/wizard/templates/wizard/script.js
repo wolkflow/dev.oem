@@ -15,7 +15,7 @@ function ShowError(title, message)
 /**
  * Добавление позиции.
  */
-function PutBasket(pid, quantity, $block)
+function PutBasket(quantity, $block)
 {
 	if (blockremote == true) {
 		return;

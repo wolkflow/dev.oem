@@ -90,7 +90,7 @@ $(document).ready(function() {
 		var value  = parseInt($input.val());
         
 		if (value > 0) {
-			 $input.val('value', value - 1);
+			 $input.val(value - 1);
 		}
         
         window['oem-func-width-height-quantity-cart']($block);
@@ -103,9 +103,16 @@ $(document).ready(function() {
 		var $input = $block.find('input.js-quantity');
 		var value  = parseInt($input.val());
         
-		$input.val('value', value + 1);
+		$input.val(value + 1);
         
         window['oem-func-width-height-quantity-cart']($block);
 	});
-
+	
+	
+	// Ввод количества.
+	$(document).on('click', '.js-block-width-height-quantity .js-quantity', function(event) {
+		var $block = $(this).closest('.js-product-block');
+		
+        window['oem-func-width-height-quantity-cart']($block);
+	});
 });

@@ -2,7 +2,7 @@
 /**
  * Функция добавления в корзину.
  */
-window['oem-func-days-hours-quantity-cart'] = function($block) {
+window['oem-func-days-quantity-cart'] = function($block) {
 
 	var quantity = 0;
 	
@@ -11,28 +11,12 @@ window['oem-func-days-hours-quantity-cart'] = function($block) {
 	var $mode     = $block.find('.js-calendar-mode');
     var $note     = $block.find('.dates');
 	
-	var $timemin  = $block.find('.js-days-hours-quantity-time-min option:selected');
-    var $timemax  = $block.find('.js-days-hours-quantity-time-max option:selected');
-	
-	var $quantity = $block.find('.js-days-hours-quantity-quantity');
-	
+	var $quantity = $block.find('.js-days-quantity-quantity');
 	
 	// Количество.
 	var quantity = parseInt($quantity.val());
 	
-	
-	// Время по часам.
-    var hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-01 ' + $timemax.val()));
-    
-    if (hours < 0) {
-        hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-02 ' + $timemax.val()));
-    }
-    if (hours != 0) {
-        hours = Math.abs(hours);
-    }
-	hours = parseInt(hours);
-	
-	
+	// Даты.
 	var dates = 0;
 	
 	// Выбор диапазона или конкретных дат.
@@ -63,12 +47,11 @@ window['oem-func-days-hours-quantity-cart'] = function($block) {
 	CalendarClose($popup);
 		
 	// Протсавление дополнительных параметров.
-	$block.find('.js-product-days-hours-quantity-dates').val($note.text());
-	$block.find('.js-product-days-hours-quantity-times').val($timemin.val() + ' - ' + $timemax.val());
-	$block.find('.js-product-days-hours-quantity-quantity').val($quantity.val());
+	$block.find('.js-product-days-quantity-dates').val($note.text());
+	$block.find('.js-product-days-quantity-quantity').val($quantity.val());
 	
 	// Общее количество.
-	quantity = dates * hours * quantity;
+	quantity = dates * quantity;
 	
     if (quantity < 0) {
         quantity = 0;
@@ -82,7 +65,7 @@ window['oem-func-days-hours-quantity-cart'] = function($block) {
 /**
  * Функция добавления товарной позиции.
  */
-window['oem-func-days-hours-quantity-more'] = function($block) {
+window['oem-func-days-quantity-more'] = function($block) {
     var $wrapper = $block.closest('.js-product-wrapper');
     var $section = $wrapper.find('.js-product-section');
     var $clone   = $wrapper.find('.js-product-block').first().clone();
@@ -90,7 +73,7 @@ window['oem-func-days-hours-quantity-more'] = function($block) {
 	$clone.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
 	
     // Сброс параметров.
-    window['oem-func-days-hours-quantity-clear']($clone);
+    window['oem-func-days-quantity-clear']($clone);
 	
     // Добавление блока.
     $section.append($clone);
@@ -102,25 +85,19 @@ window['oem-func-days-hours-quantity-more'] = function($block) {
 /**
  * Функция очистки данных.
  */
-window['oem-func-days-hours-quantity-clear'] = function($block) {
+window['oem-func-days-quantity-clear'] = function($block) {
 	var mindate  = $block.find('.calendar').attr('data-date-min'),
         maxdate  = $block.find('.calendar').attr('data-date-max');
 	
     $block.attr('data-bid', '');
-    //$block.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
+	
     $block.find('.styler').styler();
     $block.find('.js-product-select .js-option-noselect').trigger('click');
     
 	$block.find('input.js-param-value').val('');
 	$block.find('textarea.js-param-value').html('');
 	
-	$block.find('.js-days-hours-quantity-time-min option:selected').attr('selected', false);
-    $block.find('.js-days-hours-quantity-time-max option:selected').attr('selected', false);
-	$block.find('.js-days-hours-quantity-time-min option:first-child').attr('selected', 'selected');
-    $block.find('.js-days-hours-quantity-time-max option:first-child').attr('selected', 'selected');
-	$block.find('.js-days-hours-quantity-time-min').val('').styler();
-	$block.find('.js-days-hours-quantity-time-max').val('').styler();
-	$block.find('.js-days-hours-quantity-quantity').val('0').styler();
+	$block.find('.js-days-quantity-quantity').val('0').styler();
 	
     $block.find('.js-product-price').html('');
     $block.find('.js-product-descr').html('');
@@ -144,21 +121,15 @@ window['oem-func-days-hours-quantity-clear'] = function($block) {
 $(document).ready(function() {
     	
 	// Выбор даты.
-	$(document).on('click', '.js-block-days-hours-quantity .js-calendar-save', function(e) {
+	$(document).on('click', '.js-block-days-quantity .js-calendar-save', function(e) {
 		var $block = $(this).closest('.js-product-block');
 		
-		window['oem-func-days-hours-quantity-cart']($block);
+		window['oem-func-days-quantity-cart']($block);
 	});
     
-    // Выбор времени.
-    $(document).on('change', '.js-block-days-hours-quantity select.js-days-hours-quantity-times', function(e) {
-        var $block = $(this).closest('.js-product-block');
-        
-        window['oem-func-days-hours-quantity-cart']($block);
-    });
 	
 	// Увеличение количества.
-    $(document).on('click', '.js-block-days-hours-quantity .js-quantity-dec', function(event) {
+    $(document).on('click', '.js-block-days-quantity .js-quantity-dec', function(event) {
         var $block = $(this).closest('.js-product-block');
 		var $input = $block.find('input.js-quantity');
 		var value  = parseInt($input.val());
@@ -167,25 +138,26 @@ $(document).ready(function() {
 			 $input.val(value - 1);
 		}
 		
-        window['oem-func-days-hours-quantity-cart']($block);
+        window['oem-func-days-quantity-cart']($block);
 	});
 	
+	
 	// Уменьшение количества.
-    $(document).on('click', '.js-block-days-hours-quantity .js-quantity-inc', function(event) {
+    $(document).on('click', '.js-block-days-quantity .js-quantity-inc', function(event) {
 		var $block = $(this).closest('.js-product-block');
 		var $input = $block.find('input.js-quantity');
 		var value  = parseInt($input.val());
         
 		$input.val(value + 1);
 		
-        window['oem-func-days-hours-quantity-cart']($block);
+        window['oem-func-days-quantity-cart']($block);
 	});
 	
 	
 	// Ввод количества.
-	$(document).on('click', '.js-block-days-hours-quantity .js-quantity', function(event) {
+	$(document).on('click', '.js-block-days-quantity .js-quantity', function(event) {
 		var $block = $(this).closest('.js-product-block');
 		
-        window['oem-func-days-hours-quantity-cart']($block);
+        window['oem-func-days-quantity-cart']($block);
 	});
 });
