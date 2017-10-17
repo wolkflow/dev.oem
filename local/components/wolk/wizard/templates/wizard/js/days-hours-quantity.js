@@ -3,7 +3,7 @@
  * Функция добавления в корзину.
  */
 window['oem-func-days-hours-quantity-cart'] = function($block) {
-	var pid = 0;
+
 	var quantity = 0;
 	
     var $calendar = $block.find('.js-calendar-content').find('.calendar');
@@ -16,13 +16,6 @@ window['oem-func-days-hours-quantity-cart'] = function($block) {
 	
 	var $quantity = $block.find('.js-days-hours-quantity-quantity');
 	
-	
-	// Получение ID продукции.
-    if ($block.find('.js-product-select').length) {
-        pid = $block.find('.js-product-select option:selected').val();
-    } else {
-        pid = $block.find('.js-product-element').data('pid');
-    }
 	
 	// Количество.
 	var quantity = parseInt($quantity.val());
@@ -74,8 +67,6 @@ window['oem-func-days-hours-quantity-cart'] = function($block) {
 	$block.find('.js-product-days-hours-quantity-times').val($timemin.val() + ' - ' + $timemax.val());
 	$block.find('.js-product-days-hours-quantity-quantity').val($quantity.val());
 	
-	console.log(dates, hours, quantity);
-	
 	// Общее количество.
 	quantity = dates * hours * quantity;
 	
@@ -84,7 +75,7 @@ window['oem-func-days-hours-quantity-cart'] = function($block) {
     }	
 	
     // Сохранение в корзине.
-    PutBasket(pid, quantity, $block);
+    PutBasket(quantity, $block);
 }
 
 
@@ -167,21 +158,25 @@ $(document).ready(function() {
     });
 	
 	// Увеличение количества.
-    $(document).on('click', '.js-block-days-hours-quantity .js-quantity-inc', function(event) {
+    $(document).on('click', '.js-block-days-hours-quantity .js-quantity-dec', function(event) {
         var $block = $(this).closest('.js-product-block');
-		var $input = $block.find('input.js-days-hours-quantity-quantity');
+		var $input = $block.find('input.js-quantity');
+		var value  = parseInt($input.val());
         
-        $input.val(parseInt($input.val()) + 1);
+		if (value > 0) {
+			 $input.val('value', value - 1);
+		}
 		
         window['oem-func-days-hours-quantity-cart']($block);
 	});
 	
 	// Уменьшение количества.
-    $(document).on('click', '.js-block-days-hours-quantity .js-quantity-dec', function(event) {
+    $(document).on('click', '.js-block-days-hours-quantity .js-quantity-inc', function(event) {
 		var $block = $(this).closest('.js-product-block');
-		var $input = $block.find('input.js-days-hours-quantity-quantity');
-		
-		$input.val(parseInt($input.val()) - 1);
+		var $input = $block.find('input.js-quantity');
+		var value  = parseInt($input.val());
+        
+		$input.val('value', value + 1);
 		
         window['oem-func-days-hours-quantity-cart']($block);
 	});

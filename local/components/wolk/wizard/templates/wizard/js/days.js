@@ -3,7 +3,7 @@
  * Функция добавления в корзину.
  */
 window['oem-func-days-cart'] = function($block) {
-    var pid = 0;
+
 	var quantity = 0;
 	
     var $calendar = $block.find('.js-calendar-content').find('.calendar');
@@ -11,12 +11,6 @@ window['oem-func-days-cart'] = function($block) {
 	var $mode     = $block.find('.js-calendar-mode');
     var $note     = $block.find('.dates');
 	
-	// Получение ID продукции.
-    if ($block.find('.js-product-select').length) {
-        pid = $block.find('.js-product-select option:selected').val();
-    } else {
-        pid = $block.find('.js-product-element').data('pid');
-    }
 	
 	// Выбор диапазона или конкретных дат.
 	if ($mode.is(':checked')) {
@@ -53,7 +47,7 @@ window['oem-func-days-cart'] = function($block) {
     }	
 	
     // Сохранение в корзине.
-    PutBasket(pid, quantity, $block);
+    PutBasket(quantity, $block);
 }
 
 

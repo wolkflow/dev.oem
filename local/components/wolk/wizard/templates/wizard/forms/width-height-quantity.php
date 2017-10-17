@@ -6,7 +6,7 @@
 
 <? $fields = (!empty($basketitem)) ? ($basketitem->getFields()) : ([]) ?>
 
-<div class="js-width-height-wrapper js-product-element itemCount" data-pid="<?= $product->getID() ?>">
+<div class="js-width-height-wrapper itemCount" data-pid="<?= $product->getID() ?>">
 	<div class="serviceItem__row">
 		<div class="serviceItem__left">
 			<div class="serviceItem__left-child">

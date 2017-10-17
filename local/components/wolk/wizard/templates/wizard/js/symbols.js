@@ -5,17 +5,9 @@
  */
 window['oem-func-symbols-cart'] = function($block) {
     
-    var pid      = 0;
-    var $input   = $block.find('input.js-text');
-	var string   = $input.val();
-    var limit    = parseInt($block.find('.js-symbols-wrapper').data('limit'));
-	
-	// Получение ID продукции.
-    if ($block.find('.js-product-select').length) {
-        pid = $block.find('.js-product-select option:selected').val();
-    } else {
-        pid = $block.find('.js-product-element').data('pid');
-    }
+    var $input = $block.find('input.js-text');
+	var string = $input.val();
+    var limit  = parseInt($block.find('.js-symbols-wrapper').data('limit'));
 	
 	quantity = string.replace(/\s/gi, '').length; // - limit;
 	
@@ -24,7 +16,7 @@ window['oem-func-symbols-cart'] = function($block) {
     }
 	
     // Сохранение в корзине.
-    PutBasket(pid, quantity, $block);
+    PutBasket(quantity, $block);
 }
 
 

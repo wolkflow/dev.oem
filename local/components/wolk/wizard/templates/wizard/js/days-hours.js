@@ -3,7 +3,7 @@
  * Функция добавления в корзину.
  */
 window['oem-func-days-hours-cart'] = function($block) {
-	var pid = 0;
+
 	var quantity = 0;
 	
     var $calendar = $block.find('.js-calendar-content').find('.calendar');
@@ -13,14 +13,6 @@ window['oem-func-days-hours-cart'] = function($block) {
 	
 	var $timemin = $block.find('.js-days-hours-time-min option:selected');
     var $timemax = $block.find('.js-days-hours-time-max option:selected');
-	
-	
-	// Получение ID продукции.
-    if ($block.find('.js-product-select').length) {
-        pid = $block.find('.js-product-select option:selected').val();
-    } else {
-        pid = $block.find('.js-product-element').data('pid');
-    }
 	
 	
 	// Время по часам.
@@ -73,7 +65,7 @@ window['oem-func-days-hours-cart'] = function($block) {
     }	
 	
     // Сохранение в корзине.
-    PutBasket(pid, quantity, $block);
+    PutBasket(quantity, $block);
 }
 
 

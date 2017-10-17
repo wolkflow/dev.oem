@@ -17,16 +17,9 @@ window['oem-func-width-height-cart'] = function($block) {
     if (quantity == 0) {
         ResetParams($block);
     }
-	    
-    if ($block.find('.js-product-select').length) {
-        pid = $block.find('.js-product-select option:selected').val();
-    } else {
-        pid = $block.find('.js-product-element').data('pid');
-    }
-    //$input.val(quantity);
-    
+	
     // Сохранение в корзине.
-    PutBasket(pid, quantity, $block);
+    PutBasket(quantity, $block);
 }
 
 

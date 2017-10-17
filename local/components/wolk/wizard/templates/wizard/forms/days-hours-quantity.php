@@ -17,7 +17,7 @@
 ?>
 
 <div class="serviceItem__row">
-    <div class="js-days-hours-wrapper" data-pid="<?= $product->getID() ?>">
+    <div class="js-days-hours-quantity-wrapper" data-pid="<?= $product->getID() ?>">
         <input type="hidden" name="DATES"    class="js-product-days-hours-quantity-dates js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('DATES')) : ('') ?>" />
         <input type="hidden" name="TIMES"    class="js-product-days-hours-quantity-times js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('TIMES')) : ('') ?>" />
         <input type="hidden" name="QUANTITY" class="js-product-days-hours-quantity-quantity js-field-value" value="<? (!empty($basketitem)) ? ($basketitem->getField('QUANTITY')) : ('') ?>" />

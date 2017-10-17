@@ -26,6 +26,8 @@
                     <? } ?>
                 </div>
             </div>
+			
+			<input type="hidden" class="js-product-element" value="<?= $product->getID() ?>" />
             
             <div class="equipmentcontainer__itemleftside">
 				<? $src = $product->getImageSrc() ?>

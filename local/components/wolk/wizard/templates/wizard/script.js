@@ -21,6 +21,15 @@ function PutBasket(pid, quantity, $block)
 		return;
 	}
 	
+	var pid = 0;
+	
+	// Получение ID продукции.
+    if ($block.find('.js-product-select').length) {
+        pid = $block.find('.js-product-select option:selected').val();
+    } else {
+        pid = $block.find('.js-product-element').val();
+    }
+	
     if (pid <= 0) {
         return;
     }

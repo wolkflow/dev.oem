@@ -1373,7 +1373,7 @@ float: left}
   width: 200px;
 }
 .equipmentcontainer__itemcontainer {
-  overflow: hidden;
+  /*overflow: hidden;*/
   *zoom: 1;
   margin-bottom: 50px;
 }

@@ -6,7 +6,7 @@
 
 <? $value = (!empty($basketitem)) ? ($basketitem->getQuantity()) : ('0') ?>
 
-<div class="js-quantity-wrapper js-product-element itemCount" data-pid="<?= $product->getID() ?>">
+<div class="js-quantity-wrapper itemCount" data-pid="<?= $product->getID() ?>">
     <div class="serviceItem__subtitle">
         <?= Loc::getMessage('QUANTITY') ?>
     </div>

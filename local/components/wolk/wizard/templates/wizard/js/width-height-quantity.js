@@ -18,16 +18,9 @@ window['oem-func-width-height-quantity-cart'] = function($block) {
     if (quantity == 0) {
         ResetParams($block);
     }
-	    
-    if ($block.find('.js-product-select').length) {
-        pid = $block.find('.js-product-select option:selected').val();
-    } else {
-        pid = $block.find('.js-product-element').data('pid');
-    }
-    //$input.val(quantity);
-    
+	
     // Сохранение в корзине.
-    PutBasket(pid, quantity, $block);
+    PutBasket(quantity, $block);
 }
 
 
@@ -94,12 +87,10 @@ $(document).ready(function() {
     $(document).on('click', '.js-block-width-height-quantity .js-quantity-dec', function(event) {
 		var $block = $(this).closest('.js-product-block');
 		var $input = $block.find('input.js-quantity');
-		var value  = parseInt($input.val()) - 1;
-		
-		
-		if (value >= 0) {
-			$input.val(value);
-			$input.data('value', value);
+		var value  = parseInt($input.val());
+        
+		if (value > 0) {
+			 $input.val('value', value - 1);
 		}
         
         window['oem-func-width-height-quantity-cart']($block);
@@ -110,10 +101,9 @@ $(document).ready(function() {
     $(document).on('click', '.js-block-width-height-quantity .js-quantity-inc', function(event) {
         var $block = $(this).closest('.js-product-block');
 		var $input = $block.find('input.js-quantity');
-		var value  = parseInt($input.val()) + 1;
+		var value  = parseInt($input.val());
         
-		$input.val(value);
-        $input.data('value', value);
+		$input.val('value', value + 1);
         
         window['oem-func-width-height-quantity-cart']($block);
 	});

@@ -4,8 +4,7 @@
  * Функция добавления в корзину.
  */
 window['oem-func-square-cart'] = function($block) {
-    
-    var pid      = 0;
+
     var $input   = $block.find('input.js-square');
     var quantity = parseInt($input.val());
     
@@ -18,14 +17,8 @@ window['oem-func-square-cart'] = function($block) {
         ResetParams($block);
     }
 	
-    if ($block.find('.js-product-select').length) {
-        pid = $block.find('.js-product-select option:selected').val();
-    } else {
-        pid = $block.find('.js-product-element').data('pid');
-    }
-    
     // Сохранение в корзине.
-    PutBasket(pid, quantity, $block);
+    PutBasket(quantity, $block);
 }
 
 
