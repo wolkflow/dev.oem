@@ -36,6 +36,53 @@ switch ($action) {
 	/*
 	 * Печать счета.
 	 */
+	case ('pricelist'):
+		$eid  = (int)    $_REQUEST['eid'];
+		$lang = strtolower((string) $_REQUEST['lang']);
+		$type = strtolower((string) $_REQUEST['type']);
+
+		// Контекст конструктора.
+		$context = new Wolk\OEM\Context($eid, $type, $lang);
+
+		// Мероприятие.
+		$event = new Wolk\OEM\Event($eid);
+
+		// Продукция.
+		$products = $event->getProducts($context);
+
+		$fp = fopen('php://output', 'w');
+
+		ob_start();
+
+		foreach ($products as $product) {
+			
+			$data = [
+				$product->getTitle($context->getLang()),
+				$product->getPrice()
+			];
+			
+			fputcsv($fp, $data, ';');
+		}
+				
+		// Get the contents of the output buffer
+		$csv = ob_get_clean();
+		$csv = iconv('utf-8', 'cp1251', $csv);
+
+		$filename = 'pricelist_' . $event->getCode() . '_' . $lang. '_' . $type . '_' . date('YmdHis');
+
+		// Output CSV-specific headers
+		header('Content-type: text/csv');
+		header('Content-Disposition: attachment; filename="'.$filename.'.csv";');
+		header('Pragma: no-cache');
+		header('Expires: 0');
+
+		echo $csv;
+		
+		break;
+	
+	/*
+	 * Печать счета.
+	 */
 	case ('invoice-print'):
 		$order_id = (int) $_REQUEST['oid'];
 		$template = (string) $_REQUEST['tpl'];
