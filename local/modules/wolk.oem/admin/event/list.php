@@ -98,7 +98,7 @@ $params = array(
 );
 
 // Список заказов.
-$result = new CAdminResult(\Wolk\OEM\Event::getList($params), $table);
+$result = new CAdminResult(\Wolk\OEM\Event::getList($params, false), $table);
 
 // Аналогично CDBResult инициализируем постраничную навигацию.
 $result->NavStart();
@@ -126,8 +126,11 @@ $ladmin->AddHeaders(array(
 
 
 
-while ($event = $result->NavNext(true, "f_")) {
-	    
+while ($item = $result->NavNext(true, "f_")) {
+	
+	// Мероприятие.
+	$event = new Wolk\OEM\Event($item['ID']);
+	
 	// создаем строку. результат - экземпляр класса CAdminListRow
 	$row =& $ladmin->AddRow($event->getID()); 
 	
