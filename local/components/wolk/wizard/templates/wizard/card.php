@@ -19,7 +19,7 @@
                 <div class="itemquantitycontainer">
                     <? // Продукция, включенная в стенд. // ?>
                     <? if (array_key_exists($product->getID(), $arResult['BASE'])) { ?>
-                        <div class="equipmentcontainer__standartnote">
+                        <div class="equipmentcontainer__standartnote js-product-include">
                             <?= Loc::getMessage('STANDARD_INCLUDES') ?>
                             <b><?= $arResult['BASE'][$product->getID()] ?></b>
                         </div>
@@ -68,12 +68,24 @@
                             </option>
                         <? } ?>
                         <? foreach ($products as $product) { ?>
-                            <option value="<?= $product->getID() ?>" <?= (!empty($basketitem) && $basketitem->getProductID() == $product->getID()) ? ('selected') : ('') ?> data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>" data-descr="<?= $product->getDescription() ?>">
+                            <option 
+								value="<?= $product->getID() ?>" 
+								data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>" 
+								data-descr="<?= $product->getDescription() ?>"
+								data-include="<?= (array_key_exists($product->getID(), $arResult['BASE'])) ? ('1') : ('0') ?>"
+								<?= (!empty($basketitem) && $basketitem->getProductID() == $product->getID()) ? ('selected') : ('') ?>
+							>
                                 <?= $product->getTitle() ?>
                                 <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
                             </option>
                         <? } ?>
                     </select>
+					
+					<? // Продукция, включенная в стенд. // ?>
+					<div class="equipmentcontainer__standartnote js-product-include" style="display: none;">
+						<?= Loc::getMessage('STANDARD_INCLUDES') ?>
+						<b></b>
+					</div>
                 </div>
             </div>
             

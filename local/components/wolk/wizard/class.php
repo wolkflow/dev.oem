@@ -11,6 +11,7 @@ use Bitrix\Sale\Internals\OrderTable;
 use Wolk\Core\Helpers\ArrayHelper;
 
 use Wolk\OEM\Event;
+use Wolk\OEM\Stand;
 use Wolk\OEM\Context;
 use Wolk\OEM\Order;
 use Wolk\OEM\Basket;
@@ -298,10 +299,11 @@ class WizardComponent extends \CBitrixComponent
         $data['STAND'] = (int) $request->get('STAND');
         
         // Если выбран предустановленный станд.
-        if ($data['STAND'] == $this->getEvent()->getPreselectStandID()) {
+        if (!empty($data['STAND'])) {
+			$stand  = new Stand($data['STAND']);
             $params = $this->getBasket()->getParams();
             
-            $standoffer = $this->getEvent()->getPreselectStand()->getStandOffer($params['WIDTH'], $params['DEPTH'], $this->getContext());
+            $standoffer = $stand->getStandOffer($params['WIDTH'], $params['DEPTH'], $this->getContext());
             
             if (!empty($standoffer)) {
                 $data['BASE'] = $standoffer->getBaseProductQIDs();

@@ -280,12 +280,21 @@ $(document).ready(function() {
         var $that   = $(this);
         var $block  = $that.closest('.js-product-block');
         var $option = $that.find('option:selected');
-
+		
+		$block.find('.js-product-include').hide();
+		
         if (!empty($option.val())) {
             $block.find('.js-product-price').html($option.data('price'));
             $block.find('.js-product-descr').html($option.data('descr'));
             $block.find('.js-product-select-price').show();
             $block.find('.js-product-select-descr').show();
+			
+			// Включенное оборедование.
+			var include = parseInt($option.data('include'));
+			if (include > 0) {
+				$block.find('.js-product-include b').html(include);
+				$block.find('.js-product-include').show();
+			}
         } else {
             $block.find('.js-product-select-price').hide();
             $block.find('.js-product-select-descr').hide();
