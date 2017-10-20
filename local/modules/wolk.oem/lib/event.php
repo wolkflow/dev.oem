@@ -386,6 +386,26 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return array_map('intval', $this->data['PROPS']['PRODUCTS']['VALUE']);
 	}
 	
+	
+	
+	/**
+	 * Получение списка активных языков.
+	 */
+	public function getLangs()
+	{
+		$this->load();
+		
+		$langs = [];
+		foreach ($this->data['PROPS'] as $code => $prop) { 
+			if (strpos($code, 'LANG_ACTIVE_') !== false) {
+				if ($prop['VALUE'] == 'Y') {
+					$langs []= strtolower(str_replace('LANG_ACTIVE_', '', $code));
+				}
+			}
+		}
+		return $langs;
+	}
+	
     
     /**
 	 * Получение списка стендовых предложений в зависимости от размеров.

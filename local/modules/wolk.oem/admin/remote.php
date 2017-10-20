@@ -37,38 +37,53 @@ switch ($action) {
 	 * Печать счета.
 	 */
 	case ('pricelist'):
-		$eid  = (int)    $_REQUEST['eid'];
-		$lang = strtolower((string) $_REQUEST['lang']);
-		$type = strtolower((string) $_REQUEST['type']);
-
-		// Контекст конструктора.
-		$context = new Wolk\OEM\Context($eid, $type, $lang);
+		$eid  = (int) $_REQUEST['eid'];
 
 		// Мероприятие.
 		$event = new Wolk\OEM\Event($eid);
-
-		// Продукция.
-		$products = $event->getProducts($context);
-
+		
+		$types = array_map('strtolower', Wolk\OEM\Context::getTypeList());
+		$langs = $event->getLangs();
+		
+		// Поток вывода.
 		$fp = fopen('php://output', 'w');
-
+		
 		ob_start();
-
-		foreach ($products as $product) {
-			
-			$data = [
-				$product->getTitle($context->getLang()),
-				$product->getPrice()
-			];
-			
-			fputcsv($fp, $data, ';');
+		
+		foreach ($types as $type) {
+			foreach ($langs as $lang) {
+				
+				// Заголовок.
+				$data = ['Case ' . $type . ' / ' . $lang, 'Price'];
+				
+				fputcsv($fp, $data, ';');
+				
+				// Контекст конструктора.
+				$context = new Wolk\OEM\Context($event->getID(), $type, $lang);
+				
+				// Продукция.
+				$products = $event->getProducts($context);
+				
+				if (!empty($products)) {
+					foreach ($products as $product) {
+						// Наименование и цена.
+						$data = [
+							$product->getTitle($context->getLang()),
+							$product->getPrice()
+						];
+						
+						fputcsv($fp, $data, ';');
+					}
+				}
+			}
 		}
+		
 				
 		// Get the contents of the output buffer
 		$csv = ob_get_clean();
 		$csv = iconv('utf-8', 'cp1251', $csv);
 
-		$filename = 'pricelist_' . $event->getCode() . '_' . $lang. '_' . $type . '_' . date('YmdHis');
+		$filename = 'pricelist_' . $event->getCode() . '_' . date('YmdHis');
 
 		// Output CSV-specific headers
 		header('Content-type: text/csv');

@@ -139,10 +139,10 @@ while ($event = $result->NavNext(true, "f_")) {
 
 	// Просмотр элемента.
 	$actions []= array(
-		"ICON"		=> 'view',
+		"ICON"		=> '',
 		"DEFAULT"	=> true,
-		"TEXT"		=> Loc::getMessage('action-view'),
-		"ACTION"	=> $ladmin->ActionRedirect("/bitrix/admin/wolk_oem_event_index.php?ID=".$event->getID())
+		"TEXT"		=> Loc::getMessage('ACTION_PRICELIST'),
+		"ACTION"	=> "javascript: location.href = '/bitrix/admin/wolk_oem_remote.php?action=pricelist&eid=" . $event->getID() . "';",
 	);
 	
 	$row->AddActions($actions);
@@ -183,6 +183,7 @@ $formfilter = new CAdminFilter(
 );
 
 ?>
+
 <form name="find_form" method="get" action="<?= $APPLICATION->GetCurPage() ?>">
 	<? $formfilter->Begin() ?>
 	<tr>
