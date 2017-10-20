@@ -8,6 +8,7 @@ $MESS['SYSTEM_STAND'] = 'Системный стенд';
 $MESS['STANDARD_STAND'] = 'Стандартный стенд';
 $MESS['INDIVIDUALSTAND'] = 'Индивидуальный стенд';
 $MESS['CHANGE'] = 'Изменить';
+$MESS['PRINT_ORDER'] = 'Печать заказа';
 $MESS['CHANGE_ORDER'] = 'Изменить заказ';
 $MESS['STANDNUM'] = 'Стенд';
 $MESS['PAVILION'] = 'Павильон';

@@ -10,7 +10,8 @@ $APPLICATION->IncludeComponent(
 	"wolk:order.print",
 	"personal",
 	array(
-		'OID' => intval($request->get('ID')),
+		'OID'   => intval($request->get('ID')),
+		'CHECK' => 'Y'
 	)
 );
 

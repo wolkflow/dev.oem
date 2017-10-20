@@ -143,7 +143,7 @@ while ($item = $result->NavNext(true, "f_")) {
 	// Просмотр элемента.
 	$actions []= array(
 		"ICON"		=> '',
-		"DEFAULT"	=> true,
+		"DEFAULT"	=> false,
 		"TEXT"		=> Loc::getMessage('ACTION_PRICELIST'),
 		"ACTION"	=> "javascript: location.href = '/bitrix/admin/wolk_oem_remote.php?action=pricelist&eid=" . $event->getID() . "';",
 	);

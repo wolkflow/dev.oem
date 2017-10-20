@@ -24,6 +24,9 @@ class OrderPrintComponent extends \CBitrixComponent
 		// Язык.
 		$arParams['LANG'] = (string) $arParams['LANG'];
 		
+		// Проверка принадлежности.
+		$arParams['CHECK'] =(string) $arParams['CHECK'] ;
+		
 		if (empty($arParams['LANG'])) {
 			$arParams['LANG'] = \Bitrix\Main\Application::getInstance()->getContext()->getLanguage();
 		}
@@ -57,6 +60,8 @@ class OrderPrintComponent extends \CBitrixComponent
 			return;
 		}
 		
+		global $USER;
+		
 				
 		// Настройки локализации.
 		$site = \CSite::GetByID(SITE_DEFAULT)->Fetch();
@@ -68,6 +73,12 @@ class OrderPrintComponent extends \CBitrixComponent
 		
 		// Заказ.
 		$this->arResult['OEMORDER'] = new \Wolk\OEM\Order($this->arParams['OID']);
+		
+		if ($this->arParams['CHECK'] == 'Y') {
+			if ($this->arResult['OEMORDER']->getUserID() != $USER->getID()) {
+				return;
+			}
+		}
 		
 		// Данные заказа.
 		$this->arResult = array_merge($this->arResult, $this->arResult['OEMORDER']->getFullData());
@@ -84,10 +95,17 @@ class OrderPrintComponent extends \CBitrixComponent
 		// Мероприятие.
 		$event = new \Wolk\OEM\Event($this->arResult['ORDER']['PROPS']['EVENT_ID']['VALUE']);
 		
-		
 		// Данные мероприятия.
 		$this->arResult['EVENT'] = $event->getData();
 		
+		// Стенд.
+		$this->arResult['STAND'] = null;
+		
+		foreach ($this->arResult['BASKETS'] as $basket) {
+			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
+				$this->arResult['STAND'] = $basket;
+			}
+		}
 		
 		
 		// Подключение шаблона.

@@ -132,13 +132,17 @@
 		</div>
 	<? } ?>
 	
-	<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
-		<div class="ordercontainer__changebutton changeallorder">
+	
+	<div class="ordercontainer__changebutton changeallorder orderpopuplinks">
+		<? if ($arResult['ORDER']['STATUS_ID'] == 'N') { ?>
 			<a class="changebutton" href="<?= $arResult['ORDER']['LINK'] ?>">
 				<?= Loc::getMessage('CHANGE_ORDER') ?>
 			</a>
-		</div>
-	<? } ?>
+		<? } ?>
+		<a class="changebutton" target="_blank" href="/print/order/personal/<?= $arResult['ORDER']['ID'] ?>/">
+			<?= Loc::getMessage('PRINT_ORDER') ?>
+		</a>
+	</div>
 </div>
 
 <br/>

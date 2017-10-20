@@ -19,6 +19,12 @@ $arUrlRewrite = array(
 		"ID" => "",
 		"PATH" => "/print/order/form-handing/index.php",
 	),
+	array(
+		"CONDITION" => "#^/print/order/personal/([\\d]+)/#",
+		"RULE" => "ID=\$1&",
+		"ID" => "",
+		"PATH" => "/print/order/personal/index.php",
+	),
 	
 	array(
 		"CONDITION" => "#^/printsketch/([\\d]+)/#",
