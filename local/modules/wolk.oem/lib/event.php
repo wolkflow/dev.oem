@@ -487,7 +487,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
     /**
      * Получение списка оборудования и услуг с ценами.
      */
-    public function getProducts(Context $context, $section = null)
+    public function getProducts(Context $context = null, $section = null)
     {
         $ids = $this->getProductIDs();
         
@@ -496,7 +496,9 @@ class Event extends \Wolk\Core\System\IBlockEntity
         }
         
         // Цены для мероприятия.
-        $prices = $this->getProductPrices($context);
+		if (!is_null($context)) {
+			$prices = $this->getProductPrices($context);
+		}
         
         // Фильтр.
         $filter = ['ID' => $ids, 'ACTIVE' => 'Y'];

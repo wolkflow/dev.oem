@@ -13,4 +13,5 @@ $MESS['NO']  = 'Нет';
 
 $MESS['SELECT_ANY'] = '- любой -';
 
+$MESS['ACTION_VIEW'] = 'Просмотр';
 $MESS['ACTION_PRICELIST'] = 'Скачать прайслист';

@@ -93,7 +93,13 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 				]); ?>
 			</div>
 			<div class="modalContacts">
-				<? $APPLICATION->IncludeComponent('wolk:element.data', 'contacts', ['IBLOCK_ID' => EVENTS_IBLOCK_ID]); ?>
+				<?	// Контакты.
+					$APPLICATION->IncludeComponent(
+						"wolk:element.data",
+						"contacts", 
+						['IBLOCK_ID' => EVENTS_IBLOCK_ID]
+					);
+				?>
 			</div>
 		</div>
 	</div>

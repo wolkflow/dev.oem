@@ -27,7 +27,7 @@ class Main
                 'text'         => GetMessage('WOLK_OEM_GLOBAL_MENU_TEXT'),
                 'title'        => GetMessage('WOLK_OEM_GLOBAL_MENU_TITLE'),
                 'url'          => 'wolk.core_index.php?lang=' . LANGUAGE_ID,
-                'sort'         => 1100,
+                'sort'         => 50,
                 'items_id'     => 'global_menu_wolk_oem',
                 'help_section' => 'settings',
                 'items'        => []

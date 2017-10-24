@@ -57,10 +57,10 @@
 							<?= $basket['QUANTITY'] ?>
 						</td>
 						<td>
-							<?= FormatCurrency($basket['PRICE'], $arResult['RATE_CURRENCY']) ?>
+							<?= FormatCurrency($basket['PRICE'], $arResult['ORDER']['CURRENCY']) ?>
 						</td>
 						<td>
-							<?= FormatCurrency($basket['PRICE'] * $basket['QUANTITY'], $arResult['RATE_CURRENCY']) ?>
+							<?= FormatCurrency($basket['PRICE'] * $basket['QUANTITY'], $arResult['ORDER']['CURRENCY']) ?>
 						</td>
 					</tr>
 				<? } ?>
@@ -74,7 +74,7 @@
 				<tr>
 					<td align="right">
 						Наценка:
-						<b><?= FormatCurrency($arResult['PRICES']['SURCHARGE'], $arResult['RATE_CURRENCY']) ?></b>
+						<b><?= FormatCurrency($arResult['PRICES']['SURCHARGE'], $arResult['ORDER']['CURRENCY']) ?></b>
 						(<?= $arResult['ORDER']['PROPS']['SURCHARGE']['VALUE'] ?>%)
 					</td>
 				<tr>
@@ -82,13 +82,13 @@
 			<tr>
 				<td align="right">
 					Всего к оплате:
-					<b><?= FormatCurrency($arResult['PRICES']['TOTAL'], $arResult['RATE_CURRENCY']) ?></b>
+					<b><?= FormatCurrency($arResult['PRICES']['TOTAL'], $arResult['ORDER']['CURRENCY']) ?></b>
 				</td>
 			<tr>
 			</tr>
 				<td align="right">
 					В том числе НДС:
-					<b><?= FormatCurrency($arResult['PRICES']['TAX'], $arResult['RATE_CURRENCY']) ?></b>
+					<b><?= FormatCurrency($arResult['PRICES']['TAX'], $arResult['ORDER']['CURRENCY']) ?></b>
 				</td>
 			</tr>
 		</table>

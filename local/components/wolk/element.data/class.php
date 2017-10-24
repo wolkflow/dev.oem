@@ -18,7 +18,7 @@ class ElementDataComponent extends \CBitrixComponent
 		$arParams['IBLOCK_ID'] = (int) $arParams['IBLOCK_ID'];
 		
 		// Код элемента.
-		$arParams['CODE'] = (string) $arParams['CODE'];
+		$arParams['CODE'] = (string) $_REQUEST['CODE'];
 		
         return $arParams;
     }
@@ -39,22 +39,24 @@ class ElementDataComponent extends \CBitrixComponent
 			return;
 		}
 		
+		/*
 		$engine = new CComponentEngine($this);
 		
 		$templates = array(
 			'none' => '',
-			'element' => '#CODE#/',
+			'element' => '#CODE#/(.*)',
 		);
 		
 		$urltemplates = CComponentEngine::MakeComponentUrlTemplates($templates, $templates);
 
 		$page = $engine->guessComponentPath(
-			'/events/',
+			'/wizard/',
 			$urltemplates,
 			$variables
 		);
+		*/
 		
-		$this->arResult['ELEMENT'] = Wolk\Core\Helpers\IBlockElement::getByCode($this->arParams['IBLOCK_ID'], $variables['CODE']);
+		$this->arResult['ELEMENT'] = Wolk\Core\Helpers\IBlockElement::getByCode($this->arParams['IBLOCK_ID'], $this->arParams['CODE']);
 		
 		$this->includeComponentTemplate();
 	}

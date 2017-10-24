@@ -73,6 +73,39 @@ class Order
 	}
 	
 	
+	
+	public function getPrice()
+	{
+		$this->load();
+		
+		return floatval($this->data['PRICE']);
+	}
+	
+	
+	public function getTAX()
+	{
+		$this->load();
+		
+		return floatval($this->data['TAX_VALUE']);
+	}
+	
+	
+	public function getSurcharge()
+	{
+		$this->load();
+		
+		return floatval($this->data['PROPS']['SURCHARGE']['VALUE']);
+	}
+	
+	
+	public function getCurrency()
+	{
+		$this->load();
+		
+		return $this->data['CURRENCY'];
+	}
+	
+	
 	/**
 	 * Загрузка позиций заказа.
 	 *

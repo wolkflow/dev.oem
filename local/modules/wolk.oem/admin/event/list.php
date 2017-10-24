@@ -142,6 +142,14 @@ while ($item = $result->NavNext(true, "f_")) {
 
 	// Просмотр элемента.
 	$actions []= array(
+		"ICON"		=> 'view',
+		"DEFAULT"	=> true,
+		"TEXT"		=> Loc::getMessage('ACTION_VIEW'),
+		"ACTION"	=> $ladmin->ActionRedirect("/bitrix/admin/wolk_oem_event_detail.php?ID=" . $event->getID())
+	);
+	
+	// Скачивание прайслиста.
+	$actions []= array(
 		"ICON"		=> '',
 		"DEFAULT"	=> false,
 		"TEXT"		=> Loc::getMessage('ACTION_PRICELIST'),

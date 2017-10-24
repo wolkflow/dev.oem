@@ -1791,3 +1791,8 @@ div.preview-image {
 	margin-left: 4px;
 }
 
+.whatsapp {
+	background: url('../images/wa.png');
+    background-repeat: no-repeat;
+    padding-left: 18px;
+}

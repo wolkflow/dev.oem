@@ -21,9 +21,9 @@
 					M: <?= $contact['MOBILE'] ?>
 				</li>
 			<? } ?>
-			<? if (!empty($contact['WHATSUP'])) { ?>
-				<li>
-					W: <?= $contact['WHATSUP'] ?>
+			<? if (!empty($contact['WHATSAPP'])) { ?>
+				<li class="whatsapp">
+					<?= $contact['WHATSAPP'] ?>
 				</li>
 			<? } ?>
 			<li>
