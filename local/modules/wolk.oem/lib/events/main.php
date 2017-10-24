@@ -14,7 +14,7 @@ IncludeModuleLangFile(__FILE__);
 class Main
 {
     /**
-     * ���������� �������� ����.
+     * Построение главного меню.
      */
     public function OnBuildGlobal_AddMainMenu(&$global, &$modules)
     {

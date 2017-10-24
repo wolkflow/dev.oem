@@ -47,6 +47,9 @@ while($currency = $result->fetch()) {
 	$currencies[$currency['CURRENCY']] = $currency;
 }
 
+// Стенды.
+$stands = $event->getStands();
+
 // Продукция.
 $products = $event->getProducts();
 
@@ -63,14 +66,72 @@ $result = CSaleOrder::getList(
 	array()
 );
 
-$stat['ORDERS'] = (int) $result->selectedRowsCount();
-$stat['USERS']  = array();
-$stat['PRICES'] = array('PRICE' => array(), 'SURCHARGE' => array());
+$stat['ORDERS']   = (int) $result->selectedRowsCount();
+$stat['USERS']    = array();
+$stat['PRICES']   = array('PRICE' => array(), 'SURCHARGE' => array());
+$stat['STANDS']   = array();
+$stat['PRODUCTS'] = array();
 
+foreach ($stands as $stand) {
+	$stat['STANDS'][$stand->getID()] = array(
+		'TITLE'    => $stand->getTitle(),
+		'PRICES'   => array(),
+		'ORDERS'   => array(),
+		'QUANTITY' => 0,
+	);
+}
+
+foreach ($products as $product) {
+	$stat['PRODUCTS'][$product->getID()] = array(
+		'TITLE'    => $product->getTitle(),
+		'PRICES'   => array(),
+		'ORDERS'   => array(),
+		'QUANTITY' => 0,
+	);
+}
+
+
+// Проход по всем заказам и получение информации о продажах.
 while ($item = $result->fetch()) {
 	$order = new Wolk\OEM\Order($item['ID']);
 	
+	// Покупатели.
 	$stat['USERS'][$order->getUserID()] = $order->getUserID();
+	
+	// Заказанные товары.
+	$baskets = $order->getBaskets();
+	
+	foreach ($baskets as $basket) {
+		
+		if ($basket['PRICE'] == 0) {
+			continue;
+		}
+		
+		
+		// Стенды или продукция.
+		if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
+			$key = 'STANDS';
+		} else {
+			$key = 'PRODUCTS';
+		}
+		
+		
+		// Количество заказов.
+		$stat[$key][$basket['PRODUCT_ID']]['ORDERS'][$order->getID()] = $order->getID();
+		
+		// Общее количество.
+		$stat[$key][$basket['PRODUCT_ID']]['QUANTITY'] += $basket['QUANTITY'];
+		
+		foreach ($currencies as $currency) {
+			$code = $currency['CURRENCY'];
+			
+			$stat[$key][$basket['PRODUCT_ID']]['PRICES'][$code] += (float) CCurrencyRates::ConvertCurrency(
+				$basket['PRICE'], 
+				$basket['CURRENCY'],
+				$code
+			);
+		}
+	}
 	
 	foreach ($currencies as $currency) {
 		$code = $currency['CURRENCY'];
@@ -98,6 +159,7 @@ while ($item = $result->fetch()) {
 $stat['USERS'] = array_unique($stat['USERS']);
 
 
+
 // Подключение модуля.
 Bitrix\Main\Loader::includeModule('wolk.oem');
 
@@ -123,26 +185,26 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             <div class="panel panel-default">
                 <div class="panel-heading event-heading">
                     <h2>
-						Выставка 
+						<?= Loc::getMessage('EVENT') ?> 
 						<b><?= $event->getTitle() ?></b>
 					</h2>
 					<a class="glyphicon glyphicon-edit"  target="_blank" href="/bitrix/admin/iblock_element_edit.php?type=events&IBLOCK_ID=<?= EVENTS_IBLOCK_ID ?>&ID=<?= $event->getID() ?>"></a>
 					<a class="glyphicon glyphicon-share" target="_blank" href="/events/<?= $event->getCode() ?>/"></a>
 				</div>
 				<div class="panel-body">
-					<h4>Статистика по выставке</h4>
-					<table class="table table-bordered table-condensed">
+					<h4><?= Loc::getMessage('STAT_EVENT') ?></h4>
+					<table class="table table-bordered table-condensed  stat-table">
 						<tbody>
 							<tr>
-								<td width="30%">Всего заказов</td>
+								<td><?= Loc::getMessage('TOTAL_ORDERS') ?></td>
 								<td><?= $stat['ORDERS'] ?></td>
 							</tr>
 							<tr>
-								<td width="30%">Всего пользователей</td>
+								<td><?= Loc::getMessage('TOTAL_USERS') ?></td>
 								<td><?= count($stat['USERS']) ?></td>
 							</tr>
 							<tr>
-								<td width="30%">Общая сумма продаж</td>
+								<td><?= Loc::getMessage('TOTAL_SALE_SUM') ?></td>
 								<td>
 									<ul>
 										<? foreach ($currencies as $currency) { ?>
@@ -185,8 +247,71 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 					
 					<hr/>
 					
+					<h4>Статистика по стендам</h4>
+					<table class="table table-bordered table-condensed stat-table">
+						<thead>
+							<tr>
+								<th>Название</th>
+								<th>Общая стоимость</th>
+								<th>Количество заказов с позицией</th>
+								<th>Общее количество (м<sup>2</sup>)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<? foreach ($stands as $stand) { ?>
+								<tr>
+									<td>
+										<a href="/bitrix/admin/iblock_element_edit.php?type=events&IBLOCK_ID=<?= STANDS_IBLOCK_ID ?>&&ID=<?= $stand->getID() ?>"><?= $stand->getName() ?></a>
+										<br/>
+										<?= $stand->getTitle() ?>
+									</td>
+									<td>
+										<? foreach ($currencies as $currency) { ?>
+											<? $code = $currency['CURRENCY'] ?>
+											<li>
+												<?= CurrencyFormat($stat['STANDS'][$stand->getID()]['PRICES'][$code], $code) ?>
+											</li>
+										<? } ?>
+									</td>
+									<td>
+										<? if (!empty($stat['STANDS'][$stand->getID()]['ORDERS'])) { ?>
+											<?	// Список заказов. 
+												$content = [];
+												foreach ($stat['STANDS'][$stand->getID()]['ORDERS'] as $oid) {
+													$content []= "<a href='/bitrix/admin/wolk_oem_order_edit.php?ID=" . $oid . "' target='_blank'>" . $oid . "</a>";
+												}
+												$content = implode(', ', $content);
+											?>										
+											<a href="javascript:void(0)" class="js-popover" data-html="true" data-container="body" data-toggle="popover" data-placement="right" data-title="Номера заказов" data-content="<?= $content ?>">
+												<?= count(array_unique($stat['STANDS'][$stand->getID()]['ORDERS'])) ?>
+											</a>
+										<? } else { ?>
+											&mdash;
+										<? } ?>
+									</td>
+									<td>
+										<?= $stat['STANDS'][$stand->getID()]['QUANTITY'] ?>
+									</td>
+								</tr>
+							<? } ?>
+						</tbody>
+					</table>
+					
+					<hr/>
+					
 					<h4>Статистика по позициям</h4>
-					<table class="table table-bordered table-condensed">
+					<table class="table table-bordered table-condensed stat-table">
+						<thead>
+							<tr>
+								<th>Название</th>
+								<th>Общая стоимость</th>
+								<th>Количество заказов с позицией</th>
+								<th>
+									Общее количество 
+									<span class="glyphicon glyphicon-info-sign js-tooltip" data-toggle="tooltip" data-placement="top" title="Единица измерения зависит от позиции."></span>
+								</th>
+							</tr>
+						</thead>
 						<tbody>
 							<? foreach ($products as $product) { ?>
 								<tr>
@@ -194,7 +319,31 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 										<?= $product->getTitle() ?>
 									</td>
 									<td>
-										-
+										<? foreach ($currencies as $currency) { ?>
+											<? $code = $currency['CURRENCY'] ?>
+											<li>
+												<?= CurrencyFormat($stat['PRODUCTS'][$product->getID()]['PRICES'][$code], $code) ?>
+											</li>
+										<? } ?>
+									</td>
+									<td>
+										<? if (!empty($stat['PRODUCTS'][$product->getID()]['ORDERS'])) { ?>
+											<?	// Список заказов. 
+												$content = [];
+												foreach ($stat['PRODUCTS'][$product->getID()]['ORDERS'] as $oid) {
+													$content []= "<a href='/bitrix/admin/wolk_oem_order_edit.php?ID=" . $oid . "' target='_blank'>" . $oid . "</a>";
+												}
+												$content = implode(', ', $content);
+											?>										
+											<a href="javascript:void(0)" class="js-popover" data-html="true" data-container="body" data-toggle="popover" data-placement="right" data-title="Номера заказов" data-content="<?= $content ?>">
+												<?= count(array_unique($stat['PRODUCTS'][$product->getID()]['ORDERS'])) ?>
+											</a>
+										<? } else { ?>
+											&mdash;
+										<? } ?>
+									</td>
+									<td>
+										<?= $stat['PRODUCTS'][$product->getID()]['QUANTITY'] ?>
 									</td>
 								</tr>
 							<? } ?>
@@ -211,8 +360,14 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     var invoices = <?= json_encode($invoices) ?>;
     
     $(document).ready(function() {
-        // bootstrap
+        // Bootstrap.
         $('html').addClass('wolk_admin_pages_no_conflict');
+		
+		// Popover.
+		$('.js-popover').popover();
+		
+		// Tooltip.
+		$('.js-tooltip').tooltip();
 	});
 </script>
 
@@ -275,6 +430,19 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 	.event-heading .glyphicon {
 		margin-right: 5px;
 		text-decoration: none;
+	}
+	
+	.stat-table {
+		border: 2px #dddddd solid;;
+	}
+	
+	.stat-table tbody tr td {
+		padding-left: 10px;
+		vertical-align: middle;
+	}
+	
+	.stat-table tbody tr td:first-child {
+		width: 35%;
 	}
 </style>
 
