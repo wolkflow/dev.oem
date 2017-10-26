@@ -6,8 +6,7 @@
 window['oem-func-quantity-cart'] = function($block) {
     
     var $input   = $block.find('input.js-quantity');
-    var rawvalue = parseInt($input.val());
-    var quantity = parseInt($input.data('value'));
+    var quantity = parseInt($input.val());
     
     if (quantity < 0) {
         quantity = 0;

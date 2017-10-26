@@ -751,11 +751,11 @@ class Basket
 		$file  = null;
 		$image = base64_decode($this->getSketch()['SKETCH_IMAGE']);
 		if (!empty($image)) {
-			$file = \CFile::SaveFile(array(
+			$file = \CFile::SaveFile([
 				'name'    	  => 'sketch-'.$oid.'.jpg',
 				'description' => 'Изображение скетча для заказа №'.$oid,
 				'content'     => $image
-			), 'sketches')
+			], 'sketches');
 		}
 		
 		$dataprops []= [
@@ -797,7 +797,6 @@ class Basket
             'CODE'           => $props['TYPESTAND']['CODE'],
             'VALUE'          => $context->getType(),
         ];
-		
 		
 		$dataprops []= [
             'ORDER_ID'       => $oid,
