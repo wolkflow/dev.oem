@@ -296,7 +296,8 @@ class WizardComponent extends \CBitrixComponent
         
         // Получение данных из сессии.
         $data = $this->getSession();
-        $data['STAND'] = (int) $request->get('STAND');
+        $data['STAND'] = (int)    $request->get('STAND');
+		$data['SFORM'] = (string) $request->get('SFORM');
         
         // Если выбран предустановленный станд.
         if (!empty($data['STAND'])) {
@@ -321,7 +322,7 @@ class WizardComponent extends \CBitrixComponent
                 }
             }
         }
-        
+		
         $this->putSession($data);
         
         // Параметры стенда.
@@ -334,10 +335,21 @@ class WizardComponent extends \CBitrixComponent
             Basket::KIND_STAND,
             [
                 'width' => $params['WIDTH'], 
-                'depth' => $params['DEPTH']
+                'depth' => $params['DEPTH'],
+				'sform' => $data['SFORM']
             ],
             $this->getContext()
         );
+		
+		// Уточнение формы стенда для индивидуальной застройки.
+		
+		if (!empty($data['SFORM'])) {
+			$this->arParams['SFORM'] = $data['SFORM'];
+			$this->getBasket()->setParam('SFORM', $data['SFORM']);
+			
+			// Если добавилась форма стенда - надо переписать URL.
+			LocalRedirect($this->getStepLink());
+		}
     }
 
 
@@ -761,17 +773,21 @@ class WizardComponent extends \CBitrixComponent
             $this->arParams['CODE'],
             mb_strtolower($this->arParams['TYPE']),
             $step,
-            $this->arParams['WIDTH'].'x'.$this->arParams['DEPTH']
+            $this->arParams['WIDTH'].'x'.$this->arParams['DEPTH'],
+			$fields []= $this->arParams['SFORM']
         ];
         
-        if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
-            $fields []= $this->arParams['SFORM'];
-        }
+		
+        // if ($this->getContext()->getType() != Context::TYPE_INDIVIDUAL) {
+            // $fields []= $this->arParams['SFORM'];
+        // }
 		
 		if ($this->getBasket()->getOrderID() > 0) {
 			$fields []= $this->getBasket()->getOrderID();
 		}
-        
+        $fields = array_filter($fields);
+		
+		
         $link = '/wizard/' . implode('/', $fields) . '/';
         
         return $link;

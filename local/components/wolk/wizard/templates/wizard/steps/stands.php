@@ -14,18 +14,19 @@
 
 <div id="step1">
     <form action="<?= $arResult['LINKS']['NEXT'] ?>" method="post">
+	
         <? if ($arResult['CONTEXT']->getType() == \Wolk\OEM\Context::TYPE_INDIVIDUAL) { ?>
             
             <div class="standspagetop" id="preselect">
-			
-				<div id="js-preselect-wrapper-id" style="display: none;">
+				<div id="js-preselect-wrapper-id" style="display: none;" data-type="individual">
 					<input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
+					<input id="js-form-input-sform-id" type="hidden" name="SFORM" value="" />
 					
 					<div class="pagedescription">
 						<?= Loc::getMessage('PRESELECT_STAND_NOTE') ?>
 					</div>
 					
-					<? // Выбор стандартного стенда // ?>
+					<? // Выбор стандартного стенда. // ?>
 					<div>
 						<div class="pagetitle">
 							<?= Loc::getMessage('CURRENT_STAND') ?>
@@ -56,8 +57,7 @@
         <? } else { ?>
 			
 			<div class="standspagetop" id="preselect">
-			
-				<div id="js-preselect-wrapper-id">
+				<div id="js-preselect-wrapper-id" data-type="standard">
 					<input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
 					
 					<? if (!empty($arResult['PRESTAND'])) { ?>
@@ -66,7 +66,7 @@
 						</div>
 					<? } ?>
 					
-					<? // Выбор стандартного стенда // ?>
+					<? // Выбор стандартного стенда. // ?>
 					<div>
 						<div class="pagetitle">
 							<?= Loc::getMessage('CURRENT_STAND') ?>
@@ -100,7 +100,7 @@
 			</div>
         <? } ?>
         
-        <? // Выбор стеднов // ?>
+        <? // Выбор стеднов. // ?>
         <div class="standstypescontainer">
             <? if (!$arResult['EVENT']->showExternalLink()) { ?>
                 
@@ -114,7 +114,7 @@
                     <? $c = 0 ?>
                     <? foreach ($arResult['STANDS'] as $standoffer) { ?>
                         <? $stand = $standoffer->getStand() ?>
-                        <div class="js-stand-block standstypescontainer__standcontainer <?= ($c % 2 == 0) ? ('standsTypesLeft') : ('standsTypesRight') ?>">
+                        <div class="js-stand-block js-stand-block-<?= $stand->getID() ?> standstypescontainer__standcontainer <?= ($c % 2 == 0) ? ('standsTypesLeft') : ('standsTypesRight') ?>">
                             
                             <div class="pagesubtitle customizable_border">
                                 <?= $stand->getTitle() ?>
@@ -167,4 +167,46 @@
             <? } ?>
         </div>
     </form>
+</div>
+
+<div class="hide">
+	
+	<? // Выбор формы стенда. // ?>
+	<div class="modal" id="js-standtype-id">
+		<div class="modalClose arcticmodal-close"></div>
+        <div class="modalTitle">
+			<?= Loc::getMessage('CHOOSE_STAND_TYPE_FORM') ?>
+		</div>
+		<form class="js-standtype-form-id" action="">
+			<div class="chooseType__row">
+				<label for="row" class="chooseType__label js-standtype-label">
+					<input type="radio" value="row" name="standtype" id="row" />
+					<span><?= Loc::getMessage('TYPE_ROW') ?></span>
+					<span class="chooseType__icon"></span>
+				</label>
+				<label for="head" class="chooseType__label js-standtype-label">
+					<input type="radio" value="head" name="standtype" id="head" />
+					<span><?= Loc::getMessage('TYPE_HEAD') ?></span>
+					<span class="chooseType__icon"></span>
+				</label>
+			</div>
+			<div class="chooseType__row">
+				<label for="corner" class="chooseType__label js-standtype-label">
+					<input type="radio" value="corner" name="standtype" id="corner" />
+					<span><?= Loc::getMessage('TYPE_CORNER') ?></span>
+					<span class="chooseType__icon"></span>
+				</label>
+				<label for="island" class="chooseType__label js-standtype-label">
+					<input type="radio" value="island" name="standtype" id="island" />
+					<span><?= Loc::getMessage('TYPE_ISLAND') ?></span>
+					<span class="chooseType__icon"></span>
+				</label>
+			</div>
+			<br/>
+			<div class="standsTypes__save">
+				<input id="js-standtype-button-id" type="button" disabled="disabled" value="<?= Loc::getMessage('SAVE') ?>" class="styler" />
+			</div>
+		</form>
+    </div>
+	
 </div>

@@ -19,6 +19,8 @@ $asset->addJs('/local/templates/.default/build/js/jquery.inputmask.bundle.js');
 $asset->addJs('/local/templates/.default/build/js/jquery-ui.multidatespicker.js');
 //$asset->addJs('/local/templates/.default/build/js/jquery.pickmeup.min.js');
 
+// Выбор стендов.
+$asset->addJs($this->GetTemplate()->getFolder().'/js/stands.js');
 
 // Типы товаров.
 $asset->addJs($this->GetTemplate()->getFolder().'/js/quantity.js');

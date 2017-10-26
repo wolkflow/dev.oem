@@ -151,22 +151,22 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 							<?= Loc::getMessage('Stand type') ?>
 						</div>
                         <label for="row" class="indexpage__choosestandtype">
-                            <input checked type="radio" value="row" name="FORM" id="row" class="js-stand-sform">
+                            <input checked type="radio" value="row" name="FORM" id="row" class="js-stand-sform" />
                             <span><?= Loc::getMessage('Row') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="corner" class="indexpage__choosestandtype">
-                            <input type="radio" value="corner" name="FORM" id="corner" class="js-stand-sform">
+                            <input type="radio" value="corner" name="FORM" id="corner" class="js-stand-sform" />
                             <span><?= Loc::getMessage('Corner') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="peninsular" class="indexpage__choosestandtype">
-                            <input type="radio" value="head" name="FORM" id="peninsular" class="js-stand-sform">
+                            <input type="radio" value="head" name="FORM" id="head" class="js-stand-sform" />
                             <span><?= Loc::getMessage('Head') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                         <label for="island" class="indexpage__choosestandtype">
-                            <input type="radio" value="island" name="FORM" id="island" class="js-stand-sform">
+                            <input type="radio" value="island" name="FORM" id="island" class="js-stand-sform" />
                             <span><?= Loc::getMessage('Insel') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>

@@ -247,17 +247,17 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 
 .standsTypes__window p		{font-size: 13px;line-height: 18px;margin: 0 0 25px}
 .chooseType__row			{margin-bottom: 15px}
-.chooseType__label 			{display: block;padding-bottom: 3px;font-size: 17px;line-height: 30px;padding-left: 45px;width: 145px;position: relative;float: left}
-.chooseType__label + .chooseType__label {margin-left: 250px;float: none}
+.chooseType__label 			{display: block;padding-bottom: 3px;font-size: 17px;line-height: 30px;padding-left: 45px;width: 190px;position: relative;float: left}
+.chooseType__label + .chooseType__label {margin-left: 280px;float: none}
 .chooseType__label input 	{display: none;}
 .chooseType__label span 	{cursor: pointer;}
 .chooseType__label input + span:before {content: "";position: absolute;left: 0;height: 26px;width: 26px;border: 2px solid #aeaeae;-moz-border-radius: 100%;-webkit-border-radius: 100%;border-radius: 100%;cursor: pointer;}
 .chooseType__label input:checked + span:after {content: "";position: absolute;left: 9px;top: 9px;width: 12px;height: 12px;background: #333333;-moz-border-radius: 100%;-webkit-border-radius: 100%;border-radius: 100%;}
 .prevChoose input + span:after 	{content: "";position: absolute;left: 9px;top: 9px;width: 12px;height: 12px;background: #aeaeae;-moz-border-radius: 100%;-webkit-border-radius: 100%;border-radius: 100%;}
-.chooseType__label[for="row"] .chooseType__icon {border-top: 2px solid #acacac;border-left: 2px solid #acacac;border-right: 2px solid #acacac;}
-.chooseType__label[for="corner"] .chooseType__icon {border-top: 2px solid #acacac;border-right: 2px solid #acacac;}
-.chooseType__label[for="head"] .chooseType__icon {border-top: 2px solid #acacac;}
-.chooseType__icon {position: absolute;right: 0;top: 0;bottom: 3px;left: 130px;border: 1px dotted #bebebe;}
+.chooseType__label[for="row"] .chooseType__icon {border-top: 4px solid #acacac;border-left: 4px solid #acacac;border-right: 4px solid #acacac;}
+.chooseType__label[for="corner"] .chooseType__icon {border-top: 4px solid #acacac;border-right: 4px solid #acacac;}
+.chooseType__label[for="head"] .chooseType__icon {border-top: 4px solid #acacac;}
+.chooseType__icon {position: absolute;right: 0;top: 0;bottom: 3px;left: 160px;border: 1px dotted #bebebe;}
 .standsTypes__save {text-align: right;padding: 11px 0 0}
 .standsTypes__save input.styler {width: 190px}
 
@@ -509,3 +509,9 @@ div.lamColor								{width: 200px}
 	right: 4px;
 }
 
+input.styler[disabled="disabled"] {
+	color: #a0a0a0;
+}
+input.styler[disabled="disabled"]:hover {
+	color: #a0a0a0;
+}

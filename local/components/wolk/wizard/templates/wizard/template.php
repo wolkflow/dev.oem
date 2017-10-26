@@ -60,6 +60,8 @@
 </div>
 
 <div class="hide">
+
+	<? // Расписание. // ?>
     <div class="modal" id="timetable">
         <div class="modalClose arcticmodal-close"></div>
         <div class="modalTitle">

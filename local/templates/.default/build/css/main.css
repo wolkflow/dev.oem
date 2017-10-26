@@ -623,9 +623,10 @@ input[type="password"] {
   border-top: 3px solid #7f7f7f;
   border-right: 3px solid #7f7f7f;
 }
-.indexpage__choosestandtype[for="peninsular"] .indexpage__choosestandtypeicon {
+.indexpage__choosestandtype[for="head"] .indexpage__choosestandtypeicon {
   border-top: 3px solid #7f7f7f;
 }
+
 .indexpage__choosestandtypeicon {
   position: absolute;
   right: 10px;
