@@ -748,16 +748,22 @@ class Basket
             'VALUE'          => $this->getSketch()['SKETCH_IMAGE'],
         ];
 		
+		$file  = null;
+		$image = base64_decode($this->getSketch()['SKETCH_IMAGE']);
+		if (!empty($image)) {
+			$file = \CFile::SaveFile(array(
+				'name'    	  => 'sketch-'.$oid.'.jpg',
+				'description' => 'Изображение скетча для заказа №'.$oid,
+				'content'     => $image
+			), 'sketches')
+		}
+		
 		$dataprops []= [
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH_FILE']['ID'],
             'NAME'           => 'Файл скетча',
             'CODE'           => $props['SKETCH_FILE']['CODE'],
-            'VALUE'          => \CFile::SaveFile(array(
-				'name'    	  => 'sketch-'.$oid.'.jpg',
-				'description' => 'Изображение скетча для заказа №'.$oid,
-				'content'     => base64_decode($this->getSketch()['SKETCH_IMAGE'])
-			), 'sketches')
+            'VALUE'          => $file
         ];
         
         $dataprops []= [

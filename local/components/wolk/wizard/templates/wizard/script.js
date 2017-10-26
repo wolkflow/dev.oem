@@ -314,9 +314,13 @@ $(document).ready(function() {
         // ID стенда.
         var sid = $that.data('id');
 
+		// Контейнер выбранного стенда.
+		var $preselect = $('#js-preselect-wrapper-id');
+		var $noselect  = $('#js-noselect-wrapper-id');
+		
         // Выбранный стенд.
         var $prestand = $('#js-prestand-id');
-
+		
         // Установка данных.
         $prestand.find('.js-stand-description').html($stand.find('.js-stand-description').html() || '');
         $prestand.find('.js-stand-includes').html($stand.find('.js-stand-includes').html() || '');
@@ -325,7 +329,10 @@ $(document).ready(function() {
         // Установка кнопки выбрано.
         $wrap.find('.js-stand-choose-button').removeClass('current').html(jsvars.LANGS['CHOOSE']);
         $wrap.find('.js-stand-choose-button[data-id="' + sid + '"]').addClass('current').html(jsvars.LANGS['CHOOSEN']);
-
+		
+		$preselect.show();
+		$noselect.hide();
+		
         // Установка текущего стенда.
         $('#js-form-input-stand-id').val($that.data('id'));
     });

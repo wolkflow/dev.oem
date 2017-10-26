@@ -107,7 +107,7 @@
 		</div>
 	</div>
 	
-	<? if ($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) { ?>
+	<? if (!empty($arResult['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'])) { ?>
 		<div class="ordercontainer__columns">
 			<div class="pagesubtitle">
 				<?= Loc::getMessage('SKETCH_RENDERS') ?>
