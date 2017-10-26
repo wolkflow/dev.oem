@@ -75,7 +75,7 @@ endif;
                 </div>
                 <? if ($curlang != LANG_RU) { ?>
                     <div class="pagesubsubtitle">
-                        <?=$arResult["USER_PROPERTIES"]["DATA"]['UF_VAT']['EDIT_FORM_LABEL']?>
+                        <?= $arResult["USER_PROPERTIES"]["DATA"]['UF_VAT']['EDIT_FORM_LABEL'] ?>
                     </div>
                     <div class="profilecontainer__itemscontainer">
                         <div class="profilecontainer__item">

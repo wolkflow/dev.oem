@@ -73,6 +73,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
             'qo.en'    => 'QO (en)',
             'kz.ru'    => 'KZ (ru)',
             'kz.en'    => 'KZ (en)',
+			'kz'       => 'KZ',
 		];
         
         

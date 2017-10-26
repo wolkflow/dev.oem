@@ -717,3 +717,155 @@ b {
 .tg-invoice-footer-stamp img {
   width: 100%;
 }
+
+
+
+
+.inv_kz-top {
+  text-align: center;
+}
+.inv_kz-name {
+  font-weight: 700;
+  font-size: 16pt;
+  margin: 0 auto;
+  display: inline-block;
+  min-width: 500px;
+}
+.inv_kz-name .line {
+  margin: 20px 0 0;
+}
+.inv_kz-wrapper .line {
+  border-bottom: 1px solid #000;
+}
+.inv_kz-wrapper .qr {
+  position: relative;
+  padding: 0 15px;
+}
+.inv_kz-wrapper .qr::before,
+.inv_kz-wrapper .qr::after {
+  display: block;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  bottom: -1px;
+}
+.inv_kz-wrapper .qr::before {
+  left: 0;
+  content: '\00AB';
+}
+.inv_kz-wrapper .qr::after {
+  right: 0;
+  content: '\00BB';
+}
+.inv_kz-wrapper .dm {
+  display: inline-block;
+  min-width: 50px;
+}
+.inv_kz-date {
+  margin: 5px 0 20px;
+  font-weight: 700;
+}
+.inv_kz-invnum {
+  text-align: center;
+  font-weight: 700;
+}
+.inv_kz-invnum .line {
+  display: inline-block;
+  min-width: 40px;
+  font-weight: 400;
+}
+.inv_kz-header {
+  font-weight: 700;
+}
+.inv_kz-wrapper table {
+  margin: 20px -20px;
+}
+.inv_kz-wrapper table td,
+.inv_kz-wrapper table th {
+  border: 1px solid #000;
+  padding: 5px 10px;
+  text-align: center;
+}
+.inv_kz-wrapper table th {
+  font-weight: 700;
+  text-align: center;
+}
+.inv_kz-wrapper .tname {
+  width: 41.5%;
+  text-align: left;
+}
+.inv_kz-wrapper .tunit {
+  width: 12%;
+}
+.inv_kz-wrapper .tcount {
+  width: 12%;
+}
+.inv_kz-wrapper .tcost {
+  width: 19%;
+}
+.inv_kz-wrapper .tsumm {
+  width: 15.5%;
+}
+.inv_kz-wrapper .total {
+  font-weight: 700;
+}
+.inv_kz-wrapper .totalString {
+  font-weight: 700;
+}
+.inv_kz-wrapper .linein {
+  margin: 20px 0 0;
+  border-bottom: 1px solid #000;
+  display: inline-block;
+  width: 50%;
+}
+.inv_kz-wrapper .linein span {
+  position: relative;
+  padding-bottom: 3px;
+  background: #fff;
+  padding-right: 5px;
+  font-weight: 700;
+  min-width: 400px;
+  max-width: 600px;
+}
+.clear {
+  clear: both;
+}
+.inv_kz-wrapper .sdate {
+  float: right;
+  margin: 10px 0;
+}
+.inv_kz-wrapper .manager,
+.inv_kz-wrapper .phone {
+  float: left;
+  width: 70%;
+  font-weight: 700;
+}
+.inv_kz-wrapper .manager .line,
+.inv_kz-wrapper .phone .line {
+  font-weight: 400;
+  min-width: 200px;
+  display: inline-block;
+}
+.inv_kz-wrapper .info {
+  padding-top: 100px;
+}
+.inv_kz-wrapper .manager {
+  margin: 10px 0;
+}
+.inv_kz-sign {
+  margin-left: 70%;
+  position: relative;
+  height: 120px;
+  border-bottom: 1px solid #000;
+}
+.inv_kz-sign img {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.inv_kz-sign img + img {
+  right: auto;
+  top: auto;
+  bottom: -15px;
+  left: 0;
+}
