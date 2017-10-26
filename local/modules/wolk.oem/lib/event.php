@@ -301,14 +301,16 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	}
     
     
+	/**
+	 * Получение валюты.
+	 */
     public function getCurrencyContext(Context $context)
     {
         $this->load();
         
-        $type = $context->getType();
         $lang = $context->getLang();
         
-        return ((string) $this->data['PROPS']['LANG_' . $type . '_CURRENCY_' . $lang]['VALUE']);
+        return ((string) $this->data['PROPS']['LANG_CURRENCY_' . strtoupper($lang)]['VALUE']);
     }
 	
 	
@@ -328,7 +330,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
     {
         $this->load();
         
-        return (string) $this->data['PROPS']['LANG_STANDARD_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+        return (string) $this->data['PROPS']['LANG_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
     }
     
     
@@ -336,7 +338,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
     {
         $this->load();
         
-        return (string) $this->data['PROPS']['LANG_INDIVIDUAL_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
+        return (string) $this->data['PROPS']['LANG_CURRENCY_' . mb_strtoupper($lang)]['VALUE'];
     }
     
 	
@@ -367,6 +369,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
     
 	/**
 	 * Получение списка ID услуг и оборудования мероприятия.
+	 * @deprecated
 	 */
 	public function getOwnServiceIDs()
 	{
@@ -378,12 +381,24 @@ class Event extends \Wolk\Core\System\IBlockEntity
     
     /**
 	 * Получение списка ID услуг и оборудования мероприятия.
+	 * Отдает либо продукцию стандартной, либо индивидуальной застройки.
+	 * В случае, если не указан контекст, отдает всю продукцию из обоих типов застройки.
 	 */
-	public function getProductIDs()
+	public function getProductIDs(Context $context = null)
 	{
 		$this->load();
 		
-		return array_map('intval', $this->data['PROPS']['PRODUCTS']['VALUE']);
+		if (!is_null($context)) {
+			$ids = (array) $this->data['PROPS']['PRODUCTS_' . strtoupper($context->getType())]['VALUE'];
+		} else {
+			$ids = array_merge(
+				(array) $this->data['PROPS']['PRODUCTS_STANDARD']['VALUE'],
+				(array) $this->data['PROPS']['PRODUCTS_INDIVIDUAL']['VALUE']
+			);
+		}
+		$ids = array_map('intval', array_unique($ids));
+		
+		return $ids;
 	}
 	
 	
@@ -432,7 +447,6 @@ class Event extends \Wolk\Core\System\IBlockEntity
 			]
 		]);
         
-        
         // Список стендов с ценами.
         foreach ($stands as $stand) {
             $priceitem = $prices[$stand->getStandID()];
@@ -471,6 +485,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
             return $offers;
         }
         
+		// Конкретные предложения по стендам с конкретной площадью.
 		$items = [];
 		foreach ($offers as $offer) {
             $item = [
@@ -489,7 +504,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
      */
     public function getProducts(Context $context = null, $section = null)
     {
-        $ids = $this->getProductIDs();
+        $ids = $this->getProductIDs($context);
         
         if (empty($ids)) {
             return [];

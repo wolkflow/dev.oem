@@ -72,12 +72,13 @@ $result = CIBlockElement::GetPropertyValues(
     ['CODE' => IBLOCK_PROPERTY_SELECTED_PRODUCTS_ID] //  ['CODE' => 'PRODUCTS']
 )->fetch();
 
-$selected_products = $result[IBLOCK_PROPERTY_SELECTED_PRODUCTS_ID];
+$selected_products_standard   = $result[IBLOCK_PROPERTY_SELECTED_PRODUCTS_STANDARD_ID];
+$selected_products_individual = $result[IBLOCK_PROPERTY_SELECTED_PRODUCTS_INDIVIDUAL_ID];
+
+$selected_products = array_unique(array_merge($selected_products_standard, $selected_products_individual));
 
 // /local/modules/wolk.oem/admin/events/before_save.php
 // /local/modules/wolk.oem/admin/events/iblock_element_edit.php
-
-// print_r($selected_products);
 
 
 // Валюты.
@@ -101,10 +102,13 @@ while ($item = $result->fetch()) {
 }
 
 
-// Цены на продукцию.
+// Цены на продукцию (стандартная застройка).
 $result = ProductPrices::getList(
     array(
-        'filter' => [ProductPrices::FIELD_EVENT => $event->getID(), ProductPrices::FIELD_PRODUCT => $selected_products]
+        'filter' => [
+			ProductPrices::FIELD_EVENT   => $event->getID(), 
+			ProductPrices::FIELD_PRODUCT => $selected_products
+		]
     ),
     false
 );
@@ -149,6 +153,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 ////////////////////
 ?>
 
+<? /*
 <? $tabControl->BeginCustomField('CURRENCIES_STANDARD', 'Валюты (стандартные)'); ?>
     <tr>
         <td class="adm-detail-content-cell-l">
@@ -182,8 +187,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 	</tr>
 <? $tabControl->EndCustomField('CURRENCIES_STANDARD', ''); ?>
 
-
-
 <? $tabControl->BeginCustomField('CURRENCIES_INDIVIDUAL', 'Валюты (индивидуальные)'); ?>
     <tr>
         <td class="adm-detail-content-cell-l">
@@ -216,7 +219,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 		</td>
 	</tr>
 <? $tabControl->EndCustomField('CURRENCIES_INDIVIDUAL', ''); ?>
-
+*/ ?>
 
 
 <? $tabControl->BeginCustomField('STANDS_PRICES_STANDARD', 'Цены на стенды (стандартные)'); ?>
@@ -450,7 +453,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 					</tr>
                 </thead>
                 <tbody>
-                    <? foreach ($selected_products as $selected_product) { ?>
+                    <? foreach ($selected_products_standard as $selected_product) { ?>
                         <tr class="js-prices-values">
                             <td>
                                 <input type="hidden" name="PRODUCTS[<?= $selected_product ?>]" value="<?= $selected_product ?>" />
@@ -547,7 +550,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 					</tr>
                 </thead>
                 <tbody>
-                    <? foreach ($selected_products as $selected_product) { ?>
+                    <? foreach ($selected_products_individual as $selected_product) { ?>
                         <tr class="js-prices-values">
                             <td>
                                 <input type="hidden" name="PRODUCTS[<?= $selected_product ?>]" value="<?= $selected_product ?>" />

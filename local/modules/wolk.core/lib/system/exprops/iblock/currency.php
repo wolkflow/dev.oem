@@ -13,9 +13,9 @@ class Currency
         self::getCurrencies();
 
         return array(
-            'PROPERTY_TYPE'  => 'N',
-            'USER_TYPE'      => 'currency',
-            'DESCRIPTION'    => 'Привязка к валюте',
+            'PROPERTY_TYPE'         => 'S',
+            'USER_TYPE'             => 'currency',
+            'DESCRIPTION'           => 'Привязка к валюте',
             'CheckFields'           => array(__CLASS__, 'CheckFields'),
             'GetLength'             => array(__CLASS__, 'GetLength'),
             'GetAdminListViewHTML'  => array(__CLASS__, 'GetFieldView'),
@@ -59,13 +59,15 @@ class Currency
      * @param $htmlElement
      * @return string
      */
-    public function GetEditField($property, $value, $htmlElement)
+    public function GetEditField($property, $value, $element)
     {
-        $html  = '<select name="' . $htmlElement['VALUE'] . '" style="margin-bottom:10px;">';
-        $html .= '<option value="">Не выбрано</option>';
-		foreach (self::$currencies as $id => $element) {
-            $selected = ($value['VALUE'] == $id) ? ' selected' : '';
-            $html .= '<option value="' . $currency['CURRENCY'] . '"' . $selected . '>' . $element . '</option>';
+		self::getCurrencies();
+		
+        $html  = '<select name="' . $element['VALUE'] . '" style="margin-bottom:10px;">';
+        $html .= '<option value="">- не выбрано -</option>';
+		foreach (self::$currencies as $currency) {
+            $selected = ($value['VALUE'] == $currency) ? ' selected' : '';
+            $html .= '<option value="' . $currency . '"' . $selected . '>' . $currency . '</option>';
         }
         $html .= '</select>';
 		
@@ -97,7 +99,7 @@ class Currency
 	    	return array();
     	}
 		
-        if (!isset(self::$currencies)) {
+        if (empty(self::$currencies)) {
 			$result = \CCurrency::GetList(($by = "c_sort"), ($order = "asc"));
             if (intval($result->SelectedRowsCount()) > 0) {
                 while ($item = $result->Fetch()) {

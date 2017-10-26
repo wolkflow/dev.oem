@@ -15,7 +15,7 @@ $MESS['TITLE_SERVICES'] = 'Services';
 $MESS['TITLE_MARKETING'] = 'Marketing';
 $MESS['TITLE_SKETCH'] = 'Scheme of the stand';
 
-$MESS['BASKET'] = 'Trash';
+$MESS['BASKET'] = 'Basket';
 $MESS['PREV'] = 'Back';
 $MESS['NEXT'] = 'Forward';
 

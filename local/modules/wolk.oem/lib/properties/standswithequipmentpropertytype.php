@@ -54,16 +54,16 @@ class StandsWithEquipmentPropertyType
 		$am = Asset::getInstance();
 		$am->addString(<<<JS
 			<script>
-						function handleEqCheck(el) {
-						var input = $("input#"+$(el).data('ident'));
-							if(el.checked) {
-								input.removeAttr('disabled');
-								input.val(1);
-							} else {
-								input.attr('disabled', true);
-								input.val('');
-							}
-						}
+				function handleEqCheck(el) {
+				var input = $("input#" + $(el).data('ident'));
+					if(el.checked) {
+						input.removeAttr('disabled');
+						input.val(1);
+					} else {
+						input.attr('disabled', true);
+						input.val('');
+					}
+				}
 			</script>
 JS
 			, true, AssetLocation::AFTER_JS);
@@ -71,13 +71,13 @@ JS
 		$curEquipment = unserialize($value['DESCRIPTION']);
 
 		$settings = self::PrepareSettings($arProperty);
-		if($settings["size"] > 1) {
+		if ($settings["size"] > 1) {
 			$size = ' size="' . $settings["size"] . '"';
 		} else {
 			$size = '';
 		}
 
-		if($settings["width"] > 0) {
+		if ($settings["width"] > 0) {
 			$width = ' style="width:' . $settings["width"] . 'px"';
 		} else {
 			$width = '';
@@ -93,8 +93,8 @@ JS
 		$html .= $options;
 		$html .= '</select>';
 		ob_start(); ?>
-		Длина <input size="5" type="text" name="<?= $strHTMLControlName['VALUE'] ?>[WIDTH]" value="<?=$standWidth?>">
-		Ширина <input size="5" type="text" name="<?= $strHTMLControlName['VALUE'] ?>[DEPTH]" value="<?=$standDepth?>">
+		Длина <input size="5" type="text" name="<?= $strHTMLControlName['VALUE'] ?>[WIDTH]" value="<?= $standWidth ?>">
+		Ширина <input size="5" type="text" name="<?= $strHTMLControlName['VALUE'] ?>[DEPTH]" value="<?= $standDepth ?>">
 		<a href="javascript:void(0)" onclick="$(this).next().toggle()">Оборудование</a>
 		<div id="<?= str_replace(['[', ']', '__'], '_', $strHTMLControlName['VALUE']) ?>" style="display: none;"
 		     class="b_stand_equipment_list">

@@ -33,27 +33,6 @@ $ID = (int) $request->get('ID');
 $currencies = (array) $request->get('CURRENCIES');
 
 
-
-// Проверка наличия ошибок в данных.
-if (!empty($ID)) {
-    if (empty($currencies[StandPrice::TYPE_STANDARD]['RU'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной застройки (RU)');
-    }
-
-    if (empty($currencies[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен стандартной застройки (EN)');
-    }
-
-    if (empty($currencies[StandPrice::TYPE_STANDARD]['RU'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной застройки (RU)');
-    }
-
-    if (empty($currencies[StandPrice::TYPE_INDIVIDUAL]['EN'])) {
-        $error = new _CIBlockError(IBLOCK_ERROR_TYPE_FAIL, "ERROR_SAVE_STANDS_CURRENCY", 'Не указана валюта для цен индивидуальной застройки (EN)');
-    }
-}
-
-
 /**
  * Функция сохранения данных.
  */
@@ -67,19 +46,14 @@ function BXIBlockAfterSave(&$arFields)
     
     // Мероприятие.
     $event = new Event($arFields['ID']);
-    
-    
+        
     // Цены на стенды.
     $prices_stands = (array) $request->get('PRICES_STANDS');
     
     // Цены на продукцию.
     $prices_products = (array) $request->get('PRICES_PRODUCTS');
     
-    
-    // Валюты цен.
-    $currencies = (array) $request->get('CURRENCIES');
-    
-    
+	    
     // Сохранение цен на выбранные стенды.
     if (!empty($prices_stands)) {
         foreach ($prices_stands as $type => $langs) {
@@ -103,12 +77,9 @@ function BXIBlockAfterSave(&$arFields)
                     try {
                         $result = $element->add($pricedata);
                     } catch (\Exception $e) {
-                        //
+                        // exception
                     }
                 }
-                
-                // Сохранение валюты для цен.
-                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_STANDS_'.$type.'_CURRENCY_'.$lang, $currencies[$type][$lang]);
             }
         }
     }
@@ -137,12 +108,9 @@ function BXIBlockAfterSave(&$arFields)
                     try {
                         $result = $element->add($pricedata);
                     } catch (\Exception $e) {
-                        // 
+                        // exception
                     }
                 }
-                
-                // Сохранение валюты для цен.
-                CIBlockElement::SetPropertyValueCode($arFields['ID'], 'LANG_PRODUCTS_'.$type.'_CURRENCY_'.$lang, $currencies[$type][$lang]);
             }
         }
     }
