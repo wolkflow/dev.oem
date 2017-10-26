@@ -132,6 +132,7 @@ $MESS['tax'] = 'VAT';
 $MESS['deadline'] = 'deadline for submitting<br>the order is';
 $MESS['weekday'] = 'th';
 $MESS['tax_is_excluded'] = 'Prices are exclusive of VAT';
+$MESS['tax_is_excluded_bvm-2018'] = 'Prices are exclusive VAT. No VAT will be charged for international partners.';
 $MESS['tax_is_included'] = 'Prices are inclusive of VAT';
 $MESS['total_with_vat'] = 'Total with VAT';
 $MESS['review_order'] = 'Review order';
@@ -168,3 +169,4 @@ $MESS['extend_choose'] = 'Choose';
 $MESS['EXTERLAN_TEXT'] = 'For order the improved standard stands please use';
 
 $MESS['FASCIA_NOTE'] = 'The fee included fascia panel up to 9 characters. Each subsequent sign an additional cost.';
+$MESS['FASCIA_NOTE_BEVIALE'] = 'The participation fee includes fascia name. Number of fascia names depends on number of open sides on stand.';

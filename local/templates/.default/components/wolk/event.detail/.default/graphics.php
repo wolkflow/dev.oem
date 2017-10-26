@@ -48,7 +48,11 @@
                         <div v-show="selectedColor" class="itemColor__custom-name">{{ selectedColor ? allColors[selectedColor].UF_NUM : '' }} {{ selectedColor }}</div>
                     </div>
                     <div class="equipmentcontainer__itemsize">
-                        <?= Loc::getMessage('FASCIA_NOTE') ?>
+						<? if (in_array($arResult['EVENT']['CODE'], array('beviale', 'bvm-2018'))) { ?>
+							<?= Loc::getMessage('FASCIA_NOTE_BEVIALE') ?>
+						<? } else { ?>
+							<?= Loc::getMessage('FASCIA_NOTE') ?>
+						<? } ?>
                     </div>
                 </div>
             </div>
