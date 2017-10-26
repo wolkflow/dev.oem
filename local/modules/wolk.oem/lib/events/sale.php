@@ -4,6 +4,10 @@ namespace Wolk\OEM\Events;
 
 class Sale
 {
+	
+	/**
+	 * Отправка письма при смене статуса заказа.
+	 */
 	public function OnOrderStatusSendEmail($ID, $val)
 	{
 		$order = \Bitrix\Sale\Order::load($ID);
