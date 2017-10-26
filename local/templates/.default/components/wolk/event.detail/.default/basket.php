@@ -70,9 +70,17 @@
 			</div>
             <small>
 				<? if ($arResult['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] != 'Y') { ?>
-					<?= Loc::getMessage('tax_is_excluded') ?>
+					<? if (in_array($arResult['EVENT']['CODE'], array('bvm-2018'))) { ?>
+						<?= Loc::getMessage('tax_is_excluded_bvm-2018') ?>
+					<? } else { ?>
+						<?= Loc::getMessage('tax_is_excluded') ?>
+					<? } ?>
 				<? } else { ?>
-					<?= Loc::getMessage('tax_is_included') ?>
+					<? if (in_array($arResult['EVENT']['CODE'], array('bvm-2018'))) { ?>
+						<?= Loc::getMessage('tax_is_excluded_bvm-2018') ?>
+					<? } else { ?>
+						<?= Loc::getMessage('tax_is_included') ?>
+					<? } ?>
 				<? } ?>
 			</small>
         </div>

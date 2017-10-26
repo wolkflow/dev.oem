@@ -765,13 +765,18 @@ class EventDetailComponent extends BaseListComponent
                 }
 				*/
 				
+				
+				
 				// Отправка письма о новом заказе клиенту.
-				$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info', array('ID' => $arFields['ORDER_ID']));
+				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info', array('ID' => $arFields['ORDER_ID']));
+				$theme = (in_array($arEvent['CODE'], array('beviale', 'bvm-2018')))
+				       ? (Loc::getMessage('THEME_NEW_ORDER_BEVIALE', array('#OID#' => $arFields['ORDER_ID']))) 
+					   : (Loc::getMessage('THEME_NEW_ORDER'));
 				$event = new \CEvent();
 				$event->Send('SALE_NEW_ORDER_CLIENT', SITE_DEFAULT, [
 					'EMAIL' => $arFields['EMAIL'], 
 					'HTML'  => $html,
-					'THEME' => Loc::getMessage('THEME_NEW_ORDER')
+					'THEME' => $theme
 				]);
 				
 				// Отправка письма о новом закази менеджеру.
