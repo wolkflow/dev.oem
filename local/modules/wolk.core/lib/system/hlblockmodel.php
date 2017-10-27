@@ -132,4 +132,74 @@ class HLBlockModel extends Model
         }
         return $items;
 	}
+	
+	
+	/**
+	 *
+	 */
+	public static function prepareBatchItem($data)
+	{
+		$fields = static::getDBFields();
+		
+		$item = array();
+		foreach ($fields as $field) {
+			$item[$field] = $data[$field];
+		}
+		return $item;
+	}
+	
+	
+	/**
+	 * Добавление списка позиций.
+	 */
+	public static function runBatchInsert($items)
+	{
+		$class  = static::getEntityClassName();
+        $entity = new $class();
+		
+		$fields = static::getDBFields();
+		$values = array();
+		
+		foreach ($items as $item) {
+			$item = static::prepareBatchItem($item);
+			if (count($item) == count($fields)) {
+				$values []= "('" . implode("', '", $item) . "')";
+			}
+		}
+		
+		if (empty($values)) {
+			return false;
+		}
+		
+		// Запрос на добавление записей.
+		$query = "
+			INSERT INTO `" . $entity->getTableName() . "` (`" . implode("`, `", $fields) . "`)
+			VALUES " . implode(", ", $values) . ";
+		";
+		
+		$connection = \Bitrix\Main\Application::getConnection();
+        $connection->startTransaction();
+		
+		$result = $connection->query($query);
+        $connection->commitTransaction();
+		
+		return $result;
+	}
+	
+	
+	/**
+	 * Получение списка столбцов.
+	 */
+	public static function getDBFields($noid = true)
+	{
+		$reflect = new \ReflectionClass(get_called_class());
+        $consts  = $reflect->getConstants();
+		$fields  = array_filter($consts, function($const) { return (strpos($const, 'FIELD_') !== false); }, ARRAY_FILTER_USE_KEY);
+		$fields  = array_combine(array_values($fields), array_values($fields));
+		
+		if ($noid) {
+			unset($fields['ID']);
+		}
+		return $fields;
+	}
 }

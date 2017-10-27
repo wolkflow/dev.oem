@@ -149,7 +149,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 ////////////////////
 ?>
 
-<? $tabControl->BeginCustomField('PRODUCTS_PROPERTIES', Loc::getMessage('TAB_PRODUCTS_PROPERTIES')); ?>
+<? $tabControl->BeginCustomField('PRODUCTS_PROPERTIES_RU', Loc::getMessage('TAB_PRODUCTS_PROPERTIES_RU')); ?>
 	<tr>
         <td colspan="2">
 			<table class="js-props-wrapper" width="100%" border="1" cellpadding="10">
@@ -178,7 +178,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 								<? $props = $section->getProperties() ?>
 								<? foreach ($props as $prop) { ?>
 									<div style="border: 1px dotted #777777; border-radius: 5px; margin-bottom: 2px; padding: 5px; overflow: hidden;">
-										<input type="checkbox" name="PROPREQS[<?= $product->getID() ?>][<?= $prop ?>]" value="Y" />
+										<input type="checkbox" name="PARAMS[RU][<?= $product->getID() ?>][PARAMS][]" value="<?= $prop ?>" />
 										<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
 										
 										<? // Если у продукции есть оплата за символы на фризовой панели. // ?>
@@ -186,8 +186,8 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 											<input 
 												type="number" 
 												step="1"
-												title="Количество бесплатных символов"
-												name="PROPFASCIA[<?= $product->getID() ?>][<?= $prop ?>]" 
+												title="<?= Loc::getMessage('FASCIA_FREE_QUANTITY') ?>"
+												name="PARAMS[RU][<?= $product->getID() ?>][FASCIA]" 
 												value=""
 												style="float: right;"
 											/>
@@ -196,10 +196,10 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 								<? } ?>
 							</td>
 							<td>
-								<input type="text" name="PROPNAMES[<?= $product->getID() ?>][<?= $prop ?>]" value="" />
+								<input type="text" name="PARAMS[RU][<?= $product->getID() ?>][NAME]" value="" />
 							</td>
 							<td>
-								<textarea cols="30" rows="4" style="resize: none;"></textarea>
+								<textarea name="PARAMS[RU][<?= $product->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
 							</td>
 						</tr>
 					<? } ?>
@@ -207,7 +207,69 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 			</table>
 		</td>
 	</tr>
-<? $tabControl->EndCustomField('PRODUCTS_PROPERTIES', ''); ?>
+<? $tabControl->EndCustomField('PRODUCTS_PROPERTIES_RU', ''); ?>
+
+
+
+<? $tabControl->BeginCustomField('PRODUCTS_PROPERTIES_EN', Loc::getMessage('TAB_PRODUCTS_PROPERTIES_EN')); ?>
+	<tr>
+        <td colspan="2">
+			<table class="js-props-wrapper" width="100%" border="1" cellpadding="10">
+                <thead>
+					<tr>
+						<th>Название</th>
+						<th>Обязательность свойств</th>
+						<th>Подпись</th>
+						<th>Комментарий</th>
+					</tr>
+                </thead>
+                <tbody>
+					<? $sections = [] ?>
+                    <? foreach ($products as $product) { ?>
+						<?	// Раздел продукции.
+							if (!array_key_exists($product->getSectionID(), $sections)) {
+								$sections[$product->getSectionID()] = $product->getSection();
+							}
+							$section = $sections[$product->getSectionID()];
+						?>
+						<tr>
+							<td>
+								<b><?= $product->getTitle() ?></b>
+							</td>
+							<td width="35%">
+								<? $props = $section->getProperties() ?>
+								<? foreach ($props as $prop) { ?>
+									<div style="border: 1px dotted #777777; border-radius: 5px; margin-bottom: 2px; padding: 5px; overflow: hidden;">
+										<input type="checkbox" name="PARAMS[EN][<?= $product->getID() ?>][PARAMS][]" value="<?= $prop ?>" />
+										<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
+										
+										<? // Если у продукции есть оплата за символы на фризовой панели. // ?>
+										<? if ($product->isSpecialType(Product::SPECIAL_TYPE_FASCIA) && $prop == Basket::PARAM_TEXT) { ?>
+											<input 
+												type="number" 
+												step="1"
+												title="<?= Loc::getMessage('FASCIA_FREE_QUANTITY') ?>"
+												name="PARAMS[EN][<?= $product->getID() ?>][FASCIA]" 
+												value=""
+												style="float: right;"
+											/>
+										<? } ?>
+									</div>
+								<? } ?>
+							</td>
+							<td>
+								<input type="text" name="PARAMS[EN][<?= $product->getID() ?>][NAME]" value="" />
+							</td>
+							<td>
+								<textarea name="PARAMS[EN][<?= $product->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
+							</td>
+						</tr>
+					<? } ?>
+				</tbody>
+			</table>
+		</td>
+	</tr>
+<? $tabControl->EndCustomField('PRODUCTS_PROPERTIES_EN', ''); ?>
 
 
 

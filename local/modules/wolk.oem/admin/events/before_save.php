@@ -25,6 +25,7 @@ if (!$request->isPost() || !empty($dontsave)) {
   // $error = new _CIBlockError(2, "DESCRIPTION_REQUIRED", "Введите текст статьи");
 
 
+// echo '<pre>'; print_r($_REQUEST); echo '</pre>'; die();
 
 // ID элемента инфоблока.
 $ID = (int) $request->get('ID');
@@ -52,10 +53,14 @@ function BXIBlockAfterSave(&$arFields)
     
     // Цены на продукцию.
     $prices_products = (array) $request->get('PRICES_PRODUCTS');
+	
+	
+	
     
-	    
+	
     // Сохранение цен на выбранные стенды.
     if (!empty($prices_stands)) {
+		$pricedatas = [];
         foreach ($prices_stands as $type => $langs) {
             foreach ($langs as $lang => $prices) {
                 
@@ -71,21 +76,25 @@ function BXIBlockAfterSave(&$arFields)
                         StandPrice::FIELD_CURRENCY => ($currencies[$type][$lang]) ?: (CURRENCY_DEFAULT),
                         StandPrice::FIELD_PRICE    => (float) $price,
                     ];
-                    
-                    $element = new StandPrice();
-                    
-                    try {
-                        $result = $element->add($pricedata);
-                    } catch (\Exception $e) {
-                        // exception
-                    }
+					
+					$pricedatas []= $pricedata;
                 }
             }
         }
+		
+		if (!empty($pricedatas)) {
+			try {
+				$result = StandPrice::runBatchInsert($pricedatas);
+			} catch (\Exception $e) {
+				// exception
+			}
+		}
     }
+	return;
     
     
-    // Сохранение цен на выбранные стенды.
+	/*
+    // Сохранение цен на выбранные товары и услуги.
     if (!empty($prices_products)) {
         foreach ($prices_products as $type => $langs) {
             foreach ($langs as $lang => $prices) {
@@ -114,6 +123,7 @@ function BXIBlockAfterSave(&$arFields)
             }
         }
     }
+	*/
     
     return $arFields;
 }

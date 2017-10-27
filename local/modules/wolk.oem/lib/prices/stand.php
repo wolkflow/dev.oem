@@ -18,8 +18,9 @@ class Stand extends \Wolk\Core\System\HLBlockModel
     // Типы.
     const TYPE_STANDARD   = 'STANDARD';
     const TYPE_INDIVIDUAL = 'INDIVIDUAL';
-    
-    
+	
+	
+	
     public function getEventID()
     {
         return $this->get(self::FIELD_EVENT);
@@ -61,6 +62,8 @@ class Stand extends \Wolk\Core\System\HLBlockModel
         ];
     }
     
+	
+	
     
     /**
      * ”даление цен меропри¤ти¤ с выбранным типом дл¤ выбранного ¤зыка.
