@@ -5,6 +5,7 @@ use \Wolk\OEM\Context;
 use \Wolk\OEM\Products\Base as Product;
 use Wolk\OEM\Prices\Stand   as StandPrice;
 use Wolk\OEM\Prices\Product as ProductPrice;
+use Wolk\OEM\Products\Param as SectionParam;
 
 if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
     return;
@@ -21,11 +22,7 @@ if (!$request->isPost() || !empty($dontsave)) {
     return;
 }
 
-//if ($REQUEST_METHOD=="POST" && strlen($Update)>0 && $view!="Y" && (!$error) && empty($dontsave) && strlen($_POST['DETAIL_TEXT'])<=0)
-  // $error = new _CIBlockError(2, "DESCRIPTION_REQUIRED", "Введите текст статьи");
 
-
-// echo '<pre>'; print_r($_REQUEST); echo '</pre>'; die();
 
 // ID элемента инфоблока.
 $ID = (int) $request->get('ID');
@@ -42,25 +39,25 @@ function BXIBlockAfterSave(&$arFields)
     // Запрос.
     $request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
     
-    // Свойства иинфоблока мероприятий.
-    // $props = Wolk\Core\Helpers\IBlock::getProps(IBLOCK_EVENTS_ID);
-    
     // Мероприятие.
     $event = new Event($arFields['ID']);
-        
+    
+	
     // Цены на стенды.
     $prices_stands = (array) $request->get('PRICES_STANDS');
     
     // Цены на продукцию.
     $prices_products = (array) $request->get('PRICES_PRODUCTS');
 	
+	// Параметры продукции.
+    $params_sections = (array) $request->get('PARAMS_SECTIONS');
 	
-	
-    
 	
     // Сохранение цен на выбранные стенды.
     if (!empty($prices_stands)) {
-		$pricedatas = [];
+		
+		$datas = [];
+		
         foreach ($prices_stands as $type => $langs) {
             foreach ($langs as $lang => $prices) {
                 
@@ -68,7 +65,7 @@ function BXIBlockAfterSave(&$arFields)
                 $event->clearStandsPrices($type, $lang);
                 
                 foreach ($prices as $stand => $price) {
-                    $pricedata = [
+                    $data = [
                         StandPrice::FIELD_EVENT    => $arFields['ID'],
                         StandPrice::FIELD_STAND    => $stand,
                         StandPrice::FIELD_TYPE     => $type,
@@ -77,25 +74,26 @@ function BXIBlockAfterSave(&$arFields)
                         StandPrice::FIELD_PRICE    => (float) $price,
                     ];
 					
-					$pricedatas []= $pricedata;
+					$datas []= $data;
                 }
             }
         }
 		
 		if (!empty($pricedatas)) {
 			try {
-				$result = StandPrice::runBatchInsert($pricedatas);
+				$result = StandPrice::runBatchInsert($datas);
 			} catch (\Exception $e) {
 				// exception
 			}
 		}
     }
-	return;
-    
-    
-	/*
+	
+	
     // Сохранение цен на выбранные товары и услуги.
     if (!empty($prices_products)) {
+		
+		$datas = [];
+		
         foreach ($prices_products as $type => $langs) {
             foreach ($langs as $lang => $prices) {
                 
@@ -103,7 +101,7 @@ function BXIBlockAfterSave(&$arFields)
                 $event->clearProductsPrices($type, $lang);
                 
                 foreach ($prices as $product => $price) {
-                    $pricedata = [
+                    $data = [
                         ProductPrice::FIELD_EVENT    => $arFields['ID'],
                         ProductPrice::FIELD_PRODUCT  => $product,
                         ProductPrice::FIELD_TYPE     => $type,
@@ -112,19 +110,54 @@ function BXIBlockAfterSave(&$arFields)
                         ProductPrice::FIELD_PRICE    => (float) $price,
                     ];
                     
-                    $element = new ProductPrice();
-                    
-                    try {
-                        $result = $element->add($pricedata);
-                    } catch (\Exception $e) {
-                        // exception
-                    }
+					$datas []= $data;
                 }
             }
         }
+		
+		if (!empty($datas)) {
+			try {
+				$result = ProductPrice::runBatchInsert($datas);
+			} catch (\Exception $e) {
+				// exception
+			}
+		}
     }
-	*/
-    
+	
+	
+	// Сохранение параметров продукции.
+    if (!empty($params_sections)) {
+		
+		$datas = [];
+		
+        foreach ($params_sections as $lang => $sections) {
+			
+			// Удаление старых цен.
+			$event->clearProductsParams($lang);
+			
+			foreach ($sections as $section => $params) {
+				$data = [
+					SectionParam::FIELD_EVENT   => $arFields['ID'],
+					SectionParam::FIELD_SECTION => $section,
+					SectionParam::FIELD_LANG    => $lang,
+					SectionParam::FIELD_PROPS   => json_encode((array) $params['PROPS']),
+					SectionParam::FIELD_NAMES   => json_encode((array) $params['NAMES']),
+					SectionParam::FIELD_NOTE    => (string) $params['NOTE'],
+				];
+				
+				$datas []= $data;
+			}
+		}
+		
+		if (!empty($datas)) {
+			try {
+				$result = SectionParam::runBatchInsert($datas);
+			} catch (\Exception $e) {
+				// exception
+			}
+		}
+	}
+	
     return $arFields;
 }
 

@@ -2,6 +2,8 @@
 
 namespace Wolk\OEM\Products;
 
+use  Wolk\OEM\Products\Base as Product;
+
 class Section extends \Wolk\Core\System\IBlockSectionModel
 {
 	const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
@@ -201,6 +203,18 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
         }
         return $this->insides;
     }
+	
+	
+	/**
+	 * Получение специальных типов.
+	 */
+	public function isSpecialType($type)
+	{
+		// Специальные свойство.
+		$enums = Product::getSpecialTypes();
+		
+		return (in_array($this->getID(), $enums[strval($type)]['SIDS']));
+	}
     
     
     /**

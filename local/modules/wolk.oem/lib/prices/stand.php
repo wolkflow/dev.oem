@@ -62,11 +62,9 @@ class Stand extends \Wolk\Core\System\HLBlockModel
         ];
     }
     
-	
-	
     
     /**
-     * ”даление цен меропри¤ти¤ с выбранным типом дл¤ выбранного ¤зыка.
+     * Удаление цен меропри¤ти¤ с выбранным типом дл¤ выбранного ¤зыка.
      */
     public static function clear($event, $type, $lang)
     {

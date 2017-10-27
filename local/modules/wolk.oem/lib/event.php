@@ -5,7 +5,7 @@ namespace Wolk\OEM;
 use \Wolk\OEM\Products\Base as Product;
 use Wolk\OEM\Prices\Stand   as StandPrice;
 use Wolk\OEM\Prices\Product as ProductPrice;
-
+use Wolk\OEM\Products\Param as ProductParam;
 
 /**
  * Класс реализающий объект "Мероприятие" (выставка).
@@ -510,9 +510,14 @@ class Event extends \Wolk\Core\System\IBlockEntity
             return [];
         }
         
-        // Цены для мероприятия.
+        // Указан контекст.
 		if (!is_null($context)) {
+			
+			// Цены продукции мероприятия.
 			$prices = $this->getProductPrices($context);
+			
+			// Свойства продукции мероприятия.
+			$params = $this->getProductParams($context);
 		}
         
         // Фильтр.
@@ -530,8 +535,12 @@ class Event extends \Wolk\Core\System\IBlockEntity
         
 		foreach ($products as &$product) {
             $priceitem = $prices[$product->getID()];
+			$paramitem = $params[$product->getID()];
             if (!is_null($priceitem)) {
                 $product->setPrice($priceitem->getPrice());
+            }
+			if (!is_null($paramitem)) {
+                $product->setParams($paramitem->getParams());
             }
 		}
 		return $products;
@@ -673,6 +682,17 @@ class Event extends \Wolk\Core\System\IBlockEntity
     {
         return ProductPrice::clear($this->getID(), $type, $lang);
     }
+	
+	
+	/**
+     * Установка цен на продукцию в рамках мерпориятия.
+     */
+    public function clearProductsParams($lang)
+    {
+        return ProductParam::clear($this->getID(), $lang);
+    }
+	
+	
     
     
     /**

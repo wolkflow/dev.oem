@@ -1,7 +1,7 @@
 <?php
 
-$MESS['TAB_PRODUCTS_PROPERTIES_RU'] = 'Свойства продукции (RU)';
-$MESS['TAB_PRODUCTS_PROPERTIES_EN'] = 'Свойства продукции (EN)';
+$MESS['TAB_SECTIONS_PROPERTIES_RU'] = 'Свойства продукции (RU)';
+$MESS['TAB_SECTIONS_PROPERTIES_EN'] = 'Свойства продукции (EN)';
 
 $MESS['PROP_TEXT'] = 'Текст';
 $MESS['PROP_LINK'] = 'Ссылка';

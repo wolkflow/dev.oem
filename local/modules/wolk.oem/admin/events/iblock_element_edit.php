@@ -48,6 +48,15 @@ $products = Product::getList([
 ]);
 
 
+// Список разделов.
+$sections = [];
+foreach ($products as $product) { 
+	if (!array_key_exists($product->getSectionID(), $sections)) {
+		$sections[$product->getSectionID()] = $product->getSection();
+	}
+}
+
+
 // Выбранные стенды.
 $result = CIBlockElement::GetPropertyValues(
     IBLOCK_EVENTS_ID,
@@ -149,7 +158,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 ////////////////////
 ?>
 
-<? $tabControl->BeginCustomField('PRODUCTS_PROPERTIES_RU', Loc::getMessage('TAB_PRODUCTS_PROPERTIES_RU')); ?>
+<? $tabControl->BeginCustomField('SECTIONS_PROPERTIES_RU', Loc::getMessage('TAB_SECTIONS_PROPERTIES_RU')); ?>
 	<tr>
         <td colspan="2">
 			<table class="js-props-wrapper" width="100%" border="1" cellpadding="10">
@@ -162,32 +171,27 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 					</tr>
                 </thead>
                 <tbody>
-					<? $sections = [] ?>
-                    <? foreach ($products as $product) { ?>
-						<?	// Раздел продукции.
-							if (!array_key_exists($product->getSectionID(), $sections)) {
-								$sections[$product->getSectionID()] = $product->getSection();
-							}
-							$section = $sections[$product->getSectionID()];
-						?>
+                    <? foreach ($sections as $section) { ?>
 						<tr>
 							<td>
-								<b><?= $product->getTitle() ?></b>
+								<b><?= $section->getTitle() ?></b>
 							</td>
 							<td width="35%">
 								<? $props = $section->getProperties() ?>
 								<? foreach ($props as $prop) { ?>
 									<div style="border: 1px dotted #777777; border-radius: 5px; margin-bottom: 2px; padding: 5px; overflow: hidden;">
-										<input type="checkbox" name="PARAMS[RU][<?= $product->getID() ?>][PARAMS][]" value="<?= $prop ?>" />
-										<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
+										<label>
+											<input type="checkbox" name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][PROPS][REQUIRED][]" value="<?= $prop ?>" />
+											<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
+										</label>
 										
 										<? // Если у продукции есть оплата за символы на фризовой панели. // ?>
-										<? if ($product->isSpecialType(Product::SPECIAL_TYPE_FASCIA) && $prop == Basket::PARAM_TEXT) { ?>
+										<? if ($section->isSpecialType(Product::SPECIAL_TYPE_FASCIA) && $prop == Basket::PARAM_TEXT) { ?>
 											<input 
 												type="number" 
 												step="1"
 												title="<?= Loc::getMessage('FASCIA_FREE_QUANTITY') ?>"
-												name="PARAMS[RU][<?= $product->getID() ?>][FASCIA]" 
+												name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][PROPS][FASCIA]" 
 												value=""
 												style="float: right;"
 											/>
@@ -196,10 +200,12 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 								<? } ?>
 							</td>
 							<td>
-								<input type="text" name="PARAMS[RU][<?= $product->getID() ?>][NAME]" value="" />
+								<? foreach ($props as $prop) { ?>
+									<input type="text" name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][NAMES][<?= $prop ?>]" value="" style="margin-bottom: 1px 0 2px 0;" />
+								<? } ?>
 							</td>
 							<td>
-								<textarea name="PARAMS[RU][<?= $product->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
+								<textarea name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
 							</td>
 						</tr>
 					<? } ?>
@@ -207,11 +213,11 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 			</table>
 		</td>
 	</tr>
-<? $tabControl->EndCustomField('PRODUCTS_PROPERTIES_RU', ''); ?>
+<? $tabControl->EndCustomField('SECTIONS_PROPERTIES_RU', ''); ?>
 
 
 
-<? $tabControl->BeginCustomField('PRODUCTS_PROPERTIES_EN', Loc::getMessage('TAB_PRODUCTS_PROPERTIES_EN')); ?>
+<? $tabControl->BeginCustomField('SECTIONS_PROPERTIES_EN', Loc::getMessage('TAB_SECTIONS_PROPERTIES_EN')); ?>
 	<tr>
         <td colspan="2">
 			<table class="js-props-wrapper" width="100%" border="1" cellpadding="10">
@@ -224,32 +230,26 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 					</tr>
                 </thead>
                 <tbody>
-					<? $sections = [] ?>
-                    <? foreach ($products as $product) { ?>
-						<?	// Раздел продукции.
-							if (!array_key_exists($product->getSectionID(), $sections)) {
-								$sections[$product->getSectionID()] = $product->getSection();
-							}
-							$section = $sections[$product->getSectionID()];
-						?>
+                    <? foreach ($sections as $section) { ?>
 						<tr>
 							<td>
-								<b><?= $product->getTitle() ?></b>
+								<b><?= $section->getTitle() ?></b>
 							</td>
 							<td width="35%">
 								<? $props = $section->getProperties() ?>
 								<? foreach ($props as $prop) { ?>
 									<div style="border: 1px dotted #777777; border-radius: 5px; margin-bottom: 2px; padding: 5px; overflow: hidden;">
-										<input type="checkbox" name="PARAMS[EN][<?= $product->getID() ?>][PARAMS][]" value="<?= $prop ?>" />
-										<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
-										
+										<label>
+											<input type="checkbox" name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][PROPS][REQUIRED][]" value="<?= $prop ?>" />
+											<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
+										</label>
 										<? // Если у продукции есть оплата за символы на фризовой панели. // ?>
-										<? if ($product->isSpecialType(Product::SPECIAL_TYPE_FASCIA) && $prop == Basket::PARAM_TEXT) { ?>
+										<? if ($section->isSpecialType(Product::SPECIAL_TYPE_FASCIA) && $prop == Basket::PARAM_TEXT) { ?>
 											<input 
 												type="number" 
 												step="1"
 												title="<?= Loc::getMessage('FASCIA_FREE_QUANTITY') ?>"
-												name="PARAMS[EN][<?= $product->getID() ?>][FASCIA]" 
+												name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][PROPS][FASCIA]" 
 												value=""
 												style="float: right;"
 											/>
@@ -258,10 +258,12 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 								<? } ?>
 							</td>
 							<td>
-								<input type="text" name="PARAMS[EN][<?= $product->getID() ?>][NAME]" value="" />
+								<? foreach ($props as $prop) { ?>
+									<input type="text" name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][NAMES][<?= $prop ?>]" value="" style="margin-bottom: 1px 0 2px 0;" />
+								<? } ?>
 							</td>
 							<td>
-								<textarea name="PARAMS[EN][<?= $product->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
+								<textarea name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
 							</td>
 						</tr>
 					<? } ?>
@@ -269,7 +271,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 			</table>
 		</td>
 	</tr>
-<? $tabControl->EndCustomField('PRODUCTS_PROPERTIES_EN', ''); ?>
+<? $tabControl->EndCustomField('SECTIONS_PROPERTIES_EN', ''); ?>
 
 
 
