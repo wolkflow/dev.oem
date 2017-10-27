@@ -160,7 +160,7 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
                             <span><?= Loc::getMessage('Corner') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
-                        <label for="peninsular" class="indexpage__choosestandtype">
+                        <label for="head" class="indexpage__choosestandtype">
                             <input type="radio" value="head" name="FORM" id="head" class="js-stand-sform" />
                             <span><?= Loc::getMessage('Head') ?></span>
                             <span class="indexpage__choosestandtypeicon"></span>

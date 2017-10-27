@@ -1,4 +1,5 @@
-<?
+<?php
+
 class Helper
 {
     static function includeFile($file, $path = false)

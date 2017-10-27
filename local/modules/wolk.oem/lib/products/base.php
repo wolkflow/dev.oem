@@ -233,19 +233,29 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
         
         return $section->getCode();
     }
+	
+	
+	/**
+	 * Получение специальных типов.
+	 */
+	public function isSpecialType($type)
+	{
+		// Специальные свойство.
+		$enums = self::getSpecialTypes();
+		
+		return (in_array($this->getSectionID(), $enums[strval($type)]['SIDS']));
+	}
     
-    	
+	
 	/**
 	 * Получение ID элементов с уникальными свойствами.
-	 *
-	 * TODO: cache.
 	 */
-	public static function getSpecialTypeIDs() 
+	public static function getSpecialTypes() 
 	{
 		$cache = new \CPHPCache();
 		
-		if ($cache->InitCache(3600 * 4, 'get-special-type-ids', '/products/')) {
-			 $items = $cache->GetVars();
+		if ($cache->InitCache(3600 * 36, 'get-special-type-enums-ids', '/products/')) {
+			 $enums = $cache->GetVars();
 		} else {
 			// Пользовательское свойство.
 			$result = \CUserTypeEntity::GetList([], ['ENTITY_ID' => 'IBLOCK_'.IBLOCK_PRODUCTS_ID.'_SECTION', 'FIELD_NAME' => 'UF_SPECIAL']);
@@ -267,6 +277,25 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
 				$enum['SIDS'] = array_unique($enum['SIDS']);
 			}
 			unset($result, $enum);
+			
+			$cache->EndDataCache($enums);
+		}
+		return $enums;
+	}
+	
+    	
+	/**
+	 * Получение ID элементов с уникальными свойствами.\
+	 */
+	public static function getSpecialTypeIDs() 
+	{
+		$cache = new \CPHPCache();
+		
+		if ($cache->InitCache(3600 * 4, 'get-special-type-product-ids', '/products/')) {
+			 $items = $cache->GetVars();
+		} else {
+			// Специальные свойство.
+			$enums = self::getSpecialTypes();
 			
 			$items = [];
 			foreach ($enums as $enum) {

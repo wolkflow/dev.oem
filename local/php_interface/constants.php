@@ -93,6 +93,7 @@ define('IBLOCK_PRODUCTS_ID',     8);
 define('HLBLOCK_ORDER_SKETCHES_ID',  6);
 define('HLBLOCK_PRICES_PRODUCTS_ID', 9);
 define('HLBLOCK_PRICES_STANDS_ID',   10);
+define('HLBLOCK_PARAMS_PRODUCTS_ID', 11);
 
 // Разделы.
 define('SECTION_LOGOTYPES_ID', 13);

@@ -1,5 +1,6 @@
 /bitrix/
 /upload/
+/upload.bkp/
 /icache/
 test*
 *.log

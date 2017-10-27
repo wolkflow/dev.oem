@@ -1,13 +1,18 @@
 <?php
+
 //////////////////////////
 //START of the custom form
 //////////////////////////
 
+use Bitrix\Main\Localization\Loc;
+
+use Wolk\OEM\Basket;
 use Wolk\OEM\Stand;
 use Wolk\OEM\Products\Base as Product;
 use Wolk\OEM\Prices\Stand as StandPrices;
 use Wolk\OEM\Prices\Product as ProductPrices;
 
+IncludeModuleLangFile(__FILE__);
 
 \Bitrix\Main\Loader::includeModule('wolk.core');
 \Bitrix\Main\Loader::includeModule('wolk.oem');
@@ -37,19 +42,10 @@ unset($result, $item);
 
 
 // Список продукции.
-$result = Product::getList(
-    array(
-        'filter' => array('ACTIVE' => 'Y'),
-        'select' => array('ID', 'NAME'),
-        'order'  => array('NAME' => 'ASC')
-    ),
-    false
-);
-$products = array();
-while ($item = $result->fetch()) {
-    $products[$item['ID']] = $item;
-}
-unset($result, $item);
+$products = Product::getList([
+	'filter' => array('ACTIVE' => 'Y'),
+	'order'  => array('NAME' => 'ASC')
+]);
 
 
 // Выбранные стенды.
@@ -153,73 +149,66 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 ////////////////////
 ?>
 
-<? /*
-<? $tabControl->BeginCustomField('CURRENCIES_STANDARD', 'Валюты (стандартные)'); ?>
-    <tr>
-        <td class="adm-detail-content-cell-l">
-			Используемая валюта (RU)
-		</td>
-		<td class="adm-detail-content-cell-r">
-			<select name="CURRENCIES[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>]" class="js-currency-standard-<?= LANG_RU ?>">
-				<option value="">- не выбрано -</option>
-				<? foreach ($currencies as $id => $currency) { ?>
-					<option <? if ($id == $event->getCurrencyStandard(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-						<?= $currency ?>
-					</option>
-				<? } ?>
-			</select>
-		</td>
-	</tr>
+<? $tabControl->BeginCustomField('PRODUCTS_PROPERTIES', Loc::getMessage('TAB_PRODUCTS_PROPERTIES')); ?>
 	<tr>
-        <td class="adm-detail-content-cell-l">
-			Используемая валюта (EN)
-		</td>
-		<td class="adm-detail-content-cell-r">
-			<select name="CURRENCIES[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>]" class="js-currency-standard-<?= LANG_EN ?>">
-				<option value="">- не выбрано -</option>
-				<? foreach ($currencies as $id => $currency) { ?>
-					<option <? if ($id == $event->getCurrencyStandard(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-						<?= $currency ?>
-					</option>
-				<? } ?>
-			</select>
+        <td colspan="2">
+			<table class="js-props-wrapper" width="100%" border="1" cellpadding="10">
+                <thead>
+					<tr>
+						<th>Название</th>
+						<th>Обязательность свойств</th>
+						<th>Подпись</th>
+						<th>Комментарий</th>
+					</tr>
+                </thead>
+                <tbody>
+					<? $sections = [] ?>
+                    <? foreach ($products as $product) { ?>
+						<?	// Раздел продукции.
+							if (!array_key_exists($product->getSectionID(), $sections)) {
+								$sections[$product->getSectionID()] = $product->getSection();
+							}
+							$section = $sections[$product->getSectionID()];
+						?>
+						<tr>
+							<td>
+								<b><?= $product->getTitle() ?></b>
+							</td>
+							<td width="35%">
+								<? $props = $section->getProperties() ?>
+								<? foreach ($props as $prop) { ?>
+									<div style="border: 1px dotted #777777; border-radius: 5px; margin-bottom: 2px; padding: 5px; overflow: hidden;">
+										<input type="checkbox" name="PROPREQS[<?= $product->getID() ?>][<?= $prop ?>]" value="Y" />
+										<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
+										
+										<? // Если у продукции есть оплата за символы на фризовой панели. // ?>
+										<? if ($product->isSpecialType(Product::SPECIAL_TYPE_FASCIA) && $prop == Basket::PARAM_TEXT) { ?>
+											<input 
+												type="number" 
+												step="1"
+												title="Количество бесплатных символов"
+												name="PROPFASCIA[<?= $product->getID() ?>][<?= $prop ?>]" 
+												value=""
+												style="float: right;"
+											/>
+										<? } ?>
+									</div>
+								<? } ?>
+							</td>
+							<td>
+								<input type="text" name="PROPNAMES[<?= $product->getID() ?>][<?= $prop ?>]" value="" />
+							</td>
+							<td>
+								<textarea cols="30" rows="4" style="resize: none;"></textarea>
+							</td>
+						</tr>
+					<? } ?>
+				</tbody>
+			</table>
 		</td>
 	</tr>
-<? $tabControl->EndCustomField('CURRENCIES_STANDARD', ''); ?>
+<? $tabControl->EndCustomField('PRODUCTS_PROPERTIES', ''); ?>
 
-<? $tabControl->BeginCustomField('CURRENCIES_INDIVIDUAL', 'Валюты (индивидуальные)'); ?>
-    <tr>
-        <td class="adm-detail-content-cell-l">
-			Используемая валюта (RU)
-		</td>
-		<td class="adm-detail-content-cell-r">
-			<select name="CURRENCIES[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>]" class="js-currency-individual-<?= LANG_RU ?>">
-				<option value="">- не выбрано -</option>
-				<? foreach ($currencies as $id => $currency) { ?>
-					<option <? if ($id == $event->getCurrencyIndividual(LANG_RU_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-						<?= $currency ?>
-					</option>
-				<? } ?>
-			</select>
-		</td>
-	</tr>
-	<tr>
-        <td class="adm-detail-content-cell-l">
-			Используемая валюта (EN)
-		</td>
-		<td class="adm-detail-content-cell-r">
-			<select name="CURRENCIES[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>]" class="js-currency-individual-<?= LANG_EN ?>">
-				<option value="">- не выбрано -</option>
-				<? foreach ($currencies as $id => $currency) { ?>
-					<option <? if ($id == $event->getCurrencyIndividual(LANG_EN_UP)) { ?> selected <? } ?> value="<?= $id ?>">
-						<?= $currency ?>
-					</option>
-				<? } ?>
-			</select>
-		</td>
-	</tr>
-<? $tabControl->EndCustomField('CURRENCIES_INDIVIDUAL', ''); ?>
-*/ ?>
 
 
 <? $tabControl->BeginCustomField('STANDS_PRICES_STANDARD', 'Цены на стенды (стандартные)'); ?>
@@ -457,7 +446,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         <tr class="js-prices-values">
                             <td>
                                 <input type="hidden" name="PRODUCTS[<?= $selected_product ?>]" value="<?= $selected_product ?>" />
-                                <?= $products[$selected_product]['NAME'] ?>
+                                <?= $products[$selected_product]->getTitle() ?>
                             </td>
                             <td>
                                 <input 
@@ -554,7 +543,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         <tr class="js-prices-values">
                             <td>
                                 <input type="hidden" name="PRODUCTS[<?= $selected_product ?>]" value="<?= $selected_product ?>" />
-                                <?= $products[$selected_product]['NAME'] ?>
+                                <?= $products[$selected_product]->getTitle() ?>
                             </td>
                             <td>
                                 <input 
