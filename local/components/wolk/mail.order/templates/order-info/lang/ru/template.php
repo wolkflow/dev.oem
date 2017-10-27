@@ -6,6 +6,7 @@ $MESS['company']  = 'Компания и персональные данные';
 $MESS['title']	  = 'Название';
 $MESS['standnum'] = 'Номер стенда';
 $MESS['pavillion'] = 'Номер павильона';
+$MESS['ordernumber'] = 'Номер заказа';
 $MESS['orderdate'] = 'Дата заказа';
 $MESS['details']   = 'Детали заказа';
 $MESS['address']  = 'Адрес';

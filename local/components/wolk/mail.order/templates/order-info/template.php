@@ -84,6 +84,19 @@
 													</p>
 												</td>
 											</tr>
+											<? if ($arResult['EVENT']['CODE'] == 'bvm-2018') { ?>
+												<tr>
+													<td style="padding-bottom: 43px;">
+														<p style="margin: 0 0 15px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
+															<?= Loc::getMessage('ordernumber') ?>
+														</p>
+														<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" alt="___________________________________" /></div>
+														<p style="margin: 15px 0 0 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;text-transform: uppercase">
+															<?= $arResult['ORDER']['ID'] ?>
+														</p>
+													</td>
+												</tr>
+											<? } ?>
 											<tr>
 												<td>
 													<p style="margin: 0 0 15px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
