@@ -22,6 +22,17 @@ class Location extends \Wolk\Core\System\IBlockEntity
 	
 	
 	/**
+	 * Получение названия.
+	 */
+    public function getName()
+    {
+		$this->load();
+		
+		return ($this->data['NAME']);
+    }
+	
+	
+	/**
 	 * Получение документов.
 	 */
     public function getDocs()
