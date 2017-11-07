@@ -21,6 +21,11 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
 	const PRICETYPE_DAYS  	   = 'DAYS';
 	const PRICETYPE_DAYS_HOURS = 'DAYS.HOURS';
 	const PRICETYPE_SYMBOLS    = 'SYMBOLS';
+	
+	const MEASURE_PIECES = 'PC';
+	const MEASURE_SQUARE = 'SQM';
+	const MEASURE_HOURS  = 'HR';
+	const MEASURE_DAYS   = 'DS';
     
 	
     protected static $pricetypes = array();

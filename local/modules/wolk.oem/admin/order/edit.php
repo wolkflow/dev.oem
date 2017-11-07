@@ -145,7 +145,7 @@ if (!empty($_POST) && $_POST['action'] == 'order-make') {
 		
 		$order = Wolk\OEM\Order::make($fields);
 		
-		LocalRedirect('/bitrix/admin/wolk_oem_order_edit.php?OID=' . $order->getID());
+		LocalRedirect('/bitrix/admin/wolk_oem_order_edit.php?ID=' . $order->getID());
 	}
 }
 

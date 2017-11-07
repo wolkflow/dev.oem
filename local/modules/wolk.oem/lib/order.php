@@ -173,7 +173,7 @@ class Order
 	{
 		$this->load();
 		
-		return $this->data['PROPS'][self::PROP_SURCHARGE]['VALUE_ORIG'];
+		return floatval($this->data['PROPS'][self::PROP_SURCHARGE]['VALUE_ORIG']);
 	}
     
     
@@ -181,7 +181,7 @@ class Order
 	{
 		$this->load();
 		
-		return $this->data['PROPS'][self::PROP_SURCHARGE_PRICE]['VALUE_ORIG'];
+		return floatval($this->data['PROPS'][self::PROP_SURCHARGE_PRICE]['VALUE_ORIG']);
 	}
 	
 	
