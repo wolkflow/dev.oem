@@ -124,10 +124,6 @@ while ($item = $result->fetch()) {
 			$key = 'PRODUCTS';
 		}
 		
-		//if ($key == 'PRODUCTS' && !array_key_exists($basket['PRODUCT_ID'], $products)) {
-		//	continue;
-		//}
-		
 		// Процент наценки.
 		$surcharge = (float) $order->getSurchargePercent();
 		$surfactor = (1 + $surcharge / 100);
@@ -194,7 +190,7 @@ if ($request->isAjaxRequest() && !empty($request->get('export'))) {
 	}
 	
 	$target   = strtolower((string) $request->get('target'));
-	$filters  = array_filter((array)  $request->get('filters'));
+	$filters  = array_filter((array) $request->get('filters'));
 	$currency = strtoupper((string) $request->get('currency'));
 	
 	switch ($target) {
@@ -310,17 +306,18 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 						</div>
 						<? if (is_object($event->getLocation())) { ?>
 							<div class="common-stat-line">
-								Место проведения: <b><?= $event->getLocation()->getName() ?></b>
+								<?= Loc::getMessage('PLACE') ?>:
+								<b><?= $event->getLocation()->getName() ?></b>
 							</div>
 						<? } ?>
 					</div>
 					
 					<table class="table table-bordered table-condensed  stat-table">
 						<thead>
-							<th>Название</th>
+							<th><?= Loc::getMessage('STAT_HEADER_TITLE') ?></th>
 							<? foreach ($currencies as $currency) { ?>
 								<th class="currency-column">
-									Сумма по <?= $currency['CURRENCY'] ?>
+									<?= Loc::getMessage('STAT_HEADER_SUMMBY') ?> <?= $currency['CURRENCY'] ?>
 								</th>
 							<? } ?>
 						</thead>
@@ -390,7 +387,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 								<ul class="nav navbar-nav">
 									<li>
 										<a href="javascript:void(0);" class="js-export" data-target="stands">
-											Экспорт в CSV <span class="glyphicon glyphicon-import"></span>
+											<?= Loc::getMessage('STAT_EXPORT_CSV') ?>
+											<span class="glyphicon glyphicon-import"></span>
 										</a>
 									</li>
 								</ul>
@@ -453,7 +451,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 																}
 																$content = implode(', ', $content);
 															?>									
-															<a href="javascript:void(0)" class="js-popover" data-html="true" data-container="body" data-toggle="popover" data-placement="right" data-title="Номера заказов" data-content="<?= $content ?>">
+															<a href="javascript:void(0)" class="js-popover" data-html="true" data-container="body" data-toggle="popover" data-placement="right" data-title="<?= Loc::getMessage('ORDER_NUMBERS') ?>" data-content="<?= $content ?>">
 																<?= count(array_unique($subitem['ORDERS'])) ?>
 															</a>
 														<? } else { ?>
@@ -465,7 +463,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 										<? } ?>
 										<tr>
 											<td colspan="4" align="right">
-												<b>Сумма</b>
+												<b><?= Loc::getMessage('STAT_SUMM') ?></b>
 											</td>
 											<td colspan="2" align="left">
 												<b><?= CurrencyFormat($curdata['TOTAL'], $code) ?></b>
@@ -509,7 +507,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 								<ul class="nav navbar-nav">
 									<li>
 										<a href="javascript:void(0);" class="js-export" data-target="products">
-											Экспорт в CSV <span class="glyphicon glyphicon-import"></span>
+											<?= Loc::getMessage('STAT_EXPORT_CSV') ?>
+											<span class="glyphicon glyphicon-import"></span>
 										</a>
 									</li>
 								</ul>
@@ -576,7 +575,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 																}
 																$content = implode(', ', $content);
 															?>									
-															<a href="javascript:void(0)" class="js-popover" data-html="true" data-container="body" data-toggle="popover" data-placement="right" data-title="Номера заказов" data-content="<?= $content ?>">
+															<a href="javascript:void(0)" class="js-popover" data-html="true" data-container="body" data-toggle="popover" data-placement="right" data-title="<?= Loc::getMessage('ORDER_NUMBERS') ?>" data-content="<?= $content ?>">
 																<?= count(array_unique($subitem['ORDERS'])) ?>
 															</a>
 														<? } else { ?>
@@ -588,7 +587,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 										<? } ?>
 										<tr>
 											<td colspan="4" align="right">
-												<b>Сумма</b>
+												<b><?= Loc::getMessage('STAT_SUMM') ?></b>
 											</td>
 											<td colspan="2" align="left">
 												<b><?= CurrencyFormat($curdata['TOTAL'], $code) ?></b>
@@ -638,7 +637,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 			if ($link.data('update')) {
 				$link.prop({'href': 'javascript:void(0);', 'target': '_blank'});
 				$link.data('update', false);
-				$link.html('Обновить CSV <span class="glyphicon glyphicon-import"></span>');
+				$link.html('<?= Loc::getMessage('STAT_UPDATE_CSV') ?> <span class="glyphicon glyphicon-import"></span>');
 				$link.css('color', '#000000');
 			}
 		});
@@ -669,7 +668,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 			if ($link.data('update')) {
 				$link.prop({'href': 'javascript:void(0);', 'target': '_blank'});
 				$link.data('update', false);
-				$link.html('Обновить CSV <span class="glyphicon glyphicon-import"></span>');
+				$link.html('<?= Loc::getMessage('STAT_UPDATE_CSV') ?> <span class="glyphicon glyphicon-import"></span>');
 				$link.css('color', '#000000');
 			}
 		});
@@ -701,10 +700,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 					if (response.status) {
 						$that.prop({'href': response.data['link'], 'target': '_blank'});
 						$that.data('update', true);
-						$that.html('Скачать CSV <span class="glyphicon glyphicon-import"></span>');
+						$that.html('<?= Loc::getMessage('STAT_DOWNLOAD_CSV') ?> <span class="glyphicon glyphicon-import"></span>');
 						$that.css('color', '#2222cc');
 					} else {
-						alert('Произошла ошибка');
+						alert('<?= Loc::getMessage('ERROR_UNKNOWN') ?>');
 					}
 					BX.closeWait();
 				},
