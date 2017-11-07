@@ -5,6 +5,22 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Helpers\Admin\Blocks;
 use Bitrix\Highloadblock\HighloadBlockTable;
 
+
+function jsonresponse($status, $message = '', $data = null, $console = '', $type = 'json')
+{
+	$result = array(
+		'status'  => (bool)   $status,
+		'message' => (string) $message,
+		'data' 	  => (array)  $data,
+		'console' => (string) $console,
+	);
+	
+	header('Content-Type: application/json');
+	echo json_encode($result);
+	exit();
+}
+
+
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admin_before.php');
 
 // подключим языковой файл.
@@ -32,6 +48,7 @@ if (in_array(GROUP_MANAGERS_ID, $groups)) {
 $eid = (int) $_REQUEST['ID'];
 
 $event = null;
+
 if (!empty($eid)) {
     $event = new Wolk\OEM\Event($eid);
 }
@@ -52,42 +69,14 @@ while ($currency = $result->fetch()) {
 // Стенды.
 $stands = $event->getStands();
 
-// Цены на стенды.
-/*
-$result = StandPrices::getList(
-    array(
-        'filter' => [StandPrices::FIELD_EVENT => $event->getID(), StandPrices::FIELD_STAND => $selected_stands]
-    ),
-    false
-);
-
-$prices_stands = array();
-while ($item = $result->fetch()) {
-    $prices_stands
-		[$item[StandPrices::FIELD_STAND]] 
-        [$item[StandPrices::FIELD_TYPE]]
-        [$item[StandPrices::FIELD_LANG]]
-    = $item;
-}
-*/
-
 
 // Продукция.
 $products = $event->getProducts();
 
-/*
-// Цены на продукцию (стандартная застройка).
-$result = ProductPrices::getList(['filter' => [ProductPrices::FIELD_EVENT => $event->getID()]], false);
 
-$prices_products = array();
-while ($item = $result->fetch()) {
-    $prices_products
-		[$item[ProductPrices::FIELD_PRODUCT]]
-        [$item[ProductPrices::FIELD_TYPE]]
-        [$item[ProductPrices::FIELD_LANG]]
-    = $item;
-}
-*/
+// Разделы.
+$sections = Wolk\OEM\Products\Section::getList(['filter' => ['DEPTH_LEVEL' => 1]]);
+
 
 
 // Статистика.
@@ -108,25 +97,6 @@ $stat['PRICES']   = array('PRICE' => array(), 'SURCHARGE' => array());
 $stat['STANDS']   = array();
 $stat['PRODUCTS'] = array();
 
-/*
-foreach ($stands as $stand) {
-	$stat['STANDS'][$stand->getID()] = array(
-		'TITLE'    => $stand->getTitle(),
-		'PRICES'   => array(),
-		'ORDERS'   => array(),
-		'QUANTITY' => 0,
-	);
-}
-
-foreach ($products as $product) {
-	$stat['PRODUCTS'][$product->getID()] = array(
-		'TITLE'    => $product->getTitle(),
-		'PRICES'   => array(),
-		'ORDERS'   => array(),
-		'QUANTITY' => 0,
-	);
-}
-*/
 
 
 // Проход по всем заказам и получение информации о продажах.
@@ -209,13 +179,93 @@ while ($item = $result->fetch()) {
 
 $stat['USERS'] = array_unique($stat['USERS']);
 
-/*  
-echo '<pre>';
-print_r($stat['PRODUCTS']);
-echo '</pre>';
-die();
 
-   */
+
+// Запрос.
+$request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+
+/*
+ * Экспортирование данных.
+ */
+if ($request->isAjaxRequest() && !empty($request->get('export'))) {
+	
+	while (ob_get_level()) {
+		ob_end_clean();
+	}
+	
+	$target   = strtolower((string) $request->get('target'));
+	$filters  = array_filter((array)  $request->get('filters'));
+	$currency = strtoupper((string) $request->get('currency'));
+	
+	switch ($target) {
+		
+		case ('stands'):
+			$objects = $stands;
+			$items   = $stat['STANDS']['CURRENCIES'][$currency]['ITEMS'];
+			break;
+			
+		case ('products'):
+			$objects = $products;
+			$items   = $stat['PRODUCTS']['CURRENCIES'][$currency]['ITEMS'];
+			if (!empty($filters)) { 
+				foreach ($items as $id => $subitems) {
+					foreach ($subitems as $item) {
+						if (is_object($objects[$id])) {
+							$object = $objects[$id];
+							if (!in_array($object->getSection()->getMainSection()->getID(), $filters)) {
+								unset($items[$id]);
+							}
+						}
+					}
+				}
+			}
+			break;
+	}
+	
+	// Путь к файлу выгрузки.
+	$link = $request->get('link');
+	if (empty($link)) {
+		$link = '/upload/stats/' . $target . '-' . date('Y-m-d-H-i-s') . '.csv';
+	}
+	$path = $_SERVER['DOCUMENT_ROOT'] . $link;
+	
+	$fp = fopen($path, 'a');
+	
+	$data = [
+		Loc::getMessage('STAT_HEADER_TITLE'),
+		Loc::getMessage('STAT_HEADER_SURCHARGE'),
+		Loc::getMessage('STAT_HEADER_QUANTITY'),
+		Loc::getMessage('STAT_HEADER_PRICE'),
+		Loc::getMessage('STAT_HEADER_COST')
+	];
+	fputcsv($fp, $data, ';');
+	
+	foreach ($items as $id => $subitems) {
+		foreach ($subitems as $item) {
+			$object = $objects[$id];
+			$title  = '-';
+			if (!empty($object)) {
+				$title = $object->getTitle();
+			}
+			$data = [
+				$title,
+				floatval($surcharge) . '%',
+				$item['QUANTITY'],
+				CurrencyFormat($item['PRICE_SURCHARGE'], $currency),
+				CurrencyFormat($item['TOTAL'], $currency) 
+			];
+			fputcsv($fp, $data, ';');
+		}
+	}
+	
+	fclose($fp);
+	
+	// Ответ.
+	jsonresponse(true, '', array('status' => true, 'link' => $link));
+}
+
+
+
 
 // Подключение модуля.
 Bitrix\Main\Loader::includeModule('wolk.oem');
@@ -335,6 +385,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 									<? $first = false; ?>
 								<? } ?>
 							</ul>
+							
+							<div class="collapse navbar-collapse pull-right">
+								<ul class="nav navbar-nav">
+									<li>
+										<a href="javascript:void(0);" class="js-export" data-target="stands">
+											Экспорт в CSV <span class="glyphicon glyphicon-import"></span>
+										</a>
+									</li>
+								</ul>
+							</div>
+							
 							<table class="table table-bordered table-condensed stat-table">
 								<thead>
 									<tr>
@@ -362,18 +423,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 								<? foreach ($stat['STANDS']['CURRENCIES'] as $code => $curdata) { ?>
 									<tbody class="js-currency-tab js-currency-tab-<?= strtolower($code) ?>" <?= (!$first) ? ('style="display: none;"') : ('') ?>>
 										<? foreach ($curdata['ITEMS'] as $pid => $item) { ?>
-											<?	// Продукт не из доступных в выставке. 
-												if (!is_object($stands[$pid])) {
-													// continue;
-												}
-											?>
 											<? foreach ($item as $surcharge => $subitem) { ?>
 												<tr>
 													<td>
 														<? if (is_object($stands[$pid])) { ?>
 															<?= $stands[$pid]->getTitle() ?>
 														<? } else { ?>
-															<?= $pid ?>
+															&mdadsh;
 														<? } ?>
 													</td>
 													<td>
@@ -440,6 +496,25 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 									<? $first = false; ?>
 								<? } ?>
 							</ul>
+							
+							<div class="collapse navbar-collapse pull-right">
+								<div id="js-filter-id" class="navbar-form navbar-left" role="search">
+									<? foreach ($sections as $section) { ?>
+										<button type="button" class="btn btn-sm btn-default js-filter" name="SECTIONS[]" value="<?= $section->getID() ?>">
+											<?= $section->getTitle() ?>
+										</button>
+									<? } ?>
+								</div>
+								
+								<ul class="nav navbar-nav">
+									<li>
+										<a href="javascript:void(0);" class="js-export" data-target="products">
+											Экспорт в CSV <span class="glyphicon glyphicon-import"></span>
+										</a>
+									</li>
+								</ul>
+							</div>
+							
 							<table class="table table-bordered table-condensed stat-table">
 								<thead>
 									<tr>
@@ -467,18 +542,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 								<? foreach ($stat['PRODUCTS']['CURRENCIES'] as $code => $curdata) { ?>
 									<tbody class="js-currency-tab js-currency-tab-<?= strtolower($code) ?>" <?= (!$first) ? ('style="display: none;"') : ('') ?>>
 										<? foreach ($curdata['ITEMS'] as $pid => $item) { ?>
-											<?	// Продукт не из доступных в выставке. 
-												if (!is_object($products[$pid])) {
-													// continue;
-												}
-											?>
 											<? foreach ($item as $surcharge => $subitem) { ?>
-												<tr>
+												<? if (is_object($products[$pid])) { ?>
+													<? $product = $products[$pid] ?>
+													<? $section = $product->getSection()->getMainSection() ?>
+												<? } ?>
+												<tr class="js-filtered-row js-filtered-row-<?= (is_object($section)) ? ($section->getID()) : ('0') ?>">
 													<td>
 														<? if (is_object($products[$pid])) { ?>
 															<?= $products[$pid]->getTitle() ?>
 														<? } else { ?>
-															<?= $pid ?>
+															&mdash;
 														<? } ?>
 													</td>
 													<td>
@@ -549,9 +623,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 		
 		
 		// Переключение валюты.
-		$('.js-wrapper-stats .js-currency-switch').on('click', function() {
+		$('.js-wrapper-stats .js-currency-switch').on('click', function(e) {
 			var $that = $(this);
 			var $wrap = $that.closest('.js-wrapper-stats');
+			var $link = $wrap.find('.js-export');
 			var $tabs = $wrap.find('.js-currency-tab-' + $that.data('currency'));
 			
 			$wrap.find('.js-currency-switch').closest('li').removeClass('active');
@@ -559,9 +634,91 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 			
 			$wrap.find('.js-currency-tab').hide();
 			$tabs.show();
+			
+			if ($link.data('update')) {
+				$link.prop({'href': 'javascript:void(0);', 'target': '_blank'});
+				$link.data('update', false);
+				$link.html('Обновить CSV <span class="glyphicon glyphicon-import"></span>');
+				$link.css('color', '#000000');
+			}
+		});
+		
+		
+		// Переключение фильтров.
+		$('.js-wrapper-stats .js-filter').on('click', function(e) {
+			var $that = $(this);
+			var $wrap = $that.closest('.js-wrapper-stats');
+			var $link = $wrap.find('.js-export');
+			var sects = [];
+			
+			$that.toggleClass('active');
+			
+			$wrap.find('.js-filter.active').each(function() {
+				sects.push($(this).val());
+			});
+			
+			if (sects.length == 0) {
+				$wrap.find('.js-filtered-row').show();
+			} else {
+				$wrap.find('.js-filtered-row').hide();
+				for (let s in sects) {
+					$wrap.find('.js-filtered-row-' + sects[s]).show();
+				}
+			}
+			
+			if ($link.data('update')) {
+				$link.prop({'href': 'javascript:void(0);', 'target': '_blank'});
+				$link.data('update', false);
+				$link.html('Обновить CSV <span class="glyphicon glyphicon-import"></span>');
+				$link.css('color', '#000000');
+			}
+		});
+		
+		
+		// Экспорт таблицы в CSV.
+		$('.js-export').on('click', function(e) {
+			e.preventDefault();
+			
+			var $that = $(this);
+			var $wrap = $that.closest('.js-wrapper-stats');
+			
+			if ($that.data('update')) {
+				return;
+			}
+			
+			var filters = [];
+			$('#js-filter-id button.active').each(function() {
+				filters.push($(this).val());
+			});
+			var currency = $wrap.find('.active .js-currency-switch').data('currency');
+			
+			BX.showWait();
+			
+			$.ajax({
+				url: '',
+				type: 'post',
+				data: {'export': true, 'target': $that.data('target'), 'currency': currency, 'filters': filters},
+				dataType: 'json',
+				success: function(response) {
+					if (response.status) {
+						$that.prop({'href': response.data['link'], 'target': '_blank'});
+						$that.data('update', true);
+						$that.html('Скачать CSV <span class="glyphicon glyphicon-import"></span>');
+						$that.css('color', '#2222cc');
+					} else {
+						alert('Произошла ошибка');
+					}
+					BX.closeWait();
+				},
+				error: function() {
+					BX.closeWait();
+				}
+			});
 		});
 	});
 </script>
+
+
 
 <style>
 	#js-form-user-select-id {
@@ -654,6 +811,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 	.no-padding {
 		padding: 0px;
 	}
+	
 </style>
 
 <? require ($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/epilog_admin.php') ?>

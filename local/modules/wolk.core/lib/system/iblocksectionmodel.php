@@ -37,6 +37,12 @@ class IBlockSectionModel extends Model
 		}
 		return $this->data;
 	}
+	
+	
+	public function getName()
+    {
+        return $this->get('NAME');
+    }
     
     
     public function getCode()

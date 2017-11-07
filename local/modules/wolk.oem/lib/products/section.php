@@ -2,7 +2,7 @@
 
 namespace Wolk\OEM\Products;
 
-use  Wolk\OEM\Products\Base as Product;
+use Wolk\OEM\Products\Base as Product;
 
 class Section extends \Wolk\Core\System\IBlockSectionModel
 {
