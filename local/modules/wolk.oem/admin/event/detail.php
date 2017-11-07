@@ -232,27 +232,27 @@ if ($request->isAjaxRequest() && !empty($request->get('export'))) {
 	$fp = fopen($path, 'a');
 	
 	$data = [
-		Loc::getMessage('STAT_HEADER_TITLE'),
-		Loc::getMessage('STAT_HEADER_SURCHARGE'),
-		Loc::getMessage('STAT_HEADER_QUANTITY'),
-		Loc::getMessage('STAT_HEADER_PRICE'),
-		Loc::getMessage('STAT_HEADER_COST')
+		iconv('UTF-8', 'cp1251', Loc::getMessage('STAT_HEADER_TITLE')),
+		iconv('UTF-8', 'cp1251', Loc::getMessage('STAT_HEADER_SURCHARGE')),
+		iconv('UTF-8', 'cp1251', Loc::getMessage('STAT_HEADER_QUANTITY')),
+		iconv('UTF-8', 'cp1251', Loc::getMessage('STAT_HEADER_PRICE')),
+		iconv('UTF-8', 'cp1251', Loc::getMessage('STAT_HEADER_COST')),
 	];
 	fputcsv($fp, $data, ';');
 	
 	foreach ($items as $id => $subitems) {
-		foreach ($subitems as $item) {
+		foreach ($subitems as $surcharge => $item) {
 			$object = $objects[$id];
-			$title  = '-';
+			$title  = '—';
 			if (!empty($object)) {
 				$title = $object->getTitle();
 			}
 			$data = [
-				$title,
+				iconv('UTF-8', 'cp1251', $title),
 				floatval($surcharge) . '%',
 				$item['QUANTITY'],
-				CurrencyFormat($item['PRICE_SURCHARGE'], $currency),
-				CurrencyFormat($item['TOTAL'], $currency) 
+				number_format($item['PRICE_SURCHARGE'], 2),
+				number_format($item['TOTAL'], 2),
 			];
 			fputcsv($fp, $data, ';');
 		}
@@ -677,8 +677,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 		
 		// Экспорт таблицы в CSV.
 		$('.js-export').on('click', function(e) {
-			e.preventDefault();
-			
 			var $that = $(this);
 			var $wrap = $that.closest('.js-wrapper-stats');
 			
