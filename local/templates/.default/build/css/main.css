@@ -1797,3 +1797,36 @@ div.preview-image {
     background-repeat: no-repeat;
     padding-left: 18px;
 }
+
+.basket-buttons a {
+	color: #7f7f7f;
+	font-weight: bold;
+	font-size: 17px;
+	text-decoration: none;
+	border: 1px solid #afafaf;
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	position: relative;
+}
+
+.basket-buttons a.inc:after {
+	content: '+';
+	position: absolute;
+	top: -5px;
+    left: 5px;
+}
+
+.basket-buttons a.dec:after {
+	content: '–';
+	position: absolute;
+	top: -5px;
+    left: 5px;
+}
+
+.basket-buttons a.rem:after {
+	content: '×';
+	position: absolute;
+	top: -5px;
+    left: 5px;
+}

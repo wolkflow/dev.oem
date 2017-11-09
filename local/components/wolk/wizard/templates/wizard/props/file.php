@@ -8,11 +8,13 @@
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
 <? $value  = $params[Basket::PARAM_FILE] ?>
 
-<div class="js-param-block js-param-file" data-code="<?= Basket::PARAM_FILE ?>">
+<? $required = (in_array(Basket::PARAM_FILE, $arResult['SECTION_PARAMS'][$section->getID()]['PROPS']['REQUIRED'])) ?>
+
+<div class="js-param-block js-param-file <?= ($required) ? ('js-param-required') : ('') ?>" data-code="<?= Basket::PARAM_FILE ?>">
     <input type="hidden" name="<?= Basket::PARAM_FILE ?>" class="styler js-param-required js-param-value js-param-x-file" value="<?= $value ?>" />
     <div class="serviceItem__right-large">
         <div class="serviceItem__subtitle">
-            <?= Loc::getMessage('FILE') ?>
+			<?= ($arResult['SECTION_PARAMS'][$section->getID()]['NAMES'][Basket::PARAM_FILE]) ?: (Loc::getMessage('FILE')) ?>
         </div>
         <div class="preview-image js-param-x-image <?= (!empty($value)) ? ('changed') : ('') ?>" <?= (empty($value)) ? ('style="display: none;"') : ('') ?>>
             <? if (!empty($value)) { ?>

@@ -93,7 +93,7 @@ $result = CSaleOrder::getList(
 
 $stat['ORDERS']   = (int) $result->SelectedRowsCount();
 $stat['USERS']    = array();
-$stat['PRICES']   = array('PRICE' => array(), 'SURCHARGE' => array());
+$stat['PRICES']   = array('PRICE' => array(), 'VAT' => array(), 'SURCHARGE' => array());
 $stat['STANDS']   = array();
 $stat['PRODUCTS'] = array();
 
@@ -327,8 +327,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 								<? foreach ($currencies as $currency) { ?>
 									<? $code = $currency['CURRENCY'] ?>
 									<td>
-										<? if (!empty($stat['PRICES']['PRICES'][$code])) { ?>
-											<?= CurrencyFormat($stat['PRICES']['PRICES'][$code], $code) ?>
+										<? if (!empty($stat['PRICES']['PRICE'][$code])) { ?>
+											<?= CurrencyFormat($stat['PRICES']['PRICE'][$code], $code) ?>
 										<? } else { ?>
 											<span class="none">&mdash;</span>
 										<? } ?>

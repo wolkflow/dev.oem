@@ -79,7 +79,7 @@ function BXIBlockAfterSave(&$arFields)
             }
         }
 		
-		if (!empty($pricedatas)) {
+		if (!empty($datas)) {
 			try {
 				$result = StandPrice::runBatchInsert($datas);
 			} catch (\Exception $e) {
@@ -133,15 +133,15 @@ function BXIBlockAfterSave(&$arFields)
         foreach ($params_sections as $lang => $sections) {
 			
 			// Удаление старых цен.
-			$event->clearProductsParams($lang);
+			$event->clearSectionsParams($lang);
 			
 			foreach ($sections as $section => $params) {
 				$data = [
 					SectionParam::FIELD_EVENT   => $arFields['ID'],
 					SectionParam::FIELD_SECTION => $section,
 					SectionParam::FIELD_LANG    => $lang,
-					SectionParam::FIELD_PROPS   => json_encode((array) $params['PROPS']),
-					SectionParam::FIELD_NAMES   => json_encode((array) $params['NAMES']),
+					SectionParam::FIELD_PROPS   => json_encode((array) $params['PROPS'], JSON_UNESCAPED_UNICODE),
+					SectionParam::FIELD_NAMES   => json_encode((array) $params['NAMES'], JSON_UNESCAPED_UNICODE),
 					SectionParam::FIELD_NOTE    => (string) $params['NOTE'],
 				];
 				

@@ -2,6 +2,8 @@
 
 <? $this->setFrameMode(true); ?>
 
+<? $lang = \Bitrix\Main\Context::getCurrent()->getLanguage(); ?>
+
 <? $component = $this->getComponent() ?>
 
 <? use Bitrix\Main\Localization\Loc; ?>

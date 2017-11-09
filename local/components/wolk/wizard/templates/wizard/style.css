@@ -1,0 +1,4 @@
+.js-param-required .serviceItem__subtitle:after {
+	content: '*';
+	color: #393333;
+}

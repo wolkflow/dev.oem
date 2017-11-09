@@ -43,19 +43,27 @@ window['oem-func-symbols-more'] = function($block) {
 /**
  * Функция очистки данных.
  */
-window['oem-func-symbols-clear'] = function($block) {
-	$block.attr('data-bid', '');
+window['oem-func-symbols-clear'] = function($block, full) {
 	
-	$block.find('.js-text').val('');
+	full = full || true;
+	
     $block.find('.styler').styler();
+	
+	if (full) {
+		$block.find('.js-product-select .js-option-noselect').trigger('click');
+	}
     
+	$block.find('.js-text').val('');
+	
     $block.find('.js-product-price').html('');
     $block.find('.js-product-descr').html('');
     $block.find('.js-product-select-price').hide();
     $block.find('.js-product-select-descr').hide();
 	
     // Сброс всех свойств товара.
-    ResetParams($block);
+	if (full) {
+		ResetParams($block);
+	}
 }
 
 

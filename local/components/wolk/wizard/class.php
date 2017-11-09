@@ -16,6 +16,7 @@ use Wolk\OEM\Context;
 use Wolk\OEM\Order;
 use Wolk\OEM\Basket;
 use Wolk\OEM\BasketItem;
+use Wolk\OEM\Products\Param as SectionParam;
 
 /**
  * Class WizardComponent
@@ -253,6 +254,9 @@ class WizardComponent extends \CBitrixComponent
         // Получение предвыбранного стенда.
         $this->usePreStand();
         
+		// Получение параметров разделов.
+        $this->useSectionParams();
+		
         // Валюта.
         $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyStandsContext($this->getContext());
         
@@ -660,6 +664,34 @@ class WizardComponent extends \CBitrixComponent
             $this->arResult['PREOFFER'] = $this->arResult['PRESTAND']->getStandOffer($this->arParams['WIDTH'], $this->arParams['DEPTH'], $this->getContext());
         }
     }
+	
+	
+	/**
+     * Получение параметров разделов.
+     */
+	protected function useSectionParams()
+	{
+		$result = SectionParam::getList([
+			'filter' => [
+					SectionParam::FIELD_EVENT => $this->getEvent()->getID(),
+					SectionParam::FIELD_LANG  => $this->getContext()->getLang(),
+				]
+			],
+			false
+		);
+		
+		$params = array();
+		while ($item = $result->fetch()) {
+			$item['PROPS'] = json_decode($item['UF_PROPS'], true);
+			$item['NAMES'] = json_decode($item['UF_NAMES'], true);
+			
+			$params
+				[$item[SectionParam::FIELD_SECTION]] 
+			= $item;
+		}
+		
+		$this->arResult['SECTION_PARAMS'] = $params;
+	}
     
     
     /**

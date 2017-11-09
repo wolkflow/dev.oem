@@ -606,7 +606,30 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return $this->prices['products'];
     }
     
-		
+	
+	/**
+     * Получение цен на продукцию мероприятия по типу.
+     */
+    public function getProductParams(Context $context)
+    {
+		/*
+		if (empty($this->params['products'])) {
+            $this->params['products'] = ProductParam::getList(
+                [
+                    'filter' => [
+                        ProductPrice::FIELD_EVENT => $this->getID(),
+                        ProductPrice::FIELD_LANG  => $context->getLang(),
+                    ]
+                ],
+                true,
+                ProductPrice::FIELD_PRODUCT
+            );
+		}
+		return $this->params['products'];
+		*/
+		return [];
+	}
+	
 	
 	/**
 	 * Получение количества бесплатных символов для фризовой панели.
@@ -687,7 +710,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	/**
      * Установка цен на продукцию в рамках мерпориятия.
      */
-    public function clearProductsParams($lang)
+    public function clearSectionsParams($lang)
     {
         return ProductParam::clear($this->getID(), $lang);
     }

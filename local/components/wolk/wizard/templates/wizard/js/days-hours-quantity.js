@@ -102,14 +102,17 @@ window['oem-func-days-hours-quantity-more'] = function($block) {
 /**
  * Функция очистки данных.
  */
-window['oem-func-days-hours-quantity-clear'] = function($block) {
+window['oem-func-days-hours-quantity-clear'] = function($block, full) {
 	var mindate  = $block.find('.calendar').attr('data-date-min'),
         maxdate  = $block.find('.calendar').attr('data-date-max');
 	
-    $block.attr('data-bid', '');
-    //$block.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
+    full = full || true;
+	
     $block.find('.styler').styler();
-    $block.find('.js-product-select .js-option-noselect').trigger('click');
+    
+	if (full) {
+		$block.find('.js-product-select .js-option-noselect').trigger('click');
+    }
     
 	$block.find('input.js-param-value').val('');
 	$block.find('textarea.js-param-value').html('');
@@ -138,7 +141,9 @@ window['oem-func-days-hours-quantity-clear'] = function($block) {
 	$block.find('.js-calendar-reset').trigger('click');
 	
     // Сброс всех свойств товара.
-    ResetParams($block);
+	if (full) {
+		ResetParams($block);
+	}
 }
 
 

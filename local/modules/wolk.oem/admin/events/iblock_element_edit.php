@@ -9,6 +9,7 @@ use Bitrix\Main\Localization\Loc;
 use Wolk\OEM\Basket;
 use Wolk\OEM\Stand;
 use Wolk\OEM\Products\Base as Product;
+use Wolk\OEM\Products\Param as SectionParam;
 use Wolk\OEM\Prices\Stand as StandPrices;
 use Wolk\OEM\Prices\Product as ProductPrices;
 
@@ -128,6 +129,28 @@ while ($item = $result->fetch()) {
 
 
 
+// Параметры на продукцию.
+$result = SectionParam::getList(
+    array(
+        'filter' => [
+			SectionParam::FIELD_EVENT => $event->getID()
+		]
+    ),
+    false
+);
+$params_sections = array();
+while ($item = $result->fetch()) {
+	$item['PROPS'] = json_decode($item['UF_PROPS'], true);
+	$item['NAMES'] = json_decode($item['UF_NAMES'], true);
+	
+	$params_sections
+		[$item[SectionParam::FIELD_LANG]]
+		[$item[SectionParam::FIELD_SECTION]] 
+	= $item;
+}
+
+
+
 // Подключение библиотеки jQuery.
 CJSCore::Init('jquery');
 
@@ -181,7 +204,12 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 								<? foreach ($props as $prop) { ?>
 									<div style="border: 1px dotted #777777; border-radius: 5px; margin-bottom: 2px; padding: 5px; overflow: hidden;">
 										<label>
-											<input type="checkbox" name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][PROPS][REQUIRED][]" value="<?= $prop ?>" />
+											<input 
+												type="checkbox" 
+												name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][PROPS][REQUIRED][]" 
+												value="<?= $prop ?>" 
+												<?= (in_array($prop, $params_sections['RU'][$section->getID()]['PROPS']['REQUIRED'])) ? ('checked') : ('') ?>
+											/>
 											<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
 										</label>
 										
@@ -192,7 +220,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 												step="1"
 												title="<?= Loc::getMessage('FASCIA_FREE_QUANTITY') ?>"
 												name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][PROPS][FASCIA]" 
-												value=""
+												value="<?= $params_sections['RU'][$section->getID()]['PROPS']['FASCIA'] ?>"
 												style="float: right;"
 											/>
 										<? } ?>
@@ -201,11 +229,16 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 							</td>
 							<td>
 								<? foreach ($props as $prop) { ?>
-									<input type="text" name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][NAMES][<?= $prop ?>]" value="" style="margin-bottom: 1px 0 2px 0;" />
+									<input 
+										type="text" 
+										name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][NAMES][<?= $prop ?>]" 
+										value="<?= $params_sections['RU'][$section->getID()]['NAMES'][$prop] ?>" 
+										style="margin: 2px 0 2px 0;"
+									/>
 								<? } ?>
 							</td>
 							<td>
-								<textarea name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
+								<textarea name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"><?= $params_sections['RU'][$section->getID()]['UF_NOTE'] ?></textarea>
 							</td>
 						</tr>
 					<? } ?>

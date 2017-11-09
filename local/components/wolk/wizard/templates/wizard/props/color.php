@@ -8,15 +8,16 @@
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
 <? $value  = $params[Basket::PARAM_COLOR] ?>
 
-<div class="js-param-block js-param-color" data-code="<?= Basket::PARAM_COLOR ?>">
+<? $required = (in_array(Basket::PARAM_COLOR, $arResult['SECTION_PARAMS'][$section->getID()]['PROPS']['REQUIRED'])) ?>
 
-    <input class="js-param-required js-param-value js-param-x-value" name="<?= Basket::PARAM_COLOR ?>.ID" type="hidden" value="<?= (!empty($value)) ? ($value['ID']) : ('') ?>" />
-    <input class="js-param-required js-param-value js-param-x-color" name="<?= Basket::PARAM_COLOR ?>.COLOR" type="hidden" value="<?= (!empty($value)) ? ($value['COLOR']) : ('') ?>" />
+<div class="js-param-block js-param-color <?= ($required) ? ('js-param-required') : ('') ?>" data-code="<?= Basket::PARAM_COLOR ?>">
+    <input class="js-param-value js-param-x-value" name="<?= Basket::PARAM_COLOR ?>.ID" type="hidden" value="<?= (!empty($value)) ? ($value['ID']) : ('') ?>" />
+    <input class="js-param-value js-param-x-color" name="<?= Basket::PARAM_COLOR ?>.COLOR" type="hidden" value="<?= (!empty($value)) ? ($value['COLOR']) : ('') ?>" />
 
     <div class="serviceCol serviceColor lamColor">
         <div class="serviceItem__subtitle">
-            <?= Loc::getMessage('COLOR') ?>
-        </div>
+			<?= ($arResult['SECTION_PARAMS'][$section->getID()]['NAMES'][Basket::PARAM_COLOR]) ?: (Loc::getMessage('COLOR')) ?>
+		</div>
         <button class="js-button-param styler itemColor__custom" data-modal="#js-color-popup-<?= $proptmpid ?>-id" style="<?= (!empty($value)) ? ('background:' . $value['COLOR'] . ';') : ('') ?>">
             <? if (!empty($params[Basket::PARAM_COLOR])) { ?>
                 <?= Loc::getMessage('CHANGE_COLOR') ?>

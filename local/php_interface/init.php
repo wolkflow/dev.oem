@@ -49,3 +49,36 @@ Loader::registerAutoLoadClasses(null, ['Helper' => '/local/php_interface/libs/he
 
 
 
+
+
+
+// ТЕСТ
+/*
+$em->addEventHandler('fileman', 'OnBeforeHTMLEditorScriptRuns', 'OnIncludeHTMLEditorScriptRunsHandler');   
+
+function OnIncludeHTMLEditorScriptRunsHandler()
+{
+	
+	/*
+	// Регистрируем расширение, с подключением основного скрипта и подключением языкового файла.      
+	CJSCore::RegisterExt('sotbit_htmleditor_additional', array(
+		'js' => '/bitrix/tools/'.self::MODULE_ID.'/js/script.js',    
+		'lang' => '/bitrix/modules/'.self::MODULE_ID.'/lang/'.LANGUAGE_ID.'/install/tools/'.self::MODULE_ID.'/js/script.php',    
+	));       
+    
+   // Инициализируем наше расширение.     
+   CJSCore::Init(array('sotbit_htmleditor_additional'));
+  
+}
+ */
+
+
+
+
+
+
+
+
+
+
+

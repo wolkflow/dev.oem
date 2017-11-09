@@ -57,19 +57,27 @@ function PutBasket(quantity, $block)
 
     // Проверка заполненности всех свойств товара.
     var params   = {};
-    var reqprops = false;
-    $block.find('.js-param-value').each(function() {
+    var required = false;
+	
+    $block.find('.js-param-block').each(function() {
         var $that = $(this);
-        if ($that.attr('name') == undefined) {
-            return;
+        
+        if ($that.hasClass('js-param-required')) {
+			console.log('q');
+			$that.find('.js-param-value').each(function() {
+				var $item = $(this);
+				if ($item.val().length == 0) {
+					required = true;
+				}
+				if ($item.attr('name').length > 0) {
+					params[$item.attr('name')] = $item.val();
+				}
+			});
         }
-        if ($that.hasClass('js-param-required') && $that.val().length == 0) {
-            reqprops = true;
-        }
-        params[$that.attr('name')] = $that.val();
     });
-
-    if (reqprops) {
+	
+    if (required) {
+		window['oem-func-' + $block.data('price-type') + '-clear']($block, false);
         ShowError('Внимание!', 'Не заполнены все свойства товара');
         return;
     }
@@ -85,7 +93,6 @@ function PutBasket(quantity, $block)
     });
 	
 	
-    
     // Отправка продукции в корзину.
     $.ajax({
         url: '/remote/',

@@ -209,8 +209,27 @@ switch ($action) {
         jsonresponse(true, '', array('html' => $html, 'item' => $item));
         break;
 
+	
+	 // Изменение количества товара в корзине.
+    case ('update-basket-quantity'):
+		$bid      = (string) $request->get('bid');
+        $pid      = (int)    $request->get('pid');
+        $eid      = (int)    $request->get('eid');
+        $code     = (string) $request->get('code');
+        $type     = (string) $request->get('type');
+        $quantity = (float)  $request->get('quantity');
+		
+		// Корзина.
+        $basket = new \Wolk\OEM\Basket($code);
+		$basket->setContext($context);
+        
+        // Изменение количества товара в корзине.
+        $item = $basket->update($bid, $pid, $quantity, $parameters, $fields);
+		
+		break;
+		
     
-    // Изменение количества товара в корзине.
+    // Изменение корзины.
     case ('update-basket'):
         $bid      = (string) $request->get('bid');
         $pid      = (int)    $request->get('pid');

@@ -41,13 +41,20 @@
                         </span>
                     <? } ?>
                 </span>
-                <a href="javascript:void(0)" class="js-basket-remove" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>">&times;</a>
             </div>
             <div class="basketcontainer__itemtotalprice">
                 <?= FormatCurrency($item->getCost(), $arResult['CURRENCY']) ?>
             </div>
             <div class="basketcontainer__itemprice">
-                <?= FormatCurrency($item->getPrice(), $arResult['CURRENCY']) ?> &times; <?= $item->getQuantity() ?>
+                <?= FormatCurrency($item->getPrice(), $arResult['CURRENCY']) ?> 
+				&times; 
+				<?= $item->getQuantity() ?>
+				
+				<span class="basket-buttons">
+					<a href="javascript:void(0)" class="js-basket-inc inc"    data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+					<a href="javascript:void(0)" class="js-basket-dec dec"    data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+					<a href="javascript:void(0)" class="js-basket-remove rem" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+				</span>
             </div>
         </div>
     <? } ?>

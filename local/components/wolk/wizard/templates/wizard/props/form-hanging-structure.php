@@ -8,10 +8,12 @@
 <? $params = (is_object($basketitem)) ? ($basketitem->getParams()) : ([]) ?>
 <? $value  = $params[Basket::PARAM_FORM_HANGING_STRUCTURE] ?>
 
-<div class="js-param-block js-param-form_hanging_structure" data-code="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>">
+<? $required = (in_array(Basket::PARAM_FORM_HANGING_STRUCTURE, $arResult['SECTION_PARAMS'][$section->getID()]['PROPS']['REQUIRED'])) ?>
+
+<div class="js-param-block js-param-form_hanging_structure <?= ($required) ? ('js-param-required') : ('') ?>" data-code="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>">
     <div class="serviceItem__row">
         <div class="serviceItem__subtitle">
-			<?= Loc::getMessage('FORM_COMPANY') ?>
+			<?= ($arResult['SECTION_PARAMS'][$section->getID()]['NAMES'][Basket::PARAM_FORM_HANGING_STRUCTURE]) ?: (Loc::getMessage('FORM_COMPANY')) ?>
 		</div>
         <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.COMPANY" value="<?= (!empty($value)) ? ($value['COMPANY']) : ('') ?>" />
     </div>
