@@ -14,14 +14,14 @@
 					<?= Loc::getMessage('WIDTH') ?>
 					<span>(<?= Loc::getMessage('MEASURE_MM') ?>)</span>
 				</div>
-				<input type="text" class="js-width js-field-value itemCount__input styler ma0 w100" name="WIDTH" data-value="<?= $fields['WIDTH'] ?>" value="<?= $fields['WIDTH'] ?>" />
+				<input type="text" class="js-width js-field-value itemCount__input styler ma0 w100" name="WIDTH" value="<?= (int) $fields['WIDTH'] ?>" />
 			</div>
 			<div class="serviceItem__left-child">
 				<div class="serviceItem__subtitle mt0">
 					<?= Loc::getMessage('HEIGHT') ?>
 					<span>(<?= Loc::getMessage('MEASURE_MM') ?>)</span>
 				</div>
-				<input type="text" class="js-height js-field-value itemCount__input styler ma0 w100" name="HEIGHT" data-value="<?= $fields['HEIGHT'] ?>" value="<?= $fields['HEIGHT'] ?>" />
+				<input type="text" class="js-height js-field-value itemCount__input styler ma0 w100" name="HEIGHT" value="<?= (int) $fields['HEIGHT'] ?>" />
 			</div>
 		</div>
 		<div class="serviceItem__right">
@@ -31,7 +31,7 @@
 				</div>
 				<div class="js-quantity-dec itemCount__button itemCount__down"></div>
 				<div class="js-quantity-inc itemCount__button itemCount__up"></div>
-				<input type="text" class="js-quantity js-field-value itemCount__input styler" name="QUANTITY" data-value="<?= $fields['QUANTITY'] ?>" value="<?= $fields['QUANTITY'] ?>" />
+				<input type="text" class="js-quantity js-field-value itemCount__input styler" name="QUANTITY" value="<?= (int) $fields['QUANTITY'] ?>" />
 			</div>
 		</div>
 	</div>

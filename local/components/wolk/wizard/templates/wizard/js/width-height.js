@@ -4,15 +4,15 @@
  * Функция добавления в корзину.
  */
 window['oem-func-width-height-cart'] = function($block) {
-	var pid      = 0;
-	var $width   = $block.find('input.js-width');
-	var $height  = $block.find('input.js-height');
-   
-    var quantity = parseInt($width.val()) * parseInt($height.val());
+	var pid    = 0;
+	var width  = parseInt($block.find('input.js-width').val())  || 0;
+	var height = parseInt($block.find('input.js-height').val()) || 0;
+    
+    var quantity = width * height;
     if (quantity < 0) {
         quantity = 0;
     }
-
+	
     // Нулевое количество.
     if (quantity == 0) {
         ResetParams($block);

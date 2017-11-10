@@ -38,6 +38,7 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 
 <div class="hide">
 	
+	<? // Окно "Документы" // ?>
 	<div class="modal modalContact" id="general-info">
 		<div class="modalClose arcticmodal-close"></div>
 		<div class="windowNavigate"></div>
@@ -45,6 +46,7 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 			<? $APPLICATION->IncludeComponent('wolk:element.data', 'documents', ['IBLOCK_ID' => EVENTS_IBLOCK_ID]); ?>
 		</div>
 	</div>
+	
 	
     <? // Окно "Правила" // ?>
 	<div class="modal modalContact" id="rules">
@@ -104,14 +106,14 @@ $APPLICATION->SetPageProperty('jsvars', json_encode($GLOBALS['JSVARS']));
 		</div>
 	</div>
 
-
+	
+	<? // Окно ошибок // ?>
     <div class="modal modalError" id="js-modal-error-id">
         <div class="modalClose arcticmodal-close"></div>
         <div class="modalTitle"></div>
         <div class="modalContent"></div>
     </div>
-
-
+	
 </div>
 </body>
 </html>

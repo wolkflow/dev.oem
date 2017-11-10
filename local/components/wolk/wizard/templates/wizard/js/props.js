@@ -48,17 +48,18 @@ function ResetParams($block)
     // Для своства "Цвет".
     var uniqid = (new Date()).getTime();
 
+	$block.find('.js-param-x-remove').trigger('click'); // Удаление файла.
     $block.find('.js-button-param').css('background', '');
     $block.find('.js-button-param').attr('data-modal', '#js-color-popup-' + uniqid + '-id');
     $block.find('.modal .js-colors-palette li').removeClass('active');
     $block.find('.modal').attr('id', 'js-color-popup-' + uniqid + '-id');
 }
 
-function CalendarClose(block)
+function CalendarClose($block)
 {
-    block.animate({'top': '250%', 'opacity': 0}, 200, function() {
-        block.fadeOut(1, function() {
-            block.removeClass('open');
+    $block.animate({'top': '250%', 'opacity': 0}, 200, function() {
+        $block.fadeOut(1, function() {
+            $block.removeClass('open');
         });
     });
 }
@@ -139,6 +140,7 @@ $(document).ready(function() {
         });
     });
 	
+	
 	// СВОЙСТВО: Файл - удаление файла.
 	$(document).on('click', '.js-param-x-remove', function(event) {
         var $that  = $(this);
@@ -156,8 +158,7 @@ $(document).ready(function() {
 		UpdateBasketProps($(this).closest('.js-param-block'));
 	});
 	
-
-
+	
     // СВОЙСТВО: Выбор цвета.
     $(document).on('click', '.js-colors-palette .js-color-item', function() {
         var $that    = $(this);
@@ -191,7 +192,6 @@ $(document).ready(function() {
     });
 
 
-
     // УТИЛИТА: Показать календарь
     $(document).on('click', '.setDate', function () {
         var block = $(this).parent().find('.calendarPopupBlock');
@@ -206,7 +206,6 @@ $(document).ready(function() {
         }
     });
 
-	
 	
     // СВОЙСТВО: Календраь - первый запуск.
     $('.js-calendar-popup').each(function() {

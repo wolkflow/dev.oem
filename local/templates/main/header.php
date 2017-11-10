@@ -56,7 +56,7 @@ Loc::loadLanguageFile(__FILE__);
 			});
 		}
 		
-		$(window).on('load', function(){
+		$(window).on('load', function() {
 			stickyCall();
 		});
 	</script>

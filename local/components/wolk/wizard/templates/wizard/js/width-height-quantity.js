@@ -5,11 +5,11 @@
  */
 window['oem-func-width-height-quantity-cart'] = function($block) {
 	var pid      = 0;
-	var $width   = $block.find('input.js-width');
-	var $height  = $block.find('input.js-height');
-    var $quanty  = $block.find('input.js-quantity');
+	var width    = parseInt($block.find('input.js-width').val())    || 0;
+    var height   = parseInt($block.find('input.js-height').val())   || 0;
+    var quantity = parseInt($block.find('input.js-quantity').val()) || 0;
    
-    var quantity = parseInt($width.val()) * parseInt($height.val()) * parseInt($quanty.val());
+    var quantity = width * height * quantity;
     if (quantity < 0) {
         quantity = 0;
     }

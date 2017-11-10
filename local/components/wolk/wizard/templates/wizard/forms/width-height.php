@@ -14,14 +14,14 @@
 					<?= Loc::getMessage('WIDTH') ?>
 					<span>(<?= Loc::getMessage('MEASURE_MM') ?>)</span>
 				</div>
-				<input type="text" class="js-width js-field-value itemCount__input styler ma0 w100" name="WIDTH" value="<?= $fields['WIDTH'] ?>" />
+				<input type="text" class="js-width js-field-value itemCount__input styler ma0 w100" name="WIDTH" value="<?= (int) $fields['WIDTH'] ?>" />
 			</div>
 			<div class="serviceItem__left-child">
 				<div class="serviceItem__subtitle">
 					<?= Loc::getMessage('HEIGHT') ?>
 					<span>(<?= Loc::getMessage('MEASURE_MM') ?>)</span>
 				</div>
-				<input type="text" class="js-height js-field-value itemCount__input styler ma0 w100" name="HEIGHT" value="<?= $fields['HEIGHT'] ?>" />
+				<input type="text" class="js-height js-field-value itemCount__input styler ma0 w100" name="HEIGHT" value="<?= (int) $fields['HEIGHT'] ?>" />
 			</div>
 		</div>
 	</div>
