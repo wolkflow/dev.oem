@@ -47,7 +47,7 @@ function ResetParams($block)
 
     // Для своства "Цвет".
     var uniqid = (new Date()).getTime();
-
+	
 	$block.find('.js-param-x-remove').trigger('click'); // Удаление файла.
     $block.find('.js-button-param').css('background', '');
     $block.find('.js-button-param').attr('data-modal', '#js-color-popup-' + uniqid + '-id');

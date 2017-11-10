@@ -33,6 +33,10 @@ window['oem-func-width-height-quantity-more'] = function($block) {
     var $clone   = $wrapper.find('.js-product-block').first().clone();
     
 	$clone.find('.jq-selectbox__select, .jq-selectbox__dropdown').remove();
+	$clone.find('.jq-file__name, .jq-file__browse').remove();
+	$clone.find('.js-param-x-image').removeClass('changed').hide();
+	
+	$clone.attr('data-bid', '');
 	
     // Сброс параметров.
     window['oem-func-width-height-quantity-clear']($clone);

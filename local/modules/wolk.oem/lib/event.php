@@ -5,7 +5,7 @@ namespace Wolk\OEM;
 use \Wolk\OEM\Products\Base as Product;
 use Wolk\OEM\Prices\Stand   as StandPrice;
 use Wolk\OEM\Prices\Product as ProductPrice;
-use Wolk\OEM\Products\Param as ProductParam;
+use Wolk\OEM\Products\Param as SectionParam;
 
 /**
  * Класс реализающий объект "Мероприятие" (выставка).
@@ -517,7 +517,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 			$prices = $this->getProductPrices($context);
 			
 			// Свойства продукции мероприятия.
-			$params = $this->getProductParams($context);
+			$params = $this->getSectionParams($context);
 		}
         
         // Фильтр.
@@ -610,24 +610,29 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	/**
      * Получение цен на продукцию мероприятия по типу.
      */
-    public function getProductParams(Context $context)
+    public function getSectionParams(Context $context, $sid = null)
     {
-		/*
-		if (empty($this->params['products'])) {
-            $this->params['products'] = ProductParam::getList(
-                [
-                    'filter' => [
-                        ProductPrice::FIELD_EVENT => $this->getID(),
-                        ProductPrice::FIELD_LANG  => $context->getLang(),
-                    ]
-                ],
-                true,
-                ProductPrice::FIELD_PRODUCT
-            );
+		$result = SectionParam::getList([
+			'filter' => [
+					SectionParam::FIELD_EVENT => $this->getID(),
+					SectionParam::FIELD_LANG  => $context->getLang(),
+				]
+			],
+			false
+		);
+		
+		$params = array();
+		while ($item = $result->fetch()) {
+			$item['PROPS'] = json_decode($item['UF_PROPS'], true);
+			$item['NAMES'] = json_decode($item['UF_NAMES'], true);
+			
+			$params[$item[SectionParam::FIELD_SECTION]] = $item;
 		}
-		return $this->params['products'];
-		*/
-		return [];
+		
+		if (!empty($sid)) {
+			$params = $params[intval($sid)];
+		}
+		return $params;
 	}
 	
 	
@@ -712,7 +717,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
      */
     public function clearSectionsParams($lang)
     {
-        return ProductParam::clear($this->getID(), $lang);
+        return SectionParam::clear($this->getID(), $lang);
     }
 	
 	

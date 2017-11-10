@@ -62,18 +62,17 @@ function PutBasket(quantity, $block)
     $block.find('.js-param-block').each(function() {
         var $that = $(this);
         
-        if ($that.hasClass('js-param-required')) {
-			console.log('q');
-			$that.find('.js-param-value').each(function() {
-				var $item = $(this);
+		$that.find('.js-param-value').each(function() {
+			var $item = $(this);
+			if ($that.hasClass('js-param-required')) {
 				if ($item.val().length == 0) {
 					required = true;
 				}
-				if ($item.attr('name').length > 0) {
-					params[$item.attr('name')] = $item.val();
-				}
-			});
-        }
+			}
+			if ($item.attr('name').length > 0) {
+				params[$item.attr('name')] = $item.val();
+			}
+		});
     });
 	
     if (required) {
@@ -167,19 +166,21 @@ function RemoveBasket(bid, sid, $block)
         success: function(response) {
             if (response.status) {
                 $('#js-basket-wrapper-id').html(response.data['html']);
+				
+				if (!empty($block)) {
+					if ($section.find('.js-product-block').length > 1) {
+						$block.remove();
+					} else {
+						// Очистка данных в блоке.
+						window['oem-func-' + $block.data('price-type') + '-clear']($block);
+						
+						$block.attr('data-bid', '');
+						$block.find('.js-product-select .js-option-noselect').trigger('click');
+					}
 
-                if ($section.find('.js-product-block').length > 1) {
-                    $block.remove();
-                } else {
-                    // Очистка данных в блоке.
-                    window['oem-func-' + $block.data('price-type') + '-clear']($block);
-                    
-                    $block.attr('data-bid', '');
-                    $block.find('.js-product-select .js-option-noselect').trigger('click');
-                }
-
-                // Сброс всех парамметров.
-                ResetParams($block);
+					// Сброс всех парамметров.
+					ResetParams($block);
+				}
             }
 			blockremote = false;
         }

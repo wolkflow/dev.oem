@@ -16,7 +16,7 @@
 			<?= ($arResult['SECTION_PARAMS'][$section->getID()]['NAMES'][Basket::PARAM_TEXT]) ?: (Loc::getMessage('TEXT')) ?>
         </div>
         <div class="itemText_custom">
-            <input class="js-param-required js-param-value js-param-x-value js-text styler" name="<?= Basket::PARAM_TEXT ?>" type="text" value="<?= $value ?>" />
+            <input class="js-param-value js-param-x-value js-text styler" name="<?= Basket::PARAM_TEXT ?>" type="text" value="<?= $value ?>" />
         </div>
     </div>
 </div>

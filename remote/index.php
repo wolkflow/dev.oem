@@ -193,6 +193,7 @@ switch ($action) {
         
         // Корзина.
         $basket = new \Wolk\OEM\Basket($code);
+		$basket->setContext($context);
         
         // Сохранение продукции в корзину.
         $item = $basket->put(
@@ -210,32 +211,6 @@ switch ($action) {
         break;
 
 	
-	 // Изменение количества товара в корзине.
-    case ('update-basket-quantity'):
-		$bid      = (string) $request->get('bid');
-        $pid      = (int)    $request->get('pid');
-        $eid      = (int)    $request->get('eid');
-        $code     = (string) $request->get('code');
-        $type     = (string) $request->get('type');
-        $quantity = (float)  $request->get('quantity');
-		
-		// Контекст конструктора.
-        $context = new Wolk\OEM\Context($eid, $type, $lang);
-		
-		// Корзина.
-        $basket = new \Wolk\OEM\Basket($code);
-		$basket->setContext($context);
-        
-        // Изменение количества товара в корзине.
-        $item = $basket->update($bid, ['quantity' => $quantity]);
-		
-		// Обновление данных в корзине.
-        $html = gethtmlremote('basket.php');
-        
-        jsonresponse(true, '', array('html' => $html, 'item' => $item));
-		break;
-		
-    
     // Изменение корзины.
     case ('update-basket'):
         $bid      = (string) $request->get('bid');
@@ -276,6 +251,32 @@ switch ($action) {
         
         jsonresponse(true, '', array('html' => $html, 'item' => $item));
         break;
+		
+	
+	// Изменение количества товара в корзине.
+    case ('update-basket-quantity'):
+		$bid      = (string) $request->get('bid');
+        $pid      = (int)    $request->get('pid');
+        $eid      = (int)    $request->get('eid');
+        $code     = (string) $request->get('code');
+        $type     = (string) $request->get('type');
+        $quantity = (float)  $request->get('quantity');
+		
+		// Контекст конструктора.
+        $context = new Wolk\OEM\Context($eid, $type, $lang);
+		
+		// Корзина.
+        $basket = new \Wolk\OEM\Basket($code);
+		$basket->setContext($context);
+        
+        // Изменение количества товара в корзине.
+        $item = $basket->update($bid, ['quantity' => $quantity]);
+		
+		// Обновление данных в корзине.
+        $html = gethtmlremote('basket.php');
+        
+        jsonresponse(true, '', array('html' => $html, 'item' => $item));
+		break;
 		
 		
 	// Обновление параметров товара в корзине.

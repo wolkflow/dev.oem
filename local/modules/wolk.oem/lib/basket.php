@@ -252,17 +252,24 @@ class Basket
         if ($kind == self::KIND_PRODUCT) {
             $sid = $section->getID();
         }
-		
-		// Обработка особенного типа продукции.
-		switch ($section->getPriceType()) {
+				
+		// Контекст.
+		if (!empty($context)) {
+			$event = new Event($context->getEventID());
 			
-			// Обработка количества символов.
-			case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
-				if (!empty($context)) {
-					$event    = new Event($context->getEventID());
-					$quantity = mb_strlen(preg_replace('#\s+#', '', $params[self::PARAM_TEXT])) - $event->getPayLimitSymbols();
-				}
-				break;
+			// Обработка особенного типа продукции.
+			switch ($section->getPriceType()) {
+				
+				// Обработка количества символов.
+				case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
+					$scparams = $event->getSectionParams($context, $section->getID());
+					$quantity = mb_strlen(preg_replace('#\s+#', '', $params[self::PARAM_TEXT])) - intval($scparams['PROPS']['FASCIA']);
+					break;
+			}
+		}
+		
+		if ($quantity <= 0) {
+			$quantity = 0;
 		}
 		
 
@@ -321,22 +328,33 @@ class Basket
 		$section = $product->getSection();
 		$context = $this->getContext();
 		
-		// Обработка особенного типа продукции.
-		switch ($section->getPriceType()) {
+		// TODO: Переделать.
+		$usezero = false;
+		
+		// Контекст.
+		if (!empty($context)) {
+			$event = new Event($context->getEventID());
 			
-			// Обработка количества символов.
-			case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
-				if (!empty($context)) {
-					$event    = new Event($context->getEventID());
-					$quantity = mb_strlen(preg_replace('#\s+#', '', $params[self::PARAM_TEXT])) - $event->getPayLimitSymbols();
-				}
-				break;
+			// Обработка особенного типа продукции.
+			switch ($section->getPriceType()) {
+				
+				// Обработка количества символов.
+				case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
+					$scparams = $event->getSectionParams($context, $section->getID());
+					$quantity = mb_strlen(preg_replace('#\s+#', '', $params[self::PARAM_TEXT])) - intval($scparams['PROPS']['FASCIA']);
+					$usezero  = true;
+					break;
+			}
 		}
 		
-        
-        if ($quantity <= 0) {
+		if ($quantity <= 0) {
+			$quantity = 0;
+		}
+		
+        if (!$usezero && $quantity == 0) {
             return;
         }
+		
 		
 		if (isset($data['pid'])) {
 			$this->data[self::SESSCODE_PRODUCTS][$bid]['pid'] = $pid;
