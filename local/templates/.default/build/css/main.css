@@ -1798,12 +1798,20 @@ div.preview-image {
     padding-left: 18px;
 }
 
+
+.block-basket-buttons {
+	padding: 10px 0 0 0;
+	text-align: left;
+	width: 100%;
+}
+
 .basket-buttons a {
 	color: #7f7f7f;
 	font-weight: bold;
 	font-size: 17px;
 	text-decoration: none;
-	border: 1px solid #afafaf;
+	border: 1px solid #cfcfcf;
+	border-radius: 1px;
 	width: 20px;
 	height: 20px;
 	display: inline-block;

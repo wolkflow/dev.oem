@@ -309,13 +309,13 @@ class Basket
     /**
      * Обновление количества товара.
      */
-    public function update($bid, $pid, $quantity, $params, $fields)
+    public function update($bid, $data) // $pid, $quantity, $params, $fields)
     {
         $bid      = (string) $bid;
-        $pid      = (int)   $pid;
-        $quantity = (float) $quantity;
-        $params   = (array) $params;
-        $fields   = (array) $fields;
+        $pid      = (int)    $data['pid'];
+        $quantity = (float)  $data['quantity'];
+        $params   = (array)  $data['params'];
+        $fields   = (array)  $data['fields'];
 		
 		$product = new Product($pid);
 		$section = $product->getSection();
@@ -338,10 +338,19 @@ class Basket
             return;
         }
 		
-        $this->data[self::SESSCODE_PRODUCTS][$bid]['pid']      = $pid;
-        $this->data[self::SESSCODE_PRODUCTS][$bid]['quantity'] = $quantity;
-        $this->data[self::SESSCODE_PRODUCTS][$bid]['params']   = $params;
-        $this->data[self::SESSCODE_PRODUCTS][$bid]['fields']   = $fields;
+		if (isset($data['pid'])) {
+			$this->data[self::SESSCODE_PRODUCTS][$bid]['pid'] = $pid;
+		}
+		if (isset($data['quantity'])) {
+			$this->data[self::SESSCODE_PRODUCTS][$bid]['quantity'] = $quantity;
+		}
+		if (isset($data['params'])) {
+			$this->data[self::SESSCODE_PRODUCTS][$bid]['params'] = $params;
+		}
+		if (isset($data['fields'])) {
+			$this->data[self::SESSCODE_PRODUCTS][$bid]['fields'] = $fields;
+		}
+		
         
         // Сохранение в сесиию.
         $this->putSession();

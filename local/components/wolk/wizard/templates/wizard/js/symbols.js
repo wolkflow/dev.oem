@@ -45,7 +45,7 @@ window['oem-func-symbols-more'] = function($block) {
  */
 window['oem-func-symbols-clear'] = function($block, full) {
 	
-	full = full || true;
+	full = (typeof full !== 'undefined') ?  (full) : (true);
 	
     $block.find('.styler').styler();
 	

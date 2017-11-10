@@ -48,7 +48,7 @@ window['oem-func-width-height-more'] = function($block) {
  */
 window['oem-func-width-height-clear'] = function($block, full) {
     
-	full = full || true;
+	full = (typeof full !== 'undefined') ?  (full) : (true);
     
 	$block.find('.styler').styler();
 	

@@ -47,7 +47,7 @@ window['oem-func-quantity-more'] = function($block) {
  */
 window['oem-func-quantity-clear'] = function($block, full) {
     
-	full = full || true;
+	full = (typeof full !== 'undefined') ?  (full) : (true);
 	
 	$block.find('.styler').styler();
 	

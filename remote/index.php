@@ -219,13 +219,20 @@ switch ($action) {
         $type     = (string) $request->get('type');
         $quantity = (float)  $request->get('quantity');
 		
+		// Контекст конструктора.
+        $context = new Wolk\OEM\Context($eid, $type, $lang);
+		
 		// Корзина.
         $basket = new \Wolk\OEM\Basket($code);
 		$basket->setContext($context);
         
         // Изменение количества товара в корзине.
-        $item = $basket->update($bid, $pid, $quantity, $parameters, $fields);
+        $item = $basket->update($bid, ['quantity' => $quantity]);
 		
+		// Обновление данных в корзине.
+        $html = gethtmlremote('basket.php');
+        
+        jsonresponse(true, '', array('html' => $html, 'item' => $item));
 		break;
 		
     
@@ -259,7 +266,10 @@ switch ($action) {
 		$basket->setContext($context);
         
         // Изменение количества товара в корзине.
-        $item = $basket->update($bid, $pid, $quantity, $parameters, $fields);
+        $item = $basket->update(
+			$bid, 
+			['pid' => $pid, 'quantity' => $quantity, 'params' => $parameters, 'filed' => $fields]
+		);
         
         // Обновление данных в корзине.
         $html = gethtmlremote('basket.php');

@@ -106,7 +106,7 @@ window['oem-func-days-hours-quantity-clear'] = function($block, full) {
 	var mindate  = $block.find('.calendar').attr('data-date-min'),
         maxdate  = $block.find('.calendar').attr('data-date-max');
 	
-    full = full || true;
+    full = (typeof full !== 'undefined') ?  (full) : (true);
 	
     $block.find('.styler').styler();
     

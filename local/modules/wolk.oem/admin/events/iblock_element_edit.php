@@ -234,6 +234,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 										name="PARAMS_SECTIONS[RU][<?= $section->getID() ?>][NAMES][<?= $prop ?>]" 
 										value="<?= $params_sections['RU'][$section->getID()]['NAMES'][$prop] ?>" 
 										style="margin: 2px 0 2px 0;"
+										<?= ($prop == Basket::PARAM_FORM_HANGING_STRUCTURE) ? ('disabled') : ('') ?>
 									/>
 								<? } ?>
 							</td>
@@ -273,7 +274,12 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 								<? foreach ($props as $prop) { ?>
 									<div style="border: 1px dotted #777777; border-radius: 5px; margin-bottom: 2px; padding: 5px; overflow: hidden;">
 										<label>
-											<input type="checkbox" name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][PROPS][REQUIRED][]" value="<?= $prop ?>" />
+											<input 
+												type="checkbox" 
+												name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][PROPS][REQUIRED][]" 
+												value="<?= $prop ?>" 
+												<?= (in_array($prop, $params_sections['EN'][$section->getID()]['PROPS']['REQUIRED'])) ? ('checked') : ('') ?>
+											/>
 											<span><?= Loc::getMessage('PROP_' . $prop) ?></span>
 										</label>
 										<? // Если у продукции есть оплата за символы на фризовой панели. // ?>
@@ -292,7 +298,13 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 							</td>
 							<td>
 								<? foreach ($props as $prop) { ?>
-									<input type="text" name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][NAMES][<?= $prop ?>]" value="" style="margin-bottom: 1px 0 2px 0;" />
+									<input 
+										type="text" 
+										name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][NAMES][<?= $prop ?>]" 
+										value="<?= $params_sections['EN'][$section->getID()]['NAMES'][$prop] ?>" 
+										style="margin: 2px 0 2px 0;"
+										<?= ($prop == Basket::PARAM_FORM_HANGING_STRUCTURE) ? ('disabled') : ('') ?>
+									/>
 								<? } ?>
 							</td>
 							<td>

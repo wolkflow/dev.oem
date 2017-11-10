@@ -49,7 +49,7 @@ window['oem-func-width-height-quantity-more'] = function($block) {
  */
 window['oem-func-width-height-quantity-clear'] = function($block, full) {
     
-	full = full || true;
+	full = (typeof full !== 'undefined') ?  (full) : (true);
 	
 	if (full) {
 		$block.find('.js-product-select .js-option-noselect').trigger('click');
