@@ -256,7 +256,17 @@ $(document).ready(function() {
 	
 	// Стилизация.
     $('.styler').styler();
-
+	
+	
+	// Подмотка.
+	var hash = location.hash.replace('#', '');
+	if (hash.length > 0) {
+		var $item = $('#js-' + hash + '-id');
+		if ($item.length) {
+			$('html').animate({scrollTop: $item.offset().top - 18}, 1200, 'easeOutExpo');
+		}
+	}
+	
 	
     // Загрузка формы.
     $(document).on('click', '.js-submit', function(e) {

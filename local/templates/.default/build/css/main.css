@@ -26,7 +26,8 @@ body {
 }
 .main {
   padding: 0 0 25px;
-}
+  will-change: auto;
+ }
 .layout {
   width: 940px;
   padding: 0 10px;
@@ -829,6 +830,7 @@ input[type="password"] {
   border-bottom: 1px solid #7f7f7f;
   line-height: 30px;
   padding: 15px 0;
+  will-change: scroll-position;
 }
 .basketcontainer__itemname {
   font-weight: bold;
@@ -1559,11 +1561,29 @@ float: left}
 	cursor: pointer;
     font-size: 20px;
     color: #fff;
+	font-weight: bold;
     position: absolute;
     z-index: 10;
     display: block;
     right: 5px;
 	top: 0px;
+	text-shadow: 
+		-0   -1px 2px #7f7f7f,
+		 0   -1px 2px #7f7f7f,
+		-0    1px 2px #7f7f7f,
+		 0    1px 2px #7f7f7f,
+		-1px -0   2px #7f7f7f,
+		 1px -0   2px #7f7f7f,
+		-1px  0   2px #7f7f7f,
+		 1px  0   2px #7f7f7f,
+		-1px -1px 2px #7f7f7f,
+		 1px -1px 2px #7f7f7f,
+		-1px  1px 2px #7f7f7f,
+		 1px  1px 2px #7f7f7f,
+		-1px -1px 2px #7f7f7f,
+		 1px -1px 2px #7f7f7f,
+		-1px  1px 2px #7f7f7f,
+		 1px  1px 2px #7f7f7f;
 }
 
 /* 19.09 */
@@ -1769,7 +1789,7 @@ div.preview-image {
 
 
 .js-product-block {
-	margin-top: 15px;
+	margin-top: 45px;
 }
 
 .js-product-block:first-child {

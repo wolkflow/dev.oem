@@ -179,3 +179,9 @@ $MESS['TYPE_ROW']    = 'Линейный';
 $MESS['TYPE_CORNER'] = 'Угловой';
 $MESS['TYPE_HEAD']   = 'Полуостров';
 $MESS['TYPE_ISLAND'] = 'Остров';
+
+
+$MESS['ERROR'] = 'Ошибка';
+$MESS['ERROR_SKETCH_REQUIRED'] = 'Не все объекты размещены на схеме.';
+
+

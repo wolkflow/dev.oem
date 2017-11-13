@@ -123,7 +123,7 @@ $(document).ready(function() {
 	
 	
 	// Ввод количества.
-	$(document).on('click', '.js-block-width-height-quantity .js-quantity', function(event) {
+	$(document).on('keyup', '.js-block-width-height-quantity .js-quantity', function(event) {
 		var $block = $(this).closest('.js-product-block');
 		
         window['oem-func-width-height-quantity-cart']($block);

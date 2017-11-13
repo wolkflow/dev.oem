@@ -152,7 +152,7 @@
             var image = ru.octasoft.oem.designer.Main.saveJPG();
             
             if (scene.objects.length < <?= count($arResult['OBJECTS']) ?>) {
-                showError('Ошибка', 'Не все объекты размещены на схеме'); // 
+                showError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
             }
             
             var savesketch = function() {

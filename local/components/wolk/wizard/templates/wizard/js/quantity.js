@@ -102,7 +102,7 @@ $(document).ready(function() {
 
 	
 	// Ввод количества.
-	$(document).on('click', '.js-block-quantity .js-quantity', function(event) {
+	$(document).on('keyup', '.js-block-quantity .js-quantity', function(event) {
 		var $block = $(this).closest('.js-product-block');
 		
         window['oem-func-quantity-cart']($block);

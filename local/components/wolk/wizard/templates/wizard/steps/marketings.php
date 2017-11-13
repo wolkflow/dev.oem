@@ -5,7 +5,7 @@
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 
-<div class="pagetitle">
+<div id="js-marketing-id" class="pagetitle">
     <?= Loc::getMessage('TITLE_MARKETING') ?>
 </div>
 
@@ -34,7 +34,7 @@
                                 $basketgroup = $basketgroups[$section->getID()];
                             ?>
 
-                            <div class="js-product-wrapper js-block-<?= strtolower($pricetype) ?>">
+                            <div id="js-s-<?= $section->getID() ?>-id" class="js-product-wrapper js-block-<?= strtolower($pricetype) ?>">
                                 <? if (!empty($basketgroup)) { ?>
                                     <? if ($multiple) { ?>
                                         <div class="js-product-section js-pricetype-<?= strtolower($pricetype) ?>" data-sid="<?= $section->getID() ?>" data-pricetype="<?= $pricetype ?>">

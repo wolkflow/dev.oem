@@ -41,5 +41,7 @@ $asset->addJs($this->GetTemplate()->getFolder().'/js/width-height-quantity.js');
 // Свойства товаров.
 $asset->addJs($this->GetTemplate()->getFolder().'/js/props.js');
 
+// Корзина.
+$asset->addJs($this->GetTemplate()->getFolder().'/js/basket.js');
 
 

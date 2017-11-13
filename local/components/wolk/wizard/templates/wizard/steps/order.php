@@ -5,10 +5,6 @@
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 
-<pre>
-    <? // print_r($arResult['STEPLINKS']) ?>
-</pre>
-
 <div id="step">
     <div class="orderpage">
         <div class="pagetitle"><?= Loc::getMessage('ORDER') ?></div>
@@ -22,7 +18,7 @@
                     <? // Оборудование. // ?>
                     <div class="pagesubtitle">
                         <?= Loc::getMessage('TITLE_EQUIPMENT') ?>
-                        <div class="pagesubtitle__addbutton customizable" onclick="javascript: location.href = '<?= $arResult['STEPLINKS']['equipments'] ?>';"></div>
+                        <div class="pagesubtitle__addbutton customizable" onclick="javascript: location.href = '<?= $arResult['STEPLINKS']['equipments'] ?>#equipment';"></div>
                     </div>
                     <? if (!empty($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_EQUIPMENTS])) { ?>
                         <? foreach ($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_EQUIPMENTS] as $item) { ?>
@@ -41,7 +37,50 @@
                                         <?= $item['BASKET']->getQuantity() ?>
                                     </div>
                                     <div class="ordercontainer__changebutton">
-                                        <a href="<?= $arResult['STEPLINKS']['equipments'] ?>">
+										<a href="javascript:void(0)" class="js-basket-inc" data-quantity="<?= $item['BASKET']->getQuantity() ?>" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-tpl="order">
+											+
+										</a>
+										<a href="javascript:void(0)" class="js-basket-dec" data-quantity="<?= $item['BASKET']->getQuantity() ?>" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-tpl="order">
+											-
+										</a>
+										|
+                                        <a href="<?= $arResult['STEPLINKS']['equipments'] ?>#s-<?= $item['ITEM']->getSectionID() ?>">
+                                            <?= Loc::getMessage('CHANGE') ?>
+                                        </a>
+                                        |
+                                        <a href="javascript:void(0)" class="js-basket-delete" data-bid="<?= $item['BASKET']->getID() ?>">
+                                            <?= Loc::getMessage('DELETE') ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <? } ?>
+                    <? } ?>
+					
+					
+					<? // Маркетинг. // ?>
+                    <div class="pagesubtitle">
+                        <?= Loc::getMessage('TITLE_MARKETING') ?>
+                        <div class="pagesubtitle__addbutton customizable" onclick="javascript: location.href = '<?= $arResult['STEPLINKS']['marketings'] ?>#marketing';"></div>
+                    </div>
+                    <? if (!empty($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_MARKETINGS])) { ?>
+                        <? foreach ($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_MARKETINGS] as $item) { ?>
+                            <div class="ordercontainer__itemscontainer js-product-block" data-bid="<?= $item['BASKET']->getID() ?>">
+                                <div class="pagesubsubtitle">
+                                    <?= $item['ITEM']->getSection()->getTitle() ?>
+                                </div>
+                                <div class="ordercontainer__item">
+                                    <div class="ordercontainer__itemtotalprice">
+                                        <?= FormatCurrency($item['BASKET']->getCost(), $arResult['CURRENCY']) ?>
+                                    </div>
+                                    <div class="ordercontainer__itemname">
+                                        <?= $item['ITEM']->getTitle() ?> | 
+                                        <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
+                                            &times;
+                                        <?= $item['BASKET']->getQuantity() ?>
+                                    </div>
+                                    <div class="ordercontainer__changebutton">
+                                        <a href="<?= $arResult['STEPLINKS']['services'] ?>#s-<?= $item['ITEM']->getSectionID() ?>">
                                             <?= Loc::getMessage('CHANGE') ?>
                                         </a>
                                         |
@@ -85,7 +124,7 @@
                     <? // Услуги. // ?>
                     <div class="pagesubtitle">
                         <?= Loc::getMessage('TITLE_SERVICES') ?>
-                        <div class="pagesubtitle__addbutton customizable" onclick="javascript: location.href = '<?= $arResult['STEPLINKS']['services'] ?>';"></div>
+                        <div class="pagesubtitle__addbutton customizable" onclick="javascript: location.href = '<?= $arResult['STEPLINKS']['services'] ?>#services';"></div>
                     </div>
                     <? if (!empty($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_SERVICES])) { ?>
                         <? foreach ($arResult['PRODUCTS'][Wolk\OEM\Products\Section::TYPE_SERVICES] as $item) { ?>
@@ -104,7 +143,7 @@
                                         <?= $item['BASKET']->getQuantity() ?>
                                     </div>
                                     <div class="ordercontainer__changebutton">
-                                        <a href="<?= $arResult['STEPLINKS']['services'] ?>">
+                                        <a href="<?= $arResult['STEPLINKS']['services'] ?>#s-<?= $item['ITEM']->getSectionID() ?>">
                                             <?= Loc::getMessage('CHANGE') ?>
                                         </a>
                                         |
