@@ -68,11 +68,19 @@
     <div class="basketcontainer__totalpricecontainercount">
         <?= FormatCurrency($arResult['PRICE'], $arResult['CURRENCY']) ?>
     </div>
-    <small>
-        <? if ($arResult['EVENT']->hasVAT()) { ?>
-            <?= Loc::getMessage('TAX_INCLUDED') ?>
+    <small>			
+        <? if (!$arResult['EVENT']->hasVAT()) { ?>
+			<? if (in_array($arResult['EVENT']->getCode(), array('bvm-2018'))) { ?>
+				<?= Loc::getMessage('TAX_EXCLUDED-bvm-2018') ?>
+			<? } else { ?>
+				<?= Loc::getMessage('TAX_EXCLUDED') ?>
+			<? } ?>
         <? } else { ?>
-            <?= Loc::getMessage('TAX_EXCLUDED') ?>
+            <? if (in_array($arResult['EVENT']['CODE'], array('bvm-2018'))) { ?>
+				<?= Loc::getMessage('TAX_INCLUDED-bvm-2018') ?>
+			<? } else { ?>
+				<?= Loc::getMessage('TAX_INCLUDED') ?>
+			<? } ?>
         <? } ?>
     </small>
 </div>

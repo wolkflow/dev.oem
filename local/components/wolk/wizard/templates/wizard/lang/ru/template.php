@@ -87,7 +87,6 @@ $MESS['FORM_HANDING_DETAILS'] = 'Подвес к потолочным конст
 $MESS['FORM_HANDING_COMPANY'] = 'Название компании';
 $MESS['FORM_HANDING_PAVILION'] = 'Павильон №';
 $MESS['FORM_HANDING_HALL'] = 'Зал №';
-$MESS['FORM_HANDING_HALL'] = 'Зал №';
 $MESS['FORM_HANDING_STAND'] = 'Стенд №';
 $MESS['FORM_HANDING_SIZE'] = 'Размер';
 $MESS['FORM_HANDING_MATERIAL'] = 'Материал';

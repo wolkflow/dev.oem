@@ -1,16 +1,16 @@
 <?php
 
 $MESS['STEP_STANDS'] = 'Stand type';
-$MESS['STEP_EQUIPMENTS'] = 'Hardware';
+$MESS['STEP_EQUIPMENTS'] = 'Equipment';
 $MESS['STEP_SERVICES'] = 'Services';
 $MESS['STEP_MARKETINGS'] = 'Marketing';
-$MESS['STEP_SKETCH'] = 'Stand layout';
+$MESS['STEP_SKETCH'] = 'Sketch';
 $MESS['STEP_ORDER'] = 'Order';
 
 $MESS['TYPE_STANDARD'] = 'Standard';
 $MESS['TYPE_INDIVIDUAL'] = 'Individual';
 
-$MESS['TITLE_EQUIPMENT'] = 'Add. equipment';
+$MESS['TITLE_EQUIPMENT'] = 'Additional equipment';
 $MESS['TITLE_SERVICES'] = 'Services';
 $MESS['TITLE_MARKETING'] = 'Marketing';
 $MESS['TITLE_SKETCH'] = 'Scheme of the stand';
@@ -18,6 +18,8 @@ $MESS['TITLE_SKETCH'] = 'Scheme of the stand';
 $MESS['BASKET'] = 'Basket';
 $MESS['PREV'] = 'Back';
 $MESS['NEXT'] = 'Forward';
+
+$MESS['RENDER'] = 'Render';
 
 $MESS['SELECTED_INDIVIDUAL_STAND_NOTE'] = 'On request for participation, you have ordered an unequipped space. You can click "Continue" and go to the selection of additional services or you can choose any booth listed below. ';
 
@@ -34,10 +36,10 @@ $MESS['INCLUDES'] = 'Includes';
 $MESS['BETTER_STANDART'] = 'Improved Standard';
 $MESS['BETTER_STANDART_NOTE'] = 'For advice on choosing an improved standard, please contact the technical service.';
 
-$MESS['M2'] = 'm <sup> 2 </ sup>';
+$MESS['M2'] = 'm <sup>2</sup>';
 
-$MESS['CHOOSEN'] = 'Selected';
-$MESS['CHOOSE'] = 'Select';
+$MESS['CHOOSEN'] = 'Chosen';
+$MESS['CHOOSE'] = 'Choose';
 $MESS['NOT_SELECTED'] = 'Not selected';
 
 $MESS['QUANTITY'] = 'Quantity';
@@ -48,6 +50,7 @@ $MESS['TIMES'] = 'Time';
 $MESS['CLEAR'] = 'Clear';
 $MESS['DATERANGE'] = 'Date range';
 
+$MESS['TEXT'] = 'Text';
 $MESS['PRICE'] = 'Price';
 
 $MESS['STANDARD_INCLUDES'] = 'The stand includes';
@@ -55,13 +58,15 @@ $MESS['STANDARD_INCLUDES'] = 'The stand includes';
 $MESS['COMMENTS'] = 'Comments';
 $MESS['ADDITIONAL_INFO'] = 'More information about your order';
 $MESS['CONFIGURATION'] = 'Your configuration';
-$MESS['SYSTEM_STAND'] = 'System Booth';
+$MESS['SYSTEM_STAND'] = 'System Stand';
+$MESS['TYPE'] = 'Type';
+$MESS['EXHIBITION'] = 'Exhibition';
+$MESS['LOCATION'] = 'Location';
 $MESS['AREA'] = 'Area';
 $MESS['WIDTH'] = 'Width';
 $MESS['DEPTH'] = 'Depth';
-$MESS['TYPE'] = 'Type';
-$MESS['EXHIBITION'] = 'Exhibition';
-$MESS['LOCATION'] = 'Place';
+$MESS['HEIGHT'] = 'Height';
+$MESS['SQUARE'] = 'Square';
 
 
 // Properties.
@@ -82,7 +87,6 @@ $MESS['FORM_HANDING_DETAILS'] = 'Suspension to ceiling structures';
 $MESS['FORM_HANDING_COMPANY'] = 'Company name';
 $MESS['FORM_HANDING_PAVILION'] = 'Pavilion No.';
 $MESS['FORM_HANDING_HALL'] = 'Room No.';
-$MESS['FORM_HANDING_HALL'] = 'Room No.';
 $MESS['FORM_HANDING_STAND'] = 'Stand No.';
 $MESS['FORM_HANDING_SIZE'] = 'Size';
 $MESS['FORM_HANDING_MATERIAL'] = 'Material';
@@ -90,7 +94,7 @@ $MESS['FORM_HANDING_WEIGHT'] = 'Weight';
 
 
 $MESS['STAND_TYPE'] = 'Type of stand';
-$MESS['SYSTEM_STAND'] = 'System Booth';
+$MESS['SYSTEM_STAND'] = 'System stand';
 
 $MESS['CHANGE'] = 'Change';
 $MESS['DELETE'] = 'Delete';
@@ -99,13 +103,13 @@ $MESS['STAND'] = 'Stand';
 $MESS['PAVILION'] = 'Pavilion';
 
 $MESS['PRICE_TOTAL'] = 'Total';
-$MESS['SURCHRGE'] = 'Extra charge';
+$MESS['SURCHRGE'] = 'Surcharge';
 $MESS['PRICE_TOTAL_WITH_VAT'] = 'Total with VAT';
 $MESS['VAT'] = 'VAT';
 $MESS['PRICE_TOTAL_WITH_SURCHARGE'] = 'Total with extra charge';
 
 $MESS['PLACE_ORDER'] = 'Make an order';
-$MESS['PLACE_ORDER_NOT_LOGIN_TEXT'] = 'You need to review the participation rules and log in to place an order. If you already have an account, select "Login" and enter your credentials. If you have not registered yet, please choose "Registration" and fill out the form. ';
+$MESS['PLACE_ORDER_NOT_LOGIN_TEXT'] = 'To place the order you must read the participation rules and enter the system. If you already have an account, choose "Login" and type-in your credentials. If don’t, choose "Register" and fill up the form.';
 
 $MESS['LOGIN'] = 'Login';
 $MESS['REGISTER'] = 'Registration';
@@ -114,26 +118,30 @@ $MESS['USER_LOGIN'] = 'Login';
 $MESS['USER_PASSWORD'] = 'Password';
 
 $MESS['COMPANY_NAME'] = 'Company name';
-$MESS['COMPANY_ADDRESS'] = 'Company Address';
+$MESS['COMPANY_ADDRESS'] = 'Company address';
 $MESS['NAME'] = 'Name';
-$MESS['LAST_NAME'] = 'Famiya';
+$MESS['LAST_NAME'] = 'Last name';
 $MESS['PERSONAL_MOBILE'] = 'Phone';
 $MESS['EMAIL'] = 'E-mail';
 $MESS['CONFIRM_EMAIL'] = 'Confirm e-mail';
-$MESS['USER_CONFIRM_PASSWORD'] = 'Confirm Password';
+$MESS['USER_CONFIRM_PASSWORD'] = 'Confirm password';
 $MESS['VAT_ID'] = 'Vat ID';
 
 $MESS['DATERANGE'] = 'Range';
+$MESS['SAVE'] = 'Save';
 $MESS['CANCEL'] = 'Cancel';
 
 $MESS['SUCCESS'] = 'Successful!';
-$MESS['ORDER_PLACED'] = 'Order issued';
+$MESS['ORDER_PLACED'] = 'Order placed';
 $MESS['HOME'] = 'Home';
 $MESS['REVIEW_ORDER'] = 'View Order';
 
+$MESS['MEASURE_MM'] = 'mm';
+$MESS['MEASURE_M2'] = 'm<sup>2</sup>';
+
 $MESS['FORM_COMPANY'] = 'Company name';
 $MESS['FORM_PAVILION'] = 'Pavilion No.';
-$MESS['FORMM_HALL'] = 'Room No';
+$MESS['FORMM_HALL'] = 'Room No.';
 $MESS['FORM_STAND'] = 'Stand No.';
 $MESS['FORM_SIZE'] = 'Size';
 $MESS['FORM_SIZE_DIMENSION'] = 'mm';
@@ -141,8 +149,8 @@ $MESS['FORM_SIZE_HOLDER'] = 'L x W x H';
 $MESS['FORM_METARIAL'] = 'Material';
 $MESS['FORM_WEIGHT'] = 'Weight';
 $MESS['FORM_WEIGHT_DIMENSION'] = 'kg';
-$MESS['FORM_LIST'] = 'Equipment Placement List for Structure';
-$MESS['FORM_LIST_HOLDER'] = 'Please indicate the weight of each element (lighting, advertising equipment, decor elements)';
+$MESS['FORM_LIST'] = 'List of the equipment placing on the structure';
+$MESS['FORM_LIST_HOLDER'] = 'Please indicate weight of each item (lightings, advertising equipment, decoration elements)"';
 $MESS['FORM_MATERIAL'] = 'Material';
 $MESS['FORM_WEIGHT_POINT'] = 'Weight per point';
 $MESS['FORM_WEIGHT_POINT_DIMENSION'] = 'kg';
@@ -150,6 +158,28 @@ $MESS['FORM_HEIGHT'] = 'Height';
 $MESS['FORM_HEIGHT_DIMENSION'] = 'mm';
 $MESS['FORM_WEIGHT_TOTAL'] = 'Final weight';
 $MESS['FORM_WEIGHT_TOTAL_DIMENSION'] = 'kg';
-$MESS['FORM_ASSIGNEE_PROJECT'] = 'Responsible for the structure design';
-$MESS['FORM_ASSIGNEE_MOUNTING'] = 'Responsible for installation work';
-$MESS['FORM_PHONE'] = 'Phone number';
+$MESS['FORM_ASSIGNEE_PROJECT'] = 'RPerson in charge of the project of the structure';
+$MESS['FORM_ASSIGNEE_MOUNTING'] = 'Person in charge of mounting works';
+$MESS['FORM_PHONE'] = 'Mobile phone';
+
+$MESS['SKETCH_HELP'] = 'Help';
+$MESS['SKETCH_HELP_HEAD'] = 'Help';
+$MESS['SKETCH_HELP_TEXT'] = 'To arrange the equipment on the stand, drag all equipment from the left column to the sketch. <br/> <br/>
+You can clean the sketch using the clear button in the form of an arrow. <br/>
+You can delete an object by selecting the desired object and clicking the cross in the top panel. <br/>
+Using the arrows, you can go back one step or the other. <br/>
+Also you can zoom in or out of the scene using the zoom buttons. <br/>
+To rotate an object, eject the object and drag it around the corner of the frame.
+';
+
+$MESS['CHOOSE_STAND_TYPE_FORM'] = 'Select the wall configuration';
+
+$MESS['TYPE_ROW'] = 'Linear';
+$MESS['TYPE_CORNER'] = 'Corner';
+$MESS['TYPE_HEAD'] = 'Peninsula';
+$MESS['TYPE_ISLAND'] = 'Island';
+
+$MESS['ATTENTION'] = 'Warning';
+$MESS['ERROR'] = 'Error';
+$MESS['ERROR_SKETCH_REQUIRED'] = 'Not all objects are placed on the schematic.';
+$MESS['ERROR_SKETCH_REQUIRED_IN_ORDER'] = 'Not all objects are placed on the sketch. Please go to the "Sketch" step and place all the equipment.';
