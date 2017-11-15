@@ -12,7 +12,7 @@
 <div class="breadcrumbs">
     <div class="breadcrumbs__container">
         <? foreach ($arResult['STEPS'] as $i => $step) { ?>
-            <a href="<?= $component->getStepLink($i) ?>" class="breadcrumbs__button <?= ($step == $arResult['STEP']) ? ('active') : ('') ?>"> 
+            <a href="<?= $component->getStepLink($i) ?>" class="breadcrumbs__button js-step-<?= $step ?> <?= ($step == $arResult['STEP']) ? ('active') : ('') ?>"> 
                 <span class="breadcrumbs__buttoncontainer">
                     <?= $i ?>. <?= Loc::getMessage('STEP_' . mb_strtoupper($step)) ?>
                 </span>

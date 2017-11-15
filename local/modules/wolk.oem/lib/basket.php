@@ -183,6 +183,56 @@ class Basket
     {
         return ((int) $this->getData()[self::SESSCODE_ORDERID]);
     }
+	
+	
+
+	/** 
+	 * Получение общей стоимости корзины.
+     */
+	public function getPrice()
+	{
+		$context = $this->getContext();
+
+		if (empty($context)) {
+			return null;
+		}
+		
+		$price = 0;
+
+		$baskets = $this->getList(true);
+
+        foreach ($baskets as $basket) {
+
+			// Входит в стоимость стнеда.
+            if ($basket->isIncluded()) {
+                continue;
+            }
+
+            $element = $basket->getElement();
+            if (empty($element)) {
+                continue;
+            }
+			
+			// Получение цены по контексту.
+            $basket->setPrice($element->getContextPrice($context));
+            
+            // Общая стоимость продукции.
+            $price += (float) $basket->getCost();
+        }
+        
+        // Стенд.
+		$basket = $this->getStand();
+
+		if (!empty($basket)) {
+			// Получение цены по контексту.
+			$basket->loadPrice($context);
+			
+			// Стоимость стенда.
+            $price += (float) $basket->getCost();
+		}
+		
+		return $price;
+	}
     
     
     /**
@@ -369,9 +419,10 @@ class Basket
 			$this->data[self::SESSCODE_PRODUCTS][$bid]['fields'] = $fields;
 		}
 		
-        
         // Сохранение в сесиию.
         $this->putSession();
+
+		return $this->data[self::SESSCODE_PRODUCTS][$bid];
     }
     
 	

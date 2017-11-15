@@ -43,6 +43,7 @@
 				<? } ?>
                 <div class="equipmentcontainer__itemsize">
                     <?= $product->getDescription() ?>
+					<?= ($arResult['SECTION_PARAMS'][$section->getID()]['UF_NOTE']) ?: ($section->getDescription()) ?>
                 </div>
             </div>
 			
@@ -108,7 +109,7 @@
             
             <? // Комментарий раздела. // ?>
             <div class="equipmentcontainer__itemsize">
-                <?= $section->getDescription() ?>
+				<?= ($arResult['SECTION_PARAMS'][$section->getID()]['UF_NOTE']) ?: ($section->getDescription()) ?>
             </div>
             
             <? // Подключение формы добавления продукции в корзину. // ?>

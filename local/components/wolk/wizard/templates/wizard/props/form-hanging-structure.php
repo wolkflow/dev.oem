@@ -53,11 +53,8 @@
         </div>
         <div class="serviceItem__col-3">
             <div class="serviceItem__subtitle">
-				<div class="serviceItem__subtitle">
-					<?= Loc::getMessage('FORM_WEIGHT') ?>
-					<span>(<?= Loc::getMessage('FORM_WEIGHT_DIMENSION') ?>)</span>
-				</div>
-                <i class="tip" title="Tip"></i>
+				<?= Loc::getMessage('FORM_WEIGHT') ?>
+				<span>(<?= Loc::getMessage('FORM_WEIGHT_DIMENSION') ?>)</span>
             </div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.WEIGHT" value="<?= (!empty($value)) ? ($value['WEIGHT']) : ('') ?>" />
         </div>
@@ -86,21 +83,15 @@
     <div class="serviceItem__row">
         <div class="serviceItem__col-2">
             <div class="serviceItem__subtitle">
-				<div class="serviceItem__subtitle">
-					<?= Loc::getMessage('FORM_HEIGHT') ?>
-					<span>(<?= Loc::getMessage('FORM_HEIGHT_DIMENSION') ?>)</span>
-				</div>
-                <i class="tip" title="Tip"></i>
+				<?= Loc::getMessage('FORM_HEIGHT') ?>
+				<span>(<?= Loc::getMessage('FORM_HEIGHT_DIMENSION') ?>)</span>
             </div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.HEIGHT" value="<?= (!empty($value)) ? ($value['HEIGHT']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-2">
             <div class="serviceItem__subtitle">
-				<div class="serviceItem__subtitle">
-					<?= Loc::getMessage('FORM_WEIGHT_TOTAL') ?>
-					<span>(<?= Loc::getMessage('FORM_WEIGHT_TOTAL_DIMENSION') ?>)</span>
-				</div>
-                <i class="tip" title="Tip"></i>
+				<?= Loc::getMessage('FORM_WEIGHT_TOTAL') ?>
+				<span>(<?= Loc::getMessage('FORM_WEIGHT_TOTAL_DIMENSION') ?>)</span>
             </div>
             <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.FULLWEIGHT" value="<?= (!empty($value)) ? ($value['FULLWEIGHT']) : ('') ?>" />
         </div>

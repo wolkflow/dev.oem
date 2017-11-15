@@ -1316,6 +1316,10 @@ float: left}
   text-align: center;
   cursor: pointer;
 }
+a.ordertotalcontainer__placeorder {
+	display: block;
+	text-decoration: none;
+}
 .ordertotalcontainer__placeorder:hover {
   background: #999999;
 }
@@ -1857,4 +1861,8 @@ div.preview-image {
 	position: absolute;
 	top: -5px;
     left: 5px;
+}
+
+.noborder {
+	border: none;
 }

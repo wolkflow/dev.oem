@@ -67,9 +67,7 @@
             <?= Loc::getMessage('NEXT') ?>
         </a>
     </div>
-
-    <hr/>
-	
+    <hr/>	
     <div class="renders">
         <div id="js-renders-images-id" class="render-images"></div>
         <br/>
@@ -142,6 +140,20 @@
 
 <script>
     $(document).ready(function() {
+		
+		// Переход на страницу заказа.
+		$(document).on('click', '.js-step-order', function(e) {
+			var scene = ru.octasoft.oem.designer.Main.getScene();
+            var image = ru.octasoft.oem.designer.Main.saveJPG();
+
+			if (scene.objects.length < <?= count($arResult['OBJECTS']) ?>) {
+				e.preventDefault();
+                ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
+				return false;
+            }
+		});
+		
+		// Сохранение данных и переход на страницу заказа.
         $(document).on('click', '#js-sketch-save-id', function(e) {
             e.preventDefault();
             
@@ -152,7 +164,8 @@
             var image = ru.octasoft.oem.designer.Main.saveJPG();
             
             if (scene.objects.length < <?= count($arResult['OBJECTS']) ?>) {
-                showError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
+                ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
+				return false;
             }
             
             var savesketch = function() {
@@ -165,7 +178,7 @@
 			});
         });
         
-        
+        // Запрос рендеров схемы стенда.
         $(document).on('click', '#js-render-id', function(e) {
             e.preventDefault();
             

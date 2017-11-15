@@ -281,18 +281,7 @@ $(document).ready(function() {
         window['oem-func-' + $block.data('price-type') + '-more']($block);
     });
 	
-
-    // Удаление из корзины.
-    $(document).on('click', '.js-basket-remove', function(e) {
-        var bid = $(this).data('bid');
-        var sid = $(this).data('sid');
-
-        if (bid.length > 0) {
-            RemoveBasket(bid, sid);
-        }
-    });
-    
-    
+	
     // Выбор товара из выпадающего списка.
     $(document).on('change', 'select.js-product-select', function(e) {
         var $that   = $(this);
@@ -345,38 +334,7 @@ $(document).ready(function() {
     });
     
     
-    // Удаление элемента корзины.
-    $('.js-basket-delete').on('click', function() {
-        var $that    = $(this);
-        var $block   = $that.closest('.js-product-block');
-        var $wrapper = $('#js-wrapper-id');
-        
-        // Идентификатор корзины.
-        var bid = $that.data('bid');
-        
-        if (!bid.length) {
-            return;
-        }
-        
-        $.ajax({
-            url: '/remote/',
-            type: 'post',
-            data: {
-                'action': 'remove-basket',
-                'sessid': BX.bitrix_sessid(),
-                'bid':    bid,
-                'eid':    $wrapper.data('eid'),
-                'code':   $wrapper.data('code'),
-                'type':   $wrapper.data('type')
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status) {
-                    $block.remove();
-                }
-            }
-        });
-    });
+    
     
     
 	// Создание заказа.

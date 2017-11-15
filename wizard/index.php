@@ -19,7 +19,7 @@
 	$oid = $request->get('OID');
 ?>
 
-<?  // Конструкторстенда.
+<?  // Конструктор стенда.
     $APPLICATION->IncludeComponent(
         "wolk:wizard", 
         "wizard", 

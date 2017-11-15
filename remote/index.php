@@ -261,6 +261,7 @@ switch ($action) {
         $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');
         $quantity = (float)  $request->get('quantity');
+		$template = (string) $request->get('template');
 		
 		// Контекст конструктора.
         $context = new Wolk\OEM\Context($eid, $type, $lang);
@@ -270,12 +271,37 @@ switch ($action) {
 		$basket->setContext($context);
         
         // Изменение количества товара в корзине.
-        $item = $basket->update($bid, ['quantity' => $quantity]);
+        $data = $basket->update($bid, ['quantity' => $quantity]);
 		
 		// Обновление данных в корзине.
-        $html = gethtmlremote('basket.php');
+		switch ($template) {
+			case ('order'):
+				$html = gethtmlremote('wizard.order.summary.php');
+				break;
+			default:
+				$html = gethtmlremote('basket.php');
+				break;
+		}
+		$event = new \Wolk\OEM\Event($eid);
+		
+		$currency = $event->getCurrencyStandsContext($context);
+		$basitem  = new \Wolk\OEM\BasketItem($code, $data['id'], $data);
+		$element  = $basitem->getElement();
+		if (!empty($element)) {
+			if (!$basitem->isIncluded()) {
+				$basitem->setPrice($element->getContextPrice($context));
+			}
+		}
+		$item = [
+			'bid'	      => $basitem->getID(),
+			'pid'	      => $basitem->getProductID(),
+			'quantity'    => $basitem->getQuantity(),
+			'price'       => $basitem->getPrice(),
+			'cost'        => $basitem->getCost(),
+			'cost-format' => FormatCurrency($basitem->getCost(), $currency),
+		];
         
-        jsonresponse(true, '', array('html' => $html, 'item' => $item));
+        jsonresponse(true, '', array('html' => $html, 'item' => $item, 'template' => $template));
 		break;
 		
 		

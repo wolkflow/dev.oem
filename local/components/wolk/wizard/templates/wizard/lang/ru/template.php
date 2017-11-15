@@ -180,8 +180,9 @@ $MESS['TYPE_CORNER'] = 'Угловой';
 $MESS['TYPE_HEAD']   = 'Полуостров';
 $MESS['TYPE_ISLAND'] = 'Остров';
 
-
+$MESS['ATTENTION'] = 'Внимание';
 $MESS['ERROR'] = 'Ошибка';
 $MESS['ERROR_SKETCH_REQUIRED'] = 'Не все объекты размещены на схеме.';
+$MESS['ERROR_SKETCH_REQUIRED_IN_ORDER'] = 'Не все объекты размещены на схеме. Пожалуйста, перейдите на шаг "Схема стенда" и разместите все оборудование.';
 
 

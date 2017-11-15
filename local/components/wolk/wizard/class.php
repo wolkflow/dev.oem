@@ -124,6 +124,8 @@ class WizardComponent extends \CBitrixComponent
 			return;
 		}
 		
+		global $APPLICATION;
+		
 		$reload = false;
 		
 		// Обраотка входных параметров.
@@ -131,10 +133,13 @@ class WizardComponent extends \CBitrixComponent
             $this->arParams['SFORM'] = self::DEFAULT_STAND_FORM;
         }
 		
+		// Обработка данных по ширине стенда - округление до 0.5
 		if (!self::isAllowSketchSideLength($this->arParams['WIDTH'])) {
 			$this->arParams['WIDTH'] = self::roundSketchSideLength($this->arParams['WIDTH']);
 			$reload = true;
 		}
+		
+		// Обработка данных по глубине стенда - округление до 0.5
 		if (!self::isAllowSketchSideLength($this->arParams['DEPTH'])) {
 			$this->arParams['DEPTH'] = self::roundSketchSideLength($this->arParams['DEPTH']);
 			$reload = true;
@@ -158,7 +163,7 @@ class WizardComponent extends \CBitrixComponent
         
         // Проверка валидности сессии.
         if ($this->getStepNumber() > 1 && empty($_SESSION[self::SESSCODE][$this->getEventCode()]['BASKET'])) {
-            LocalRedirect('/events/'.strtolower($this->getEventCode()).'/');
+            LocalRedirect($this->getEventLink());
         }
         
         // Запрос.
@@ -258,13 +263,17 @@ class WizardComponent extends \CBitrixComponent
         $this->useSectionParams();
 		
         // Валюта.
-        $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyStandsContext($this->getContext());
+        $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyContext($this->getContext());
         
 
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
 		
-                
+
+		// Ссылка на мероприятие.
+		$APPLICATION->AddViewContent('EVENT_LINK', $this->getEventLink());
+        
+
 		return $this->arResult;
     }
     
@@ -550,8 +559,28 @@ class WizardComponent extends \CBitrixComponent
         $oembasket = $this->getBasket();
         $baskets   = $oembasket->getList(true);
         
-        $this->arResult['PRODUCTS'] = ['EQUIPMENTS' => [], 'SERVICES' => [], 'MARKETINGS' => []];
-        
+		// Проверка на заполненность скетча.
+		if (in_array('sketch', $this->getSteps())) {
+			$objects = 0;
+			foreach ($baskets as $basket) {
+				$element = $basket->getElement();
+
+				if (empty($element) || !$element->isSketchShow()) {
+					continue;
+				}
+				$objects += (int) $basket->getQuantity();
+			}
+			
+			// Размещенные обекты.
+			$placed = count((array) json_decode($this->getBasket()->getSketch()['SKETCH_SCENE'], true)['objects']);
+			
+			if ($placed < $objects) {
+				$this->arResult['SKETCHERROR'] = true;
+			}
+		}
+		
+		$this->arResult['PRODUCTS'] = ['EQUIPMENTS' => [], 'SERVICES' => [], 'MARKETINGS' => []];
+	
         $price = 0;
         foreach ($baskets as $basket) {
             $elem = $basket->getElement();
@@ -623,6 +652,15 @@ class WizardComponent extends \CBitrixComponent
     protected function getContext()
     {
         return $this->context;
+    }
+
+
+	/**
+     * Получение ссылки на мероприятие.
+     */
+    protected function getEventLink()
+    {
+        return ('/events/' . mb_strtolower($this->getEventCode()) . '/');
     }
     
     
