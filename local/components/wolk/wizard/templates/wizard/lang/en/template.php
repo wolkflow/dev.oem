@@ -17,7 +17,7 @@ $MESS['TITLE_SKETCH'] = 'Scheme of the stand';
 
 $MESS['BASKET'] = 'Basket';
 $MESS['PREV'] = 'Back';
-$MESS['NEXT'] = 'Forward';
+$MESS['NEXT'] = 'Next';
 
 $MESS['RENDER'] = 'Render';
 

@@ -26,17 +26,17 @@ if (in_array(GROUP_MANAGERS_ID, $groups) || in_array(GROUP_PARTNERS_ID, $groups)
 
 
 if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
-    ShowError('Модуль wolk.core не устанволен.');
+    ShowError('Module wolk.core not installed.');
     return;
 }
 
 if (!\Bitrix\Main\Loader::includeModule('iblock')) {
-    ShowError('Модуль iblock не устанволен.');
+    ShowError('Module iblock not installed.');
     return;
 }
 
 if (!\Bitrix\Main\Loader::includeModule('sale')) {
-    ShowError('Модуль sale не устанволен.');
+    ShowError('Module sale not installed.');
     return;
 }
 
