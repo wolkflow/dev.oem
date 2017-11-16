@@ -172,8 +172,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <? if (!empty($oid)) { ?>
-                        <h3
-							<?= Loc::getMessage('HEADER_ORDER_CHANGING') ?> №
+                        <h3>
+							<?= Loc::getMessage('HEADER_ORDER_CHANGING') ?>
 							<b><a href="/bitrix/admin/wolk_oem_order_index.php?ID=<?= $oid ?>"><?= $oid ?></a></b>
 						</h3>
                     <? } else { ?>
