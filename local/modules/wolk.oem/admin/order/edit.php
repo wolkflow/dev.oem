@@ -114,20 +114,20 @@ if (!empty($_POST) && $_POST['action'] == 'order-make') {
     );
 	
 	if (empty($fields['EID'])) {
-		$errors['EVENT'] = 'Не укаазна выставка';
+		$errors['EVENT'] = Loc::getMessage('ERROR_NOT_SPECIFIED_EVENT');// 'Не укаазна выставка';
 	}
 	if (empty($fields['UID'])) {
-		$errors['USER'] = 'Не укаазн участник';
+		$errors['USER'] = Loc::getMessage('ERROR_NOT_SPECIFIED_USER');//'Не укаазн участник';
 	}
 	if (empty($fields['CURRENCY'])) {
-		$errors['CURRENCY'] = 'Не укаазна валюта';
+		$errors['CURRENCY'] = Loc::getMessage('ERROR_NOT_SPECIFIED_CURRENCY');//'Не укаазна валюта';
 	}
 	if (empty($fields['LANGUAGE'])) {
-		$errors['LANGUAGE'] = 'Не укаазн язык';
+		$errors['LANGUAGE'] = Loc::getMessage('ERROR_NOT_SPECIFIED_LANGUAGE');//'Не укаазн язык';
 	}
 	if ($fields['TYPE'] != 'QUICK' && $fields['TYPESTAND'] != 'INDIVIDUAL') {
 		if (empty($fields['SID'])) {
-			$errors['STAND'] = 'Не выбран стенд';
+			$errors['STAND'] = Loc::getMessage('ERROR_NOT_SPECIFIED_STAND');//'Не выбран стенд';
 		}
 	}
 	
@@ -172,9 +172,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <? if (!empty($oid)) { ?>
-                        <h3>Изменение заказа № <b><a href="/bitrix/admin/wolk_oem_order_index.php?ID=<?= $oid ?>"><?= $oid ?></a></b></h3>
+                        <h3
+							<?= Loc::getMessage('HEADER_ORDER_CHANGING') ?> №
+							<b><a href="/bitrix/admin/wolk_oem_order_index.php?ID=<?= $oid ?>"><?= $oid ?></a></b>
+						</h3>
                     <? } else { ?>
-                        <h3>Создание заказа</h3>
+                        <h3><?= Loc::getMessage('HEADER_ORDER_CREATING') ?></h3>
                     <? } ?>
                 </div>
                 <div class="panel-body">
@@ -182,7 +185,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <input type="hidden" name="action" value="order-make" />
                         <input type="hidden" name="ID" value="<?= $oid ?>" />
                         <div class="form-group">
-                            <label class="control-label" for="form-event-id">Выставка:</label>
+                            <label class="control-label" for="form-event-id">
+								<?= Loc::getMessage('EVENT') ?>:
+							</label>
                             <select class="form-control" id="form-event-id" name="EVENT">
                                 <option class="option-no-select"> - выберите - </option>
                                 <? foreach ($events as $event) { ?>
@@ -196,13 +201,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label" for="js-form-user-id">Участник:</label>
+                                    <label class="control-label" for="js-form-user-id">
+										<?= Loc::getMessage('FIELD_USER') ?>:
+									</label>
                                     <input type="hidden" name="USER" id="furm-user-value-id" value="<?= $odata['USER']['ID'] ?>" />
                                     
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="js-form-user-id" placeholder="Введите название компании" value="<?= $odata['USER']['WORK_COMPANY'] ?>" />
+                                        <input type="text" class="form-control" id="js-form-user-id" placeholder="<?= Loc::getMessage('FIELD_COMPANY_HOLDER') ?>" value="<?= $odata['USER']['WORK_COMPANY'] ?>" />
                                         <div class="input-group-btn">
-                                            <a class="btn btn-primary" href="/bitrix/admin/user_edit.php" target="_blank">Добавить участника</a>
+                                            <a class="btn btn-primary" href="/bitrix/admin/user_edit.php" target="_blank"><?= Loc::getMessage('FIELD_USER_ADD_LINK') ?></a>
                                         </div>
                                     </div>
                                     <select multiple class="form-control hidden" id="js-form-user-select-id" style="min-height: 200px; margin-top: 2px; z-index: 1000; position: absolute;"></select>
@@ -210,13 +217,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label" for="form-standnum-id">Номер стенда:</label>
+                                    <label class="control-label" for="form-standnum-id"><?= Loc::getMessage('FIELD_STANDNUM') ?>:</label>
                                     <input type="text" class="form-control" id="form-standnum-id" name="STANDNUM" value="<?= $odata['ORDER']['PROPS']['STANDNUM']['VALUE'] ?>" />
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label" for="form-pavillion-id">Павильон:</label>
+                                    <label class="control-label" for="form-pavillion-id"><?= Loc::getMessage('FIELD_PAVILION') ?>:</label>
                                     <input type="text" class="form-control" id="form-pavillion-id" name="PAVILION" value="<?= $odata['ORDER']['PROPS']['PAVILION']['VALUE'] ?>" />
                                 </div>
                             </div>
@@ -226,13 +233,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                             <div class="radio">
                                 <label>
                                     <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-common-id" value="COMMON" <?= ($odata['ORDER']['PROPS']['TYPE']['VALUE'] == 'COMMON' || empty($odata)) ? ('checked="checked"') : ('') ?> />
-                                    Обычный заказ
+                                    <?= Loc::getMessage('FIELD_ORDER_COMMON') ?>
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
                                     <input class="js-form-type-order" type="radio" name="TYPE" id="form-type-quick-id" value="QUICK" <?= ($odata['ORDER']['PROPS']['TYPE']['VALUE'] == 'QUICK' || empty($odata)) ? ('checked="checked"') : ('') ?> />
-                                    Быстрый заказ
+                                    <?= Loc::getMessage('FIELD_ORDER_QUICK') ?>
                                 </label>
                             </div>
                         </div>
@@ -240,7 +247,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label" for="form-currency-id">Валюта заказа:</label>
+                                    <label class="control-label" for="form-currency-id">
+										<?= Loc::getMessage('FIELD_CURRENCY') ?>:
+									</label>
                                     <select class="form-control" id="form-currency-id" name="CURRENCY">
                                         <? foreach ($currencies as $currency) { ?>
                                             <option value="<?= $currency['CURRENCY'] ?>" <?= ($odata['ORDER']['CURRENCY'] == $currency['CURRENCY']) ? ('selected') : ('') ?>>
@@ -252,7 +261,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label" for="form-language-id">Язык заказа:</label>
+                                    <label class="control-label" for="form-language-id">
+										<?= Loc::getMessage('FIELD_LANGUAGE') ?>:
+									</label>
                                     <select class="form-control" id="form-language-id" name="LANGUAGE">
                                         <? foreach ($languages as $language) { ?>
                                             <option value="<?= $language['LID'] ?>" <?= ($odata['ORDER']['PROPS']['LANGUAGE']['VALUE'] == strtoupper($language['LID'])) ? ('selected') : ('') ?>>
@@ -268,18 +279,18 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         
                         <div class="row">
                             <div class="col-md-11">
-                                <h3>Стенд</h3>
+                                <h3><?= Loc::getMessage('FIELD_TABLE_HEADER_STAND') ?></h3>
                                 <div class="form-group">
                                     <div class="radio">
                                         <label>
                                             <input class="js-form-type-stand" type="radio" name="TYPESTAND" <?= ($odata['ORDER']['PROPS']['TYPESTAND']['VALUE'] == Wolk\OEM\Context::TYPE_STANDARD || empty($odata)) ? ('checked="checked"') : ('') ?> id="form-type-stand-standard-id" value="<?= Wolk\OEM\Context::TYPE_STANDARD ?>" />
-                                            Стандартная застройка
+                                            <?= Loc::getMessage('FIELD_TYPESTAND_STANDARD') ?>
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
                                             <input class="js-form-type-stand" type="radio" name="TYPESTAND" <?= ($odata['ORDER']['PROPS']['TYPESTAND']['VALUE'] == Wolk\OEM\Context::TYPE_INDIVIDUAL) ? ('checked="checked"') : ('') ?> id="form-type-stand-individual-id" value="<?= Wolk\OEM\Context::TYPE_INDIVIDUAL ?>" />
-                                            Индивидуальная застройка
+                                            <?= Loc::getMessage('FIELD_TYPESTAND_INDIVIDUAL') ?>:
                                         </label>
                                     </div>
                                 </div>
@@ -287,11 +298,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 <table class="table table-bordered" id="js-stand-id">
                                     <thead>
                                         <tr>
-                                            <th>Название</th>
-                                            <th>Цена</th>
-                                            <th>Ширина (м)</th>
-                                            <th>Шлубина (м)</th>
-                                            <th>Стоимость</th>
+                                            <th><?= Loc::getMessage('FIELD_TABLE_TITLE') ?></th>
+                                            <th><?= Loc::getMessage('FIELD_TABLE_PRICE') ?></th>
+                                            <th><?= Loc::getMessage('FIELD_TABLE_WIDTH') ?></th>
+                                            <th><?= Loc::getMessage('FIELD_TABLE_DEPTH') ?></th>
+                                            <th><?= Loc::getMessage('FIELD_TABLE_COST') ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -331,11 +342,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 </table>
                                 <? if (empty($odata)) { ?>
                                     <button type="button" class="btn btn-primary" id="js-form-stand-select-button-id" disabled="disabled">
-                                        Выбрать стенд
+                                        <?= Loc::getMessage('CHOOSE_STAND') ?>
                                     </button>
                                 <? } else { ?>
                                     <button type="button" class="btn btn-primary" id="js-form-stand-select-button-id">
-                                        Выбрать стенд
+                                        <?= Loc::getMessage('CHOOSE_STAND') ?>
                                     </button>
                                 <? } ?>
                             </div>
@@ -345,15 +356,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         
                         <div class="row">
                             <div class="col-md-11">
-                                <h3>Товарные позиции</h3>
+                                <h3><?= Loc::getMessage('FIELD_TABLE_HEADER_PRODUCTS') ?></h3>
                                 <table class="table table-bordered table-condensed" id="js-positions-id">
                                     <thead>
                                         <tr>
-                                            <th colspan="2">Название</th>
-                                            <th>Количество</th>
-                                            <th>Цена</th>
-                                            <th>Сумма</th>
-                                            <th colspan="2">Комментарий</th>
+                                            <th colspan="2"><?= Loc::getMessage('FIELD_TABLE_TITLE') ?></th>
+											<th><?= Loc::getMessage('FIELD_TABLE_QUANTITY') ?></th>
+                                            <th><?= Loc::getMessage('FIELD_TABLE_PRICE') ?></th>
+                                            <th><?= Loc::getMessage('FIELD_TABLE_COST') ?></th>
+                                            <th colspan="2"><?= Loc::getMessage('FIELD_TABLE_NOTE') ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -368,7 +379,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                     <? if (!empty($isrc)) { ?>
                                                         <img src="<?= $isrc ?>" class="img-thumbnail position-image-preview" />
                                                     <? } else { ?>
-                                                        <div class="no_foto">Нет картинки</div>
+                                                        <div class="no_foto"><?= Loc::getMessage('NO_IMAGE') ?></div>
                                                     <? } ?>
                                                 </td>
                                                 <td class="td-name">
@@ -395,7 +406,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">×</span></button>
-                                                                    <h4 class="modal-title">Свойства продукции</h4>
+                                                                    <h4 class="modal-title"><?= Loc::getMessage('FIELD_PRODUCT_PROPERTIES') ?></h4>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <input type="hidden" name="PRODUCTS[<?= $bitem['ID'] ?>][PROPS][INCLUDED]" value="<?= $bitem['PROPS']['INCLUDING'] ?>" />
@@ -422,8 +433,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                         </div>
                                                     </div>
                                                     <div class="btn-group" role="group">
-                                                        <button type="button" class="btn btn-primary <?= (!empty($props)) ? ('js-props') : ('disabled') ?>" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>
-                                                        <button type="button" class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></button>
+                                                        <button type="button" class="btn btn-primary <?= (!empty($props)) ? ('js-props') : ('disabled') ?>" title="<?= Loc::getMessage('LINK_POSITION_PROPERTIES') ?>"><span class="glyphicon glyphicon-tasks"></span></button>
+                                                        <button type="button" class="btn btn-danger js-remove" title="<?= Loc::getMessage('LINK_POSITION_DELETE') ?>"><span class="glyphicon glyphicon-remove"></span></button>
                                                     </div>
                                                 </td>
                                            </tr>
@@ -432,11 +443,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 </table>
                                 <? if (empty($odata)) { ?>
                                     <button type="button" class="btn btn-primary" id="js-form-insert-position-id" disabled="disabled">
-                                        Добавить позицию
+                                        <?= Loc::getMessage('LINK_POSITION_INSERT') ?>
                                     </button>
                                 <? } else { ?>
                                     <button type="button" class="btn btn-primary" id="js-form-insert-position-id">
-                                        Добавить позицию
+                                        <?= Loc::getMessage('LINK_POSITION_INSERT') ?>
                                     </button>
                                 <? } ?>
                             </div>
@@ -447,7 +458,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <div class="row">
                             <div class="col-md-11">
                                 <div class="form-group">
-                                    <label class="control-label" for="form-comments-id">Комментарий к заказу:</label>
+                                    <label class="control-label" for="form-comments-id"><?= Loc::getMessage('FIELD_ORDER_COMMENT') ?>:</label>
                                     <textarea class="form-control" id="form-comments-id" name="COMMENTS" rows="8"><?= $odata['ORDER']['USER_DESCRIPTION'] ?></textarea>
                                 </div>
                             </div>
@@ -458,7 +469,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label" for="form-surcharge-id">Наценка:</label>
+                                    <label class="control-label" for="form-surcharge-id"><?= Loc::getMessage('FIELD_SURCHARGE') ?>:</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="form-surcharge-id" name="SURCHARGE" value="<?= $odata['ORDER']['PROPS']['SURCHARGE']['VALUE'] ?>" />
                                         <span class="input-group-addon">%</span>
@@ -468,32 +479,32 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                     <div class="checkbox">
                                         <label>
                                             <input type="checkbox" id="form-vat-id" name="VAT" value="1" <?= ($odata['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') ? ('checked="checked"') : ('') ?> />
-                                            Включен НДС
+                                            <?= Loc::getMessage('FIELD_INCLUDE_VAT') ?>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="control-label">Сумма заказа:</label>
+                                <label class="control-label"><?= Loc::getMessage('ORDER_PRICE') ?>:</label>
                                 <table class="table table-bordered table-condensed table-prices">
                                     <tr class="bold">
-                                        <td class="bold">Всего:</td>
+                                        <td class="bold"><?= Loc::getMessage('ORDER_SUMMARY') ?>:</td>
                                         <td id="js-order-price-baskets-id"><?= number_format($odata['PRICES']['BASKET'], 2, '.', '') ?></td>
                                     </tr>
 									<tr>
-                                        <td class="bold">Наценка:</td>
+                                        <td class="bold"><?= Loc::getMessage('ORDER_SURCHARGE') ?>:</td>
                                         <td id="js-order-price-surcharge-id"><?= number_format($odata['PRICES']['SURCHARGE'], 2, '.', '') ?></td>
                                     </tr>
 									<tr>
-                                        <td class="bold">Итого:</td>
+                                        <td class="bold"><?= Loc::getMessage('ORDER_TOTAL') ?>:</td>
                                         <td id="js-order-price-summ-id"><?= number_format($odata['PRICES']['TOTAL_WITH_SUR'], 2, '.', '') ?></td>
                                     </tr>
                                     <tr>
-                                        <td class="bold">НДС:</td>
+                                        <td class="bold"><?= Loc::getMessage('ORDER_VAT') ?>:</td>
                                         <td id="js-order-price-vat-id"><?= number_format($odata['PRICES']['TAX'], 2, '.', '') ?></td>
                                     </tr>
                                     <tr class="info bold">
-                                        <td class="bold">Итого с НДС:</td>
+                                        <td class="bold"><?= Loc::getMessage('ORDER_TOTAL_VAT') ?>:</td>
                                         <td id="js-order-price-total-id"><?= number_format($odata['PRICES']['TOTAL'], 2, '.', '') ?></td>
                                     </tr>
                                 </table>
@@ -501,32 +512,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         </div>
                         
                         <hr/>
-                        
-                        <? /*
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="control-label" for="form-invoice-id">Счет:</label>
-                                <div class="input-group">
-                                    <select class="form-control" id="form-invoice-id" name="INVOICE"></select>
-                                    <div class="input-group-btn">
-                                        <button type="button" class="btn btn-default">
-                                            <span class="glyphicon glyphicon-list-alt"></span>
-                                            Сгенерировать счет
-                                        </button>
-                                        <button type="button" class="btn btn-default" disabled>
-                                            <span class="glyphicon glyphicon-download-alt"></span>
-                                            Скачать счет
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        */ ?>
-                        
+						
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">Сохранить</a>
+                                    <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)"><?= Loc::getMessage('SAVE') ?></a>
                                 </div>
                             </div>
                         </div>
@@ -737,36 +727,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         // Отправка формы заказа.
 		$('#js-submit-id').on('click', function() {
 			$(this).closest('form').submit();
-			/*
-			var $errmessage = $('#js-error-message-id');
-			
-			$.ajax({
-				url: '/bitrix/admin/wolk_oem_remote.php',
-                data: $('#js-order-make-form-id').serialize(),
-                dataType: 'json',
-				beforeSend: function () {
-					$errmessage.addClass('hidden');
-					
-					BX.closeWait('.js-invoices-wrapper');
-					BX.showWait('.js-invoices-wrapper');
-				},
-                success: function (response) {
-                    if (response.status) {
-						location.href = '/bitrix/admin/wolk_oem_order_index.php?ID=' + response.data['ID'];
-                    } else {
-                        $errmessage.html('<b>Ошибка при создании заказа:</b><br/>' + response.message).removeClass('hidden');
-						$('html, body').animate({
-							scrollTop: $errmessage.offset().top
-						}, 700);
-                    }
-					BX.closeWait('.js-invoices-wrapper');
-                },
-                error: function (response) {
-                    BX.closeWait('.js-invoices-wrapper');
-                    alert(response);
-                }
-			});
-			*/
 		});
         
         
@@ -877,11 +837,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         html += element.PRODUCT.HTML;
         html += '<div class="btn-group" role="group">';
         if (element.PRODUCT.HTML.length) {
-            html += '<button type="button" class="btn btn-primary js-props" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>';
+            html += '<button type="button" class="btn btn-primary js-props" title="<?= Loc::getMessage('LINK_POSITION_PROPERTIES') ?>"><span class="glyphicon glyphicon-tasks"></span></button>';
         } else {
-            html += '<button type="button" class="btn btn-primary disabled" title="Свойства позиции"><span class="glyphicon glyphicon-tasks"></span></button>';
+            html += '<button type="button" class="btn btn-primary disabled" title="<?= Loc::getMessage('LINK_POSITION_PROPERTIES') ?>"><span class="glyphicon glyphicon-tasks"></span></button>';
         }
-        html += '<button type="button" class="btn btn-danger js-remove" title="Удалить позицию"><span class="glyphicon glyphicon-remove"></span></button>';
+        html += '<button type="button" class="btn btn-danger js-remove" title="<?= Loc::getMessage('LINK_POSITION_DELETE') ?>"><span class="glyphicon glyphicon-remove"></span></button>';
         html += '</div>';
         html += '</td>';
         html += '</tr>';
