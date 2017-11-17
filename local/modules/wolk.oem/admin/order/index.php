@@ -63,7 +63,7 @@ if ($ismanager) {
 	
 	$result = CSaleOrderPropsValue::getList([], ['CODE' => 'EVENT_ID', '@VALUE' => $eids, 'ORDER_ID' => $ID], false, false, ['ORDER_ID']);
 	if ($result->SelectedRowsCount() <= 0) {
-		ShowError('Вы не являетесь менеджером данного заказа.');
+		ShowError(Loc::getMessage('ERROR_MANAGER_ACCESS'));
 		return;
 	}
 }
@@ -148,11 +148,7 @@ if (!empty($_POST)) {
 				
 				$result = $bxorder->save()->isSuccess();
 				
-				
-				
-                
 				// $bxorder = Bitrix\Sale\Order::load($ID);
-				
 				// $result = CSaleOrder::StatusOrder($oemorder->getID(), $status);
                 
                 if (!$result) {
@@ -266,7 +262,7 @@ if (!empty($_POST)) {
 				
                 if (!$result) {
                     $message = new CAdminMessage([
-                        'MESSAGE' => 'При изменнии данных скетча возникла ошибка',
+                        'MESSAGE' => Loc::getMessage('ERROR_CHANGE_DATA'),
                         'TYPE'    => 'ERROR'
                     ]);
 				}
@@ -291,7 +287,7 @@ if ($element) {
 	$event = $element->GetFields();
 	$event['PROPS'] = $element->GetProperties();
 } else {
-	ShowError('Мероприятие не найдено.');
+	ShowError(Loc::getMessage('ERROR_EVENT_NOT_FOUND'));
     return;
 }
 
@@ -360,9 +356,6 @@ foreach ($baskets as $i => $basket) {
 }
 unset($item);
 
-
-// if ($USER->getID() == 1) { echo '<hr/><pre>'; print_r($baskets); echo '</pre>'; }
-
 $surcharge       = (float) $order['PROPS']['SURCHARGE']['VALUE_ORIG'];
 $surcharge_price = (float) $order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
 
@@ -418,15 +411,13 @@ unset($basket);
 // Печать заказа.
 $orderprint = new \Wolk\OEM\OrderPrint($ID);
 
-/*
- * Описываем табы административной панели битрикса.
- */
+// Описываем табы административной панели битрикса.
 $aTabs = [
     [
         'DIV'   => 'data',
-        'TAB'   => 'Данные заказа',
+        'TAB'   => Loc::getMessage('ORDER_DATA'),
         'ICON'  => 'data',
-        'TITLE' => 'Заказ №'.$ID.' | '.$oemorder->getLanguage()
+        'TITLE' => Loc::getMessage('ORDER_NO').$ID.' | '.$oemorder->getLanguage()
     ]
 ];
 
@@ -587,7 +578,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 
 		loadsketch();
     });
-
 </script>
 
 <style>
@@ -607,51 +597,51 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 <? } ?>
 
 <div class="adm-detail-toolbar"><span style="position:absolute;"></span>
-    <a href="/bitrix/admin/wolk_oem_order_list.php" class="adm-detail-toolbar-btn" title="Перейти к списку заказов" id="btn_list">
-        <span class="adm-detail-toolbar-btn-l"></span><span class="adm-detail-toolbar-btn-text">Список заказов</span><span class="adm-detail-toolbar-btn-r"></span>
+    <a href="/bitrix/admin/wolk_oem_order_list.php" class="adm-detail-toolbar-btn" title="<?= Loc::getMessage('GOTO_ORDERS_LIST') ?>" id="btn_list">
+        <span class="adm-detail-toolbar-btn-l"></span><span class="adm-detail-toolbar-btn-text"><?= Loc::getMessage('ORDERS_LIST') ?></span><span class="adm-detail-toolbar-btn-r"></span>
     </a>
     <div class="adm-detail-toolbar-right" style="top: 0px;">
-        <a href="/bitrix/admin/wolk_oem_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit">Редактировать заказ</a>
+        <a href="/bitrix/admin/wolk_oem_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit"><?= Loc::getMessage('ORDER_EDIT') ?></a>
 
-		<a href="<?= $orderprint->getURL() ?>" target="_blank" class="adm-btn adm-btn-edit">Распечатать заказ</a>
-		<a href="/bitrix/admin/wolk_oem_image.php?action=sketch-download&ID=<?= $ID ?>" target="_blank" id="js-sketch-image-download-id" class="adm-btn adm-btn-edit">Распечатать скетч</a>
+		<a href="<?= $orderprint->getURL() ?>" target="_blank" class="adm-btn adm-btn-edit"><?= Loc::getMessage('ORDER_PRINT') ?></a>
+		<a href="/bitrix/admin/wolk_oem_image.php?action=sketch-download&ID=<?= $ID ?>" target="_blank" id="js-sketch-image-download-id" class="adm-btn adm-btn-edit"><?= Loc::getMessage('SKETCH_PRINT') ?></a>
     </div>
 </div>
 
 <div class="adm-bus-orderinfoblock adm-detail-tabs-block-pin" id="sale-order-edit-block-order-info">
     <div class="adm-bus-orderinfoblock-container">
         <div class="adm-bus-orderinfoblock-title">
-            Заказ №<?= $order['ID'] ?>
+            <?= Loc::getMessage('ORDER_NO') ?> <?= $order['ID'] ?>
         </div>
         <div class="adm-bus-orderinfoblock-content">
             <div class="adm-bus-orderinfoblock-content-block-customer">
                 <ul class="adm-bus-orderinfoblock-content-customer-info">
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-customer-info-param">Мероприятие:</span>
+                        <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('EVENT') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
 							<?= $event['NAME'] ?>
 						</span>
                     </li>
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-customer-info-param">Павильон:</span>
+                        <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('PAVILION') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
 							<?= $oemorder->getPavilion() ?>
 						</span>
                     </li>
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-customer-info-param">Номер стенда:</span>
+                        <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('STANDNUM') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
 							<?= $oemorder->getStandNumber() ?>
 						</span>
                     </li>
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-customer-info-param">Дата создания:</span>
+                        <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('DATE_CREATED') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
 							<?= date('d.m.Y H:i', strtotime($order['DATE_INSERT'])) ?>
 						</span>
                     </li>
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-customer-info-param">Статус заказа:</span>
+                        <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('ORDER_STATUS') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
 							<?= $statuses[$order['STATUS_ID']]['NAME'] ?>
 						</span>
@@ -661,26 +651,26 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
             <div class="adm-bus-orderinfoblock-content-block-order">
                 <ul class="adm-bus-orderinfoblock-content-order-info">
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-order-info-param">Стоимость стенда</span>
+                        <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('COST_STAND') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
 							<?= CurrencyFormat($stand['BASKET']['PRICE'] * $stand['BASKET']['QUANTITY'] * $rate, $rate_currency) ?>
 						</span>
                     </li>
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-order-info-param">Общая стоимость товаров</span>
+                        <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('TOTAL_COST_PRODUCTS') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
 							<?= CurrencyFormat($goodprice * $rate, $rate_currency) ?>
 						</span>
                     </li>
 					<li class="adm-bus-orderinfoblock-content-redtext">
-                        <span class="adm-bus-orderinfoblock-content-order-info-param">Наценки</span>
+                        <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('SURCHARGES') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
 							(<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>%)
                             <?= CurrencyFormat($order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'] * $rate, $rate_currency) ?>
 						</span>
                     </li>
 					<li>
-                        <span class="adm-bus-orderinfoblock-content-order-info-param">НДС</span>
+                        <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('VAT') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
 							<?= CurrencyFormat($order['TAX_VALUE'] * $rate, $rate_currency) ?>
 						</span>
@@ -688,7 +678,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 </ul>
                 <ul class="adm-bus-orderinfoblock-content-order-info-result">
                     <li>
-                        <span class="adm-bus-orderinfoblock-content-order-info-param">Итого</span>
+                        <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('TOTAL') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
 							<?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?>
 							<? if (!empty($order['PROPS']['RATE']['VALUE'])) { ?>
@@ -714,7 +704,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 <div class="adm-bus-statusorder">
                     <div class="adm-bus-component-container">
                         <div class="adm-bus-component-title-container">
-                            <div class="adm-bus-component-title">Данные заказа</div>
+                            <div class="adm-bus-component-title"><?= Loc::getMessage('ORDER_DATA') ?></div>
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
@@ -722,7 +712,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     <input type="hidden" name="action" value="data"/>
                                     <table class="adm-detail-content-table edit-table" style="width: 60%;">
                                         <tr>
-                                            <td class="adm-detail-content-cell-l">Статус заказа:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('ORDER_STATUS') ?>:</td>
                                             <td class="adm-detail-content-cell-r">
                                                 <select name="STATUS" class="adm-bus-select">
                                                     <? foreach ($statuses as $status) { ?>
@@ -735,19 +725,19 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 											</td>
 										</tr>
 										<tr>
-                                            <td class="adm-detail-content-cell-l">Комментарий к заказу:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('ORDER_COMMENT') ?>:</td>
                                             <td class="adm-detail-content-cell-r">
 												<textarea name="COMMENTS" cols="45" rows="5"><?= $order['COMMENTS'] ?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="adm-detail-content-cell-l">Номер счета:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('ORDER_INVOICE') ?>:</td>
                                             <td class="adm-detail-content-cell-r">
                                                 <input type="text" name="BILL" value="<?= $order['PROPS']['BILL']['VALUE'] ?>" size="40" />
                                             </td>
                                         </tr>
 										<tr>
-                                            <td class="adm-detail-content-cell-l">Комментарий к заказу от пользователя:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('ORDER_NOTE') ?>:</td>
                                             <td class="adm-detail-content-cell-r">
 												<div>
 													<?= ($order['USER_DESCRIPTION']) ?: ('&mdash;') ?>
@@ -756,7 +746,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                         </tr>
 										<tr>
                                             <td colspan="2" align="left">
-                                                <input type="submit" class="amd-btn-save adm-btn-green" value="Сохранить" />
+                                                <input type="submit" class="amd-btn-save adm-btn-green" value="<?= Loc::getMessage('SAVE') ?>" />
                                             </td>
                                         </tr>
                                     </table>
@@ -766,12 +756,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                         <hr width="96%" color="e7f2f2"/>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container js-invoices-wrapper">
-							
 								<form method="post">
 									<input type="hidden" name="action" value="convert" />
 									<table cellpadding="5">
 										<tr>
-											<td class="adm-detail-content-cell-l" width="235">Курс пересчета:</td>
+											<td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('RATE') ?>:</td>
 											<td width="200">
 												<?= $order['CURRENCY'] ?>
 												&rarr;
@@ -786,11 +775,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 												<input type="text" name="RATE" id="js-convert-rate-id" value="1" style="width: 75px;" />
 											</td>
 											<td>
-												<input type="submit" class="amd-btn-save" value="Пересчитать" />
+												<input type="submit" class="amd-btn-save" value="<?= Loc::getMessage('RECALC') ?>" />
 											</td>
 											<td>
 												<? if (!empty($order['PROPS']['RATE']['VALUE'])) { ?>
-													Пересчитан по курсу 
+													<?= Loc::getMessage('RATED') ?>
 													<b><?= $order['PROPS']['RATE']['VALUE'] ?> <?= $order['PROPS']['RATE_CURRENCY']['VALUE'] ?></b>
 												<? } ?>
 											</td>
@@ -804,12 +793,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 									<input type="hidden" name="action" value="surcharge" />
 									<table cellpadding="5">
 										<tr>
-											<td class="adm-detail-content-cell-l" width="235">Наценка (%):</td>
+											<td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('SURCHARGE') ?>:</td>
 											<td width="200">
                                                 <input type="text" name="SURCHARGE" value="<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>" />
 											</td>
 											<td>
-												<input type="submit" class="amd-btn-save" value="Пересчитать" />
+												<input type="submit" class="amd-btn-save" value="<?= Loc::getMessage('RECALC') ?>" />
 											</td>
 										</tr>
 									</table>
@@ -819,7 +808,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 							
                                 <table cellpadding="5">
                                     <tr>
-                                        <td class="adm-detail-content-cell-l" width="235">Генерация счета:</td>
+                                        <td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('INVOICE_GENERATION') ?>:</td>
                                         <td width="200">
                                             <? // Счета // ?>
                                             <select name="invoice" id="js-invoice-select-id" style="width: 200px;">
@@ -831,13 +820,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="button" id="js-invoice-button-id" class="amd-btn-save" value="Получить счет"/>
+                                            <input type="button" id="js-invoice-button-id" class="amd-btn-save" value="<?= Loc::getMessage('GET_INCOVCE') ?>"/>
                                         </td>
                                         <td>
                                             <div id="js-invoice-response-id">
 												<? $invoice = $oemorder->getInvoice() ?>
 												<? if (!empty($invoice)) { ?>
-													<input type="button" class="amd-btn-save" onclick="javascript: window.open('<?= $oemorder->getInvoiceLink() ?>?<?= time() ?>');" target="_blank" value="Скачать счет" />
+													<input type="button" class="amd-btn-save" onclick="javascript: window.open('<?= $oemorder->getInvoiceLink() ?>?<?= time() ?>');" target="_blank" value="<?= Loc::getMessage('DOWNLOAD_INVOICE') ?>" />
 												<? } ?>
 											</div>
                                         </td>
@@ -848,18 +837,18 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 									<input type="hidden" name="action" value="mail" />
 									<table cellpadding="5">
 										<tr>
-											<td class="adm-detail-content-cell-l" width="235">Отправка счета:</td>
+											<td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('INVOCE_SENDING') ?>:</td>
 											<td>
 												<input type="text" name="EMAIL" value="<?= $customer['EMAIL'] ?>" size="23" />
 											</td>
 											<td>
-												<input type="submit" id="js-send-button-id" class="amd-btn-save" value="Отправить счет" />
+												<input type="submit" id="js-send-button-id" class="amd-btn-save" value="<?= Loc::getMessage('SEND_INVOCE') ?>" />
 											</td>
 											<td>
 												<? if (!empty($order['PROPS']['SENDTIME']['VALUE'])) { ?>
-													Отправлено <?= date('H:i d.m.Y', strtotime($order['PROPS']['SENDTIME']['VALUE'])) ?>
+													<?= Loc::getMessage('SENDED') ?> <?= date('H:i d.m.Y', strtotime($order['PROPS']['SENDTIME']['VALUE'])) ?>
 												<? } else { ?>
-													Счет еще не был отправлен.
+													<?= Loc::getMessage('NOT_SENDED_YET') ?>
 												<? } ?>
 											</td>
 										</tr>
@@ -884,19 +873,19 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 						<div class="adm-bus-component-container">
 							<div class="adm-bus-component-title-container">
 								<div class="adm-bus-component-title">
-									Форма подвесных конструкций.
+									<?= Loc::getMessage('FORM_HANDING_STRUCTURE') ?>
 								</div>
 							</div>
 							<div class="adm-bus-component-content-container">
 								<div class="adm-bus-table-container">
-									<input id="js-order-form-print-id" type="button" value="Печать формы" />
+									<input id="js-order-form-print-id" type="button" value="<?= Loc::getMessage('PRINT_FORM') ?>" />
 									<? if ($print->isExists()) { ?>
 										<a id="js-order-form-link-id" href="<?= $print->getPathPDF() ?>" class="adm-btn" target="_blank">
-											Скачать PDF
+											<?= Loc::getMessage('DOWNLOAD_PDF') ?>
 										<a/>
 									<? } else { ?>
 										<a id="js-order-form-link-id" href="" style="display: none;" class="adm-btn" target="_blank">
-											Скачать PDF
+											<?= Loc::getMessage('DOWNLOAD_PDF') ?>
 										<a/>
 									<? } ?>
 								</div>
@@ -915,7 +904,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 <div class="adm-bus-statusorder">
                     <div class="adm-bus-component-container">
                         <div class="adm-bus-component-title-container">
-                            <div class="adm-bus-component-title">Данные компании</div>
+                            <div class="adm-bus-component-title">
+								<?= Loc::getMessage('COMPANY_DATA') ?>
+							</div>
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
@@ -923,50 +914,50 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     <input type="hidden" name="action" value="user" />
                                     <table class="adm-detail-content-table edit-table">
                                         <tr>
-                                            <td class="adm-detail-content-cell-l">Компания:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_NAME') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
                                                 <?= $customer['WORK_COMPANY'] ?>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="adm-detail-content-cell-l">E-mail:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_EMAIL') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
                                                 <?= $customer['EMAIL'] ?>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="adm-detail-content-cell-l">Телефон:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_PHONE') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
                                                 <?= $customer['PERSONAL_PHONE'] ?>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="adm-detail-content-cell-l">VAT ID</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_VATID') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
                                                 <?= $customer['UF_VAT'] ?>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="adm-detail-content-cell-l">Контактное лицо:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_CONTACT') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
                                                 <?= trim($customer['NAME'] . ' ' . $customer['LAST_NAME']) ?>
                                             </td>
                                         </tr>
 										<tr>
-                                            <td class="adm-detail-content-cell-l">Рекивизиты:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_REQUISITES') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
                                                 <textarea cols="30" rows="6" name="REQUISITES"><?= $customer['UF_REQUISITES'] ?></textarea>
                                             </td>
                                         </tr>
 										<tr>
-                                            <td class="adm-detail-content-cell-l">Номер клиента:</td>
+                                            <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_CLIENT_NUMBER') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
                                                 <input type="text" name="CLIENT_NUMBER" value="<?= $customer['UF_CLIENT_NUMBER'] ?>" size="28" />
                                             </td>
                                         </tr>
 										<tr>
                                             <td colspan="2" align="left">
-                                                <input type="submit" class="amd-btn-save adm-btn-green" value="Сохранить" />
+                                                <input type="submit" class="amd-btn-save adm-btn-green" value="<?= Loc::getMessage('SAVE') ?>" />
                                             </td>
                                         </tr>
                                     </table>
@@ -986,20 +977,22 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 <div class="adm-bus-statusorder">
                     <div class="adm-bus-component-container">
                         <div class="adm-bus-component-title-container">
-                            <div class="adm-bus-component-title">Список позиций заказа</div>
+                            <div class="adm-bus-component-title">
+								<?= Loc::getMessage('PRODUCT_LIST') ?>
+							</div>
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
                                 <table class="adm-s-order-table-ddi-table" style="width: 100%">
                                     <thead>
                                         <tr>
-                                            <td align="left">Изображение</td>
-                                            <td align="left">Название</td>
-                                            <td align="left">Количество</td>
-                                            <td align="left">Цена в каталоге</td>
-                                            <td align="left">Цена</td>
-                                            <td align="left">Стоимость</td>
-											<td align="left">Дополнительные данные</td>
+                                            <td align="left"><?= Loc::getMessage('PRODUCT_IMAGE') ?></td>
+                                            <td align="left"><?= Loc::getMessage('PRODUCT_NAME') ?></td>
+                                            <td align="left"><?= Loc::getMessage('PRODUCT_QUANTITY') ?></td>
+                                            <td align="left"><?= Loc::getMessage('PRODUCT_PRICE_CATALOG') ?></td>
+                                            <td align="left"><?= Loc::getMessage('PRODUCT_PRICE') ?></td>
+                                            <td align="left"><?= Loc::getMessage('PRODUCT_COST') ?></td>
+											<td align="left"><?= Loc::getMessage('PRODUCT_INFO') ?></td>
                                         </tr>
                                     </thead>
                                     <tbody style="text-align: left; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(221, 221, 221);">
@@ -1011,12 +1004,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                                     <? if (!empty($basket['ITEM']['PREVIEW_PICTURE'])) { ?>
                                                         <img src="<?= $basket['ITEM']['IMAGE'] ?>" width="78" height="78" />
                                                     <? } else { ?>
-                                                        <div class="no_foto">Нет картинки</div>
+                                                        <div class="no_foto"><?= Loc::getMessage('NO_IMAGE') ?></div>
                                                     <? } ?>
                                                 </td>
                                                 <td align="left">
 													<? if ($basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) { ?> 
-														Стенд &laquo;<?= $basket['NAME'] ?>&raquo;
+														<?= Loc::getMessage('STAND') ?> &laquo;<?= $basket['NAME'] ?>&raquo;
 													<? } else { ?>
 														<?= $basket['NAME'] ?>
 													<? } ?>
@@ -1041,16 +1034,16 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     <tfoot>
                                         <tr>
                                             <td colspan="4" align="left" style="height: 50px; margin-left: 15px;">
-                                                <b style="margin-left: 30px;">Всего товаров <?= $cnt ?></b>.
+                                                <b style="margin-left: 30px;"><?= Loc::getMessage('TOTAL_PRODUCTS') ?><?= $cnt ?></b>.
                                             </td>
                                             <td colspan="3" align="right">
-                                                <h2 style="3px 20px 0 0">Итого: <?= CurrencyFormat(($order['PRICE'] - $order['TAX_VALUE']) * $rate, $rate_currency) ?></h2>
+                                                <h2 style="3px 20px 0 0"><?= Loc::getMessage('TOTAL') ?>: <?= CurrencyFormat(($order['PRICE'] - $order['TAX_VALUE']) * $rate, $rate_currency) ?></h2>
                                             </td>
                                         <tr>
                                         </tr>
                                             <td colspan="4"></td>
                                             <td colspan="3" align="right">
-                                                <h2 style="3px 20px 0 0">Итого с НДС: <?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?></h2>
+                                                <h2 style="3px 20px 0 0"><?= Loc::getMessage('TOTAL_VAT') ?>: <?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?></h2>
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -1069,7 +1062,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 <div class="adm-bus-statusorder">
                     <div class="adm-bus-component-container">
                         <div class="adm-bus-component-title-container">
-                            <div class="adm-bus-component-title">Прикрепленые данные</div>
+                            <div class="adm-bus-component-title"><?= Loc::getMessage('ATTACHMENTS') ?></div>
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
@@ -1078,7 +1071,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 									<? foreach ($baskets as $basket) { ?>
 										<? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_LOGOTYPES_ID && !empty($basket['PROPS']['LOGO_FILE']['VALUE'])) { ?>
 											<li>
-												<a href="<?= CFile::getPath($basket['PROPS']['LOGO_FILE']['VALUE']) ?>" target="_blank">Логотип</a>
+												<a href="<?= CFile::getPath($basket['PROPS']['LOGO_FILE']['VALUE']) ?>" target="_blank"><?= Loc::getMessage('LOGOTYPE') ?> </a>
                                                 / <i><?= $basket['NAME'] ?></i>
 												<? if (!empty($basket['PROPS']['LOGO_COMMENTS']['VALUE'])) { ?>
 													<p class="note"><?= $basket['PROPS']['LOGO_COMMENTS']['VALUE'] ?></p>
@@ -1088,7 +1081,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                         
                                         <? if ($basket['ITEM']['IBLOCK_SECTION_ID'] == SECTION_BANNERS_ID && !empty($basket['PROPS']['BANNER_FILE']['VALUE'])) { ?>
 											<li>
-												<a href="<?= CFile::getPath($basket['PROPS']['BANNER_FILE']['VALUE']) ?>" target="_blank">Баннер</a>
+												<a href="<?= CFile::getPath($basket['PROPS']['BANNER_FILE']['VALUE']) ?>" target="_blank"><?= Loc::getMessage('BANNER') ?> </a>
                                                 / <i><?= $basket['NAME'] ?></i>
 												<? if (!empty($basket['PROPS']['BANNER_COMMENTS']['VALUE'])) { ?>
 													<p class="note"><?= $basket['PROPS']['BANNER_COMMENTS']['VALUE'] ?></p>
@@ -1098,14 +1091,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 										
 										<? if ($basket['ITEM']['CODE'] == 'FASCIA_NAME') { ?>
 											<li>
-												Надпись на фриз (<i><?= $basket['PROPS']['FASCIA_COLOR']['VALUE'] ?> - <?= $colors[$basket['PROPS']['FASCIA_COLOR']['VALUE']]['UF_NUM'] ?></i>):
+												<?= Loc::getMessage('FASCIA') ?> 
+												(<i><?= $basket['PROPS']['FASCIA_COLOR']['VALUE'] ?> - <?= $colors[$basket['PROPS']['FASCIA_COLOR']['VALUE']]['UF_NUM'] ?></i>):
 												<div class="fascia-text"><?= $basket['PROPS']['FASCIA_TEXT']['VALUE'] ?></div>
 											</li>
 										<? } ?>
 										
 										<? if ($basket['ITEM']['CODE'] == 'file_upload') { ?>
 											<li>
-												<a href="<?= CFile::getPath($basket['PROPS']['FILE_ID']['VALUE']) ?>" target="_blank">Логотип</a>
+												<a href="<?= CFile::getPath($basket['PROPS']['FILE_ID']['VALUE']) ?>" target="_blank"><?= Loc::getMessage('LOGOTYPE') ?></a>
 												<? if (!empty($basket['PROPS']['LOGO_COMMENTS']['VALUE'])) { ?>
 													<p class="note"><?= $basket['PROPS']['LOGO_COMMENTS']['VALUE'] ?></p>
 												<? } ?>
@@ -1114,7 +1108,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 										
 										<? if ($basket['ITEM']['CODE'] == 'FULL_COLOR_PRINTING') { ?>
 											<li>
-												<a href="<?= $basket['PROPS']['LINK']['VALUE'] ?>" target="_blank">Ссылка на изображение</a>
+												<a href="<?= $basket['PROPS']['LINK']['VALUE'] ?>" target="_blank"><?= Loc::getMessage('LINK_IMAGE') ?></a>
 												<? if (!empty($basket['PROPS']['COMMENTS']['VALUE'])) { ?>
 													<p class="note"><?= $basket['PROPS']['COMMENTS']['VALUE'] ?></p>
 												<? } ?>
@@ -1137,7 +1131,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                 <div class="adm-bus-statusorder">
                     <div class="adm-bus-component-container">
                         <div class="adm-bus-component-title-container">
-                            <div class="adm-bus-component-title">Заполненные формы</div>
+                            <div class="adm-bus-component-title">
+								<?= Loc::getMessage('FILLED_FORMS') ?>
+							</div>
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
@@ -1206,7 +1202,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 					<div class="adm-bus-statusorder">
 						<div class="adm-bus-component-container">
 							<div class="adm-bus-component-title-container">
-								<div class="adm-bus-component-title">Скетч</div>
+								<div class="adm-bus-component-title"><?= Loc::getMessage('SKETCH') ?></div>
 							</div>
 							<div class="adm-bus-component-content-container">
 								<div class="adm-bus-table-container">
@@ -1218,7 +1214,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 										<input type="hidden" name="action" value="sketch" />
 										<input type="hidden" name="OBJECTS" value="" id="js-sketch-scene-input-id" />
 										<input type="hidden" name="IMAGE" value="" id="js-sketch-image-input-id" />
-										<input type="button" id="js-sketch-button-id" class="amd-btn-save adm-btn-green" value="Сохранить" />
+										<input type="button" id="js-sketch-button-id" class="amd-btn-save adm-btn-green" value="<?= Loc::getMessage('SAVE') ?>" />
 									</form>
 								</div>
 							</div>
