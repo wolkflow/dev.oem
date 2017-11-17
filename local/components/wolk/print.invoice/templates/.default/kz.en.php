@@ -109,5 +109,4 @@
             <img src="<?= $this->getFolder() ?>/images/tg-stamp.png" />
         </div>
     </div>
-
 </div>

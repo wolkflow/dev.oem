@@ -33,22 +33,22 @@ if ($ID <= 0) {
 }
 
 if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
-    ShowError('Модуль wolk.core не устанволен.');
+    ShowError('Module wolk.core not installed.');
     return;
 }
 
 if (!\Bitrix\Main\Loader::includeModule('iblock')) {
-    ShowError('Модуль iblock не устанволен.');
+    ShowError('Module iblock not installed.');
     return;
 }
 
 if (!\Bitrix\Main\Loader::includeModule('sale')) {
-    ShowError('Модуль sale не устанволен.');
+    ShowError('Module sale not installed');
     return;
 }
 
 if (!\Bitrix\Main\Loader::includeModule('currency')) {
-    ShowError('Модуль currency не устанволен.');
+    ShowError('Module currency not installed.');
     return;
 }
 
@@ -61,7 +61,7 @@ if ($ismanager) {
 	}
 	unset($result, $item);
 	
-	$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'EVENT_ID', '@VALUE' => $eids, 'ORDER_ID' => $ID], false, false, ['ORDER_ID']);
+	$result = CSaleOrderPropsValue::getList([], ['CODE' => 'EVENT_ID', '@VALUE' => $eids, 'ORDER_ID' => $ID], false, false, ['ORDER_ID']);
 	if ($result->SelectedRowsCount() <= 0) {
 		ShowError('Вы не являетесь менеджером данного заказа.');
 		return;

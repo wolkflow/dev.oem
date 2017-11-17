@@ -10,7 +10,7 @@
 </script>
 <div class="ficontainer">
 	<div class="filogo">
-		<img src="<?= $this->getFolder() ?>/images/itemf_logo.png" alt="">
+		<img src="<?= $this->getFolder() ?>/images/itemf_logo.png" />
 	</div>
 
 	<div class="finvoiceName">ITEMF EXPO</div>

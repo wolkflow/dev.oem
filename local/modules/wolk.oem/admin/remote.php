@@ -120,7 +120,7 @@ switch ($action) {
 		if ($result !== 0) {
 			jsonresponse(false, 'Ошибка создания счета');
 		}
-		$invoiceID = CFile::SaveFile(CFile::MakeFileArray($invoice->getInvoice()));
+		$invoiceID = CFile::SaveFile(CFile::MakeFileArray($invoice->getInvoice()), 'invoices');
 		
 		\Wolk\Core\Helpers\SaleOrder::saveProperty($order_id, 'INVOICE', $invoiceID);
 		

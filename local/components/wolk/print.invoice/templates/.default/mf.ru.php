@@ -30,7 +30,7 @@
 		<p>Номер клиента: <span><?= $arResult['USER']['UF_CLIENT_NUMBER'] ?></span></p>
 		<p>Номер счета: <span><?= $arResult['PROPS']['BILL']['VALUE'] ?></span></p>
 	</div>
-
+	
 	<div class="invoiceParams">
 		<p><span class="toleft">Выставка:</span> <?= $arResult['EVENT']['PROPS']['LANG_TITLE_RU']['VALUE'] ?></p>
 		<p><span class="toleft">Место проведения:</span> <span class="red"><?= $arResult['EVENT']['PROPS']['LANG_LOCATION_RU']['VALUE'] ?></span></p>
@@ -41,9 +41,9 @@
 
 	<div class="invoiceParams2">
 		<div class="invoiceParams2__left">
-			<p><span class="toleft">Аренда стенда:</span> <?= $arResult['PROPS']['standNum']['VALUE'] ?></p>
-			<p><span class="toleft">Ширина, м:</span> <?= $arResult['PROPS']['width']['VALUE'] ?></p>
-			<p><span class="toleft">Глубина:</span> <?= $arResult['PROPS']['depth']['VALUE'] ?></p>
+			<p><span class="toleft">Аренда стенда:</span> <?= $arResult['PROPS']['STANDNUM']['VALUE'] ?></p>
+			<p><span class="toleft">Ширина, м:</span> <?= $arResult['PROPS']['WIDTH']['VALUE'] ?></p>
+			<p><span class="toleft">Глубина:</span> <?= $arResult['PROPS']['DEPTH']['VALUE'] ?></p>
 		</div>
 		<div class="clear"></div>
 	</div>

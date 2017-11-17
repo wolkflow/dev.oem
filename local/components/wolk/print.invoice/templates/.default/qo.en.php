@@ -15,9 +15,9 @@
                 <div class="qo-order-left">Order #<?= $arResult['ORDER']['ID'] ?></div>
                 <div class="qo-order-right">
                     <ul>
-                        <li><b>Pavillion:</b> <?= $arResult['PROPS']['pavillion']['VALUE'] ?></li>
-                        <li><b>Stand:</b> <?= $arResult['PROPS']['standNum']['VALUE'] ?></li>
-                        <? /* <li><b>Area:</b> <?= round(floatval($arResult['PROPS']['width']['VALUE'] * $arResult['PROPS']['depth']['VALUE']), 2) ?> m<sup>2</sup></li> */ ?>
+                        <li><b>Pavillion:</b> <?= $arResult['PROPS']['PAVILION']['VALUE'] ?></li>
+                        <li><b>Stand:</b> <?= $arResult['PROPS']['STANDNUM']['VALUE'] ?></li>
+                        <? /* <li><b>Area:</b> <?= round(floatval($arResult['PROPS']['WIDTH']['VALUE'] * $arResult['PROPS']['DEPTH']['VALUE']), 2) ?> m<sup>2</sup></li> */ ?>
                         <li><b>Company:</b> <?= $arResult['USER']['WORK_COMPANY'] ?></li>
                         <li><b>Date:</b> <?= date('d.m.Y', $arResult['DATE']) ?></li>
                     </ul>                    

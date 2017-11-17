@@ -117,7 +117,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
         $surcharge_price = (float) $this->arResult['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
         
         
-		$event = CIBlockElement::getByID($this->arResult['PROPS']['eventId']['VALUE'])->GetNextElement();
+		$event = CIBlockElement::getByID($this->arResult['PROPS']['EVENT_ID']['VALUE'])->GetNextElement();
 		
 		if ($event) {
 			$this->arResult['EVENT'] = $event->getFields();
@@ -187,17 +187,11 @@ class PrintInvoiceComponent extends \CBitrixComponent
 			}
 		}
 		
-		
 		// Конвертирование валюты.
 		$this->arResult['ORDER']['CURRENCY'] = $currency;
-		
 		
 		// Подключение шаблона.
 		$this->includeComponentTemplate($this->arParams['TEMPLATE']);
 	}
 	
 }
-
-
-
-

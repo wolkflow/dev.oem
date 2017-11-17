@@ -15,9 +15,9 @@
                 <div class="qo-order-left">Заказ №<?= $arResult['ORDER']['ID'] ?></div>
                 <div class="qo-order-right">
                     <ul>
-                        <li><b>Павильон:</b> <?= $arResult['PROPS']['pavillion']['VALUE'] ?></li>
-                        <li><b>Стенд:</b> <?= $arResult['PROPS']['standNum']['VALUE'] ?></li>
-                        <? /* <li><b>Метраж:</b> <?= round(floatval($arResult['PROPS']['width']['VALUE'] * $arResult['PROPS']['depth']['VALUE']), 2) ?> м<sup>2</sup></li> */ ?>
+                        <li><b>Павильон:</b> <?= $arResult['PROPS']['PAVILION']['VALUE'] ?></li>
+                        <li><b>Стенд:</b> <?= $arResult['PROPS']['STANDNUM']['VALUE'] ?></li>
+                        <? /* <li><b>Метраж:</b> <?= round(floatval($arResult['PROPS']['WIDTH']['VALUE'] * $arResult['PROPS']['DEPTH']['VALUE']), 2) ?> м<sup>2</sup></li> */ ?>
                         <li><b>Компания:</b> <?= $arResult['USER']['WORK_COMPANY'] ?></li>
                         <li><b>Дата:</b> <?= date('d.m.Y', $arResult['DATE']) ?></li>
                     </ul>                    

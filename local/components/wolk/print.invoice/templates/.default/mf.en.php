@@ -49,10 +49,10 @@
 
 	<div class="invoiceParams2">
 		<div class="invoiceParams2__left">
-			<p><span class="toleft">Surface area in sqm:</span> <?= ($arResult['PROPS']['width']['VALUE'] * $arResult['PROPS']['depth']['VALUE']) ?></p>
+			<p><span class="toleft">Surface area in sqm:</span> <?= ($arResult['PROPS']['WIDTH']['VALUE'] * $arResult['PROPS']['DEPTH']['VALUE']) ?></p>
 			<p><span class="toleft">Sides opened:</span> </p>
-			<p><span class="toleft">Width in m:</span> <?= $arResult['PROPS']['width']['VALUE'] ?></p>
-			<p><span class="toleft">Depth in m:</span> <?= $arResult['PROPS']['depth']['VALUE'] ?></p>
+			<p><span class="toleft">Width in m:</span> <?= $arResult['PROPS']['WIDTH']['VALUE'] ?></p>
+			<p><span class="toleft">Depth in m:</span> <?= $arResult['PROPS']['DEPTH']['VALUE'] ?></p>
 		</div>
 		<div class="invoiceParams2__right">
 			<p><span class="toright">Hall / floor:</span> </p>
