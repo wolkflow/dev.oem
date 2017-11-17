@@ -182,6 +182,8 @@
         $(document).on('click', '#js-render-id', function(e) {
             e.preventDefault();
             
+			var $that = $(this);
+
             var objs = ru.octasoft.oem.designer.Main.getScene();
             var code = $(this).data('code');
             
@@ -197,12 +199,18 @@
                     dataType: 'json',
                     async: true,
                     cache: false,
+					beforeSend: function() {
+						$that.addClass('button-loader');
+						$that.prop('disabled', 'disabled');
+					},
                     success: function(response) {
                         if (response.status) {
                             $('#js-renders-images-id').append('<div class="render-image"><img src="' + response.data['path'] + '" width="100" height="100" /><a class="photoZoom" href="' + response.data['path'] + '"></a></div>');
                         } else {
                             // Ошибка загрузки файла.
                         }
+						$that.removeClass('button-loader');
+						$that.prop('disabled', false);
                     },
                 });
             }

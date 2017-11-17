@@ -51,10 +51,10 @@
 				<?= $item->getQuantity() ?>
             </div>
 			<div class="block-basket-buttons">
-				<div class="basket-buttons">
-					<a href="javascript:void(0)" class="js-basket-inc inc"    data-quantity="<?= $item->getQuantity() ?>" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
-					<a href="javascript:void(0)" class="js-basket-dec dec"    data-quantity="<?= $item->getQuantity() ?>" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
-					<a href="javascript:void(0)" class="js-basket-remove rem" data-quantity="<?= $item->getQuantity() ?>" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+				<div class="basket-buttons js-product-quantity" data-quantity="<?= $item->getQuantity() ?>">
+					<a href="javascript:void(0)" class="js-basket-inc inc"    data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+					<a href="javascript:void(0)" class="js-basket-dec dec"    data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+					<a href="javascript:void(0)" class="js-basket-remove rem" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
 				</div>
 			</div>
         </div>

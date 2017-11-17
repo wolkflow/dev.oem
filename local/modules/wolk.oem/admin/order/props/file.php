@@ -1,5 +1,7 @@
+<? use Bitrix\Main\Localization\Loc; ?>
+
 <div class="form-group">
-    <label class="control-label">Файл:</label>
+    <label class="control-label"><?= Loc::getMessage('HEADER_PROPERTY_FILE') ?>:</label>
     
     <? if (!empty($pval)) { ?>
         <? $file = CFile::getByID($pval); ?>

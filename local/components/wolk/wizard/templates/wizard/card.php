@@ -4,7 +4,7 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 <? use Wolk\Oem\Basket; ?>
 
-<div class="js-product-block js-product-block-<?= $section->getID() ?>" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>" data-price-type="<?= $priceform ?>">
+<div class="js-product-block js-product-block-<?= $section->getID() ?> product-block" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>" data-price-type="<?= $priceform ?>">
     
     <? // Вывод продукции карточкой или списком. // ?>
     <? if (!$section->asListShow() && count($products) == 1) { ?>

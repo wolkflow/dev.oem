@@ -1,5 +1,7 @@
+<? use Bitrix\Main\Localization\Loc; ?>
+
 <div class="form-group js-param-block">
-    <label class="control-label">Цвет:</label>
+    <label class="control-label"><?= Loc::getMessage('HEADER_PROPERTY_COLOR') ?>:</label>
     
     <?  // Получение цветов.
         $result = \Wolk\OEM\Dicts\Color::getList(['order' => ['UF_NUM' => 'ASC', 'UF_SORT' => 'ASC']], false);
