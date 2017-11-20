@@ -85,6 +85,7 @@ $MESS['NOT_SENDED_YET'] = 'The account has not been sent yet.';
 
 $MESS['FORM_HANDING_STRUCTURE'] = 'Shape of hanging constructions';
 $MESS['DOWNLOAD_PDF'] = 'Download PDF';
+$MESS['DOWNLOAD'] = 'Download';
 
 $MESS['RECALC'] = 'Recalculate';
 $MESS['SAVE'] = 'Save';

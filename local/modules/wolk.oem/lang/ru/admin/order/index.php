@@ -67,7 +67,7 @@ $MESS['TOTAL_PRODUCTS'] = 'Всего товаров';
 $MESS['TOTAL'] = 'Итого';
 $MESS['TOTAL_VAT'] = 'Итого с НДС';
 
-$MESS['ATTACHMENTS'] = 'Прикрепленые данные';
+$MESS['ATTACHMENTS'] = 'Прикрепленные данные';
 $MESS['LOGOTYPE'] = 'Логотип';
 $MESS['BANNER'] = 'Баннер';
 $MESS['FASCIA'] = 'Надпись на фриз';
@@ -85,6 +85,7 @@ $MESS['NOT_SENDED_YET'] = 'Счет еще не был отправлен.';
 
 $MESS['FORM_HANDING_STRUCTURE'] = 'Форма подвесных конструкций';
 $MESS['DOWNLOAD_PDF'] = 'Скачать PDF';
+$MESS['DOWNLOAD'] = 'Скачать';
 
 $MESS['RECALC'] = 'Пересчитать';
 $MESS['SAVE'] = 'Сохранить';

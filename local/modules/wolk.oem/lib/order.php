@@ -234,7 +234,7 @@ class Order
 	{
 		$this->load();
 		
-		return floatval($this->data['PROPS']['BILL']['VALUE']);
+		return strval($this->data['PROPS']['BILL']['VALUE']);
 	}
 	
 	
