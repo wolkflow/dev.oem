@@ -6,7 +6,7 @@ $MESS['HEADER_PROPERTY_FORM_HANGING_STRUCTURE'] = 'Форма подвесной
 
 $MESS['FIELD_FORM_COMPANY'] = 'Название компании';
 $MESS['FIELD_FORM_PAVILION'] = 'Павильон №';
-$MESS['FORMM_HALL'] = 'Зал №';
+$MESS['FIELD_FORM_HALL'] = 'Зал №';
 $MESS['FIELD_FORM_STAND'] = 'Стенд №';
 $MESS['FIELD_FORM_SIZE'] = 'Размер';
 $MESS['FIELD_FORM_SIZE_DIMENSION'] = 'мм';

@@ -6,7 +6,7 @@ $MESS['HEADER_PROPERTY_FORM_HANGING_STRUCTURE'] = 'Form handing structure';
 
 $MESS['FIELD_FORM_COMPANY'] = 'Company name';
 $MESS['FIELD_FORM_PAVILION'] = 'Pavilion No.';
-$MESS['FORMM_HALL'] = 'Room No.';
+$MESS['FIELD_FORM_HALL'] = 'Room No.';
 $MESS['FIELD_FORM_STAND'] = 'Stand No.';
 $MESS['FIELD_FORM_SIZE'] = 'Size';
 $MESS['FIELD_FORM_SIZE_DIMENSION'] = 'mm';

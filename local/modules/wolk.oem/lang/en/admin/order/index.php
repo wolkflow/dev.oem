@@ -95,3 +95,20 @@ $MESS['NO_IMAGE'] = 'No picture';
 $MESS['MESSAGE_THEME_ORDER_STATUS_CHANGE'] = 'The status of the order has changed';
 $MESS['MESSAGE_THEME_INVOICE'] = 'You are billed for payment';
 $MESS['MESSAGE_THEME_ORDER_CHANGE'] = 'Your order has been updated';
+
+$MESS['FIELD_FORM_COMPANY'] = 'Company name';
+$MESS['FIELD_FORM_PAVILION'] = 'Pavilion No.';
+$MESS['FIELD_FORM_HALL'] = 'Room No.';
+$MESS['FIELD_FORM_STAND'] = 'Stand No.';
+$MESS['FIELD_FORM_SIZE'] = 'Size (mm)';
+$MESS['FIELD_FORM_MATERIAL'] = 'Material';
+$MESS['FIELD_FORM_WEIGHT'] = 'Weight (kg)';
+$MESS['FIELD_FORM_LIST'] = 'List of the equipment placing on the structure';
+$MESS['FIELD_FORM_ONMATERIAL'] = 'Material';
+$MESS['FIELD_FORM_POINTWEIGHT'] = 'Weight per point';
+$MESS['FIELD_FORM_HEIGHT'] = 'Height (mm)';
+$MESS['FIELD_FORM_FULLWEIGHT'] = 'Final weight (kg)';
+$MESS['FIELD_FORM_PERSON_PROJECT'] = 'RPerson in charge of the project of the structure';
+$MESS['FIELD_FORM_PERSON_MOUNT'] = 'Person in charge of mounting works';
+$MESS['FIELD_FORM_PHONE'] = 'Mobile phone';
+

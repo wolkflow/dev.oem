@@ -96,3 +96,21 @@ $MESS['MESSAGE_THEME_ORDER_STATUS_CHANGE'] = 'Изменился статус з
 $MESS['MESSAGE_THEME_INVOICE'] = 'Вам выставлен счет на оплату';
 $MESS['MESSAGE_THEME_ORDER_CHANGE'] = 'Ваш заказ обновлен';
 
+
+$MESS['FIELD_FORM_COMPANY'] = 'Название компании';
+$MESS['FIELD_FORM_PAVILION'] = 'Павильон №';
+$MESS['FIELD_FORM_HALL'] = 'Зал №';
+$MESS['FIELD_FORM_STAND'] = 'Стенд №';
+$MESS['FIELD_FORM_SIZE'] = 'Размер';
+$MESS['FIELD_FORM_SIZE_DIMENSION'] = 'мм';
+$MESS['FIELD_FORM_MATERIAL'] = 'Материал';
+$MESS['FIELD_FORM_WEIGHT'] = 'Вес (кг)';
+$MESS['FIELD_FORM_LIST'] = 'Список размещения оборудования на структуру';
+$MESS['FIELD_FORM_ONMATERIAL'] = 'Материал';
+$MESS['FIELD_FORM_POINTWEIGHT'] = 'Вес на одну точку (кг)';
+$MESS['FIELD_FORM_HEIGHT'] = 'Высота (мм)';
+$MESS['FIELD_FORM_FULLWEIGHT'] = 'Итоговый вес (кг)';
+$MESS['FIELD_FORM_PERSON_PROJECT'] = 'Ответственный за проект структуры';
+$MESS['FIELD_FORM_PERSON_MOUNT'] = 'Ответственный за монтажные работы';
+$MESS['FIELD_FORM_PHONE'] = 'Номер телефона';
+

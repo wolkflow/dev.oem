@@ -867,7 +867,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 							</div>
 							<div class="adm-bus-component-content-container">
 								<div class="adm-bus-table-container">
-									<button id="js-order-form-print-id" type="button" class="btn btn-info"><?= Loc::getMessage('PRINT_FORM') ?></button>
+									<button id="js-order-form-print-id" type="button" class="btn btn-info">
+										<?= Loc::getMessage('PRINT_FORM') ?>
+									</button>
 									<? if ($print->isExists()) { ?>
 										<a id="js-order-form-link-id" href="<?= $print->getPathPDF() ?>" class="btn btn-default" target="_blank">
 											<?= Loc::getMessage('DOWNLOAD_PDF') ?>
@@ -1115,15 +1117,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                         </div>
                         <div class="adm-bus-component-content-container">
                             <div class="adm-bus-table-container">
-								<? foreach ($baskets as $basket) { ?>
-									<? if ($basket['ITEM']['CODE'] == 'form') { ?>
+								
+								<? foreach ($bundle['BASKETS'] as $basket) { ?>
+									<? if (empty($basket['PRODUCT'])) { continue; } ?>
+									
+									<? $params = json_decode($basket['PROPS']['PARAMS']['VALUE'], true) ?>
+									
+									<? if (!empty($params[Basket::PARAM_FORM_HANGING_STRUCTURE])) { ?>
 										<div class="filled-form">
 											<table>
-												<? foreach ($basket['PROPS'] as $prop) { ?>
+												<? foreach ($params[Basket::PARAM_FORM_HANGING_STRUCTURE] as $code => $prop) { ?>
 													<tr>
-														<td><?= $prop['NAME'] ?>:</td>
+														<td><?= Loc::getMessage('FIELD_FORM_' . $code) ?>:</td>
 														<td>
-															<b><?= $prop['VALUE'] ?></b>
+															<b><?= $prop ?></b>
 														</td>
 													</tr>
 												<? } ?>
