@@ -21,6 +21,8 @@ class Order
 	const PROP_INVOICE_DATE    = 'INVOICE_DATE';
     const PROP_SURCHARGE       = 'SURCHARGE';
 	const PROP_SURCHARGE_PRICE = 'SURCHARGE_PRICE';
+	const PROP_RATE            = 'RATE';
+	const PROP_RATE_CURRENCY   = 'RATE_CURRENCY';
 	
 	protected $id;
 	protected $data;
@@ -72,6 +74,13 @@ class Order
 		return $this->data;
 	}
 	
+	
+	public function getDateCreated()
+	{
+		$this->load();
+		
+		return $this->data['DATE_INSERT'];
+	}
 	
 	
 	public function getPrice()
@@ -185,6 +194,66 @@ class Order
 	}
 	
 	
+	public function getRawRate()
+	{
+		$this->load();
+		
+		return floatval($this->data['PROPS'][self::PROP_RATE]['VALUE_ORIG']);
+	}
+	
+	
+	public function getRate()
+	{
+		$rate = $this->getRawRate();
+		if (empty($rate)) {
+			$rate = 1;
+		}
+		return floatval($rate);
+	}
+	
+	
+	public function getRawRateCurrency()
+	{
+		$this->load();
+		
+		return strval($this->data['PROPS'][self::PROP_RATE_CURRENCY]['VALUE']);
+	}
+	
+	
+	public function getRateCurrency()
+	{
+		$currency = $this->getRawRateCurrency();
+		if (empty($currency)) {
+			$currency = $this->getCurrency();
+		}
+		return strval($currency);
+	}
+	
+	
+	public function getBillNumber()
+	{
+		$this->load();
+		
+		return floatval($this->data['PROPS']['BILL']['VALUE']);
+	}
+	
+	
+	public function getAdminComments()
+	{
+		$this->load();
+		
+		return strval($this->data['COMMENTS']);
+	}
+	
+	
+	public function getComments()
+	{
+		$this->load();
+		
+		return strval($this->data['USER_DESCRIPTION']);
+	}
+		
+	
 	public function getEvent($asobject = false)
 	{
 		$data = $this->getData();
@@ -202,6 +271,28 @@ class Order
 		return $result;
 	}
     
+	
+	/**
+     * Получение ширины скетча.
+     */
+    public function getSketchWidth()
+    {
+        $this->load();
+		
+		return floatval($this->data['PROPS']['WIDTH']['VALUE']);
+    }
+	
+	
+	/**
+     * Получение глубины скетча.
+     */
+    public function getSketchDepth()
+    {
+        $this->load();
+		
+		return floatval($this->data['PROPS']['DEPTH']['VALUE']);
+    }
+	
     
     /**
      * Получение объекта скетча.
@@ -382,6 +473,10 @@ class Order
 	{
 		$summary = 0;
 		foreach ($this->getBaskets() as $basket) {
+			// Исключение продукции входящей в стоимость.
+			if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
+				continue;
+			}
 			$summary += (float) $basket['SUMMARY_PRICE'];
 		}
 		

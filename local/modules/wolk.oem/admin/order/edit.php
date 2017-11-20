@@ -605,7 +605,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
         
         // Выбор типа заказа.
         $('.js-form-type-order').on('change', function() {
-            console.log($('.js-form-type-order:checked').val());
             if ($('.js-form-type-order:checked').val() == 'QUICK') {
                 $('#js-form-stand-select-button-id').prop('disabled', 'disabled');
             } else {

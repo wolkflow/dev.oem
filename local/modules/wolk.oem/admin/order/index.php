@@ -92,6 +92,42 @@ $oemorder = new Wolk\OEM\Order($ID);
 $bxorder  = Bitrix\Sale\Order::load($ID);
 
 
+// Список валют.
+$result = CCurrencyRates::GetList(($b = 'ID'), ($o = 'ASC'), []);
+$rates  = array();
+while ($irate = $result->fetch()) {
+	$rates[$rate['CURRENCY']] = $irate['RATE'];
+}
+unset($result, $irate);
+
+$result = CCurrency::GetList(($b = 'ID'), ($o = 'ASC'), []);
+$currencies = array();
+while ($currency = $result->fetch()) {
+	if ($oemorder->getCurrency() == $currency['CURRENCY']) {
+		$currency['ORDER_RATE'] = 1;
+	} else {
+		$currency['ORDER_RATE'] = round(CCurrencyRates::ConvertCurrency(1, $oemorder->getCurrency(), $currency['CURRENCY']), 6);
+	}
+	$currencies[$currency['CURRENCY']] = $currency;
+}
+unset($result, $currency);
+
+
+// Список языков.
+$result = CLanguage::GetList(($b = 'ID'), ($o = 'ASC'), []);
+$languages = array();
+while ($language = $result->fetch()) {
+	$languages[$language['LID']] = $language;
+}
+unset($result, $language);
+
+
+// Список статусов.
+$statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
+
+
+
+
 /*
  * Сохранение данных заказа.
  */
@@ -142,7 +178,7 @@ if (!empty($_POST)) {
 			
 			$result = null;
 			
-			if ($status != $oemorder->getStatus()) {
+			if ($status != $oemorder->getStatus() || $comment != $oemorder->getAdminComments()) {
 				$bxorder->setField('COMMENTS', $comment);
 				$bxorder->setField('STATUS_ID', $status);
 				
@@ -183,7 +219,7 @@ if (!empty($_POST)) {
             }
             
             if (is_null($message)) {
-                LocalRedirect('/bitrix/admin/wolk_oem_order_index.php?ID=' . $ID);
+                LocalRedirect($APPLICATION->GetCurUri());
             }
             break;
 
@@ -244,7 +280,7 @@ if (!empty($_POST)) {
 			$image   = (string) $_POST['IMAGE'];
 			
 			if (!empty($objects)) {
-				$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'sketch', $objects);
+				$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SKETCH_SCENE', $objects);
 				if ($result) {
 					$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SKETCH_IMAGE', $image);
 				}
@@ -265,6 +301,8 @@ if (!empty($_POST)) {
                         'MESSAGE' => Loc::getMessage('ERROR_CHANGE_DATA'),
                         'TYPE'    => 'ERROR'
                     ]);
+				} else {
+					LocalRedirect($APPLICATION->GetCurUri());
 				}
             }
             break;
@@ -272,6 +310,45 @@ if (!empty($_POST)) {
 }
 
 
+
+// Данные существующего заказа.
+$odata = array();
+
+if (empty($oemorder)) {
+	die('No order');
+	
+}
+$odata = $oemorder->getFullData();
+
+// Мероприятие.
+$event = $oemorder->getEvent(true);
+
+
+// В заказе есть стенд.
+foreach ($odata['BASKETS'] as $basket) {
+	if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
+		$odata['STAND'] = $basket;
+		break;
+	}
+}
+
+// Заказчик.
+$customer = $odata['USER'];
+
+
+// Курс пересчета.
+$rate = $oemorder->getRate();
+$rate_currency = $oemorder->getRateCurrency();
+
+$result = CCurrencyRates::GetList(($b = 'ID'), ($o = 'ASC'), []);
+$rates  = array();
+while ($irate = $result->fetch()) {
+	$rates[$rate['CURRENCY']] = $irate['RATE'];
+}
+unset($result, $irate);
+
+
+/*
 
 // Заказ.
 $order = CSaleOrder::getByID($ID);
@@ -293,12 +370,8 @@ if ($element) {
 
 
 
-$rate = (!empty($order['PROPS']['RATE']['VALUE'])) 
-		? ((float) $order['PROPS']['RATE']['VALUE']) 
-		: (1);
-$rate_currency = (!empty($order['PROPS']['RATE_CURRENCY']['VALUE'])) 
-				? ((string) $order['PROPS']['RATE_CURRENCY']['VALUE']) 
-				: ($order['CURRENCY']);
+$rate = (!empty($order['PROPS']['RATE']['VALUE']))  ? ((float) $order['PROPS']['RATE']['VALUE']) : (1);
+$rate_currency = (!empty($order['PROPS']['RATE_CURRENCY']['VALUE'])) ? ((string) $order['PROPS']['RATE_CURRENCY']['VALUE']) : ($order['CURRENCY']);
 
 
 
@@ -309,6 +382,7 @@ while ($irate = $result->fetch()) {
 }
 unset($result, $irate);
 
+// Валюты.
 $result = CCurrency::GetList(($b = 'ID'), ($o = 'ASC'), []);
 $currencies = array();
 while ($currency = $result->fetch()) {
@@ -356,6 +430,8 @@ foreach ($baskets as $i => $basket) {
 }
 unset($item);
 
+// echo '<pre>'; print_r($baskets); echo '</pre>';
+
 $surcharge       = (float) $order['PROPS']['SURCHARGE']['VALUE_ORIG'];
 $surcharge_price = (float) $order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
 
@@ -366,44 +442,47 @@ if ($surcharge > 0) {
     }
 }
 
-// Статусы заказа.
-$statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
 
 $goodprice = 0;
 foreach ($baskets as $basket) {
     $goodprice += $basket['PRICE'] * $basket['QUANTITY'];
 }
+*/
+
 
 
 // Данные для скетча.
-$sketch = json_decode($order['PROPS']['sketch']['VALUE_ORIG'], true);
-
+$sketch = json_decode($odata['ORDER']['PROPS']['SKETCH_SCENE']['VALUE_ORIG'], true);
 
 $sketch['items'] = [];
-foreach ($baskets as $basket) {
-    if ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] && $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] && $basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE']) {
-        if (array_key_exists($basket['ITEM']['ID'], $sketch['items'])) {
-            $sketch['items'][$basket['ITEM']['ID']]['quantity'] += $basket['QUANTITY'];
-        } else {
-			
-			if ($basket['ITEM']['PROPS']['SKETCH_TYPE']['VALUE'] == 'nouse') {
-				continue;
-			}
-			
-            $sketch['items'][$basket['ITEM']['ID']] = [
-                'id'        => $basket['ITEM']['ID'],
-                'imagePath' => CFile::ResizeImageGet($basket['ITEM']['PROPS']['SKETCH_IMAGE']['VALUE'], [
-                    'width' => ($basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10 < 5) ? 5 : $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 10,
-                    'height' => ($basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10 < 5) ? 5 : $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 10,
-                ])['src'],
-                'quantity'  => $basket['QUANTITY'],
-                'title'     => $basket['ITEM']['NAME'],
-                'type'      => $basket['ITEM']['PROPS']['SKETCH_TYPE']['VALUE'] ?: 'droppable',
-                'w'         => (float) $basket['ITEM']['PROPS']['WIDTH']['VALUE'] / 1000,
-                'h'         => (float) $basket['ITEM']['PROPS']['HEIGHT']['VALUE'] / 1000
-            ];
-        }
-    }
+
+foreach ($odata['BASKETS'] as &$basket) {
+	
+	// Продкуция.
+	$basket['PRODUCT'] = $element = new Wolk\OEM\Products\Base($basket['PRODUCT_ID']);
+	
+	// Добавление наценки на товары.
+    $basket['SURCHARGE_PRICE'] = $basket['PRICE'] * (1 + $oemorder->getSurchargePrice() / 100);
+ 
+	
+	if (empty($element)) { 
+		continue;
+	}
+	if (!$element->isSketchShow()) {
+		continue;
+	}
+	
+	$object = [
+		'id'        => $basket['PROPS']['BID']['VALUE'],
+		'quantity'  => $basket['QUANTITY'],
+		'pid'       => $element->getID(),
+		'title'     => $element->getTitle(),
+		'type'      => $element->getSketchType(),
+		'w'         => $element->getSketchWidth() / 1000,
+		'h'         => $element->getSketchHeight() / 1000,
+		'imagePath' => $element->getSketchImagePrepared(),
+	];
+	$sketch['items'][$basket['PROPS']['BID']['VALUE']] = $object;
 }
 unset($basket);
 
@@ -417,7 +496,7 @@ $aTabs = [
         'DIV'   => 'data',
         'TAB'   => Loc::getMessage('ORDER_DATA'),
         'ICON'  => 'data',
-        'TITLE' => Loc::getMessage('ORDER_NO').$ID.' | '.$oemorder->getLanguage()
+        'TITLE' => Loc::getMessage('ORDER_NO') . $ID.' | '.$oemorder->getLanguage()
     ]
 ];
 
@@ -427,11 +506,19 @@ $aTabs = [
  */
 $oTabControl = new CAdmintabControl('tabControl', $aTabs);
 
-CJSCore::Init(['jquery']);
+// CJSCore::Init(['jquery']);
+
+$APPLICATION->SetAdditionalCSS('/assets/bootstrap/css/bootstrap.min.css');
+//$APPLICATION->SetAdditionalCSS();
+
+//Bitrix\Main\Page\Asset::getInstance()->addCss('/assets/bootstrap/css/bootstrap.min.css');
+//Bitrix\Main\Page\Asset::getInstance()->addCss('/assets/css/sketch.css');
+
+Bitrix\Main\Page\Asset::getInstance()->addJs('https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js');
+Bitrix\Main\Page\Asset::getInstance()->addJs('/assets/bootstrap/js/bootstrap.min.js');
 
 Bitrix\Main\Page\Asset::getInstance()->addJs('/local/templates/.default/javascripts/designer.js');
 Bitrix\Main\Page\Asset::getInstance()->addJs('/local/templates/.default/build/js/vendor.js');
-Bitrix\Main\Page\Asset::getInstance()->addCss('/assets/css/sketch.css');
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
 
@@ -449,7 +536,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 	}
 	
     $(document).ready(function() {
-		
 		
 		// Генерация счета.
         $('#js-invoice-button-id').on('click', function(e) {
@@ -544,8 +630,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
         
 		var loadsketch = function() {
 			
-			var gridX = parseInt(<?= (int) ($order['PROPS']['width']['VALUE']) ?: 5 ?>);
-			var gridY = parseInt(<?= (int) ($order['PROPS']['depth']['VALUE']) ?: 5 ?>);
+			var gridX = parseInt(<?= (int) ($oemorder->getSketchWidth()) ?: 5 ?>);
+			var gridY = parseInt(<?= (int) ($oemorder->getSketchDepth()) ?: 5 ?>);
 			
 			(window.resizeEditor = function(items) {
 				var height =  Math.max(120 + (items.length * 135), $(window).height());
@@ -575,22 +661,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 			
 			setTimeout(function() { window.resizeEditor(sketchitems); }, 300);
 		}
-
-		loadsketch();
+		
+		if ($('#sketch-order').length) {
+			loadsketch();
+		}
     });
 </script>
-
-<style>
-	.note {
-		color: #909090;
-		margin-top: 5px;
-	}
-	.fascia-text {
-		color: #606060;
-		font-size: 18px;
-		font-weight: 600;
-	}
-</style>
 
 <? if (!empty($message)) { ?>
     <?= $message->show() ?>
@@ -608,18 +684,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
     </div>
 </div>
 
+<pre><?// print_r($odata['ORDER']) ?></pre>
+
 <div class="adm-bus-orderinfoblock adm-detail-tabs-block-pin" id="sale-order-edit-block-order-info">
     <div class="adm-bus-orderinfoblock-container">
         <div class="adm-bus-orderinfoblock-title">
-            <?= Loc::getMessage('ORDER_NO') ?> <?= $order['ID'] ?>
+            <?= Loc::getMessage('ORDER_NO') ?> <?= $oemorder->getID() ?>
         </div>
         <div class="adm-bus-orderinfoblock-content">
-            <div class="adm-bus-orderinfoblock-content-block-customer">
+            <div class="adm-bus-orderinfoblock-content-block-customer" style="width: 50%">
                 <ul class="adm-bus-orderinfoblock-content-customer-info">
                     <li>
                         <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('EVENT') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
-							<?= $event['NAME'] ?>
+							<?= $event->getTitle() ?>
 						</span>
                     </li>
                     <li>
@@ -637,42 +715,45 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                     <li>
                         <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('DATE_CREATED') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
-							<?= date('d.m.Y H:i', strtotime($order['DATE_INSERT'])) ?>
+							<?= date('d.m.Y H:i', strtotime($oemorder->getDateCreated())) ?>
 						</span>
                     </li>
                     <li>
                         <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('ORDER_STATUS') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
-							<?= $statuses[$order['STATUS_ID']]['NAME'] ?>
+							<?= $statuses[$oemorder->getStatus()]['NAME'] ?>
 						</span>
                     </li>
                 </ul>
             </div>
-            <div class="adm-bus-orderinfoblock-content-block-order">
+            <div class="adm-bus-orderinfoblock-content-block-order" style="width: 50%">
                 <ul class="adm-bus-orderinfoblock-content-order-info">
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('COST_STAND') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($stand['BASKET']['PRICE'] * $stand['BASKET']['QUANTITY'] * $rate, $rate_currency) ?>
+							<?= CurrencyFormat($odata['STAND']['PRICE'] * $odata['STAND']['QUANTITY'] * $rate, $rate_currency) ?>
 						</span>
                     </li>
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('TOTAL_COST_PRODUCTS') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($goodprice * $rate, $rate_currency) ?>
+							<?= CurrencyFormat($odata['PRICES']['BASKET'] * $rate, $rate_currency) ?>
+							<? if (!empty($odata['STAND']['PRICE'])) { ?>
+								/ <?= CurrencyFormat(($odata['PRICES']['BASKET'] - $odata['STAND']['PRICE'] * $odata['STAND']['QUANTITY']) * $rate, $rate_currency) ?>
+							<? } ?>
 						</span>
                     </li>
 					<li class="adm-bus-orderinfoblock-content-redtext">
                         <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('SURCHARGES') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							(<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>%)
-                            <?= CurrencyFormat($order['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'] * $rate, $rate_currency) ?>
+							(<?= $oemorder->getSurchargePercent() ?>%)
+                            <?= CurrencyFormat($oemorder->getSurchargePrice() * $rate, $rate_currency) ?>
 						</span>
                     </li>
 					<li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('VAT') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($order['TAX_VALUE'] * $rate, $rate_currency) ?>
+							<?= CurrencyFormat($oemorder->getTAX() * $rate, $rate_currency) ?>
 						</span>
                     </li>
                 </ul>
@@ -680,9 +761,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                     <li>
                         <span class="adm-bus-orderinfoblock-content-order-info-param"><?= Loc::getMessage('TOTAL') ?></span>
 						<span class="adm-bus-orderinfoblock-content-order-info-value">
-							<?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?>
-							<? if (!empty($order['PROPS']['RATE']['VALUE'])) { ?>
-								/ <?= CurrencyFormat($order['PRICE'], $order['CURRENCY']) ?>
+							<?= CurrencyFormat($oemorder->getPrice() * $rate, $rate_currency) ?>
+							<? if ($rate != 1) { ?>
+								/ <?= CurrencyFormat($oemorder->getPrice(), $oemorder->getCurrency()) ?>
 							<? } ?>
 						</span>
                     </li>
@@ -717,7 +798,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                                 <select name="STATUS" class="adm-bus-select">
                                                     <? foreach ($statuses as $status) { ?>
                                                         <option
-                                                            value="<?= $status['ID'] ?>" <?= ($status['ID'] == $order['STATUS_ID']) ? ('selected') : ('') ?>>
+                                                            value="<?= $status['ID'] ?>" <?= ($status['ID'] == $oemorder->getStatus()) ? ('selected') : ('') ?>>
                                                             <?= $status['NAME'] ?>
                                                         </option>
                                                     <? } ?>
@@ -727,20 +808,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 										<tr>
                                             <td class="adm-detail-content-cell-l"><?= Loc::getMessage('ORDER_COMMENT') ?>:</td>
                                             <td class="adm-detail-content-cell-r">
-												<textarea name="COMMENTS" cols="45" rows="5"><?= $order['COMMENTS'] ?></textarea>
+												<textarea name="COMMENTS" cols="45" rows="5"><?= $oemorder->getAdminComments() ?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="adm-detail-content-cell-l"><?= Loc::getMessage('ORDER_INVOICE') ?>:</td>
                                             <td class="adm-detail-content-cell-r">
-                                                <input type="text" name="BILL" value="<?= $order['PROPS']['BILL']['VALUE'] ?>" size="40" />
+                                                <input type="text" name="BILL" value="<?= $oemorder->getBillNumber() ?>" class="form-control" size="40" />
                                             </td>
                                         </tr>
 										<tr>
                                             <td class="adm-detail-content-cell-l"><?= Loc::getMessage('ORDER_NOTE') ?>:</td>
                                             <td class="adm-detail-content-cell-r">
 												<div>
-													<?= ($order['USER_DESCRIPTION']) ?: ('&mdash;') ?>
+													<?= ($oemorder->getComments()) ?: ('&mdash;') ?>
 												</div>
                                             </td>
                                         </tr>
@@ -761,21 +842,25 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 									<table cellpadding="5">
 										<tr>
 											<td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('RATE') ?>:</td>
-											<td width="200">
-												<?= $order['CURRENCY'] ?>
-												&rarr;
-												<? // Счета // ?>
-												<select name="RATE_CURRENCY" id="js-convert-select-id" style="width: 65px;">
-													<? foreach ($currencies as $code => $currency) { ?>
-														<option value="<?= $code ?>" data-rate="<?= $currency['ORDER_RATE'] ?>" <?= ($code == $order['CURRENCY']) ? ('selected') : ('') ?>>
-															<?= $code ?>
-														</option>
-													<? } ?>
-												</select>
-												<input type="text" name="RATE" id="js-convert-rate-id" value="1" style="width: 75px;" />
-											</td>
 											<td>
-												<input type="submit" class="amd-btn-save" value="<?= Loc::getMessage('RECALC') ?>" />
+												<div class="input-group">
+													<span class="input-group-addon">
+														<?= $oemorder->getCurrency() ?> &rarr;
+													</span>
+													
+													<? // Счета // ?>
+													<select name="RATE_CURRENCY" id="js-convert-select-id" class="form-control" style="width: 90px;">
+														<? foreach ($currencies as $code => $currency) { ?>
+															<option value="<?= $code ?>" data-rate="<?= $currency['ORDER_RATE'] ?>" <?= ($code == $oemorder->getCurrency()) ? ('selected') : ('') ?>>
+																<?= $code ?>
+															</option>
+														<? } ?>
+													</select>
+													<input type="text" name="RATE" id="js-convert-rate-id" value="1" class="form-control" style="width: 100px;" />
+													<span class="input-group-btn">
+														<button type="submit" class="btn btn-default" /><?= Loc::getMessage('RECALC') ?></button>
+													</span>
+												</div>
 											</td>
 											<td>
 												<? if (!empty($order['PROPS']['RATE']['VALUE'])) { ?>
@@ -794,11 +879,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 									<table cellpadding="5">
 										<tr>
 											<td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('SURCHARGE') ?>:</td>
-											<td width="200">
-                                                <input type="text" name="SURCHARGE" value="<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>" />
-											</td>
 											<td>
-												<input type="submit" class="amd-btn-save" value="<?= Loc::getMessage('RECALC') ?>" />
+												<div class="input-group">
+													<input type="text" name="SURCHARGE" value="<?= $order['PROPS']['SURCHARGE']['VALUE_ORIG'] ?>" class="form-control" />
+													<span class="input-group-btn">
+														<button type="submit" class="btn btn-default" /><?= Loc::getMessage('RECALC') ?></button>
+													</span>
+												</div>
 											</td>
 										</tr>
 									</table>
@@ -810,18 +897,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     <tr>
                                         <td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('INVOICE_GENERATION') ?>:</td>
                                         <td width="200">
-                                            <? // Счета // ?>
-                                            <select name="invoice" id="js-invoice-select-id" style="width: 200px;">
-                                                <? foreach ($event['PROPS']['INVOICES']['VALUE'] as $index => $invoice) { ?>
-                                                    <option value="<?= $event['PROPS']['INVOICES']['VALUE_XML_ID'][$index] ?>">
-                                                        <?= $invoice ?>
-                                                    </option>
-                                                <? } ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="button" id="js-invoice-button-id" class="amd-btn-save" value="<?= Loc::getMessage('GET_INCOVCE') ?>"/>
-                                        </td>
+											<div class="input-group">
+												<? // Счета // ?>
+												<select name="invoice" id="js-invoice-select-id" class="form-control" style="width: 210px;">
+													<? foreach ($event->getInvoices() as $index => $invoice) { ?>
+														<option value="<?= $event->getInvoices('VALUE_XML_ID')[$index] ?>">
+															<?= $invoice ?>
+														</option>
+													<? } ?>
+												</select>
+												<span class="input-group-btn">
+													<button type="button" id="js-invoice-button-id" class="btn btn-default"><?= Loc::getMessage('GET_INCOVCE') ?></button>
+												</span>
+											</div>
+										</td>
                                         <td>
                                             <div id="js-invoice-response-id">
 												<? $invoice = $oemorder->getInvoice() ?>
@@ -832,21 +921,25 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                         </td>
                                     </tr>
 								</table>
-
+								<br/>
+								
 								<form method="post">
 									<input type="hidden" name="action" value="mail" />
+									
 									<table cellpadding="5">
 										<tr>
 											<td class="adm-detail-content-cell-l" width="235"><?= Loc::getMessage('INVOCE_SENDING') ?>:</td>
 											<td>
-												<input type="text" name="EMAIL" value="<?= $customer['EMAIL'] ?>" size="23" />
+												<div class="input-group">
+													<input type="text" name="EMAIL" value="<?= $customer['EMAIL'] ?>" class="form-control" size="23" />
+													<span class="input-group-btn">
+														<button type="submit" id="js-send-button-id" class="btn btn-default"><?= Loc::getMessage('SEND_INVOCE') ?></button>
+													</span>
+												</div>
 											</td>
-											<td>
-												<input type="submit" id="js-send-button-id" class="amd-btn-save" value="<?= Loc::getMessage('SEND_INVOCE') ?>" />
-											</td>
-											<td>
-												<? if (!empty($order['PROPS']['SENDTIME']['VALUE'])) { ?>
-													<?= Loc::getMessage('SENDED') ?> <?= date('H:i d.m.Y', strtotime($order['PROPS']['SENDTIME']['VALUE'])) ?>
+											<td style="padding: 0 0 0 10px;">
+												<? if (!empty($odata['ORDER']['PROPS']['SENDTIME']['VALUE'])) { ?>
+													<?= Loc::getMessage('SENDED') ?> <?= date('H:i d.m.Y', strtotime($odata['ORDER']['PROPS']['SENDTIME']['VALUE'])) ?>
 												<? } else { ?>
 													<?= Loc::getMessage('NOT_SENDED_YET') ?>
 												<? } ?>
@@ -946,18 +1039,18 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 										<tr>
                                             <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_REQUISITES') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
-                                                <textarea cols="30" rows="6" name="REQUISITES"><?= $customer['UF_REQUISITES'] ?></textarea>
+                                                <textarea cols="30" rows="6" name="REQUISITES" class="form-control"><?= $customer['UF_REQUISITES'] ?></textarea>
                                             </td>
                                         </tr>
 										<tr>
                                             <td class="adm-detail-content-cell-l"><?= Loc::getMessage('COMPANY_CLIENT_NUMBER') ?>:</td>
                                             <td class="adm-detail-content-cell-r" style="font-weight: bold;">
-                                                <input type="text" name="CLIENT_NUMBER" value="<?= $customer['UF_CLIENT_NUMBER'] ?>" size="28" />
+                                                <input type="text" name="CLIENT_NUMBER" value="<?= $customer['UF_CLIENT_NUMBER'] ?>" class="form-control" size="30" />
                                             </td>
                                         </tr>
 										<tr>
                                             <td colspan="2" align="left">
-                                                <input type="submit" class="amd-btn-save adm-btn-green" value="<?= Loc::getMessage('SAVE') ?>" />
+                                                <input type="submit" class="amd-btn adm-btn-green" value="<?= Loc::getMessage('SAVE') ?>" />
                                             </td>
                                         </tr>
                                     </table>
@@ -997,21 +1090,22 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     </thead>
                                     <tbody style="text-align: left; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(221, 221, 221);">
                                         <? $cnt = 0; ?>
-                                        <? foreach ($baskets as $basket) { ?>
-                                            <? if ($basket['PRICE'] <= 0) { continue; } ?>
+                                        <? foreach ($odata['BASKETS'] as $basket) { ?>
+                                            <? if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') { continue; } ?>
                                             <tr>
                                                 <td class="adm-s-order-table-ddi-table-img">
-                                                    <? if (!empty($basket['ITEM']['PREVIEW_PICTURE'])) { ?>
-                                                        <img src="<?= $basket['ITEM']['IMAGE'] ?>" width="78" height="78" />
+													<? $isrc = $basket['PRODUCT']->getImageSrc() ?>
+                                                    <? if (!empty($isrc)) { ?>
+                                                        <img src="<?= $isrc ?>" width="78" height="78" />
                                                     <? } else { ?>
                                                         <div class="no_foto"><?= Loc::getMessage('NO_IMAGE') ?></div>
                                                     <? } ?>
                                                 </td>
                                                 <td align="left">
-													<? if ($basket['ITEM']['IBLOCK_ID'] == STANDS_IBLOCK_ID) { ?> 
-														<?= Loc::getMessage('STAND') ?> &laquo;<?= $basket['NAME'] ?>&raquo;
+													<? if ($basket['PROPS']['STAND']['VALUE'] == 'Y') { ?> 
+														<?= Loc::getMessage('STAND') ?> &laquo;<?= $basket['PRODUCT']->getTitle() ?>&raquo;
 													<? } else { ?>
-														<?= $basket['NAME'] ?>
+														<?= $basket['PRODUCT']->getTitle() ?>
 													<? } ?>
 												</td>
                                                 <td align="center"><?= $basket['QUANTITY'] ?></td>
@@ -1034,16 +1128,22 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     <tfoot>
                                         <tr>
                                             <td colspan="4" align="left" style="height: 50px; margin-left: 15px;">
-                                                <b style="margin-left: 30px;"><?= Loc::getMessage('TOTAL_PRODUCTS') ?><?= $cnt ?></b>.
+                                                <b style="margin-left: 30px;"><?= Loc::getMessage('TOTAL_PRODUCTS') ?>: <?= $cnt ?></b>
                                             </td>
                                             <td colspan="3" align="right">
-                                                <h2 style="3px 20px 0 0"><?= Loc::getMessage('TOTAL') ?>: <?= CurrencyFormat(($order['PRICE'] - $order['TAX_VALUE']) * $rate, $rate_currency) ?></h2>
+                                                <h2 style="3px 20px 0 0">
+													<?= Loc::getMessage('TOTAL') ?>: 
+													<?= CurrencyFormat(($oemorder->getPrice() - $oemorder->getTax()) * $rate, $rate_currency) ?>
+												</h2>
                                             </td>
                                         <tr>
                                         </tr>
                                             <td colspan="4"></td>
                                             <td colspan="3" align="right">
-                                                <h2 style="3px 20px 0 0"><?= Loc::getMessage('TOTAL_VAT') ?>: <?= CurrencyFormat($order['PRICE'] * $rate, $rate_currency) ?></h2>
+                                                <h2 style="3px 20px 0 0">
+													<?= Loc::getMessage('TOTAL_VAT') ?>: 
+													<?= CurrencyFormat($oemorder->getPrice() * $rate, $rate_currency) ?>
+												</h2>
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -1162,39 +1262,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 		
 
         <div style="position: relative; vertical-align: top;">
-            <style scoped>
-                @font-face {
-                    font-family: 'Gotham Pro Bold';
-                    src: url('/assets/fonts/gothaprobol-webfont.eot');
-                    src: url('/assets/fonts/gothaprobol-webfont.eot?#iefix') format('embedded-opentype'),
-                    url('/assets/fonts/gothaprobol-webfont.svg#my-font-family') format('svg'),
-                    url('/assets/fonts/gothaprobol-webfont.woff') format('woff'),
-                    url('/assets/fonts/gothaprobol-webfont.ttf') format('truetype');
-                    font-weight: normal;
-                    font-style: normal;
-                }
-                @font-face {
-                    font-family: 'Gotham Pro Regular';
-                    src: url('/assets/fonts/gothaproreg-webfont.eot');
-                    src: url('/assets/fonts/gothaproreg-webfont.eot?#iefix') format('embedded-opentype'),
-                    url('/assets/fonts/gothaproreg-webfont.svg#my-font-family') format('svg'),
-                    url('/assets/fonts/gothaproreg-webfont.woff') format('woff'),
-                    url('/assets/fonts/gothaproreg-webfont.ttf') format('truetype');
-                    font-weight: normal;
-                    font-style: normal;
-                }
-				.filled-form {
-					border: solid 1px #cccccc;
-					border-right: none;
-					border-top: none;
-					border-bottom: none;
-					border-radius: 30px;
-					padding: 15px;
-					max-width: 800px;
-				}
-            </style>
 			
-			<? // if (!$oemorder->isIndividual()) { ?>
             <? if (!empty($sketch['objects'])) { ?>
 				<div style="height: 5px; width: 100%"></div>
 				<a id="sketch-order"></a>
@@ -1229,5 +1297,103 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 
 <? $oTabControl->EndTab() ?>
 <? $oTabControl->End() ?>
+
+<script>
+    $(document).ready(function() {
+		
+        $('html').addClass('wolk_admin_pages_no_conflict');
+		
+	});
+</script>
+<style>
+	@font-face {
+		font-family: 'Gotham Pro Bold';
+		src: url('/assets/fonts/gothaprobol-webfont.eot');
+		src: url('/assets/fonts/gothaprobol-webfont.eot?#iefix') format('embedded-opentype'),
+		url('/assets/fonts/gothaprobol-webfont.svg#my-font-family') format('svg'),
+		url('/assets/fonts/gothaprobol-webfont.woff') format('woff'),
+		url('/assets/fonts/gothaprobol-webfont.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+	@font-face {
+		font-family: 'Gotham Pro Regular';
+		src: url('/assets/fonts/gothaproreg-webfont.eot');
+		src: url('/assets/fonts/gothaproreg-webfont.eot?#iefix') format('embedded-opentype'),
+		url('/assets/fonts/gothaproreg-webfont.svg#my-font-family') format('svg'),
+		url('/assets/fonts/gothaproreg-webfont.woff') format('woff'),
+		url('/assets/fonts/gothaproreg-webfont.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+	.filled-form {
+		border: solid 1px #cccccc;
+		border-right: none;
+		border-top: none;
+		border-bottom: none;
+		border-radius: 30px;
+		padding: 15px;
+		max-width: 800px;
+	}
+	
+    #js-form-user-select-id {
+        cursor: pointer;
+    }
+	
+    .wolk_admin_pages_no_conflict * {
+        -webkit-box-sizing: initial !important;
+        -moz-box-sizing: initial !important;
+        box-sizing: initial !important;
+    }
+    .linemedia_carsale_dealer_list .adm-workarea .adm-filter-box-sizing .adm-select,
+    .linemedia_carsale_auction_admin .adm-workarea .adm-filter-box-sizing .adm-select,
+    .wolk_admin_pages_no_conflict .adm-workarea .adm-filter-box-sizing .adm-select,
+    .linemedia_carsale_dealer_list .adm-workarea input[type="submit"], .linemedia_carsale_dealer_list .adm-workarea input[type="button"], .linemedia_carsale_dealer_list .adm-workarea input[type="reset"],
+    .linemedia_carsale_auction_admin .adm-workarea input[type="submit"], .linemedia_carsale_auction_admin .adm-workarea input[type="button"], .linemedia_carsale_auction_admin .adm-workarea input[type="reset"],
+    .wolk_admin_pages_no_conflict .adm-workarea input[type="submit"], .wolk_admin_pages_no_conflict .adm-workarea input[type="button"], .wolk_admin_pages_no_conflict .adm-workarea input[type="reset"],
+    .wolk_admin_pages_no_conflict input, .wolk_admin_pages_no_conflict button, .wolk_admin_pages_no_conflict select, .wolk_admin_pages_no_conflict textarea {
+        box-sizing: border-box!important;
+    }
+
+
+    .wolk_admin_pages_no_conflict .adm-workarea { background: #f2f5f7; padding-bottom: 30px}
+
+    .wolk_admin_pages_no_conflict .adm-workarea input.form-control,
+    .wolk_admin_pages_no_conflict .adm-workarea input[type="text"].form-control,
+    .wolk_admin_pages_no_conflict .adm-workarea input[type="password"].form-control,
+    .wolk_admin_pages_no_conflict .adm-workarea input[type="email"].form-control,
+    .wolk_admin_pages_no_conflict .adm-workarea select,
+    .wolk_admin_pages_no_conflict .adm-workarea textarea{
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    }
+    .wolk_admin_pages_no_conflict .adm-workarea textarea{
+        height: auto;
+    }
+	
+	.note {
+		color: #909090;
+		margin-top: 5px;
+	}
+	.fascia-text {
+		color: #606060;
+		font-size: 18px;
+		font-weight: 600;
+	}
+</style>
 
 <? require ($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/epilog_admin.php') ?>
