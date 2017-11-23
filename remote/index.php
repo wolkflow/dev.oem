@@ -138,16 +138,16 @@ switch ($action) {
         $rotate = 0;
         switch ($view) {
             case (1):
-                $rotate = 5;
+                $rotate = 360;
                 break;
             case (2):
-                $rotate = 90;
+                $rotate = 45;
                 break;
             case (3):
-                $rotate = 120;
+                $rotate = 90;
                 break;
             case (4):
-                $rotate = 150;
+                $rotate = 105;
                 break;
         }
         
@@ -427,53 +427,6 @@ switch ($action) {
         } catch (Exceptino $e) {
             jsonresponse(false, $e->getMessag());
         }
-		
-		/*
-		if (is_null($order) && $result) {
-			global $DB;
-			
-			// Отправка письма о новом заказе клиенту.
-			$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info', array('ID' => $arFields['ORDER_ID']));
-			$event = new \CEvent();
-			$event->Send('SALE_NEW_ORDER_CLIENT', SITE_DEFAULT, [
-				'EMAIL' => $arFields['EMAIL'], 
-				'HTML'  => $html,
-				'THEME' => Loc::getMessage('THEME_NEW_ORDER')
-			]);
-			
-			// Отправка письма о новом закази менеджеру.
-			if (!empty($managerEmail)) {
-				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info-manager', array('ID' => $arFields['ORDER_ID']));
-				$event = new \CEvent();
-				$event->Send('SALE_NEW_ORDER_MANAGER', SITE_DEFAULT, [
-					'EMAIL' => $arFields['MANAGER_EMAIL'],
-					'HTML'  => $html,
-					'THEME' => Loc::getMessage('THEME_NEW_ORDER_MANAGER')
-				]);
-			}
-		} else {
-			// Отправка письма об изменении заказа клиенту.
-			$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change', array('ID' => $arFields['ORDER_ID']));
-			$event = new \CEvent();
-			$event->Send('SALE_UPDATE_ORDER', SITE_DEFAULT, [
-				'EMAIL' => $arFields['EMAIL'],
-				'HTML'  => $html,
-				'THEME' => Loc::getMessage('THEME_UPDATE_ORDER')
-			]);
-			
-			// Отправка письма об изменении заказа менеджеру.
-			if (!empty($managerEmail)) {
-				$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-change-manager', array('ID' => $arFields['ORDER_ID']));
-				$event = new \CEvent();
-				$event->Send('SALE_UPDATE_ORDER_MANAGER', SITE_DEFAULT, [
-					'EMAIL' => $arFields['MANAGER_EMAIL'],
-					'HTML'  => $html,
-					'THEME' => Loc::getMessage('THEME_UPDATE_ORDER_MANAGER')
-				]);
-			}
-		}
-		*/
-		
         jsonresponse(true);
         break;
 		

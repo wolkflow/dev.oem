@@ -6,6 +6,8 @@ use \Bitrix\Main\Loader;
 use \Bitrix\Main\Localization\Loc;
 use \Bitrix\Main\Application;
 
+use Wolk\OEM\Products\Base as Product;
+
 
 \Bitrix\Main\Loader::includeModule('sale');
 
@@ -637,8 +639,14 @@ class Order
 		$items = [];
 		$baskets = $this->getBaskets();
 		foreach ($baskets as $basket) {
-			if (in_array($basket['PRODUCT_ID'], $props['FORM-HANDING'])) {
-				$items []= $basket;
+			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
+				continue;
+			}
+			$product = new Product($basket['PRODUCT_ID']);
+			if (empty($product)) {
+				if ($product->isSpecialType(Product::SPECIAL_TYPE_HANDING)) {
+					$items []= $basket;
+				}
 			}
 		}
 		return $items;

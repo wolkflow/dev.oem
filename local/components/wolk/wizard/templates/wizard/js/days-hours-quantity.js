@@ -22,18 +22,8 @@ window['oem-func-days-hours-quantity-cart'] = function($block) {
 	
 	
 	// Время по часам.
-    var hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-01 ' + $timemax.val()));
-    
-    if (hours < 0) {
-        hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-02 ' + $timemax.val()));
-    }
-    if (hours != 0) {
-        hours = Math.abs(hours);
-    }
-	hours = parseInt(hours);
-	
-	
-	var dates = 0;
+    var hours = Date.getHoursBetween($timemin.val() $timemax.val());
+    var dates = 0;
 	
 	// Выбор диапазона или конкретных дат.
 	if ($mode.is(':checked')) {

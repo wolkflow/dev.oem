@@ -500,6 +500,7 @@ div.lamColor								{width: 200px}
 
 .render-images .render-image {
 	float: left;
+	margin: 0 20px 0 0;
 	position: relative;
 	width: fit-content;
 }

@@ -10,14 +10,8 @@ window['oem-func-hours-cart'] = function($block) {
     var $timemax = $block.find('.js-hours-time-max option:selected');
 	
 	// Время по часам.
-    var hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-01 ' + $timemax.val()));
-    
-    if (hours < 0) {
-        hours = Date.getHoursBetween(new Date('2000-01-01 ' + $timemin.val()), new Date('2000-01-02 ' + $timemax.val()));
-    }
-    if (hours != 0) {
-        hours = Math.abs(hours);
-    }
+    var hours = Date.getHoursBetween($timemin.val() $timemax.val());
+	
 	
 	// Протсавление дополнительных параметров.
 	$block.find('.js-product-hours-times').val($timemin.val() + ' - ' + $timemax.val());

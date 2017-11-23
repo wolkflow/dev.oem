@@ -8,15 +8,23 @@ Date.getDateFormat = function (date) {
 /**
  * Количество часов между датами.
  */
-Date.getHoursBetween = function (date1, date2) {
+Date.getHoursBetween = function (time1, time2) {
     var hour = 60 * 60 * 1000;
 
-    var date1_ms = date1.getTime();
-    var date2_ms = date2.getTime();
+	var date1 = new Date('2000-01-01 ' + time1);
+	var date2 = new Date('2000-01-01 ' + time2);
 	
-    var difference = parseInt(date2_ms - date1_ms);
+	if (parseInt(date2.getTime() - date1.getTime()) < 0) {
+		date1 = new Date('2000-01-01 ' + time1);
+		date2 = new Date('2000-01-02 ' + time2);
+	}
 	
-    return Math.round(difference / hour);
+    var difference = parseInt(date2.getTime() - date1.getTime());
+	
+	difference = Math.abs(difference);
+	difference = Math.round(difference / hour);
+	
+    return difference;
 };
 
 

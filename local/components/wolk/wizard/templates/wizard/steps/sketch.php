@@ -59,15 +59,8 @@
     <input id="js-sketch-scene-id" type="hidden" name="SKETCH_SCENE" />
     <input id="js-sketch-image-id" type="hidden" name="SKETCH_IMAGE" />
     
-    <div class="sketchNav">
-        <a href="<?= $arResult['LINKS']['PREV'] ?>" class="basketcontainer__backstepbutton">
-            <?= Loc::getMessage('PREV') ?>
-        </a>
-        <a id="js-sketch-save-id" href="<?= $arResult['LINKS']['NEXT'] ?>" class="basketcontainer__nextstepbutton">
-            <?= Loc::getMessage('NEXT') ?>
-        </a>
-    </div>
-    <hr/>	
+	<hr/>
+	
     <div class="renders">
         <div id="js-renders-images-id" class="render-images"></div>
         <br/>
@@ -123,6 +116,15 @@
             </div>
         </div>
         <div class="clear"></div>
+    </div>
+	
+	<div class="sketchNav">
+        <a href="<?= $arResult['LINKS']['PREV'] ?>" class="basketcontainer__backstepbutton">
+            <?= Loc::getMessage('PREV') ?>
+        </a>
+        <a id="js-sketch-save-id" href="<?= $arResult['LINKS']['NEXT'] ?>" class="basketcontainer__nextstepbutton">
+            <?= Loc::getMessage('NEXT') ?>
+        </a>
     </div>
 </form>
 
@@ -205,7 +207,7 @@
 					},
                     success: function(response) {
                         if (response.status) {
-                            $('#js-renders-images-id').append('<div class="render-image"><img src="' + response.data['path'] + '" width="100" height="100" /><a class="photoZoom" href="' + response.data['path'] + '"></a></div>');
+                            $('#js-renders-images-id').append('<div class="render-image"><a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="100" height="100" /></a></div>');
                         } else {
                             // Ошибка загрузки файла.
                         }
@@ -229,6 +231,7 @@
 
         (window.resizeEditor = function(items) {
             var height =  Math.max(120 + (items.length * 135), $(window).height());
+			
             $('#designer').height(height);
 
             window.editorScrollTop = $('#designer').offset().top - 30;
