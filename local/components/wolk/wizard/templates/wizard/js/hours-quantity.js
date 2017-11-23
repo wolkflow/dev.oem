@@ -16,7 +16,7 @@ window['oem-func-hours-quantity-cart'] = function($block) {
 	
 	
 	// Время по часам.
-    var hours = Date.getHoursBetween($timemin.val() $timemax.val());
+    var hours = Date.getHoursBetween($timemin.val(), $timemax.val());
 	
 		
 	// Протсавление дополнительных параметров.

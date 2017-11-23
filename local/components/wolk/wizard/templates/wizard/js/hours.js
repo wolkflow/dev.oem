@@ -10,7 +10,7 @@ window['oem-func-hours-cart'] = function($block) {
     var $timemax = $block.find('.js-hours-time-max option:selected');
 	
 	// Время по часам.
-    var hours = Date.getHoursBetween($timemin.val() $timemax.val());
+    var hours = Date.getHoursBetween($timemin.val(), $timemax.val());
 	
 	
 	// Протсавление дополнительных параметров.

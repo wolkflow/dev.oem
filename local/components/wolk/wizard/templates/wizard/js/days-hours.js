@@ -16,7 +16,7 @@ window['oem-func-days-hours-cart'] = function($block) {
 	
 	
 	// Время по часам.
-    var hours = Date.getHoursBetween($timemin.val() $timemax.val());
+    var hours = Date.getHoursBetween($timemin.val(), $timemax.val());
 	
 	
 	// Выбор диапазона или конкретных дат.
