@@ -64,7 +64,7 @@
     <div class="renders">
         <div id="js-renders-images-id" class="render-images"></div>
         <br/>
-        <button id="js-render-id" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler">
+        <button id="js-render-id" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler customizable">
             <?= Loc::getMessage('RENDER') ?>
         </button>
     </div>
@@ -119,10 +119,10 @@
     </div>
 	
 	<div class="sketchNav">
-        <a href="<?= $arResult['LINKS']['PREV'] ?>" class="basketcontainer__backstepbutton">
+        <a href="<?= $arResult['LINKS']['PREV'] ?>" class="basketcontainer__backstepbutton customizable">
             <?= Loc::getMessage('PREV') ?>
         </a>
-        <a id="js-sketch-save-id" href="<?= $arResult['LINKS']['NEXT'] ?>" class="basketcontainer__nextstepbutton">
+        <a id="js-sketch-save-id" href="<?= $arResult['LINKS']['NEXT'] ?>" class="basketcontainer__nextstepbutton customizable">
             <?= Loc::getMessage('NEXT') ?>
         </a>
     </div>

@@ -265,15 +265,36 @@ class WizardComponent extends \CBitrixComponent
         // Валюта.
         $this->arResult['CURRENCY'] = $this->arResult['EVENT']->getCurrencyContext($this->getContext());
         
+		
+		// Шаги.
+        $steps = $this->getSteps();
+        
+        // Ссылки на шаги конструктора.
+        $this->arResult['STEPLINKS'] = [];
+        foreach ($steps as $n => $step) {
+            $this->arResult['STEPLINKS'][$step] = $this->getStepLink($n);
+        }
+		
 
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
 		
+		
+		// Контент мероприятия.
+		$APPLICATION->AddViewContent('EVENT_LINK', $this->getEvent()->getLink());
+		$APPLICATION->AddViewContent('EVENT_LOGO', $this->getEvent()->getLogo());
+		
+		$color = $this->getEvent()->getColor();
+		if (!empty($color)) {
+			$APPLICATION->AddViewContent(
+				'EVENT_COLOR',
+				'.customizable        {background-color: '.$color.' !important;} 
+				 .customizable_border {border-color: '.$color.';}
+				 .customizable_instep {background: linear-gradient(to right, '.$color.', #7f7f7f)!important;}'
+			);
+		}
 
-		// Ссылка на мероприятие.
-		$APPLICATION->AddViewContent('EVENT_LINK', $this->getEventLink());
-        
-
+		
 		return $this->arResult;
     }
     
@@ -612,16 +633,7 @@ class WizardComponent extends \CBitrixComponent
             $price += $basket->getCost();
         }
         
-        // Шаги.
-        $steps = $this->getSteps();
         
-        // Ссылки на шаги конструктора.
-        $this->arResult['STEPLINKS'] = [];
-        foreach ($steps as $n => $step) {
-            $this->arResult['STEPLINKS'][$step] = $this->getStepLink($n);
-        }
-        
-		
 		// Данные по стенду.
 		$this->arResult['STANDNUM'] = $oembasket->getParam('STANDNUM');
 		$this->arResult['PAVILION'] = $oembasket->getParam('PAVILION');
@@ -660,7 +672,7 @@ class WizardComponent extends \CBitrixComponent
      */
     protected function getEventLink()
     {
-        return ('/events/' . mb_strtolower($this->getEventCode()) . '/');
+        return $this->getEvent()->getLink();
     }
     
     
@@ -967,13 +979,7 @@ class WizardComponent extends \CBitrixComponent
      */
     protected static function getColors()
     {
-        Bitrix\Main\Loader::includeModule('highloadblock');
-        
-        //$hlblock = HighloadBlockTable::getById(COLORS_ENTITY_ID)->fetch();
-        //$entity  = HighloadBlockTable::compileEntity($hlblock);
-        //$class   = $entity->getDataClass();
-
-        $result = \Wolk\OEM\Dicts\Color::getList(['order' => ['UF_NUM' => 'ASC', 'UF_SORT' => 'ASC']], false);
+        $result = \Wolk\OEM\Dicts\Color::getList(['order' => ['UF_SORT' => 'ASC', 'UF_NUM' => 'ASC']], false);
         $colors = array();
         while ($color = $result->fetch()) {
             $colors[$color['ID']] = $color;

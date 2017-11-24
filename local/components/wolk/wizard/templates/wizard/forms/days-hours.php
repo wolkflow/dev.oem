@@ -26,7 +26,7 @@
 				<div class="serviceItem__subtitle">
 					<?= Loc::getMessage('DATES') ?>
 				</div>
-				<div class="setDate"></div>
+				<div class="setDate customizable"></div>
 				<div class="calendarPopupBlock js-calendar-popup">
 					<div class="calendarPopupContent js-calendar-content">
 						<div class="calendarPopupButtons">

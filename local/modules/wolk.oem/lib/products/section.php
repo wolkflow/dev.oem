@@ -6,7 +6,7 @@ use Wolk\OEM\Products\Base as Product;
 
 class Section extends \Wolk\Core\System\IBlockSectionModel
 {
-	const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
+    const IBLOCK_ID   = IBLOCK_PRODUCTS_ID;
     const LANG_PREFIX = 'LANG_';
     
     const DEPTH_SECTION = 1; // Раздел
@@ -16,43 +16,52 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
     const TYPE_EQUIPMENTS = 'EQUIPMENTS';
     const TYPE_SERVICES   = 'SERVICES';
     const TYPE_MARKETINGS = 'MARKETINGS';
-	
-	const PRICETYPE_QUANTITY   = 'QUANTITY';
-	const PRICETYPE_DAYS  	   = 'DAYS';
-	const PRICETYPE_DAYS_HOURS = 'DAYS.HOURS';
-	const PRICETYPE_SYMBOLS    = 'SYMBOLS';
-	
-	const MEASURE_PIECES = 'PC';
-	const MEASURE_SQUARE = 'SQM';
-	const MEASURE_HOURS  = 'HR';
-	const MEASURE_DAYS   = 'DS';
     
-	
+    // Типы формирования цены.
+    const PRICETYPE_DAYS                  = 'DAYS';
+    const PRICETYPE_DAYS_HOURS            = 'DAYS.HOURS';
+    const PRICETYPE_DAYS_HOURS_QUANTITY   = 'DAYS.HOURS.QUANTITY';
+    const PRICETYPE_DAYS_QUANTITY         = 'DAYS.QUANTITY';
+    const PRICETYPE_HOURS                 = 'HOURS';
+    const PRICETYPE_HOURS_QUANTITY        = 'HOURS.QUANTITY';
+    const PRICETYPE_QUANTITY              = 'QUANTITY';
+    const PRICETYPE_SQUARE                = 'SQUARE';
+    const PRICETYPE_WIDTH_HEIGHT          = 'WIDTH.HEIGHT';
+    const PRICETYPE_WIDTH_HEIGHT_QUANTITY = 'WIDTH.HEIGHT.QUANTITY';
+    const PRICETYPE_SYMBOLS               = 'SYMBOLS';
+    
+	// Единицы измерения.
+    const MEASURE_PIECES = 'PC';
+    const MEASURE_SQUARE = 'SQM';
+    const MEASURE_HOURS  = 'HR';
+    const MEASURE_DAYS   = 'DS';
+    
+    
     protected static $pricetypes = array();
     protected static $properties = array();
     
     // Временные внутренние данные (в текущем рабочем простаранстве).
     protected $insides = [];
     
-	
+    
     
     public function __construct($id = null, $data = [])
     {
         parent::__construct($id, $data);
     }
     
-	
-	public function getTitle($lang = null)
-	{
-		$this->load();
+    
+    public function getTitle($lang = null)
+    {
+        $this->load();
         
         if (empty($lang)) {
             $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
-		
-		return $this->data['UF_' . self::LANG_PREFIX . 'TITLE_' . $lang];
-	}
+        
+        return $this->data['UF_' . self::LANG_PREFIX . 'TITLE_' . $lang];
+    }
 
 
     public function getListTitle($lang = null)
@@ -69,16 +78,16 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
 
     
     public function getDescription($lang = null)
-	{
-		$this->load();
+    {
+        $this->load();
         
         if (empty($lang)) {
             $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
         $lang = mb_strtoupper($lang);
-		
-		return $this->data['UF_' . self::LANG_PREFIX . 'NOTE_' . $lang];
-	}
+        
+        return $this->data['UF_' . self::LANG_PREFIX . 'NOTE_' . $lang];
+    }
     
     
     /**
@@ -124,10 +133,10 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
     /**
      * Получение уровня вложенности.
      */
-	public function getDepth()
-	{
-		return intval($this->data['DEPTH_LEVEL']);
-	}
+    public function getDepth()
+    {
+        return intval($this->data['DEPTH_LEVEL']);
+    }
     
     
     /**
@@ -208,18 +217,18 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
         }
         return $this->insides;
     }
-	
-	
-	/**
-	 * Получение специальных типов.
-	 */
-	public function isSpecialType($type)
-	{
-		// Специальные свойство.
-		$enums = Product::getSpecialTypes();
-		
-		return (in_array($this->getID(), $enums[strval($type)]['SIDS']));
-	}
+    
+    
+    /**
+     * Получение специальных типов.
+     */
+    public function isSpecialType($type)
+    {
+        // Специальные свойство.
+        $enums = Product::getSpecialTypes();
+        
+        return (in_array($this->getID(), $enums[strval($type)]['SIDS']));
+    }
     
     
     /**

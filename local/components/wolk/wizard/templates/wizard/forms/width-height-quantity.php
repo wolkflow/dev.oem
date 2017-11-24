@@ -29,8 +29,8 @@
 				<div class="serviceItem__subtitle">
 					<?= Loc::getMessage('QUANTITY') ?>
 				</div>
-				<div class="js-quantity-dec itemCount__button itemCount__down"></div>
-				<div class="js-quantity-inc itemCount__button itemCount__up"></div>
+				<div class="js-quantity-dec itemCount__button itemCount__down customizable"></div>
+				<div class="js-quantity-inc itemCount__button itemCount__up customizable"></div>
 				<input type="text" class="js-quantity js-field-value itemCount__input styler" name="QUANTITY" value="<?= (int) $fields['QUANTITY'] ?>" />
 			</div>
 		</div>

@@ -39,7 +39,7 @@
                 <ul class="js-colors-palette">
                     <? foreach ($arResult['COLORS'] as $item) { ?>
                         <li <?= ($value['ID'] == $item['ID']) ? ('active') : ('') ?>>
-                            <span class="js-color-item" style="background: <?= (!empty($item['UF_BACKGROUND'])) ? ('url('.$item['UF_BACKGROUND'].')') : ('rgb('.$item['UF_CODE'].')') ?>;" data-id="<?= $item['ID'] ?>"></span>
+                            <span class="js-color-item" style="background: <?= (!empty($item['UF_BACKGROUND'])) ? ('url('.\CFile::getPath($item['UF_BACKGROUND']).')') : ('rgb('.$item['UF_CODE'].')') ?>;" data-id="<?= $item['ID'] ?>"></span>
                             <div class="colorTip">
                                 <?= $item['UF_NUM'] ?>
                                 <?= ($item['UF_LANG_NAME_'.$arResult['LANG']]) ?: ($item['UF_XML_ID'])  ?>

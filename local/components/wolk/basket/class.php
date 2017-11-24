@@ -43,6 +43,10 @@ class BasketComponent extends \CBitrixComponent
         // Язык.
         $arParams['LANG'] = (string) $arParams['LANG'];
         
+		
+		// Шаги.
+        $arParams['STEPLINKS'] = (array) $arParams['STEPLINKS'];
+		
         
         // Контекст исполнения.
         $this->context = new Context($arParams['EID'], $arParams['TYPE'], $arParams['LANG']);

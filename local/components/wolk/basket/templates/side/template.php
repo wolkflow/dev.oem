@@ -6,7 +6,8 @@
 
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
-<? use Wolk\Oem\Basket; ?>
+<? use Wolk\OEM\Basket; ?>
+<? use Wolk\OEM\Products\Section; ?>
 
 <? if ($arResult['CONTEXT']->getType() != \Wolk\OEM\Context::TYPE_INDIVIDUAL && !is_null($arResult['STAND'])) { ?>
     <div class="basketcontainer__itemcontainer customizable_border">
@@ -52,8 +53,12 @@
             </div>
 			<div class="block-basket-buttons">
 				<div class="basket-buttons js-product-quantity" data-quantity="<?= $item->getQuantity() ?>">
-					<a href="javascript:void(0)" class="js-basket-inc inc"    data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
-					<a href="javascript:void(0)" class="js-basket-dec dec"    data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+					<? if (in_array($product->getSection()->getPriceType(), array(Section::PRICETYPE_QUANTITY, Section::PRICETYPE_SQUARE))) { ?>
+						<a href="javascript:void(0)" class="js-basket-dec dec" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+						<a href="javascript:void(0)" class="js-basket-inc inc" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
+					<? } else { ?>
+						<a href="<?= $arParams['STEPLINKS'][strtolower($product->getSectionType())] ?>#s-<?= $product->getSectionID() ?>">&rarr;</a>
+					<? } ?>
 					<a href="javascript:void(0)" class="js-basket-remove rem" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
 				</div>
 			</div>

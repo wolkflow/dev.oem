@@ -41,7 +41,7 @@ Loc::loadLanguageFile(__FILE__);
 		$langs = $APPLICATION->availableLang;
     ?>
     <style>
-        <? $APPLICATION->ShowViewContent('custom_color_styles') ?>
+        <? $APPLICATION->ShowViewContent('EVENT_COLOR') ?>
     </style>
 	<script type="text/javascript" src="/local/templates/.default/javascripts/designer.js"></script>
     <script>

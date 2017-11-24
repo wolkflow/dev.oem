@@ -120,9 +120,9 @@
                                 <?= $stand->getTitle() ?>
                             </div>
                             <div class="standstypescontainer__pricecontiner">
-                                <?= FormatCurrency($standoffer->getPrice(), $arResult['CURRENCY']) ?>
+                                <?= FormatCurrency($standoffer->getPriceArea($arResult['AREA']), $arResult['CURRENCY']) ?> 
                                 <span>
-                                      <?= FormatCurrency($standoffer->getPriceArea($arResult['AREA']), $arResult['CURRENCY']) ?> 
+									  <?= FormatCurrency($standoffer->getPrice(), $arResult['CURRENCY']) ?>
                                     / <?= Loc::getMessage('M2') ?>
                                 </span>
                                 <div data-id="<?= $stand->getID() ?>" class="js-stand-choose-button standstypescontainer__choosebutton customizable <?= ($arResult['DATA']['STAND'] == $stand->getID()) ? ('current') : ('') ?>">

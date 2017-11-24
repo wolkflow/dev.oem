@@ -14,6 +14,9 @@ class Event extends \Wolk\Core\System\IBlockEntity
 {
     const IBLOCK_ID = IBLOCK_EVENTS_ID;
     
+	const LINK_PREFIX     = '/events/';
+	const LOGO_DEFAULT    = '/local/templates/.default/build/images/header-logo.png';
+	
     const STEP_EQUIPMENTS = 'EQUIPMENTS';
     const STEP_SERVICES   = 'SERVICES';
     const STEP_MARKETINGS = 'MARKETINGS';
@@ -22,6 +25,8 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	protected $data    = [];
 	protected $prices  = ['stands' => [], 'equipments' => [], 'services' => [], 'marketings' => []];
 	
+	protected $logo;
+	protected $color;
     protected $preselect;
 	
     
@@ -234,12 +239,6 @@ class Event extends \Wolk\Core\System\IBlockEntity
         return $this->preselect;
     }
 	
-	/*
-    public function getAvailableStands()
-    {
-        return [];
-    }
-	*/
 	
 	public function getStandIDs()
 	{
@@ -299,6 +298,51 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
 		return intval($this->data['PROPS']['PAY_LIMIT_SYMBOLS_PANEL']['VALUE']);
 	}
+	
+	
+	/**
+	 * Получение ссылки на выставку.
+	 */
+	public function getLink()
+	{
+		return (self::LINK_PREFIX . mb_strtolower($this->getCode()) . '/');
+	}
+	
+	
+	/**
+	 * Получение логотипа выставки.
+	 */
+	public function getLogo($lang = null)
+	{
+		if (empty($this->logo)) {
+			$this->load();
+			
+			if (empty($lang)) {
+				$lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+			}
+			$lang = mb_strtoupper($lang);
+			$logo = $this->data['PROPS']['LANG_LOGO_' . $lang]['VALUE'];
+			
+			if (!empty($logo)) {
+				$this->logo = \CFile::ResizeImageGet($logo, ['width' => 220, 'height' => 65])['src'];
+			} else {
+				$this->logo = self::LOGO_DEFAULT;
+			}
+		}
+		return $this->logo;
+	}
+	
+	
+	/**
+	 * Получение цветовой гаммы выставки.
+	 */
+	public function getColor()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['COLOR']['VALUE'];
+	}
+	
     
     
 	/**

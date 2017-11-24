@@ -67,7 +67,7 @@
                                 <? if ($multiple) { ?>
                                     <div class="serviceItem__bottom">
                                         <a href="javascript:void(0);" class="js-more-field itemAdd_field">
-                                            <i></i>
+                                            <i class="customizable"></i>
                                             <span><?= Loc::getMessage('MORE') ?></span>
                                         </a>
                                     </div>
@@ -98,15 +98,16 @@
                         "CODE" => $arResult['EVENT']->getCode(),
                         "TYPE" => $arResult['CONTEXT']->getType(),
                         "LANG" => $arResult['CONTEXT']->getLang(),
+						"STEPLINKS" => $arResult['STEPLINKS'],
                     )
                 );
                 ?>
             </div>
             <div class="navButtons">
-                <a href="<?= $arResult['LINKS']['PREV'] ?>" class="button styler prev">
+                <a href="<?= $arResult['LINKS']['PREV'] ?>" class="button styler prev customizable">
                     <?= Loc::getMessage('PREV') ?>
                 </a>
-                <a href="<?= $arResult['LINKS']['NEXT'] ?>" class="button styler next">
+                <a href="<?= $arResult['LINKS']['NEXT'] ?>" class="button styler next customizable">
                     <?= Loc::getMessage('NEXT') ?>
                 </a>
             </div>
