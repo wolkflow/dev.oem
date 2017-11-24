@@ -6,8 +6,9 @@ $MESS['EVENT'] = 'Exhibition';
 $MESS['STAT_EVENT'] = 'Statistics on the exhibition';
 $MESS['TOTAL_ORDERS'] = 'Total orders';
 $MESS['TOTAL_USERS'] = 'Total Participants';
-$MESS['TOTAL_SALE_SUM'] = 'Total sales amount';
+$MESS['TOTAL_SALE_SUM_NOVAT'] = 'Total sales amount without VAT';
 $MESS['TOTAL_VAT_SUM'] = 'Total VAT amount';
+$MESS['TOTAL_SALE_SUM'] = 'Total sales amount';
 $MESS['TOTAL_SURCHARGE_SUM'] = 'Total amount of extra charges';
 $MESS['PLACE'] = 'Location';
 

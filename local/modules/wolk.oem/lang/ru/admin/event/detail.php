@@ -6,8 +6,9 @@ $MESS['EVENT'] = 'Выставка';
 $MESS['STAT_EVENT'] = 'Статистика по выставке';
 $MESS['TOTAL_ORDERS'] = 'Всего заказов';
 $MESS['TOTAL_USERS'] = 'Всего участников';
-$MESS['TOTAL_SALE_SUM'] = 'Общая сумма продаж';
+$MESS['TOTAL_SALE_SUM_NOVAT'] = 'Общая сумма продаж без НДС';
 $MESS['TOTAL_VAT_SUM'] = 'Общая сумма НДС';
+$MESS['TOTAL_SALE_SUM'] = 'Общая сумма продаж';
 $MESS['TOTAL_SURCHARGE_SUM'] = 'Общая сумма наценок';
 $MESS['PLACE'] = 'Место проведения';
 

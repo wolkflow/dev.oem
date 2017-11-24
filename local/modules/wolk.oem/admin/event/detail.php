@@ -124,15 +124,19 @@ while ($item = $result->fetch()) {
 			$key = 'PRODUCTS';
 		}
 		
+		// Курс и валютя для статистики.
+		$convrate = $order->getRate();
+		$currency = $order->getRateCurrency();
+		
 		// Процент наценки.
 		$surcharge = (float) $order->getSurchargePercent();
 		$surfactor = (1 + $surcharge / 100);
 		
 		// Стоимость.
-		$cost = $basket['PRICE'] * $basket['QUANTITY'];
+		$cost = $basket['PRICE'] * $basket['QUANTITY'] * $convrate;
 		
 		// Элемент.
-		$bitem = &$stat[$key]['CURRENCIES'][$basket['CURRENCY']]['ITEMS'][$basket['PRODUCT_ID']][$surcharge];
+		$bitem = &$stat[$key]['CURRENCIES'][$currency]['ITEMS'][$basket['PRODUCT_ID']][$surcharge];
 		
 		
 		// Количество заказов.
@@ -142,18 +146,18 @@ while ($item = $result->fetch()) {
 		$bitem['QUANTITY'] += $basket['QUANTITY'];
 		
 		// Цена товара.
-		$bitem['PRICE_ORIGINAL'] = (float) $basket['PRICE'];
+		$bitem['PRICE_ORIGINAL'] = (float) $basket['PRICE'] * $convrate;
 		
 		// Цена товара с наценкой.
-		$bitem['PRICE_SURCHARGE'] = (float) $basket['PRICE'] * $surfactor;
+		$bitem['PRICE_SURCHARGE'] = (float) $basket['PRICE'] * $surfactor * $convrate;
 		
 		// Стоимость товара.
-		$bitem['TOTAL'] += (float) $cost * $surfactor;
+		$bitem['TOTAL'] += (float) $cost * $surfactor * $convrate;
 		
 		
 		
 		// Общая сумма.
-		$stat[$key]['CURRENCIES'][$basket['CURRENCY']]['TOTAL'] += (float) $cost * $surfactor;
+		$stat[$key]['CURRENCIES'][$currency]['TOTAL'] += (float) $cost * $surfactor * $convrate;
 		
 		
 		// Общее количество товаров.
@@ -163,14 +167,17 @@ while ($item = $result->fetch()) {
 		$stat[$key]['STATS'][$basket['PRODUCT_ID']]['ORDERS'][$order->getID()] = $order->getID();
 	}
 	
-	// Цены.
-	$stat['PRICES']['PRICE'][$order->getCurrency()] += (float) $order->getPrice();
+	// Цена.
+	$stat['PRICES']['PRICE'][$currency] += (float) $order->getPrice() * $convrate;
 	
 	// НДС.
-	$stat['PRICES']['VAT'][$order->getCurrency()] += (float) $order->getTAX();
+	$stat['PRICES']['VAT'][$currency] += (float) $order->getTAX() * $convrate;
+	
+	// Цена без НДС.
+	$stat['PRICES']['NOVAT'][$currency] = $stat['PRICES']['PRICE'][$currency] - $stat['PRICES']['VAT'][$currency];
 	
 	// Наценки.
-	$stat['PRICES']['SURCHARGE'][$order->getCurrency()] += (float) $order->getSurcharge();
+	$stat['PRICES']['SURCHARGE'][$currency] += (float) $order->getSurcharge() * $convrate;
 }
 
 $stat['USERS'] = array_unique($stat['USERS']);
@@ -323,12 +330,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 						</thead>
 						<tbody>
 							<tr>
-								<td><?= Loc::getMessage('TOTAL_SALE_SUM') ?></td>
+								<td><?= Loc::getMessage('TOTAL_SALE_SUM_NOVAT') ?></td>
 								<? foreach ($currencies as $currency) { ?>
 									<? $code = $currency['CURRENCY'] ?>
 									<td>
-										<? if (!empty($stat['PRICES']['PRICE'][$code])) { ?>
-											<?= CurrencyFormat($stat['PRICES']['PRICE'][$code], $code) ?>
+										<? if (!empty($stat['PRICES']['NOVAT'][$code])) { ?>
+											<?= CurrencyFormat($stat['PRICES']['NOVAT'][$code], $code) ?>
 										<? } else { ?>
 											<span class="none">&mdash;</span>
 										<? } ?>
@@ -342,6 +349,19 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 									<td>
 										<? if (!empty($stat['PRICES']['VAT'][$code])) { ?>
 											<?= CurrencyFormat($stat['PRICES']['VAT'][$code], $code) ?>
+										<? } else { ?>
+											<span class="none">&mdash;</span>
+										<? } ?>
+									</td>
+								<? } ?>
+							</tr>
+							<tr>
+								<td><?= Loc::getMessage('TOTAL_SALE_SUM') ?></td>
+								<? foreach ($currencies as $currency) { ?>
+									<? $code = $currency['CURRENCY'] ?>
+									<td>
+										<? if (!empty($stat['PRICES']['PRICE'][$code])) { ?>
+											<?= CurrencyFormat($stat['PRICES']['PRICE'][$code], $code) ?>
 										<? } else { ?>
 											<span class="none">&mdash;</span>
 										<? } ?>
