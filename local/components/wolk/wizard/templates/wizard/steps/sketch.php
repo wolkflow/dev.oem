@@ -67,11 +67,11 @@
 			<div id="js-render-image-2-id" class="render-image"></div>
 			<div id="js-render-image-3-id" class="render-image"></div>
 			<div id="js-render-image-4-id" class="render-image"></div>
+			
+			<button id="js-render-id" style="width: auto;" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler customizable">
+				<?= Loc::getMessage('RENDER') ?>
+			</button>
 		</div>
-        <br/>
-        <button id="js-render-id" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler customizable">
-            <?= Loc::getMessage('RENDER') ?>
-        </button>
     </div>
     
     <div class="sketchAfter">
@@ -145,6 +145,13 @@
 	</div>
 </div>
 
+<?	// Определение количества оборудования на скетче.
+	$count = 0;
+	foreach ($arResult['OBJECTS'] as $object) {
+		$count += $object['quantity'];
+	}
+?>
+
 <script>
     $(document).ready(function() {
 		
@@ -153,7 +160,7 @@
 			var scene = ru.octasoft.oem.designer.Main.getScene();
             var image = ru.octasoft.oem.designer.Main.saveJPG();
 
-			if (scene.objects.length < <?= count($arResult['OBJECTS']) ?>) {
+			if (scene.objects.length < <?= $count ?>) {
 				e.preventDefault();
                 ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 				return false;
@@ -169,8 +176,8 @@
             
             var scene = ru.octasoft.oem.designer.Main.getScene();
             var image = ru.octasoft.oem.designer.Main.saveJPG();
-            
-            if (scene.objects.length < <?= count($arResult['OBJECTS']) ?>) {
+			
+            if (scene.objects.length < <?= $count?>) {
                 ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 				return false;
             }
@@ -194,8 +201,6 @@
             var objs = ru.octasoft.oem.designer.Main.getScene();
             var code = $(this).data('code');
             
-            // $('#js-renders-images-id').html('');
-            
             for (var i = 1; i <= 4; i++) {
                 var data = {'action': 'render', 'code': code, 'view': i, 'objs': JSON.stringify(objs)};
                 
@@ -212,7 +217,7 @@
 					},
                     success: function(response) {
                         if (response.status) {
-                            $('#js-render-image-' + response.data['view'] + '-id').removeClass('pre-loader').html('<a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="100" height="100" /></a>');
+                            $('#js-render-image-' + response.data['view'] + '-id').removeClass('pre-loader').html('<a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="60" height="60" /></a>');
                         } else {
                             // Ошибка загрузки файла.
                         }
@@ -234,11 +239,11 @@
         var gridY = parseFloat(<?= (float) ($arResult['DEPTH']) ?: 5 ?>);
 
         (window.resizeEditor = function(items) {
-            var height =  Math.max(120 + (items.length * 135), $(window).height());
+            var height =  Math.max(60 + (items.length * 135), $(window).height());
 			
             $('#designer').height(height);
-
-            window.editorScrollTop = $('#designer').offset().top - 30;
+			
+            window.editorScrollTop    = $('#designer').offset().top - 30;
             window.editorScrollBottom = window.editorScrollTop - 30 + height - $(window).height();
             if (window.editorScrollBottom < window.editorScrollTop) {
                 window.editorScrollTop = window.editorScrollBottom;

@@ -19,7 +19,7 @@ $MESS['BASKET'] = 'Basket';
 $MESS['PREV'] = 'Back';
 $MESS['NEXT'] = 'Next';
 
-$MESS['RENDER'] = 'Render';
+$MESS['RENDER'] = 'Load 3D models of the stand';
 
 $MESS['SELECTED_INDIVIDUAL_STAND_NOTE'] = 'On request for participation, you have ordered an unequipped space. You can click "Continue" and go to the selection of additional services or you can choose any booth listed below. ';
 

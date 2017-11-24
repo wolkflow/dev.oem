@@ -16,7 +16,7 @@
 			<div class="ordercontainer noborder">
 				<div class="ordercontainer__columnscontainer">
 					<?= Loc::getMessage('ERROR_SKETCH_REQUIRED_IN_ORDER') ?>
-					<a href="<?= $arResult['LINKS']['PREV'] ?>" class="ordertotalcontainer__placeorder">
+					<a href="<?= $arResult['LINKS']['PREV'] ?>" class="ordertotalcontainer__placeorder customizable">
 						<?= Loc::getMessage('PREV') ?>
 					</a>
 				</div>
