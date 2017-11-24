@@ -54,7 +54,7 @@ function PutBasket(quantity, $block)
         }
         action = 'put-basket';
     }
-
+	
     // Проверка заполненности всех свойств товара.
     var params   = {};
     var required = false;

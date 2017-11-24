@@ -311,6 +311,7 @@ switch ($action) {
         $eid      = (int)    $request->get('eid');
         $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');
+		$quantity = (float)  $request->get('quantity');
         $params   = (array)  $request->get('params');
         
         $parameters = [];
