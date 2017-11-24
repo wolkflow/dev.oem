@@ -44,6 +44,17 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	{
 		return $this->get('CODE');
 	}
+	
+	
+	/**
+     * Получение даты начала мероприятия.
+     */
+    public function getDateBegin()
+	{
+		$this->load();
+		
+		return $this->data['PROPS']['DATE_BEGIN']['VALUE'];
+	}
     
 	
 	/**
@@ -51,7 +62,9 @@ class Event extends \Wolk\Core\System\IBlockEntity
      */
     public function getDateFinish()
 	{
-		return $this->get('DATE_ACTIVE_TO');
+		$this->load();
+		
+		return $this->data['PROPS']['DATE_FINISH']['VALUE'];
 	}
 	
 	

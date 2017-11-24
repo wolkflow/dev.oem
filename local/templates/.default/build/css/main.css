@@ -908,7 +908,8 @@ float: left}
 	font-size: 17px;
 	cursor: pointer;
 	width: 145px;
-	float: left
+	float: left;
+	text-decoration: none;
 }
 
 .basketcontainer__backstepbutton:hover {background:#999}
@@ -923,7 +924,7 @@ float: left}
   text-transform: uppercase;
   font-size: 17px;
   cursor: pointer;
-	margin-left: 155px;
+  margin-left: 155px;
 }
 .basketcontainer__nextstepbutton:hover {
   background: #999999;
