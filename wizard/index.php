@@ -10,8 +10,8 @@
     $type = mb_strtoupper((string) $request->get('TYPE'));
     $lang = mb_strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     
-    $width = $request->get('WIDTH');
-    $depth = $request->get('DEPTH');
+    $width = str_replace(',', '.', $request->get('WIDTH'));
+    $depth = str_replace(',', '.', $request->get('DEPTH'));
     $sform = $request->get('SFORM');
     
     $eid  = Wolk\Core\Helpers\IBlockElement::getIDByCode(IBLOCK_EVENTS_ID, $code);

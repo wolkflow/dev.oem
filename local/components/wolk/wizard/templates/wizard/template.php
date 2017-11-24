@@ -11,8 +11,9 @@
 
 <div class="breadcrumbs">
     <div class="breadcrumbs__container">
+		<? $stepstand = ($arResult['STEP'] == 'stands') ?>
         <? foreach ($arResult['STEPS'] as $i => $step) { ?>
-            <a href="<?= $component->getStepLink($i) ?>" class="breadcrumbs__button js-step-<?= $step ?> <?= ($step == $arResult['STEP']) ? ('active customizable_instep') : ('') ?>"> 
+            <a href="<?= ($stepstand) ? ('javascript:void(0)') : ($component->getStepLink($i)) ?>" class="breadcrumbs__button js-step-<?= $step ?> <?= ($step == $arResult['STEP']) ? ('active customizable_instep') : ('') ?>"> 
                 <span class="breadcrumbs__buttoncontainer">
                     <?= $i ?>. <?= Loc::getMessage('STEP_' . mb_strtoupper($step)) ?>
                 </span>

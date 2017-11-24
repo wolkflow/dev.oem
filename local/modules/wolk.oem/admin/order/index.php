@@ -154,7 +154,9 @@ if (!empty($_POST)) {
 					'MESSAGE' => Loc::getMessage('ERROR_CHANGE_RATE'),
 					'TYPE'    => 'ERROR'
 				]);
-			}
+			} else {
+                LocalRedirect($APPLICATION->GetCurUri());
+            }
 			break;
 		
         
@@ -747,12 +749,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 													<? // Счета // ?>
 													<select name="RATE_CURRENCY" id="js-convert-select-id" class="form-control" style="width: 85px;">
 														<? foreach ($currencies as $code => $currency) { ?>
-															<option value="<?= $code ?>" data-rate="<?= $currency['ORDER_RATE'] ?>" <?= ($code == $oemorder->getCurrency()) ? ('selected') : ('') ?>>
+															<option value="<?= $code ?>" data-rate="<?= $currency['ORDER_RATE'] ?>" <?= ($code == $oemorder->getRateCurrency()) ? ('selected') : ('') ?>>
 																<?= $code ?>
 															</option>
 														<? } ?>
 													</select>
-													<input type="text" name="RATE" id="js-convert-rate-id" value="1" class="form-control" style="width: 100px;" />
+													<input type="text" name="RATE" id="js-convert-rate-id" value="<?= $oemorder->getRate() ?>" class="form-control" style="width: 100px;" />
 													<span class="input-group-btn">
 														<button type="submit" class="btn btn-info" /><?= Loc::getMessage('RECALC') ?></button>
 													</span>
