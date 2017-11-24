@@ -38,16 +38,26 @@ class Main
         
         if (!$USER->IsAdmin()) {			
 			$exclude = [
-				'global_menu_settings'  => '*', 
-				'global_menu_store'	    => '*', 
-				'global_menu_marketing' => '*',
-				'global_menu_content'   => [
+				'global_menu_settings'    => '*', 
+				'global_menu_store'	      => '*', 
+				'global_menu_marketing'   => '*',
+				'global_menu_services'    => '*',
+				'global_menu_statistics'  => '*',
+				'global_menu_marketplace' => '*',
+				'global_menu_wolk.core'   => '*',
+				'global_menu_content'     => [
 					'menu_iblock_/events' => [
 						'menu_iblock_/events/'.STANDS_IBLOCK_ID, 
 						'menu_iblock_/events/'.STANDS_OFFERS_IBLOCK_ID,
 					],
+					'menu_iblock_/equipment' => '*',
+					'menu_iblock' => '*',
 				]
 			];
+			
+			if (in_array(GROUP_PARTNERS_ID, $USER->getUserGroup())) {
+				// ...
+			}
 			
 			foreach ($globals as $g => $global) {
                 if (array_key_exists($global['items_id'], $exclude) && $exclude[$global['items_id']] == '*') {
@@ -75,6 +85,8 @@ class Main
 				}
             }
         }
+		
+		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/menu.log', print_r($globals, true).print_r($modules, true));
 
         return $menu;
     }
