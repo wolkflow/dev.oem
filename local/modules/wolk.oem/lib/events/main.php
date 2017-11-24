@@ -16,8 +16,8 @@ class Main
     /**
      * ���������� �������� ����.
      */
-    public function OnBuildGlobal_AddMainMenu(&$global, &$modules)
-    {
+    public function OnBuildGlobal_AddMainMenu(&$globals, &$modules)
+    {	
         $menu = [
             'global_menu_wolk.oem' => [
                 'menu_id'      => 'wolkoem',
@@ -36,12 +36,43 @@ class Main
         
         global $USER;
         
-        if (!$USER->IsAdmin()) {
-            $exclude = ['GENERAL', 'MAIN', 'TOOLS', 'perfmon'];
-            foreach ($modules as $i => $module) {
-                if ($module['parent_menu'] == 'global_menu_settings' && in_array($module['section'], $exclude)) {
-                    unset($modules[$i]);
+        if (!$USER->IsAdmin()) {			
+			$exclude = [
+				'global_menu_settings'  => '*', 
+				'global_menu_store'	    => '*', 
+				'global_menu_marketing' => '*',
+				'global_menu_content'   => [
+					'menu_iblock_/events' => [
+						'menu_iblock_/events/'.STANDS_IBLOCK_ID, 
+						'menu_iblock_/events/'.STANDS_OFFERS_IBLOCK_ID,
+					],
+				]
+			];
+			
+			foreach ($globals as $g => $global) {
+                if (array_key_exists($global['items_id'], $exclude) && $exclude[$global['items_id']] == '*') {
+                    unset($globals[$g]);
                 }
+            }
+			
+            foreach ($modules as $m => $module) {
+				if (array_key_exists($module['parent_menu'], $exclude)) {
+					if ($exclude[$module['parent_menu']] == '*') {
+						unset($modules[$m]);
+					} else {
+						if (array_key_exists($module['items_id'], $exclude[$module['parent_menu']])) {
+							if ($exclude[$module['parent_menu']][$module['items_id']] == '*') {
+								unset($modules[$m]);
+							} else {
+								foreach ($module['items'] as $s => $submodule) {
+									if (in_array($submodule['items_id'], $exclude[$module['parent_menu']][$module['items_id']])) {
+										unset($modules[$m]['items'][$s]);
+									}
+								}
+							}
+						}
+					}
+				}
             }
         }
 
