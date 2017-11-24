@@ -161,7 +161,7 @@ switch ($action) {
         $renders []= $path;
         $oembasket->setRenders($renders);
         
-        jsonresponse(true, '', ['path' => $path]);
+        jsonresponse(true, '', ['path' => $path, 'view' => $view]);
         break;
     
         

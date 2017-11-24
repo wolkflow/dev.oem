@@ -1800,13 +1800,20 @@ div.preview-image {
 	margin-top: 0px;
 }
 
-button.styler.button-loader {
+.button-loader {
     background-repeat: no-repeat;
     background-image: url(/local/templates/.default/build/images/button-loader.gif);
     background-position: 50% 0;
 	color: transparent;
 }
 
+
+.pre-loader {
+    background-repeat: no-repeat;
+    background-image: url(/local/templates/.default/build/images/loader.svg);
+    background-position: 50% 50%;
+	color: transparent;
+}
 
 .product-block {
 	/*

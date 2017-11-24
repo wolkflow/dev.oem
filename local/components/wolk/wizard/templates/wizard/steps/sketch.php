@@ -63,7 +63,10 @@
 	
     <div class="renders">
         <div id="js-renders-images-id" class="render-images">
-			
+			<div id="js-render-image-1-id" class="render-image"></div>
+			<div id="js-render-image-2-id" class="render-image"></div>
+			<div id="js-render-image-3-id" class="render-image"></div>
+			<div id="js-render-image-4-id" class="render-image"></div>
 		</div>
         <br/>
         <button id="js-render-id" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler customizable">
@@ -191,7 +194,7 @@
             var objs = ru.octasoft.oem.designer.Main.getScene();
             var code = $(this).data('code');
             
-            $('#js-renders-images-id').html('');
+            // $('#js-renders-images-id').html('');
             
             for (var i = 1; i <= 4; i++) {
                 var data = {'action': 'render', 'code': code, 'view': i, 'objs': JSON.stringify(objs)};
@@ -204,16 +207,15 @@
                     async: true,
                     cache: false,
 					beforeSend: function() {
-						$that.addClass('button-loader');
+						$('#js-renders-images-id div').addClass('pre-loader');
 						$that.prop('disabled', 'disabled');
 					},
                     success: function(response) {
                         if (response.status) {
-                            $('#js-renders-images-id').append('<div class="render-image"><a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="100" height="100" /></a></div>');
+                            $('#js-render-image-' + response.data['view'] + '-id').removeClass('pre-loader').html('<a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="100" height="100" /></a>');
                         } else {
                             // Ошибка загрузки файла.
                         }
-						$that.removeClass('button-loader');
 						$that.prop('disabled', false);
                     },
                 });
