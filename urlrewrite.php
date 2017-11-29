@@ -38,32 +38,22 @@ $arUrlRewrite = array(
 		"ID" => "",
 		"PATH" => "/printorder/print.php",
 	),
+	
+	
 	array(
-		"CONDITION" => "#^/events/#",
-		"RULE" => "",
-		"ID" => "bitrix:catalog",
-		"PATH" => "/events/index.php",
+		"CONDITION" => "#^/events/([^\/]+)/([\\d]+)/#",
+		"RULE" => "CODE=$1&STEP=$2&",
+		"ID" => "",
+		"PATH" => "/wizard/index.php",
 	),
-    
-    
 	array(
-		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/([.\\d]+)x([.\\d]+)/([^\/]+)/([\\d]+)/#",
-		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&WIDTH=$4&DEPTH=$5&SFORM=$6&OID=$7",
+		"CONDITION" => "#^/events/([^\/]+)/#",
+		"RULE" => "CODE=$1&",
 		"ID" => "",
 		"PATH" => "/wizard/index.php",
 	),
-    array(
-		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/([.\\d]+)x([.\\d]+)/([^\/]+)/#",
-		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&WIDTH=$4&DEPTH=$5&SFORM=$6&",
-		"ID" => "",
-		"PATH" => "/wizard/index.php",
-	),
-    array(
-		"CONDITION" => "#^/wizard/([^\/]+)/([^\/]+)/([\\d]+)/([.\\d]+)x([.\\d]+)/#",
-		"RULE" => "CODE=$1&TYPE=$2&STEP=$3&WIDTH=$4&DEPTH=$5&",
-		"ID" => "",
-		"PATH" => "/wizard/index.php",
-	),
+	
+	
     array(
 		"CONDITION" => "#^/i/(.+?)/#",
 		"RULE" => "src=$1&",

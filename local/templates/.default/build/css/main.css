@@ -255,61 +255,48 @@ input[type="password"] {
   background: #aeaeae;
 }
 .breadcrumbs__button:hover:after {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: url('../images/breadcrumbs-arrow-hover.png?1446662059');
+  background: url('../images/breadcrumbs-arrow-hover.png') 50% 50% no-repeat;
   width: 11px;
   height: 60px;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
   .breadcrumbs__button:hover:after {
-    -moz-background-size: 11px auto;
-    -o-background-size: 11px auto;
-    -webkit-background-size: 11px auto;
     background-size: 11px auto;
-    background-image: url('../images/breadcrumbs-arrow-hover@2x.png?1446662067');
+    background-image: url('../images/breadcrumbs-arrow-hover@2x.png');
   }
 }
 .breadcrumbs__button.active {
-  background: #7f7f7f;
+  background: #7f7f7f;ц
 }
 .breadcrumbs__button.active:after {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: url('../images/breadcrumbs-arrow-active.png?1446648014');
+  background: url('../images/breadcrumbs-arrow-active.png') 50% 50% no-repeat;
   width: 11px;
   height: 60px;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
   .breadcrumbs__button.active:after {
-    -moz-background-size: 11px auto;
-    -o-background-size: 11px auto;
-    -webkit-background-size: 11px auto;
     background-size: 11px auto;
-    background-image: url('../images/breadcrumbs-arrow-active@2x.png?1446648021');
+    background-image: url('../images/breadcrumbs-arrow-active@2x.png');
   }
 }
 .breadcrumbs__button:after {
+  display: none;
   content: "";
   position: absolute;
   left: 100%;
   top: 0;
   z-index: 2;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: url('../images/breadcrumbs-arrow.png?1446647703');
+  background-image: url('../images/breadcrumbs-arrow.png') 50% 50% no-repeat;
   width: 11px;
   height: 60px;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
   .breadcrumbs__button:after {
-    -moz-background-size: 11px auto;
-    -o-background-size: 11px auto;
-    -webkit-background-size: 11px auto;
     background-size: 11px auto;
-    background-image: url('../images/breadcrumbs-arrow@2x.png?1446647712');
+    background-image: url('../images/breadcrumbs-arrow@2x.png');
   }
 }
+
 .breadcrumbs__buttoncontainer {
   display: table-cell;
   height: 60px;

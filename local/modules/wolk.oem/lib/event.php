@@ -17,6 +17,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	const LINK_PREFIX     = '/events/';
 	const LOGO_DEFAULT    = '/local/templates/.default/build/images/header-logo.png';
 	
+	const STEP_STANDS     = 'STANDS';
     const STEP_EQUIPMENTS = 'EQUIPMENTS';
     const STEP_SERVICES   = 'SERVICES';
     const STEP_MARKETINGS = 'MARKETINGS';
@@ -44,6 +45,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	{
 		return $this->get('CODE');
 	}
+	
 	
 	
 	/**
@@ -82,6 +84,38 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
 		return ($this->data['PROPS']['LANG_TITLE_' . $lang]['VALUE']);
     }
+	
+	
+	/**
+	 * Локализованный заголовок мероприятия.
+	 */
+	public function getHeader($lang = null)
+	{
+		$this->load();
+        
+        if (empty($lang)) {
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+        }
+        $lang = mb_strtoupper($lang);
+		
+		return ($this->data['PROPS']['LANG_HEADER_' . $lang]['VALUE']);
+	}
+	
+	
+	/**
+	 * Локализованный подзаголовок мероприятия.
+	 */
+	public function getSubHeader($lang = null)
+	{
+		$this->load();
+        
+        if (empty($lang)) {
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+        }
+        $lang = mb_strtoupper($lang);
+		
+		return ($this->data['PROPS']['LANG_SUBHEADER_' . $lang]['~VALUE']['TEXT']);
+	}
 	
 	
 	/**
@@ -154,12 +188,6 @@ class Event extends \Wolk\Core\System\IBlockEntity
         
         $steps = (array) $this->data['PROPS']['STEPS']['VALUE_XML_ID'];
         $steps = array_combine($steps, $steps);
-        
-        if (!is_null($context)) {
-            if ($context->getType() == Context::TYPE_INDIVIDUAL) {
-                unset($steps[self::STEP_EQUIPMENTS]);
-            }
-        }
         $steps = array_values($steps);
         
         return $steps;
@@ -596,9 +624,6 @@ class Event extends \Wolk\Core\System\IBlockEntity
             if (!is_null($priceitem)) {
                 $product->setPrice($priceitem->getPrice());
             }
-			//if (!is_null($paramitem)) {
-            //   $product->setParams($paramitem->getParams());
-            //}
 		}
 		return $products;
     }

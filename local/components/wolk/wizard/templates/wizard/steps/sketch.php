@@ -98,13 +98,13 @@
                     <span class="reviewconfigurationcontainer__configurationtitle">
                         <?= Loc::getMessage('WIDTH') ?> &amp; <?= Loc::getMessage('DEPTH') ?>:
                     </span>
-                    <?= $arParams['WIDTH'] ?> &times; <?= $arParams['DEPTH'] ?>
+                    <?= $arResult['WIDTH'] ?> &times; <?= $arResult['DEPTH'] ?>
                 </div>
                 <div class="reviewconfigurationcontainer__configuration">
                     <span class="reviewconfigurationcontainer__configurationtitle">
                         <?= Loc::getMessage('TYPE') ?>:
                     </span>
-                    <?= Loc::getMessage('TYPE_' . strtoupper($arParams['TYPE'])) ?>
+                    <?= Loc::getMessage('TYPE_' . strtoupper($arResult['SFORM'])) ?>
                 </div>
                 <div class="reviewconfigurationcontainer__configuration">
                     <span class="reviewconfigurationcontainer__configurationtitle">

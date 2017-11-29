@@ -7,14 +7,14 @@
     
     $code = (string) $request->get('CODE');
     $step = (int)    $request->get('STEP');
-    $type = mb_strtoupper((string) $request->get('TYPE'));
+    //$type = mb_strtoupper((string) $request->get('TYPE'));
     $lang = mb_strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     
-    $width = str_replace(',', '.', $request->get('WIDTH'));
-    $depth = str_replace(',', '.', $request->get('DEPTH'));
-    $sform = $request->get('SFORM');
+    //$width = str_replace(',', '.', $request->get('WIDTH'));
+    //$depth = str_replace(',', '.', $request->get('DEPTH'));
+    //$sform = $request->get('SFORM');
     
-    $eid  = Wolk\Core\Helpers\IBlockElement::getIDByCode(IBLOCK_EVENTS_ID, $code);
+    //$eid  = 
 	
 	$oid = $request->get('OID');
 ?>
@@ -26,15 +26,15 @@
         array(
 			"OID"  => $oid,
 		
-            "EID"  => $eid,
+            //"EID"  => $eid,
             "CODE" => $code,
             "STEP" => $step,
-            "TYPE" => $type,
+            //"TYPE" => $type,
             "LANG" => $lang,
             
-            "WIDTH" => $width,
-            "DEPTH" => $depth,
-            "SFORM" => $sform,
+            //"WIDTH" => $width,
+            //"DEPTH" => $depth,
+            //"SFORM" => $sform,
         )
     );
 ?>

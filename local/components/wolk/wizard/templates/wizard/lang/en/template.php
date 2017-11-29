@@ -136,6 +136,7 @@ $MESS['ORDER_PLACED'] = 'Order placed';
 $MESS['HOME'] = 'Home';
 $MESS['REVIEW_ORDER'] = 'View Order';
 
+$MESS['MEASURE_M']  = 'm';
 $MESS['MEASURE_MM'] = 'mm';
 $MESS['MEASURE_M2'] = 'm<sup>2</sup>';
 
@@ -183,3 +184,9 @@ $MESS['ATTENTION'] = 'Warning';
 $MESS['ERROR'] = 'Error';
 $MESS['ERROR_SKETCH_REQUIRED'] = 'Not all objects are placed on the schematic.';
 $MESS['ERROR_SKETCH_REQUIRED_IN_ORDER'] = 'Not all objects are placed on the sketch. Please go to the "Sketch" step and place all the equipment.';
+
+
+
+$MESS['GENERAL_INFORMATION']   = 'General information';
+$MESS['TYPE_STANDARD_STAND']   = 'Standard stand';
+$MESS['TYPE_INDIVIDUAL_STAND'] = 'Individual stand';

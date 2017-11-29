@@ -135,6 +135,7 @@ $MESS['ORDER_PLACED'] = 'Заказ оформлен';
 $MESS['HOME'] = 'На главную';
 $MESS['REVIEW_ORDER'] = 'Посмотреть заказа';
 
+$MESS['MEASURE_M']  = 'м';
 $MESS['MEASURE_MM'] = 'мм';
 $MESS['MEASURE_M2'] = 'м<sup>2</sup>';
 
@@ -184,4 +185,6 @@ $MESS['ERROR'] = 'Ошибка';
 $MESS['ERROR_SKETCH_REQUIRED'] = 'Не все объекты размещены на схеме.';
 $MESS['ERROR_SKETCH_REQUIRED_IN_ORDER'] = 'Не все объекты размещены на схеме. Пожалуйста, перейдите на шаг "Схема стенда" и разместите все оборудование.';
 
-
+$MESS['GENERAL_INFORMATION']   = 'Основная информация';
+$MESS['TYPE_STANDARD_STAND']   = 'Стандартный стенд';
+$MESS['TYPE_INDIVIDUAL_STAND'] = 'Индивидуальный стенд';

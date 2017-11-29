@@ -20,6 +20,7 @@ $asset->addJs('/local/templates/.default/build/js/jquery-ui.multidatespicker.js'
 // $asset->addJs('/local/templates/.default/javascripts/designer.js');
 
 // Выбор стендов.
+$asset->addJs($this->GetTemplate()->getFolder().'/js/types.js');
 $asset->addJs($this->GetTemplate()->getFolder().'/js/stands.js');
 
 // Типы товаров.

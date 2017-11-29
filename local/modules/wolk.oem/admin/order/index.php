@@ -1028,10 +1028,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="3" align="left" style="height: 50px; margin-left: 15px;">
+                                            <td colspan="2" align="left" style="height: 50px; margin-left: 15px;">
                                                 <b style="margin-left: 30px;"><?= Loc::getMessage('TOTAL_PRODUCTS') ?>: <?= $cnt ?></b>
                                             </td>
-                                            <td colspan="4" align="right">
+                                            <td colspan="5" align="right">
                                                 <h2 style="padding: 3px 20px 10px 0;">
 													<?= Loc::getMessage('TOTAL') ?>: 
 													<?= CurrencyFormat(($oemorder->getPrice() - $oemorder->getTax()) * $rate, $rate_currency) ?>
@@ -1039,8 +1039,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                             </td>
                                         <tr>
                                         </tr>
-                                            <td colspan="3"></td>
-                                            <td colspan="4" align="right">
+                                            <td colspan="2"></td>
+                                            <td colspan="5" align="right">
                                                 <h2 style="padding: 3px 20px 20px 0;">
 													<?= Loc::getMessage('TOTAL_VAT') ?>: 
 													<?= CurrencyFormat($oemorder->getPrice() * $rate, $rate_currency) ?>

@@ -16,12 +16,16 @@ class Context
     const TYPE_INDIVIDUAL = 'INDIVIDUAL';
     
     
-    public function __construct($event, $type, $lang = null)
+    public function __construct($event, $type = null, $lang = null)
     {
         $this->event = (int) $event;
         $this->type  = mb_strtoupper((string) $type);
         $this->lang  = mb_strtoupper((string) $lang);
         
+		if (empty($type)) {
+			$this->type = self::TYPE_STANDARD;
+		}
+		
         if (empty($lang)) {
             $this->lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
         }
