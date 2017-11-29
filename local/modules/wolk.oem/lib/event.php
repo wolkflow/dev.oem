@@ -596,9 +596,9 @@ class Event extends \Wolk\Core\System\IBlockEntity
             if (!is_null($priceitem)) {
                 $product->setPrice($priceitem->getPrice());
             }
-			if (!is_null($paramitem)) {
-                $product->setParams($paramitem->getParams());
-            }
+			//if (!is_null($paramitem)) {
+            //   $product->setParams($paramitem->getParams());
+            //}
 		}
 		return $products;
     }

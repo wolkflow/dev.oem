@@ -132,3 +132,14 @@ define('SECTION_PRODUCTS_EQUIPMENTS_ID', 58);
 define('SECTION_PRODUCTS_SERVICES_ID',   59);
 define('SECTION_PRODUCTS_MARKETINGS_ID', 60);
 
+/*
+ * Свойства продукции.
+ */
+define('SECTION_PRODUCTS_PROPERTY_TEXT_ID',                   15);
+define('SECTION_PRODUCTS_PROPERTY_LINK_ID',                   12);
+define('SECTION_PRODUCTS_PROPERTY_COMMENT_ID',                11);
+define('SECTION_PRODUCTS_PROPERTY_FILE_ID',                   10);
+define('SECTION_PRODUCTS_PROPERTY_COLOR_ID',                  13);
+define('SECTION_PRODUCTS_PROPERTY_FORM_HANGING_STRUCTURE_ID', 14);
+
+

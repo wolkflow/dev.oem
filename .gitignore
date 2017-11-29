@@ -1,7 +1,8 @@
 /bitrix/
 /upload/
-/upload.bkp/
+/upload.*/
 /icache/
+/transfer/
 test*
 *.log
 yandex*.html
