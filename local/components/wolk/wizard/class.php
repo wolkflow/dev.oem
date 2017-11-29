@@ -60,15 +60,8 @@ class WizardComponent extends \CBitrixComponent
         $this->basket = new Basket($arParams['CODE']);
 		
 		
-		 // Контекст исполнения.
-        $this->context = new Context(
-			$arParams['EID'], 
-			$this->getBasket()->getParam('TYPE'), 
-			$arParams['LANG']
-		);
-		
 		if (empty($arParams['STEP'])) {
-			$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])] = [];
+			$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])] = ['BASKET' => []];
 		}
         
         // На первом шаге сохраняем параметра стенда в сессию.
@@ -120,6 +113,18 @@ class WizardComponent extends \CBitrixComponent
 		global $APPLICATION;
 		
 		
+		// Запрос.
+        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+		
+		
+		// Контекст исполнения.
+        $this->context = new Context(
+			$this->getEvent()->getID(), 
+			$this->getBasket()->getParam('TYPE'), 
+			mb_strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage())
+		);
+		
+		
 		// Переход на первый шаг, в случае отсутствие выбора типа стенда.
 		if (!in_array('types', $this->getSteps())) {
 			if ($this->getStepNumber() == 0) {
@@ -127,11 +132,11 @@ class WizardComponent extends \CBitrixComponent
 			}
 			$infstep = 1;
 		} else {
-			$infstep = 1;
+			$infstep = 0;
 		}
 		
 		// Проверка валидности сессии.
-		if ($this->getStepNumber() > $infstep && empty($_SESSION[self::SESSCODE][$this->getEventCode()]['BASKET'])) {
+		if ($this->getStepNumber() > $infstep && !$request->isPost() && empty($_SESSION[self::SESSCODE][$this->getEventCode()]['BASKET'])) {
 			LocalRedirect($this->getEventLink());
 		}
 		
@@ -145,9 +150,6 @@ class WizardComponent extends \CBitrixComponent
             'NEXT' => $this->getNextStepLink(),
         ];
         
-
-		// Запрос.
-        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
         
         // Обработка данных предыдущего шага.
         if ($request->isPost()) {
@@ -357,6 +359,13 @@ class WizardComponent extends \CBitrixComponent
 			'DEPTH' => $depth,
 			'SFORM' => $sform
 		]);
+		
+		// Контекст исполнения.
+        $this->context = new Context(
+			$this->getEvent()->getID(), 
+			$this->getBasket()->getParam('TYPE'), 
+			mb_strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage())
+		);
 	}
 	
     
@@ -444,8 +453,8 @@ class WizardComponent extends \CBitrixComponent
 		if (!empty($data['SFORM'])) {
 			$this->getBasket()->setParam('SFORM', $data['SFORM']);
 			
-			// Если добавилась форма стенда - надо переписать URL.
-			// LocalRedirect($this->getStepLink());
+			// Если добавилась форма стенда - надо перезагрузить страницу с другим набором шагов.
+			LocalRedirect($this->getStepLink());
 		}
     }
 
