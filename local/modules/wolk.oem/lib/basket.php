@@ -344,6 +344,7 @@ class Basket
 		}
 		
 		
+		
         switch ($kind) {
             case (self::KIND_STAND):
                 $this->data[self::SESSCODE_STAND] = $item;
@@ -358,6 +359,8 @@ class Basket
         
         // Сохранение в сесиию.
         $this->putSession();
+		
+		// var_dump($kind); print_r($item); die();
         
         return $item;
     }

@@ -209,7 +209,7 @@
 			var scene = ru.octasoft.oem.designer.Main.getScene();
             var image = ru.octasoft.oem.designer.Main.saveJPG();
 
-			if (scene.objects.length < <?= $count ?>) {
+			if (scene.objects.length < <?= intval($count) ?>) {
 				ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 			} else {
 				$('#js-sketch-save-id').trigger('click');
@@ -284,7 +284,7 @@
     var sketchitems = <?= json_encode(array_values($arResult['OBJECTS'])) ?>;
     
     var loadsketch = function() {
-
+		
         var gridX = parseFloat(<?= (float) ($arResult['WIDTH']) ?: 5 ?>);
         var gridY = parseFloat(<?= (float) ($arResult['DEPTH']) ?: 5 ?>);
 
@@ -317,6 +317,6 @@
 
         setTimeout(function() { window.resizeEditor(sketchitems); }, 300);
     }
-
+	
     loadsketch();
 </script>

@@ -399,24 +399,44 @@ class WizardComponent extends \CBitrixComponent
         // Запрос.
         $request = \Bitrix\Main\Context::getCurrent()->getRequest();
         
+        // Получение данных из сессии.
+        $data = $this->getSession();
+		
+		// Данные о стенде и форме стенда.
+        $data['STAND'] = intval($request->get('STAND'));
+		$data['SFORM'] = strval($request->get('SFORM'));
+		
+		if (!empty($data['SFORM'])) {
+			$this->getBasket()->setParam('SFORM', $data['SFORM']);
+		}
+		
+		// Параметры стенда.
 		$width = $this->getBasket()->getParam('WIDTH');
 		$depth = $this->getBasket()->getParam('DEPTH');
 		$sform = $this->getBasket()->getParam('SFORM');
 		
-        // Стенды мероприятия.
-        $stands = $this->getEvent()->getStandsList($width, $depth, $this->getContext());
-        
-        // Получение данных из сессии.
-        $data = $this->getSession();
-        $data['STAND'] = (int)    $request->get('STAND');
-		$data['SFORM'] = (string) $request->get('SFORM');
-        
-        // Если выбран предустановленный станд.
 		
+        // Если выбран предустановленный станд.
         if (!empty($data['STAND'])) {
 			$stand = new Stand($data['STAND']);
             
 			if ($stand->exists()) {
+				
+				// Сохранение данных в корзину.
+				$this->getBasket()->put(
+					$stand->getID(),
+					($width * $depth),
+					Basket::KIND_STAND,
+					[
+						'width' => $width, 
+						'depth' => $depth,
+						'sform' => $sform
+					],
+					$this->getContext()
+				);
+				
+				
+				// Добавление включенных товаров и услуг в выбранный стенд.
 				$standoffer = $stand->getStandOffer($width, $depth, $this->getContext());
 				
 				if (!empty($standoffer)) {
@@ -433,30 +453,13 @@ class WizardComponent extends \CBitrixComponent
 							true
 						);
 					}
-					
-					// Сохранение данных в корзину.
-					$this->getBasket()->put(
-						intval($request->get('STAND')),
-						($width * $depth),
-						Basket::KIND_STAND,
-						[
-							'width' => $width, 
-							'depth' => $depth,
-							'sform' => $sform
-						],
-						$this->getContext()
-					);
 				}
 			}
         }
 		
-        $this->putSession($data);
-        
 		// Уточнение формы стенда для индивидуальной застройки.
+		// Если добавилась форма стенда - надо перезагрузить страницу с другим набором шагов.
 		if (!empty($data['SFORM'])) {
-			$this->getBasket()->setParam('SFORM', $data['SFORM']);
-			
-			// Если добавилась форма стенда - надо перезагрузить страницу с другим набором шагов.
 			LocalRedirect($this->getStepLink());
 		}
     }
@@ -606,7 +609,8 @@ class WizardComponent extends \CBitrixComponent
         
         // Объекты для скетча.
         $this->arResult['OBJECTS'] = $objects;
-
+		
+		
         // Размещенные обекты.
         $this->arResult['PLACED'] = json_decode($this->getBasket()->getSketch()['SKETCH_SCENE'], true)['objects'];
         
