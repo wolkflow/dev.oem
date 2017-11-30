@@ -728,12 +728,42 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 			<div id="js-products-individual-block-id">
 				<? _ShowPropertyField('PROP['.$propfields['ID'].']', $propfields, $propfields['VALUE'], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy) ?>
 				<br/>
-				<input id="js-use-standard-products-id" class="btn" value="Использовать продукцию стандартной застройки" />
-				<br/>
+				<input type="button" id="js-use-standard-products-id" class="btn" value="Использовать продукцию стандартной застройки" />
 			</div>
 		</td>
     </tr>
 <? $tabControl->EndCustomField('PRODUCTS_ITEMS_INDIVIDUAL', ''); ?>
+
+<script>
+	function CheckLangFields(element) {
+		if (element.checked) {
+			$(element).closest('.edit-table').find("input, textarea, select").not(element).attr('disabled', false);
+		} else {
+			$(element).closest('.edit-table').find("input, textarea, select").not(element).attr('disabled', true);
+		}
+	}
+	
+	$(document).ready(function() {
+		$(document).on('click', '#js-use-individual-products-id', function() {
+			var $select = $('#js-products-standard-block-id select');
+			
+			$select.find('option').prop('selected', false);
+			$('#js-products-individual-block-id select option:selected').each(function() {
+				$select.find('option[value="' + $(this).val() + '"]').prop('selected', 'selected');
+			});
+		});
+		
+		$(document).on('click', '#js-use-standard-products-id', function() {
+			var $select = $('#js-products-individual-block-id select');
+			
+			$select.find('option').prop('selected', false);
+			$('#js-products-standard-block-id select option:selected').each(function() {
+				$select.find('option[value="' + $(this).val() + '"]').prop('selected', 'selected');
+			});
+		});
+	});
+</script>
+
 
 <? /*
 <? if (empty($ID)) { ?>
@@ -752,15 +782,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 */ ?>
 
 
-<script>
-	function CheckLangFields(element) {
-		if (element.checked) {
-			$(element).closest('.edit-table').find("input, textarea, select").not(element).attr('disabled', false);
-		} else {
-			$(element).closest('.edit-table').find("input, textarea, select").not(element).attr('disabled', true);
-		}
-	}
-</script>
+
     
 <? 
 // стандартный файл-обработчик Битрикс.

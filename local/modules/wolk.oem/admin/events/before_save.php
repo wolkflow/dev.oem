@@ -44,17 +44,16 @@ function BXIBlockAfterSave(&$arFields)
     
 	
 	// Продукция стандартной застройки.
-    $products_standard = (array) $request->get('PROP')[108];
+    $products_standard = (array) $request->get('PROP')[ELEMENT_EVENTS_PROPERTY_PRODUCTS_STANDARD_ID];
 	$products_standard = array_filter($products_standard, function($x) { return (!empty($x) && !is_array($x)); });
 	
 	// Продукция индивидуальной застройки.
-    $products_individual = (array) $request->get('PROP')[125];
+    $products_individual = (array) $request->get('PROP')[ELEMENT_EVENTS_PROPERTY_PRODUCTS_INDIVIDUAL_ID];
 	$products_individual = array_filter($products_individual, function($x) { return (!empty($x) && !is_array($x)); });
 	
-	//echo '<pre>'; print_r($products_standard);die();
-	CIBlockElement::SetPropertyValuesEx($ID, IBLOCK_EVENTS_ID, false, ['PRODUCTS_STANDARD' => $products_standard]);
-	CIBlockElement::SetPropertyValuesEx($ID, IBLOCK_EVENTS_ID, false, ['PRODUCTS_INDIVIDUAL' => $products_individual]);
 	
+	CIBlockElement::SetPropertyValueCode($event->getID(), 'PRODUCTS_STANDARD',   $products_standard);
+	CIBlockElement::SetPropertyValueCode($event->getID(), 'PRODUCTS_INDIVIDUAL', $products_individual);
 	
     // Цены на стенды.
     $prices_stands = (array) $request->get('PRICES_STANDS');
