@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+
 	// Увеличение количества к пощиции из корзины.
     $(document).on('click', '.js-basket-inc', function(e) {
 		var $that     = $(this);

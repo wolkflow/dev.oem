@@ -11,12 +11,13 @@
 
 
 <? if ($arResult['STEP'] != 'types') { ?>
+	<? $stepstand = ($arResult['STEP'] == 'stands') ?>
+	<? unset($arResult['STEPS'][array_search('types', $arResult['STEPS'])]); ?>
+
 	<div class="breadcrumbs">
-		<div class="breadcrumbs__container">
-			<? $stepstand = ($arResult['STEP'] == 'stands') ?>
+		<div class="breadcrumbs__container items-<?= count($arResult['STEPS']) ?>">
 			<? foreach ($arResult['STEPS'] as $i => $step) { ?>
-				<? if ($step == 'types') { continue; } ?>
-				<a href="<?= ($stepstand) ? ('javascript:void(0)') : ($component->getStepLink($i)) ?>" class="breadcrumbs__button js-step-<?= $step ?> <?= ($step == $arResult['STEP']) ? ('active customizable_instep') : ('') ?>"> 
+				<a href="<?= ($stepstand) ? ('javascript:void(0)') : ($component->getStepLink($i)) ?>" class="breadcrumbs__button js-step js-step-<?= $step ?> <?= ($step == $arResult['STEP']) ? ('active customizable_instep') : ('') ?>"> 
 					<span class="breadcrumbs__buttoncontainer">
 						<?= $i ?>. <?= Loc::getMessage('STEP_' . mb_strtoupper($step)) ?>
 					</span>

@@ -226,12 +226,11 @@ input[type="password"] {
   margin-bottom: 51px;
 }
 .breadcrumbs__container {
-  overflow: hidden;
-  *zoom: 1;
   width: 939px;
+  *zoom: 1;
+  overflow: hidden;
 }
 .breadcrumbs__button {
-  display: block;
   text-decoration: none;
   padding: 0 21px;
   background: #cccccc;
@@ -241,13 +240,37 @@ input[type="password"] {
   line-height: 15px;
   position: relative;
   height: 60px;
+  display: block;
+  float: left;
   font-weight: 700;
+  box-sizing: border-box;
+}
+.items-1 .breadcrumbs__button {
+  width: 100%;
+}
+.items-2 .breadcrumbs__button {
+  width: 50%;
+}
+.items-3 .breadcrumbs__button {
+  width: 33.33333%;
+}
+.items-4 .breadcrumbs__button {
+  width: 25%;
+}
+.items-5 .breadcrumbs__button {
+  width: 20%;
+}
+.items-6 .breadcrumbs__button {
+  width: 16.666666%;
+}
+.items-7 .breadcrumbs__button {
+  width: 14.28%;
 }
 .breadcrumbs__button:first-child {
-  width: 145px; 
+  /*width: 145px; */
 }
 .indStand .breadcrumbs__button {
-  width: 271px;
+  /*width: 271px;*/
 }
 .breadcrumbs__button:hover {
   background: #aeaeae;
@@ -264,7 +287,7 @@ input[type="password"] {
   }
 }
 .breadcrumbs__button.active {
-  background: #7f7f7f;ц
+  background: #7f7f7f;
 }
 .breadcrumbs__button.active:after {
   background: url('../images/breadcrumbs-arrow-active.png') 50% 50% no-repeat;
@@ -278,13 +301,12 @@ input[type="password"] {
   }
 }
 .breadcrumbs__button:after {
-  display: none;
   content: "";
   position: absolute;
   left: 100%;
   top: 0;
   z-index: 2;
-  background-image: url('../images/breadcrumbs-arrow.png') 50% 50% no-repeat;
+  background: url('../images/breadcrumbs-arrow.png') 50% 50% no-repeat;
   width: 11px;
   height: 60px;
 }
@@ -1879,3 +1901,6 @@ div.preview-image {
 	overflow: hidden;
 }
 
+.js-days-hours-quantity-wrapper .dates {
+  margin-right: 210px;
+}

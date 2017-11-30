@@ -706,6 +706,52 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
     </tr>
 <? $tabControl->EndCustomField('PRODUCTS_PRICES_INDIVIDUAL', ''); ?>
 
+
+<? $tabControl->BeginCustomField('PRODUCTS_ITEMS_STANDARD', 'Список продукции (стандартная застройка)'); ?>
+	<? $propfields = $PROP['PRODUCTS_STANDARD'] ?>
+    <tr id="tr_PROPERTY_<?= $propfields['ID'] ?>">
+        <td class="adm-detail-valign-top">
+			<div id="js-products-standard-block-id">
+				<? _ShowPropertyField('PROP['.$propfields['ID'].']', $propfields, $propfields['VALUE'], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy) ?>
+				<br/>
+				<input type="button" id="js-use-individual-products-id" class="btn" value="Использовать продукцию индивидуальной застройки" />
+			</div>
+		</td>
+    </tr>
+<? $tabControl->EndCustomField('PRODUCTS_ITEMS_STANDARD', ''); ?>
+
+
+<? $tabControl->BeginCustomField('PRODUCTS_ITEMS_INDIVIDUAL', 'Список продукции (индивидуальная застройка)'); ?>
+	<? $propfields = $PROP['PRODUCTS_INDIVIDUAL'] ?>
+    <tr id="tr_PROPERTY_<?= $propfields['ID'] ?>">
+        <td class="adm-detail-valign-top">
+			<div id="js-products-individual-block-id">
+				<? _ShowPropertyField('PROP['.$propfields['ID'].']', $propfields, $propfields['VALUE'], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy) ?>
+				<br/>
+				<input id="js-use-standard-products-id" class="btn" value="Использовать продукцию стандартной застройки" />
+				<br/>
+			</div>
+		</td>
+    </tr>
+<? $tabControl->EndCustomField('PRODUCTS_ITEMS_INDIVIDUAL', ''); ?>
+
+<? /*
+<? if (empty($ID)) { ?>
+	<script>
+		var binds = ['standard' => true, 'individual' => true];
+		
+		$(document).on('change', '#js-products-standard-block-id input', function(e) {
+			binds['standard'] = false;
+		});
+		
+		$(document).on('change', '#js-products-individual-block-id input', function(e) {
+			binds['individual'] = false;
+		});
+	</script>
+<? } ?>
+*/ ?>
+
+
 <script>
 	function CheckLangFields(element) {
 		if (element.checked) {

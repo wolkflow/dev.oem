@@ -19,7 +19,7 @@
             
             <div class="standspagetop" id="preselect">
 				<div id="js-preselect-wrapper-id" style="display: none;" data-type="individual">
-					<input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
+					<input id="js-form-input-stand-id" type="hidden" name="STAND" value="" />
 					<input id="js-form-input-sform-id" type="hidden" name="SFORM" value="" />
 					
 					<div class="pagedescription">

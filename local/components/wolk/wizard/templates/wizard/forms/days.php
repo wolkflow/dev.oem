@@ -16,7 +16,7 @@
 ?>
 
 <div class="serviceItem__row">
-	<div class="js-days-wrapper itemCount" data-pid="<?= $product->getID() ?>">
+	<div class="js-days-wrapper" data-pid="<?= $product->getID() ?>">
 		<input type="hidden" name="DATES" class="js-product-days-dates js-field-value" value="<?= $field ?>" />
 		
 		<? // Установка даты // ?>

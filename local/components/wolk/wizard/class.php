@@ -142,7 +142,6 @@ class WizardComponent extends \CBitrixComponent
 		
 		
 		// Шаги.
-		$this->arResult['STEPS'] = $this->getSteps();
 		$this->arResult['STEP']  = strtolower($this->getStep());
 		$this->arResult['PREV']  = strtolower($this->getPrevStep());
         $this->arResult['LINKS'] = [
@@ -193,6 +192,10 @@ class WizardComponent extends \CBitrixComponent
                     break;
             }
         }
+		
+		
+		// Список шагов.
+		$this->arResult['STEPS'] = $this->getSteps();
         
         
         // Выбираем шаг.
@@ -409,46 +412,46 @@ class WizardComponent extends \CBitrixComponent
 		$data['SFORM'] = (string) $request->get('SFORM');
         
         // Если выбран предустановленный станд.
+		
         if (!empty($data['STAND'])) {
-			$stand  = new Stand($data['STAND']);
+			$stand = new Stand($data['STAND']);
             
-            $standoffer = $stand->getStandOffer($width, $depth, $this->getContext());
-            
-            if (!empty($standoffer)) {
-                $data['BASE'] = $standoffer->getBaseProductQIDs();
-                
-                $basket = $this->getBasket();
-                foreach ($data['BASE'] as $pid => $quantity) {
-                    $basket->put(
-                        $pid,
-                        $quantity,
-                        \Wolk\OEM\Basket::KIND_PRODUCT,
-                        [],
-                        [],
-                        true
-                    );
-                }
-            }
+			if ($stand->exists()) {
+				$standoffer = $stand->getStandOffer($width, $depth, $this->getContext());
+				
+				if (!empty($standoffer)) {
+					$data['BASE'] = $standoffer->getBaseProductQIDs();
+					
+					$basket = $this->getBasket();
+					foreach ($data['BASE'] as $pid => $quantity) {
+						$basket->put(
+							$pid,
+							$quantity,
+							\Wolk\OEM\Basket::KIND_PRODUCT,
+							[],
+							[],
+							true
+						);
+					}
+					
+					// Сохранение данных в корзину.
+					$this->getBasket()->put(
+						intval($request->get('STAND')),
+						($width * $depth),
+						Basket::KIND_STAND,
+						[
+							'width' => $width, 
+							'depth' => $depth,
+							'sform' => $sform
+						],
+						$this->getContext()
+					);
+				}
+			}
         }
 		
         $this->putSession($data);
         
-        // Параметры стенда.
-        $params = $this->getBasket()->getParams();
-        
-        // Сохранение данных в корзину.
-        $this->getBasket()->put(
-            intval($request->get('STAND')),
-            ($width * $depth),
-            Basket::KIND_STAND,
-            [
-                'width' => $width, 
-                'depth' => $depth,
-				'sform' => $sform
-            ],
-            $this->getContext()
-        );
-		
 		// Уточнение формы стенда для индивидуальной застройки.
 		if (!empty($data['SFORM'])) {
 			$this->getBasket()->setParam('SFORM', $data['SFORM']);
@@ -1003,7 +1006,7 @@ class WizardComponent extends \CBitrixComponent
 		
 		
 		// Добавление шага расстановки оборудования.
-		if ((in_array('STANDS', $eventsteps) && in_array('EQUIPMENTS', $eventsteps)) || !empty($stand)) {
+		if ((in_array('STANDS', $eventsteps) && in_array('EQUIPMENTS', $eventsteps) && $this->getContext()->getType() == Context::TYPE_STANDARD) || !empty($stand)) {
 			$steps[$index++] = 'SKETCH';
 		}
 		

@@ -275,7 +275,8 @@ if(!empty($PROP)):
 				?><span id="hint_<?= $prop_fields["ID"];?>"></span><script type="text/javascript">BX.hint_replace(BX('hint_<?= $prop_fields["ID"];?>'), '<?= CUtil::JSEscape(htmlspecialcharsbx($prop_fields["HINT"]))?>');</script>&nbsp;<?
 			endif;?><?= $tabControl->GetCustomLabelHTML();?>:</td>
 			<td width="60%"><?_ShowPropertyField('PROP['.$prop_fields["ID"].']', $prop_fields, $prop_fields["VALUE"], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy);?></td>
-		
+			
+			<? // CUSTOMIZE // ?>
 			<? if (strpos($prop_code, 'LANG_ACTIVE_') !== false) { ?>
                 <script>
                     var langActiveElement<?= $prop_fields['ID'] ?> = document.querySelector('input[type=checkbox][name=PROP\\[<?= $prop_fields['ID'] ?>\\]\\[<?= str_replace(':',

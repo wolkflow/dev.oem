@@ -121,6 +121,9 @@ function PutBasket(quantity, $block)
                 if (!empty(response.data['item'])) {
                     $block.attr('data-bid', response.data['item']['id']);
                 }
+				
+				// Выравнивание высоты корзины.
+				$(document.body).trigger('sticky_kit:recalc');
             }
 			blockremote = false;
         }
