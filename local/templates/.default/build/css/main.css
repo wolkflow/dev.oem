@@ -233,7 +233,6 @@ input[type="password"] {
 .breadcrumbs__button {
   display: block;
   text-decoration: none;
-  float: left;
   padding: 0 21px;
   background: #cccccc;
   text-transform: uppercase;
@@ -242,8 +241,7 @@ input[type="password"] {
   line-height: 15px;
   position: relative;
   height: 60px;
-  width: 146px;
-  font-weight: bold;
+  font-weight: 700;
 }
 .breadcrumbs__button:first-child {
   width: 145px; 

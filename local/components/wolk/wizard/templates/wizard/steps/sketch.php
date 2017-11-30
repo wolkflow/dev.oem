@@ -204,14 +204,17 @@
 		
 		// Переход на страницу заказа.
 		$(document).on('click', '.js-step-order', function(e) {
+			e.preventDefault();
+			
 			var scene = ru.octasoft.oem.designer.Main.getScene();
             var image = ru.octasoft.oem.designer.Main.saveJPG();
 
 			if (scene.objects.length < <?= $count ?>) {
-				e.preventDefault();
-                ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
-				return false;
-            }
+				ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
+			} else {
+				$('#js-sketch-save-id').trigger('click');
+			}
+			return false;
 		});
 		
 		// Сохранение данных и переход на страницу заказа.
@@ -224,7 +227,7 @@
             var scene = ru.octasoft.oem.designer.Main.getScene();
             var image = ru.octasoft.oem.designer.Main.saveJPG();
 			
-            if (scene.objects.length < <?= $count?>) {
+            if (scene.objects.length < <?= $count ?>) {
                 ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 				return false;
             }
@@ -246,7 +249,7 @@
 			var $that = $(this);
 
             var objs = ru.octasoft.oem.designer.Main.getScene();
-            var code = $(this).data('code');
+            var code = $that.data('code');
             
             for (var i = 1; i <= 4; i++) {
                 var data = {'action': 'render', 'code': code, 'view': i, 'objs': JSON.stringify(objs)};
@@ -286,7 +289,7 @@
         var gridY = parseFloat(<?= (float) ($arResult['DEPTH']) ?: 5 ?>);
 
         (window.resizeEditor = function(items) {
-            var height =  Math.max(60 + (items.length * 135), $(window).height());
+            var height = Math.max(60 + (items.length * 135), $(window).height());
 			
             $('#designer').height(height);
 			
