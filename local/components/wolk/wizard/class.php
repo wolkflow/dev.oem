@@ -1003,7 +1003,7 @@ class WizardComponent extends \CBitrixComponent
 		
 		
 		// Добавление шага расстановки оборудования.
-		if (in_array('EQUIPMENTS', $eventsteps) && !empty($stand)) {
+		if ((in_array('STANDS', $eventsteps) && in_array('EQUIPMENTS', $eventsteps)) || !empty($stand)) {
 			$steps[$index++] = 'SKETCH';
 		}
 		

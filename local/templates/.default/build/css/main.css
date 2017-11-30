@@ -1868,3 +1868,16 @@ div.preview-image {
 .noborder {
 	border: none;
 }
+
+.sketch-help .legend img {
+	float: left;
+	margin: 0 20px 0 0;
+}
+
+.sketch-help .legend {
+	border-bottom: 1px dotted #dfdfdf;
+	margin: 20px 0 0 0;
+	padding: 0 0 10px 0;
+	overflow: hidden;
+}
+

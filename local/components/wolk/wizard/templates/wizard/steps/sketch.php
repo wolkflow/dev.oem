@@ -7,12 +7,13 @@
 
 <div class="pagetitle">
     <?= Loc::getMessage('TITLE_SKETCH') ?>
-    <div class="active pagetitle__button customizable" data-modal="#js-sketch-help-id">
-        <?= Loc::getMessage('SKETCH_HELP') ?>
-    </div>
 </div>
 <div class="pagedescription">
     <? Helper::includeFile('sketch_desc_' . \Bitrix\Main\Context::getCurrent()->getLanguage()); ?>
+	
+	<div class="active pagetitle__button customizable" data-modal="#js-sketch-help-id">
+        <?= Loc::getMessage('SKETCH_HELP') ?>
+    </div>
 </div>
 
 <div
@@ -139,8 +140,54 @@
         <div class="modalTitle">
 			<?= Loc::getMessage('SKETCH_HELP_HEAD') ?>
 		</div>
-		<div class="modalBody">
+		<div class="modalBody sketch-help">
 			<?= Loc::getMessage('SKETCH_HELP_TEXT') ?>
+			<br/>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/panel.jpg" width="300" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_PANEL') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/move.jpg" width="300" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_MOVE') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/rotate.jpg" width="300" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_ROTATE') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/button-1.jpg" width="50" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_BUTTON_1') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/button-2.jpg" width="50" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_BUTTON_2') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/button-3.jpg" width="50" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_BUTTON_3') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/button-4.jpg" width="50" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_BUTTON_4') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/button-5.jpg" width="50" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_BUTTON_5') ?>
+			</div>
+			<div class="legend">
+				<img src="/local/templates/.default/build/images/help/button-6.jpg" width="50" />
+				<br/>
+				<?= Loc::getMessage('SKETCH_HELP_LEGEND_BUTTON_6') ?>
+			</div>
 		</div>
 	</div>
 </div>

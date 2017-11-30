@@ -165,13 +165,19 @@ $MESS['FORM_PHONE'] = 'Mobile phone';
 
 $MESS['SKETCH_HELP'] = 'Help';
 $MESS['SKETCH_HELP_HEAD'] = 'Help';
-$MESS['SKETCH_HELP_TEXT'] = 'To arrange the equipment on the stand, drag all equipment from the left column to the sketch. <br/> <br/>
-You can clean the sketch using the clear button in the form of an arrow. <br/>
-You can delete an object by selecting the desired object and clicking the cross in the top panel. <br/>
-Using the arrows, you can go back one step or the other. <br/>
-Also you can zoom in or out of the scene using the zoom buttons. <br/>
-To rotate an object, eject the object and drag it around the corner of the frame.
-';
+$MESS['SKETCH_HELP_TEXT'] = '&nbsp;&nbsp; To arrange the equipment on the stand, drag all the equipment from the left column to the schematic field. <br/>
+&nbsp;&nbsp; You can arrange the equipment inside the circuit by moving and rotating objects around its axis.
+Some objects, for example, lighting, can be placed only near the walls.<br/><br/>
+&nbsp;&nbsp; Below is a description of the buttons, with which you can also manage the placement of objects.';
+$MESS['SKETCH_HELP_LEGEND_PANEL'] = 'You can control the elements on the sketch using the toolbar at the top.';
+$MESS['SKETCH_HELP_LEGEND_MOVE'] = 'To place an object on the chart, simply drag it from the list of objects.';
+$MESS['SKETCH_HELP_LEGEND_ROTATE'] = 'To rotate an object, select the object by clicking on it and drag it by one.';
+$MESS['SKETCH_HELP_LEGEND_BUTTON_1'] = 'With this button you can reset the placed equipment.';
+$MESS['SKETCH_HELP_LEGEND_BUTTON_2'] = 'You will delete the selected object.';
+$MESS['SKETCH_HELP_LEGEND_BUTTON_3'] = 'Button that allows you to undo action.';
+$MESS['SKETCH_HELP_LEGEND_BUTTON_4'] = 'Button that allows you to redo action.';
+$MESS['SKETCH_HELP_LEGEND_BUTTON_5'] = 'Zoom in button.';
+$MESS['SKETCH_HELP_LEGEND_BUTTON_6'] = 'Zoom out button.';
 
 $MESS['CHOOSE_STAND_TYPE_FORM'] = 'Select the wall configuration';
 
