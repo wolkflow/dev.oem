@@ -13,11 +13,11 @@
 		<? if ($property == Basket::PARAM_LINK) { ?>
 			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/link.php') ?>
 		<? } ?>
-		<? if ($property == Basket::PARAM_COMMENT) { ?>
-			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
-		<? } ?>
 		<? if ($property == Basket::PARAM_FILE) { ?>
 			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/file.php') ?>
+		<? } ?>
+		<? if ($property == Basket::PARAM_COMMENT) { ?>
+			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/comment.php') ?>
 		<? } ?>
 		<? if ($property == Basket::PARAM_COLOR) { ?>
 			<? include ($_SERVER['DOCUMENT_ROOT'] . $this->getFolder() . '/props/color.php') ?>

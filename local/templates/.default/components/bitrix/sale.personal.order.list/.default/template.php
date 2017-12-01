@@ -43,7 +43,7 @@ JS
                     
                     <div class="profilecontainer__changebutton">
 						<? if ($order['ORDER']['PROPS']['TYPE']['VALUE'] != 'QUICK') { ?>
-							<a @click.prevent="loadOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?ORDER_ID=<?= $order['ORDER']['ID'] ?>">
+							<a @click.prevent="loadOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?OID=<?= $order['ORDER']['ID'] ?>">
 								<? if ($order['ORDER']['STATUS_ID'] == 'N') { ?>
 									<?= Loc::getMessage('сhangeview_order') ?>
 								<? } else { ?>
@@ -51,7 +51,7 @@ JS
 								<? } ?>
 							</a>
 						<? } else { ?>
-							<a @click.prevent="getQuickOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?ORDER_ID=<?= $order['ORDER']['ID'] ?>">
+							<a @click.prevent="getQuickOrder(<?= $order['ORDER']['ID'] ?>)" href="/events/<?= $event['CODE'] ?>/?OID=<?= $order['ORDER']['ID'] ?>">
 								<?= Loc::getMessage('view_order') ?>
 							</a>
 						<? } ?>

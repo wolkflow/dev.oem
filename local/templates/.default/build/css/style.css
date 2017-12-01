@@ -478,6 +478,7 @@ div.lamColor								{width: 200px}
     font-size: 13px;
     line-height: 24px;
     text-transform: none;
+	margin: 20px 0 0 0;
 }
 
 .preview-image {

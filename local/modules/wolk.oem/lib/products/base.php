@@ -254,7 +254,7 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
 	{
 		$cache = new \CPHPCache();
 		
-		if ($cache->InitCache(3600 * 36, 'get-special-type-enums-ids', '/products/')) {
+		if (0 && $cache->InitCache(3600 * 36, 'get-special-type-enums-ids', '/products/')) {
 			 $enums = $cache->GetVars();
 		} else {
 			// Пользовательское свойство.

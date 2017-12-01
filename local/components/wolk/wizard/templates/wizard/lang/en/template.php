@@ -30,6 +30,8 @@ $MESS['WEEKDAY'] = 'e';
 
 $MESS['PRESELECT_STAND_NOTE'] = 'You have already ordered the "Standard Stand" for the application form. You can continue with the chosen type of stand or choose one of the options below. ';
 $MESS['CURRENT_STAND'] = 'Your current stand';
+$MESS['CURRENT_STAND_NO_FOUND'] = '"Standard stand" of such a configuration was not found. To continue, select one of the stands. ';
+$MESS['CURRENT_STAND_NO_EXIST'] = 'Select one of the stands to continue.';
 $MESS['CONTINUE'] = 'continue';
 $MESS['INCLUDES'] = 'Includes';
 

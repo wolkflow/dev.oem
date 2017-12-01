@@ -49,7 +49,7 @@
             <div class="serviceItem__subtitle">
 				<?= Loc::getMessage('FORM_MATERIAL') ?>
 			</div>
-            <input type="text" class="style js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.MATERIAL" value="<?= (!empty($value)) ? ($value['MATERIAL']) : ('') ?>" />
+            <input type="text" class="styler js-param-value" name="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>.MATERIAL" value="<?= (!empty($value)) ? ($value['MATERIAL']) : ('') ?>" />
         </div>
         <div class="serviceItem__col-3">
             <div class="serviceItem__subtitle">

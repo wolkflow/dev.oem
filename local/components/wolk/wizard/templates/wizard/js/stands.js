@@ -38,6 +38,7 @@ $(document).ready(function() {
 			// Установка текущего стенда.
 			$('#js-form-input-stand-id').val(sid);
 		}
+		$('#js-wrapper-stands-id').show();
     });
 	
 	

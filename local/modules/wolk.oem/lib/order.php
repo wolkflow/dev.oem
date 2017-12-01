@@ -424,9 +424,9 @@ class Order
 	/**
 	 * Ссылка на редактирование заказа.
 	 */
-	public function getLinkEdit($step = 2)
+	public function getLinkEdit($step = 1)
 	{
-		$link = '/wizard/#EVENT#/#TYPE#/#STEP#/#WIDTH#x#DEPTH#/#SFORM#/#OID#/';
+		$link = '/events/#EVENT#/?OID=#OID#';
 		$data = $this->getFullData();
 		
 		$event = strtolower($data['EVENT']['CODE']);
@@ -442,8 +442,8 @@ class Order
 		}
 		
 		$link = str_replace(
-			['#EVENT#', '#TYPE#', '#STEP#', '#WIDTH#', '#DEPTH#', '#SFORM#', '#OID#'],
-			[$event, $type, $step, $width, $depth, $sform, $oid],
+			['#EVENT#', '#STEP#', '#OID#'],
+			[$event, $step, $oid],
 			$link
 		);
 		
