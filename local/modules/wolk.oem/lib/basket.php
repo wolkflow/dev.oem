@@ -907,6 +907,8 @@ class Basket
         } else {
             $this->data = $dump;
         }
+		
+		return $oid;
     }
 	
 	

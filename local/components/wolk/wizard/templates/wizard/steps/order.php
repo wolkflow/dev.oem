@@ -4,6 +4,7 @@
 
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\OEM\Products\Section as Section ?>
 
 <div id="step">
     <div class="orderpage">
@@ -56,13 +57,6 @@
 												</span>
 											</div>
 											<div class="ordercontainer__changebutton">
-												<? /*<a href="javascript:void(0)" class="js-basket-inc" data-quantity="<?= $item['BASKET']->getQuantity() ?>" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">
-													+
-												</a>
-												<a href="javascript:void(0)" class="js-basket-dec" data-quantity="<?= $item['BASKET']->getQuantity() ?>" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">
-													-
-												</a>
-												|*/ ?>
 												<a href="<?= $arResult['STEPLINKS']['equipments'] ?>#s-<?= $item['ITEM']->getSectionID() ?>">
 													<?= Loc::getMessage('CHANGE') ?>
 												</a>
@@ -99,19 +93,18 @@
 											<div class="ordercontainer__itemname">
 												<?= $item['ITEM']->getTitle() ?> | 
 												<?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
-													&times;
+												&times;
 												<span class="js-product-quantity" data-quantity="<?= $item['BASKET']->getQuantity() ?>">
 													<?= $item['BASKET']->getQuantity() ?>
 												</span>
 											</div>
 											<div class="ordercontainer__changebutton">
-												<a href="javascript:void(0)" class="js-basket-inc" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">
-													+
-												</a>
-												<a href="javascript:void(0)" class="js-basket-dec" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">
-													-
-												</a>
-												|
+												<? $section = $item['ITEM']->getSection() ?>
+												<? if (in_array($section->getPriceType(), [Section::PRICETYPE_QUANTITY, Section::PRICETYPE_SQUARE])) { ?>
+													<a href="javascript:void(0)" class="js-basket-dec" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">-</a>
+													<a href="javascript:void(0)" class="js-basket-inc" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">+</a>
+													|
+												<? } ?>
 												<a href="<?= $arResult['STEPLINKS']['services'] ?>#s-<?= $item['ITEM']->getSectionID() ?>">
 													<?= Loc::getMessage('CHANGE') ?>
 												</a>
@@ -175,19 +168,18 @@
 											<div class="ordercontainer__itemname">
 												<?= $item['ITEM']->getTitle() ?> | 
 												<?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
-													&times;
+												&times;
 												<span class="js-product-quantity" data-quantity="<?= $item['BASKET']->getQuantity() ?>">
 													<?= $item['BASKET']->getQuantity() ?>
 												</span>
 											</div>
 											<div class="ordercontainer__changebutton">
-												<a href="javascript:void(0)" class="js-basket-inc" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">
-													+
-												</a>
-												<a href="javascript:void(0)" class="js-basket-dec" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">
-													-
-												</a>
-												|
+												<? $section = $item['ITEM']->getSection() ?>
+												<? if (in_array($section->getPriceType(), [Section::PRICETYPE_QUANTITY, Section::PRICETYPE_SQUARE])) { ?>
+													<a href="javascript:void(0)" class="js-basket-dec" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">-</a>
+													<a href="javascript:void(0)" class="js-basket-inc" data-bid="<?= $item['BASKET']->getID() ?>" data-sid="<?= $item['ITEM']->getSectionID() ?>" data-template="order">+</a>
+													|
+												<? } ?>
 												<a href="<?= $arResult['STEPLINKS']['services'] ?>#s-<?= $item['ITEM']->getSectionID() ?>">
 													<?= Loc::getMessage('CHANGE') ?>
 												</a>

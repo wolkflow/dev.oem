@@ -24,7 +24,7 @@ require ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before
 /**
  * Ответ в формате JSON.
  */
-function jsonresponse($status, $message = '', $data = null, $console = '', $type = 'json')
+function jsonresponse($status, $message = '', $data = null, $console = '', $type = 'json', $exit = true)
 {
 	$result = array(
 		'status'  => (bool)   $status,
@@ -35,7 +35,10 @@ function jsonresponse($status, $message = '', $data = null, $console = '', $type
 	
 	header('Content-Type: application/json');
 	echo json_encode($result);
-	exit();
+	
+	if ($exit) {
+		exit();
+	}
 }
 
 /** 
@@ -421,14 +424,22 @@ switch ($action) {
         
         // Создание заказа.
         try {
-            $basket->order($context);
+            $oid = $basket->order($context);
 			
 			// Очистка сессии.
 			$_SESSION[\Wolk\OEM\Basket::SESSCODE_EVENT][strtoupper($code)] = null;
         } catch (Exceptino $e) {
             jsonresponse(false, $e->getMessag());
         }
-        jsonresponse(true);
+		jsonresponse(true, '', null, '', 'json', false);
+		
+		session_write_close();
+		fastcgi_finish_request();
+		
+		// Создание рендеров.
+		$order = new Wolk\OEM\Order($oid);
+		$order->makeRenders(true);
+		
         break;
 		
 		

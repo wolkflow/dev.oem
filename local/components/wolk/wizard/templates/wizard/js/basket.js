@@ -5,7 +5,7 @@ $(document).ready(function() {
 		var $that     = $(this);
 		var $wrapper  = $('#js-wrapper-id');
 		var $block    = $that.closest('.js-product-block');
-		var $quantity = $that.closest('.js-product-quantity');
+		var $quantity = $block.find('.js-product-quantity');
 		
 		// Идентификатор корзины.
         var bid = $that.data('bid');
@@ -59,7 +59,7 @@ $(document).ready(function() {
 		var $that     = $(this);
 		var $wrapper  = $('#js-wrapper-id');
         var $block    = $that.closest('.js-product-block');
-		var $quantity = $that.closest('.js-product-quantity');
+		var $quantity = $block.find('.js-product-quantity');
 		
 		// Идентификатор корзины.
         var bid = $that.data('bid');

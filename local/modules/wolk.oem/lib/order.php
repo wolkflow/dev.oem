@@ -576,6 +576,42 @@ class Order
 	
 	
 	/**
+	 * Создание рендеров заказа.
+	 */
+	public function makeRenders($save = false)
+	{
+		$renders = \Wolk\OEM\Render::order($this);
+		
+		if ($save) {
+			if (!empty($renders)) {
+				$result = \CSaleOrderProps::getList([], ['CODE' => 'RENDERS'], false, false, []);
+				if ($prop = $result->fetch()) {
+					// Данные свойств.
+					$dataprop = [
+						'ORDER_ID'       => $this->getID(),
+						'ORDER_PROPS_ID' => $prop['ID'],
+						'NAME'           => 'Рендеры',
+						'CODE'           => $prop['CODE'],
+						'VALUE'          => $renders,
+					];
+					
+					$result = \CSaleOrderPropsValue::getList(
+						[], 
+						['ORDER_ID' => $dataprop['ORDER_ID'], 'ORDER_PROPS_ID' => $dataprop['ORDER_PROPS_ID'], 'CODE' => $dataprop['CODE']]
+					);
+					if ($propval = $result->Fetch()) {
+						\CSaleOrderPropsValue::update($propval['ID'], array('VALUE' => $renders));
+					} else {
+						\CSaleOrderPropsValue::add($dataprop);
+					}
+				}
+			}
+		}
+		return $renders;
+	}
+	
+	
+	/**
 	 * Получение списка рендеров заказа.
 	 */
 	public function getRenders()
@@ -585,29 +621,7 @@ class Order
 		$renders = array_filter((array) unserialize($data['PROPS']['RENDERS']['VALUE']));
 		
 		if (empty($renders)) {
-			$renders = \Wolk\OEM\Render::order($this);
-			
-			$result = \CSaleOrderProps::GetList([], ['CODE' => 'RENDERS'], false, false, []);
-			if ($prop = $result->Fetch()) {
-				// Данные свойств.
-				$dataprop = [
-					'ORDER_ID'       => $this->getID(),
-					'ORDER_PROPS_ID' => $prop['ID'],
-					'NAME'           => 'Рендеры',
-					'CODE'           => $prop['CODE'],
-					'VALUE'          => $renders,
-				];
-				
-				$result = \CSaleOrderPropsValue::GetList(
-					[], 
-					['ORDER_ID' => $dataprop['ORDER_ID'], 'ORDER_PROPS_ID' => $dataprop['ORDER_PROPS_ID'], 'CODE' => $dataprop['CODE']]
-				);
-				if ($propval = $result->Fetch()) {
-					\CSaleOrderPropsValue::Update($propval['ID'], array('VALUE' => $renders));
-				} else {
-					\CSaleOrderPropsValue::Add($dataprop);
-				}
-			}
+			$renders = $this->makeRenders(true);
 		}
 		return $renders;
 	}

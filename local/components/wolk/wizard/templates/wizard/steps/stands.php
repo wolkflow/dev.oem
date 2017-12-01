@@ -58,7 +58,7 @@
 			
 			<div class="standspagetop" id="preselect">
 				<div id="js-preselect-wrapper-id" data-type="standard">
-					<input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND']) && !!empty($arResult['PREOFFER'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
+					<input id="js-form-input-stand-id" type="hidden" name="STAND" value="<?= (!empty($arResult['PRESTAND']) && !empty($arResult['PREOFFER'])) ? ($arResult['PRESTAND']->getID()) : ('') ?>" />
 					
 					<? // Выбор стандартного стенда. // ?>
 					<? if (!empty($arResult['PRESTAND'])) { ?>

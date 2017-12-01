@@ -25,22 +25,6 @@ class Render
 		// Данные заказа.
 		$data = $order->getData();
 		
-		// Корзины.
-		$baskets = [];
-		foreach ($order->getBaskets() as $basket) {
-			if ($basket['PROPS']['STAND']['VALUE'] == 'Y' || empty($basket['PROPS']['BID']['VALUE'])) { 
-				continue;
-			}
-			$baskets[$basket['PROPS']['BID']['VALUE']] = $basket;
-		}
-		
-		// Углы поворота.
-        $rotates = array(0, 30, 90, 120);
-		
-		// Код мероприятия.s
-		$code = $data['PROPS']['EVENT_CODE']['VALUE'];
-		
-		
 		// Данные скетча.
 		$sketch = $data['PROPS']['SKETCH_SCENE']['VALUE'];
 		
@@ -48,6 +32,32 @@ class Render
 			return false;
 		}
 		$sketch = json_decode($sketch, true);
+		
+		// Стенд.
+		$stand = null;
+		
+		// Корзины.
+		$baskets = [];
+		foreach ($order->getBaskets() as $basket) {
+			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
+				$stand = $basket;
+				continue;
+			}
+			if (empty($basket['PROPS']['BID']['VALUE'])) { 
+				continue;
+			}
+			$baskets[$basket['PROPS']['BID']['VALUE']] = $basket;
+		}
+		
+		if (empty($stand)) {
+			return false;
+		}
+		
+		// Углы поворота.
+        $rotates = array(0, 30, 90, 120);
+		
+		// Код мероприятия.s
+		$code = $data['PROPS']['EVENT_CODE']['VALUE'];
 		
 		// Объекты на сцене.
 		$objects = $sketch['objects'];
