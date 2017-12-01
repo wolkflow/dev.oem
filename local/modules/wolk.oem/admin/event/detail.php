@@ -438,7 +438,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 									</tr>
 								</thead>
 								<? $first = true; ?>
-								<? foreach ($stat['STANDS']['CURRENCIES'] as $code => $curdata) { ?>
+								<? foreach ($currencies as $currency) { ?>
+									<? $curdata = $stat['STANDS']['CURRENCIES'][$currency['CURRENCY']] ?>
 									<tbody class="js-currency-tab js-currency-tab-<?= strtolower($code) ?>" <?= (!$first) ? ('style="display: none;"') : ('') ?>>
 										<? foreach ($curdata['ITEMS'] as $pid => $item) { ?>
 											<? foreach ($item as $surcharge => $subitem) { ?>
@@ -558,7 +559,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 									</tr>
 								</thead>
 								<? $first = true; ?>
-								<? foreach ($stat['PRODUCTS']['CURRENCIES'] as $code => $curdata) { ?>
+								<? foreach ($currencies as $currency) { ?>
+									<? $curdata = $stat['PRODUCTS']['CURRENCIES'][$currency['CURRENCY']] ?>
 									<tbody class="js-currency-tab js-currency-tab-<?= strtolower($code) ?>" <?= (!$first) ? ('style="display: none;"') : ('') ?>>
 										<? foreach ($curdata['ITEMS'] as $pid => $item) { ?>
 											<? foreach ($item as $surcharge => $subitem) { ?>
