@@ -270,6 +270,16 @@ $(document).ready(function() {
 		}
 	}
 	
+	$(document).on('click', '.js-move-product', function() {
+		var hash = $(this).data('hash');
+		var href = $(this).prop('href');
+		
+		var $item = $('#js-' + hash + '-id');
+		if ($item.length) {
+			$('html').animate({scrollTop: $item.offset().top - 18}, 1200, 'easeOutExpo');
+		}
+	});
+	
 	
     // Загрузка формы.
     $(document).on('click', '.js-submit', function(e) {

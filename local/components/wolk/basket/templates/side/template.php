@@ -57,7 +57,7 @@
 						<a href="javascript:void(0)" class="js-basket-dec dec" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
 						<a href="javascript:void(0)" class="js-basket-inc inc" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
 					<? } else { ?>
-						<a href="<?= $arParams['STEPLINKS'][strtolower($product->getSectionType())] ?>#s-<?= $product->getSectionID() ?>">&rarr;</a>
+						<a class="js-move-product" href="<?= $arParams['STEPLINKS'][strtolower($product->getSectionType())] ?>#s-<?= $product->getSectionID() ?>" data-hash="s-<?= $product->getSectionID() ?>">&rarr;</a>
 					<? } ?>
 					<a href="javascript:void(0)" class="js-basket-remove rem" data-bid="<?= $item->getID() ?>" data-sid="<?= $item->getSectionID() ?>"></a>
 				</div>
