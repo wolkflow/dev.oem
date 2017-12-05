@@ -86,8 +86,6 @@ class Main
             }
         }
 		
-		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/menu.log', print_r($globals, true).print_r($modules, true));
-
         return $menu;
     }
 
@@ -95,6 +93,7 @@ class Main
     public function onBeforeUserUpdateHandler(&$fields)
     {
         global $USER;
+		
         if (!$USER->IsAdmin()) {
 			if (isset($fields['EMAIL'])) {
 				$fields['LOGIN'] = $fields['EMAIL'];

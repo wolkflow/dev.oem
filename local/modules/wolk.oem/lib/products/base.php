@@ -12,7 +12,7 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
     const LANG_PREFIX = 'LANG_';
 	
 	const SPECIAL_TYPE_FASCIA  = 'FASCIA';
-	const SPECIAL_TYPE_HANDING = 'HANDING';
+	const SPECIAL_TYPE_HANDING = 'FORM-HANDING';
     
 	protected $price;
     protected $count;
@@ -291,8 +291,8 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
 	{
 		$cache = new \CPHPCache();
 		
-		if ($cache->InitCache(3600 * 4, 'get-special-type-product-ids', '/products/')) {
-			 $items = $cache->GetVars();
+		if (0 && $cache->InitCache(3600, 'get-special-type-product-ids', '/products/')) {
+			 $items = $cache->getVars();
 		} else {
 			// Специальные свойство.
 			$enums = self::getSpecialTypes();

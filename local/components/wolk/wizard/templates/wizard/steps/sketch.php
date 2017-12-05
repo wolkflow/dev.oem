@@ -229,6 +229,7 @@
 			var $that = $(this);
 			
 			if ($that.hasClass('js-step-order')) {
+				var scene = ru.octasoft.oem.designer.Main.getScene();
 				if (scene.objects.length < <?= intval($count) ?>) {
 					ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 				} else {

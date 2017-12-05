@@ -632,11 +632,11 @@ class Order
 	 */
 	public function getFasciaBaskets()
     {
-		$props = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
+		$pids = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
 		$items = [];
 		$baskets = $this->getBaskets();
 		foreach ($baskets as $basket) {
-			if (in_array($basket['PRODUCT_ID'], $props['FASCIA'])) {
+			if (in_array($basket['PRODUCT_ID'], $pids[Product::SPECIAL_TYPE_FASCIA])) {
 				$items []= $basket;
 			}
 		}
@@ -649,18 +649,13 @@ class Order
 	 */
 	public function getFormHandingBaskets()
     {
-		$props = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
+		$pids  = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
 		$items = [];
 		$baskets = $this->getBaskets();
+		
 		foreach ($baskets as $basket) {
-			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
-				continue;
-			}
-			$product = new Product($basket['PRODUCT_ID']);
-			if (empty($product)) {
-				if ($product->isSpecialType(Product::SPECIAL_TYPE_HANDING)) {
-					$items []= $basket;
-				}
+			if (in_array($basket['PRODUCT_ID'], $pids[Product::SPECIAL_TYPE_HANDING])) {
+				$items []= $basket;
 			}
 		}
 		return $items;

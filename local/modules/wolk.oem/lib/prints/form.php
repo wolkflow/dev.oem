@@ -6,7 +6,7 @@ namespace Wolk\OEM\Prints;
 class Form
 {
 	const PATH = '/upload/orders/forms-handing/';
-	
+	const SDIR = '/print/order/form-handing/';
 	
 	protected $oid  = null;
 	protected $lang = null;
@@ -14,8 +14,8 @@ class Form
 	
 	public function __construct($oid, $lang = null)
 	{
-		$this->oid  = (int) $oid;
-		$this->lang = (string) $lang;
+		$this->oid  = intval($oid);
+		$this->lang = strval($lang);
 	}
 	
 	
@@ -73,12 +73,12 @@ class Form
 	public function getURL($absolute = false)
 	{
 		$site = \CSite::GetByID(SITE_DEFAULT)->fetch();
-		$url  = '/print/order/form-handing/' . $this->getOrderID() . '/' . $this->getLanguage() . '/';
+		$link = self::SDIR . $this->getOrderID() . '/' . $this->getLanguage() . '/';
 		
 		if ($absolute) {
-			$url = 'http://' . $site['SERVER_NAME'] . $url;
+			$link = 'http://' . $site['SERVER_NAME'] . $link;
 		}
-		return $url;
+		return $link;
 	}
 	
 	

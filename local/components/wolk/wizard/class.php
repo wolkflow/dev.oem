@@ -60,11 +60,6 @@ class WizardComponent extends \CBitrixComponent
         $this->basket = new Basket($arParams['CODE']);
 		
 		
-		// На первом шаге сохраняем параметра стенда в сессию.
-		if (empty($arParams['STEP'])) {
-			$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])] = ['BASKET' => ['EVENT' => $arParams['CODE']]];
-		}
-        
 		
 		// Загрузка данных.
 		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
@@ -73,6 +68,14 @@ class WizardComponent extends \CBitrixComponent
 				LocalRedirect($this->getEventLink());
 			}
 			$this->getBasket()->load($order);
+			
+			// Добавление параметра для корзины.
+			$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])]['BASKET']['EVENT'] = $arParams['CODE'];
+		} else {
+			// На первом шаге сохраняем параметра стенда в сессию.
+			if (empty($arParams['STEP'])) {
+				$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])] = ['BASKET' => ['EVENT' => $arParams['CODE']]];
+			}
 		}
         
         return $arParams;

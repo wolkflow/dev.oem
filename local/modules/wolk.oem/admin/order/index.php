@@ -854,7 +854,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 		
 		
 		<? $baskets = $oemorder->getFormHandingBaskets() ?>
-		<? if (1 || !empty($baskets)) { ?>
+		<? if (!empty($baskets)) { ?>
 			<? $print = new \Wolk\OEM\Prints\Form($oemorder->getID()); ?>
 			<div style="position: relative; vertical-align: top;">
 				<div style="height: 5px; width: 100%;"></div>
