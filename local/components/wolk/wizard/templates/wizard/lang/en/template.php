@@ -163,7 +163,7 @@ $MESS['FORM_HEIGHT'] = 'Height';
 $MESS['FORM_HEIGHT_DIMENSION'] = 'mm';
 $MESS['FORM_WEIGHT_TOTAL'] = 'Final weight';
 $MESS['FORM_WEIGHT_TOTAL_DIMENSION'] = 'kg';
-$MESS['FORM_ASSIGNEE_PROJECT'] = 'RPerson in charge of the project of the structure';
+$MESS['FORM_ASSIGNEE_PROJECT'] = 'Person in charge of the project of the structure';
 $MESS['FORM_ASSIGNEE_MOUNTING'] = 'Person in charge of mounting works';
 $MESS['FORM_PHONE'] = 'Mobile phone';
 
