@@ -239,7 +239,7 @@
 							<input class="js-form-remote-input" type="text" name="PAVILION" value="<?= (!empty($arResult['PAVILION'])) ? ($arResult['PAVILION']) : ('0') ?>" />
 						</div>
 					</div>
-					<div class="ordertotalcontainer__placeorder" data-modal="<?= ($USER->IsAuthorized()) ? ('#place-auth') : ('#place-unauth') ?>">
+					<div class="ordertotalcontainer__placeorder customizable" data-modal="<?= ($USER->IsAuthorized()) ? ('#place-auth') : ('#place-unauth') ?>">
 						<?= Loc::getMessage('PLACE_ORDER') ?>
 					</div>
 				</div>
@@ -315,7 +315,7 @@
 					<? Helper::includeFile('rules_text_with_link_'.$arResult['CONTEXT']->getLang()) ?>
 				</label>
 				<div id="js-order-place-block-auth-id" class="placeOrder__buttons hide">
-					<button id="js-place-order-id" class="styler">
+					<button id="js-place-order-id" class="styler customizable">
 						<?= Loc::getMessage('PLACE_ORDER') ?>
 					</button>
 				</div>
@@ -338,10 +338,10 @@
 					<? Helper::includeFile('rules_text_with_link_'.$arResult['CONTEXT']->getLang()) ?>
 				</label>
 				<div id="js-order-place-block-unauth-id" class="placeOrder__buttons hide">
-					<button class="styler x-arcticmodal-close" data-modal="#modal-login">
+					<button class="styler x-arcticmodal-close customizable" data-modal="#modal-login">
 						<?= Loc::getMessage('LOGIN') ?>
 					</button>
-					<button class="styler x-arcticmodal-close" data-modal="#modal-register">
+					<button class="styler x-arcticmodal-close customizable" data-modal="#modal-register">
 						<?= Loc::getMessage('REGISTER') ?>
 					</button>
 				</div>
@@ -371,7 +371,7 @@
 					<input type="password" class="styler"  name="AUTH[PASSWORD]" />
 				</div>
 				<div class="formRow">
-					<input type="submit" class="styler full-width" value="<?= Loc::getMessage('LOGIN') ?>" />
+					<input type="submit" class="styler full-width customizable" value="<?= Loc::getMessage('LOGIN') ?>" />
 				</div>
 				<div class="clear"></div>
 				<div class="errortext"></div>
@@ -455,7 +455,7 @@
 					</div>
 					<div class="formRow">
 						<label>&nbsp;</label>
-						<input type="submit" class="styler modalSend" value="<?= Loc::getMessage('REGISTER') ?>" />
+						<input type="submit" class="styler modalSend customizable" value="<?= Loc::getMessage('REGISTER') ?>" />
 					</div>
 				</div>
 				<div class="clear"></div>

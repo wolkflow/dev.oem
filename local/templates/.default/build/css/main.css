@@ -1925,3 +1925,12 @@ div.preview-image {
 	display: block;
 }
 
+.color-indicator {
+	width: 60px;
+    height: 60px;
+    background: #7f7f7f;
+	float: left;
+    margin-right: 10px;
+}
+
+

@@ -18,13 +18,15 @@
         <div class="serviceItem__subtitle">
 			<?= ($arResult['SECTION_PARAMS'][$section->getID()]['NAMES'][Basket::PARAM_COLOR]) ?: (Loc::getMessage('COLOR')) ?>
 		</div>
-        <button class="js-button-param styler itemColor__custom" data-modal="#js-color-popup-<?= $proptmpid ?>-id" style="<?= (!empty($value)) ? ('background:' . $value['COLOR'] . ';') : ('') ?>">
+		<button class="js-button-param styler itemColor__custom customizable" data-modal="#js-color-popup-<?= $proptmpid ?>-id">
             <? if (!empty($params[Basket::PARAM_COLOR])) { ?>
                 <?= Loc::getMessage('CHANGE_COLOR') ?>
             <? } else { ?>
                 <?= Loc::getMessage('CHOOSE_COLOR') ?>
             <? } ?>
         </button>
+		<div class="js-color-indicator color-indicator" data-indicator="#js-color-popup-<?= $proptmpid ?>-id" style="<?= (!empty($value)) ? ('background:' . $value['COLOR'] . ';') : ('') ?>"></div>
+        
         <div class="js-color-title itemColor__custom-name"></div>
     </div>
     

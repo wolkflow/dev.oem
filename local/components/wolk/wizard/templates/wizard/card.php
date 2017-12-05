@@ -76,8 +76,8 @@
 								data-include="<?= (array_key_exists($product->getID(), $arResult['BASE'])) ? ('1') : ('0') ?>"
 								<?= (!empty($basketitem) && $basketitem->getProductID() == $product->getID()) ? ('selected') : ('') ?>
 							>
-                                <?= $product->getTitle() ?>
-                                <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
+								<?= $product->getTitle() ?> &mdash;
+								<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>
                             </option>
                         <? } ?>
                     </select>

@@ -15,7 +15,7 @@
 		<?= $arResult['EVENT']->getSubHeader() ?>
     </div>
     <div class="indexpage__generalinfocontainer">
-        <div class="pagesubtitle">
+        <div class="pagesubtitle customizable_border">
             <?= Loc::getMessage('GENERAL_INFORMATION') ?>
         </div>
         <?  // Разбиение документов.
@@ -73,7 +73,7 @@
         
         <div class="indexpage__choosestand system">
             <div class="indexpage__choosestandtitlecontainer">
-                <div class="indexpage__choosestandtitle">
+                <div class="indexpage__choosestandtitle customizable">
                     <?= Loc::getMessage('TYPE_STANDARD_STAND') ?>
                 </div>
                 <form method="post" action="<?= $arResult['LINKS']['NEXT'] ?>" class="indexpage__choosestandform js-stand-select-form">
@@ -118,7 +118,7 @@
                             <span class="indexpage__choosestandtypeicon"></span>
                         </label>
                     </div>
-                    <button type="submit" class="indexpage__choosestandnextbutton">
+                    <button type="submit" class="indexpage__choosestandnextbutton customizable">
 						<?= Loc::getMessage('NEXT') ?>
 					</button>
                 </form>
@@ -129,10 +129,9 @@
         
         <div class="indexpage__choosestand individual">
             <div class="indexpage__choosestandtitlecontainer">
-                <div class="indexpage__choosestandtitle">
+                <div class="indexpage__choosestandtitle customizable">
                     <?= Loc::getMessage('TYPE_INDIVIDUAL_STAND') ?>
                 </div>
-
                 <form method="post" action="<?= $arResult['LINKS']['NEXT'] ?>" class="indexpage__choosestandform js-stand-select-form">
                     <input type="hidden" name="TYPE" value="individual" />
 					<div class="indexpage__choosestandinputscontainer">
@@ -149,7 +148,7 @@
                             <input required name="DEPTH" type="text" value="" class="js-stand-depth" />
 						</div>
                     </div>
-                    <button type="submit" class="indexpage__choosestandnextbutton">
+                    <button type="submit" class="indexpage__choosestandnextbutton customizable">
 						<?= Loc::getMessage('NEXT') ?>
 					</button>
                 </form>

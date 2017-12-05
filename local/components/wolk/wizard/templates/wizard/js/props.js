@@ -184,7 +184,8 @@ $(document).ready(function() {
         var $that    = $(this);
         var $parent  = $that.parent('li');
         var $modal  = $that.closest('.modal');
-        var $button  = $('[data-modal="#' + $modal.attr('id') + '"]')
+        var $button  = $('[data-modal="#' + $modal.attr('id') + '"]');
+		var $indicator = $('[data-indicator="#' + $modal.attr('id') + '"]');
         var $wrapper = $button.closest('.js-param-block');
 
         // Данные свойства для корзины.
@@ -201,7 +202,7 @@ $(document).ready(function() {
             $input_value.val($that.data('id'));
             $input_color.val($that.css('background'));
         }
-        $button.css('background', $that.css('background'));
+        $indicator.css('background', $that.css('background'));
 
         setTimeout(function() {
             $('#' + $modal.attr('id')).arcticmodal('close');
