@@ -16,7 +16,7 @@ class OrderPrintComponent extends \CBitrixComponent
     public function onPrepareComponentParams($arParams)
     {
 		// Код корзины.
-		$arParams['CODE'] = (string) $arParams['CODE'];
+		$arParams['DATA'] = (array) $arParams['DATA'];
 		
 		// Язык.
 		$arParams['LANG'] = (string) $arParams['LANG'];
@@ -68,9 +68,18 @@ class OrderPrintComponent extends \CBitrixComponent
 		$this->arResult['LANGUAGE'] = strtoupper($this->arParams['LANG']);
 		
 		
-		// Заказ.
-		$this->arResult['BASKET'] = (new \Wolk\OEM\Basket($this->arParams['CODE']))->getSession();
+		// Установка языка.
+		\Bitrix\Main\Context::getCurrent()->setLanguage($this->arParams['LANG']);
 		
+		
+		// Корзина.
+		$this->arResult['BASKET'] = $this->arParams['DATA'];
+		
+		// Идентификатор выставки.
+		$eid = (int) \Wolk\Core\Helpers\IBlockElement::getIDByCode(IBLOCK_EVENTS_ID, $this->arResult['BASKET']['EVENT']);
+		
+		// Выставка.
+		$this->arResult['EVENT'] = (new Wolk\OEM\Event($eid))->getData();
 		
 		
 		// Подключение шаблона.

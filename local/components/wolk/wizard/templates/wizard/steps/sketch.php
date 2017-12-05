@@ -203,7 +203,7 @@
 			var scene = ru.octasoft.oem.designer.Main.getScene();
             var image = ru.octasoft.oem.designer.Main.saveJPG();
 			
-			$.ajax({
+			var result = $.ajax({
 				url: '/remote/',
 				type: 'post',
 				data: {
@@ -214,10 +214,13 @@
 					'COMMENTS': $('#js-order-comments-id').val(),
 				},
 				dataType: 'json',
-				async: true,
+				async: false,
 				cache: false
 			});
+			
+			return result;
 		}
+		
 		
 		// Переход на страницу заказа.
 		$(document).on('click', '.js-step', function(e) {
@@ -239,33 +242,9 @@
                 $that.prop('disabled', false);
 			});
 			
-			/*
-			var scene = ru.octasoft.oem.designer.Main.getScene();
-            var image = ru.octasoft.oem.designer.Main.saveJPG();
-			
-			$.ajax({
-				url: '/remote/',
-				type: 'post',
-				data: {
-					'action': 'update-basket-sketch',
-					'code': '<?= $arResult['EVENT']->getCode() ?>',
-					'SKETCH_SCENE': JSON.stringify(scene),
-					'SKETCH_IMAGE': image,
-					'COMMENTS': $('#js-order-comments-id').val(),
-				},
-				dataType: 'json',
-				async: true,
-				cache: false,
-				beforeSend: function() {
-					$that.prop('disabled', 'disabled');
-				},
-				success: function(response) {
-					$that.prop('disabled', false);
-				},
-			});
-			*/
 			location = $that.prop('href');
 		});
+		
 		
 		// Сохранение данных и переход на страницу заказа.
         $(document).on('click', '#js-sketch-save-id', function(e) {
@@ -292,6 +271,7 @@
 			});
         });
         
+		
         // Запрос рендеров схемы стенда.
         $(document).on('click', '#js-render-id', function(e) {
             e.preventDefault();
@@ -299,7 +279,12 @@
 			var $that = $(this);
 			
 			$.when(SaveSketchRemote()).done(function() {
-				var data = {'action': 'render', 'code': '<?= $arResult['EVENT']->getCode() ?>'};
+				var objs = ru.octasoft.oem.designer.Main.getScene();
+				var data = {
+					'action': 'render', 
+					'code': '<?= $arResult['EVENT']->getCode() ?>',
+					'objs': JSON.stringify(objs)
+				};
                 
                 $.ajax({
                     url: '/remote/',
@@ -322,41 +307,11 @@
                     },
                 });
 			});
-            
-			/*
-			var $that = $(this);
-
-            var objs = ru.octasoft.oem.designer.Main.getScene();
-            var code = $that.data('code');
-            
-            //for (var i = 1; i <= 4; i++) {
-                var data = {'action': 'render', 'code': code, 'objs': JSON.stringify(objs)};
-                
-                $.ajax({
-                    url: '/remote/',
-                    type: 'post',
-                    data: data,
-                    dataType: 'json',
-                    async: true,
-                    cache: false,
-					beforeSend: function() {
-						$('#js-render-image-id').addClass('pre-loader');
-						$that.prop('disabled', 'disabled');
-					},
-                    success: function(response) {
-                        if (response.status) {
-                            $('#js-render-image-id').removeClass('pre-loader').html('<a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="60" height="60" /></a>');
-                        } else {
-                            // Ошибка загрузки файла.
-                        }
-						$that.prop('disabled', false);
-                    },
-                });
-            //}
-			*/
         });
     });
-
+	
+	
+	
     /*
      * Обработчики скетча.
      */

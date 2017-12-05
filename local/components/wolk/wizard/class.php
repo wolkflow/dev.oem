@@ -60,29 +60,11 @@ class WizardComponent extends \CBitrixComponent
         $this->basket = new Basket($arParams['CODE']);
 		
 		
+		// На первом шаге сохраняем параметра стенда в сессию.
 		if (empty($arParams['STEP'])) {
-			$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])] = ['BASKET' => []];
+			$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])] = ['BASKET' => ['EVENT' => $arParams['CODE']]];
 		}
         
-        // На первом шаге сохраняем параметра стенда в сессию.
-		/*
-        if ($arParams['STEP'] == 1) {
-            // Очистка данных по выставке.
-            $_SESSION[self::SESSCODE][$this->getBasket()->getEventCode()] = array('STAND' => null, Basket::SESSCODE_BASKET => array());
-            
-            $this->getBasket()->setParams(array(
-                'WIDTH' => $arParams['WIDTH'],
-                'DEPTH' => $arParams['DEPTH'],
-                'SFORM' => $arParams['SFORM']
-            ));
-        } else {
-            $params = $this->getBasket()->getParams();
-            
-            $arParams['WIDTH'] = $params['WIDTH'];
-            $arParams['DEPTH'] = $params['DEPTH'];
-            $arParams['SFORM'] = $params['SFORM'];
-        }
-		*/
 		
 		// Загрузка данных.
 		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
@@ -136,7 +118,7 @@ class WizardComponent extends \CBitrixComponent
 		}
 		
 		// Проверка валидности сессии.
-		if ($this->getStepNumber() > $infstep && !$request->isPost() && empty($_SESSION[self::SESSCODE][$this->getEventCode()]['BASKET'])) {
+		if ($this->getStepNumber() > $infstep && !$request->isPost() && empty($_SESSION[self::SESSCODE][$this->getEventCode()]['BASKET']['EVENT'])) {
 			LocalRedirect($this->getEventLink());
 		}
 		

@@ -8,7 +8,7 @@
 	<div class="logo">
 		<? $src = CFile::getPath($arResult['EVENT']['PROPS']['LANG_LOGO_' . $lang]['VALUE']) ?>
 		<? if (is_readable($_SERVER['DOCUMENT_ROOT'] . $src)) { ?>
-			<img src="http://<?= $arResult['SERVER_NAME'] ?>/i.php?src=<?= $src ?>&h=100" />
+			<img src="/i.php?src=<?= $src ?>&h=100" />
 		<? } ?>
 	</div>
 	<section>
@@ -18,18 +18,18 @@
 		</div>
 		
 		<div>
-			<h3>Свойства стенда</h3>
+			<h3>Stand parameters</h3>
 			<ul>
 				<li>
-					Тип стенда: <b><?= Loc::getMessage('TYPE_' . strtoupper($arResult['BASKET']['PARAMS']['SFORM'])) ?></b>
+					Stand type: <b><?= Loc::getMessage('TYPE_' . strtoupper($arResult['BASKET']['PARAMS']['SFORM'])) ?></b>
 				</li>
 				<li>
-					Размер стенда: 
+					Stand sizes: 
 					<b><?= $arResult['BASKET']['PARAMS']['WIDTH'] ?> &times; <?= $arResult['BASKET']['PARAMS']['DEPTH'] ?></b>
 				</li>
 				<li>
-					Общий метраж: 
-					<b><?= $arResult['BASKET']['PARAMS']['WIDTH'] * $arResult['BASKET']['PARAMS']['DEPTH'] ?> м<sup>2</sup></b>
+					Total square: 
+					<b><?= $arResult['BASKET']['PARAMS']['WIDTH'] * $arResult['BASKET']['PARAMS']['DEPTH'] ?> m<sup>2</sup></b>
 				</li>
 			</ul>
 		</div>
@@ -48,7 +48,7 @@
 			<? foreach ($renders as $render) { ?>
 				<? if (is_readable($_SERVER['DOCUMENT_ROOT'] . $render)) { ?>
 					<div class="center">
-						<img src="http://<?= $arResult['SERVER_NAME'] ?>/i.php?src=<?= $render ?>&h=450" />
+						<img src="/i.php?src=<?= $render ?>&h=450" />
 					</div>
 				<? } ?>
 			<? } ?>

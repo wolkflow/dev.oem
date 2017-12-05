@@ -12,23 +12,38 @@ class Prerender
 	const PDIR = '/print/basket/render/';
 	
 	
-	protected $basket = null;
-	protected $lang   = null;
+	protected $stid = null;
+	protected $code = null;
+	protected $lang = null;
 	
 	
-	public function __construct(Basket $basket, $lang = null)
+	public function __construct($stid, $code, $lang = null)
 	{
-		$this->basket = $basket;
-		$this->lang = (string) $lang;
+		$this->stid = intval($stid);
+		$this->code = strval($code);
+		$this->lang = strval($lang);
+		
+		if (empty($this->lang)) {
+			$this->lang = \Bitrix\Main\Application::getInstance()->getContext()->getLanguage();	
+		}
 	}
 	
 	
 	/**
-	 * Получение корзины.
+	 * Получение ID хранилища.
 	 */
-	public function getBasket()
+	public function getStorageID()
 	{
-		return $this->basket;
+		return $this->stid;
+	}
+	
+	
+	/**
+	 * Получение кода.
+	 */
+	public function getCode()
+	{
+		return $this->code;
 	}
 	
 	
@@ -55,7 +70,7 @@ class Prerender
 	 */
 	public function getPath()
 	{
-		return (self::PATH . 'basket_' . session_id() . '-' . strtolower($this->getBasket()->getEventCode()) . '.pdf');
+		return (self::PATH . 'basket_' . $this->getStorageID() . '-' . strtolower($this->getCode()) . '.pdf');
 	}
 	
 	
@@ -77,13 +92,12 @@ class Prerender
 	public function getURL($absolute = false)
 	{
 		$site = \CSite::GetByID(SITE_DEFAULT)->fetch();
-		$lang = \Bitrix\Main\Application::getInstance()->getContext()->getLanguage();
-		$url  = self::PDIR . session_id() . '/' . $this->getBasket()->getEventCode() . '/' . $lang . '/';
+		$link  = self::PDIR . $this->getStorageID() . '/' . $this->getCode() . '/' . $this->getLanguage() . '/';
 		
 		if ($absolute) {
-			$url = 'http://' . $site['SERVER_NAME'] . $url;
+			$link = 'http://' . $site['SERVER_NAME'] . $link;
 		}
-		return $url;
+		return $link;
 	}
 	
 	
@@ -95,7 +109,7 @@ class Prerender
 		$url = $this->getURL(true); 
 		
 		// Аргументы.
-		$args = array('-q' => '', '--no-stop-slow-scripts' => '');
+		$args = array('-q' => ''); // , '--no-stop-slow-scripts' => '');
 		
 		if ($delay > 0) {
 			$args['--javascript-delay'] = $delay;

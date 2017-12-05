@@ -1,5 +1,8 @@
 <?php
 
+set_time_limit(0);
+
+
 define('NO_KEEP_STATISTIC', true);
 define('PULL_AJAX_INIT', true);
 define('PUBLIC_AJAX_MODE', true);
@@ -113,6 +116,9 @@ switch ($action) {
         $objects = json_decode($objs, true)['objects'];
 
         foreach ($objects as &$object) {
+			if (!is_object($baskets[$object['id']])) {
+				continue;
+			}
             $element = $baskets[$object['id']]->getElement();
             
             $object['path'] = $element->getModelPath();
@@ -154,11 +160,15 @@ switch ($action) {
 		// Сохранение в корзину.
         $basket->setRenders($renders);
 		
+		// Сохранение корзины во временное хранилище.
+		$storage = Wolk\OEM\TempRenderStorage::push($basket->getData());
+		
 		// Печать
-		$print = new Wolk\OEM\Prints\Prerender($basket);
+		$print = new Wolk\OEM\Prints\Prerender($storage->getID(), $code, $lang);
+		$print->make();
 		
 		// Путь к файлу PDF.
-		$file = $print->make();
+		$file = $print->getPath();
 		
 		
         jsonresponse(true, '', ['path' => $path, 'file' => $file]);
