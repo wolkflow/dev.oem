@@ -94,6 +94,8 @@ $MESS['FORM_HANDING_SIZE'] = 'Размер';
 $MESS['FORM_HANDING_MATERIAL'] = 'Материал';
 $MESS['FORM_HANDING_WEIGHT'] = 'Вес';
 
+$MESS['FORM_SWITCHER'] = 'Показать / скрыть форму';
+
 
 $MESS['STAND_TYPE'] = 'Тип стенда';
 $MESS['SYSTEM_STAND'] = 'Системный стенд';

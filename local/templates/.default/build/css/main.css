@@ -1904,3 +1904,24 @@ div.preview-image {
 .js-days-hours-quantity-wrapper .dates {
   margin-right: 210px;
 }
+
+.form-switcher {
+	display: inline-block;
+	margin: 15px 0 5px 0;
+	text-decoration: none;
+	border-bottom: 1px dotted #333333;
+}
+
+.form-switcher:hover {
+	text-decoration: none;
+	border-bottom: 1px dotted #000000;
+}
+
+.form-wrapper {
+	display: none;
+}
+
+.form-wrapper.filled {
+	display: block;
+}
+

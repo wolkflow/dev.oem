@@ -167,6 +167,18 @@ $(document).ready(function() {
 	});
 	
 	
+	// СВОЙСТВО: Форма подвесной конструкции.
+	$(document).on('click', '.js-form-opener', function() {
+		var $that  = $(this);
+		var $block = $that.closest('.js-param-block');
+		var $wrap  = $block.find('.js-form-wrapper');
+		
+		$.when($wrap.slideToggle()).then(function() {
+			$(document.body).trigger('sticky_kit:recalc');
+		});
+	});
+	
+	
     // СВОЙСТВО: Выбор цвета.
     $(document).on('click', '.js-colors-palette .js-color-item', function() {
         var $that    = $(this);
