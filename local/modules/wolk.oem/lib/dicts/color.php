@@ -27,4 +27,13 @@ class Color extends \Wolk\Core\System\HLBlockModel
         }
         return $name;
     }
+	
+	
+	/**
+     * Получение номера цвета.
+     */
+	public function getNumber()
+	{
+		return $this->get('UF_NUM');
+	}
 }

@@ -148,7 +148,15 @@ switch ($action) {
 		// Рендеры сцены.
 		$renders = [];
 		foreach ($rotates as $rotate) {
-			$renders []= Wolk\OEM\Render::render($code . '-' . $view, json_encode($scene), 'out-'.uniqid(), 1024, 768, $distance, $rotate);
+			$renders []= Wolk\OEM\Render::render(
+				$code, 
+				json_encode($scene), 
+				'out-'.uniqid(), 
+				Wolk\OEM\Render::DEFAULT_WIDTH, 
+				Wolk\OEM\Render::DEFAULT_HEIGHT, 
+				$distance, 
+				$rotate
+			);
         }
        
 	    if (empty($renders)) {

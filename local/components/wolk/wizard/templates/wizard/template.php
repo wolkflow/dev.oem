@@ -51,7 +51,7 @@
 			<div class="catalogdeadline__deadlinedescription">
 				<? foreach ($dates as $date => $percent) { ?>
 					<span>
-						<?= Loc::getMessage('SURCHARGE', ['#PERCENT#' => $percent, '#DATE#' => $date]) ?><br>
+						<?= Loc::getMessage('SURCHARGE', ['#PERCENT#' => $percent.'%', '#DATE#' => $date]) ?><br>
 					</span>
 				<? } ?>
 			</div>

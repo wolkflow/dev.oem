@@ -12,8 +12,8 @@ class Render
     const PATH_MODELS = '/upload/models/xml';
     const PATH_IMAGES = '/upload/models/img';
     
-    const DEFAULT_WIDTH    = 1200; // 1280;
-    const DEFAULT_HEIGHT   = 960;  // 1024;
+    const DEFAULT_WIDTH    = 800; // 1280;
+    const DEFAULT_HEIGHT   = 680; // 1024;
     const DEFAULT_DISTANCE = 2;
 	
 	
@@ -113,8 +113,8 @@ class Render
 				$order->getID() . '-' . $rotate, 
 				json_encode($scene), 
 				'out-'.uniqid(), 
-				1280, 
-				1024, 
+				self::DEFAULT_WIDTH, 
+				self::DEFAULT_HEIGHT, 
 				$distance, 
 				$rotate
 			);
@@ -129,7 +129,7 @@ class Render
      * Пример:
      * java -jar oem-render.jar -i scene1.json -o out -r 1280x1024 -l -cr 30 -cd 1
      */
-    public static function render($sid, $scene, $outfile, $width = 1280, $height = 1024, $distance = 1, $rotate = null)
+    public static function render($sid, $scene, $outfile, $width = 800, $height = 680, $distance = 1, $rotate = null)
     {
         if (empty($scene)) {
             return false;
@@ -167,4 +167,5 @@ class Render
         }
         return false;
     }
+	
 }

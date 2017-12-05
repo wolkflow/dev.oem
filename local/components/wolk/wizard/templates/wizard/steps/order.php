@@ -55,7 +55,7 @@
 													<? $param = $item['BASKET']->getParam(Basket::PARAM_COLOR) ?>
 													<? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
 													<span class="product-param">
-														(<?= $color->getName() ?>)
+														(<?= $color->getName() ?>, <?= $color->getNumber() ?>)
 													</span>
 												<? } ?>
 												| <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?>
@@ -104,7 +104,7 @@
 													<? $param = $item['BASKET']->getParam(Basket::PARAM_COLOR) ?>
 													<? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
 													<span class="product-param">
-														(<?= $color->getName() ?>)
+														(<?= $color->getName() ?>, <?= $color->getNumber() ?>)
 													</span>
 												<? } ?>
 												| <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
@@ -186,7 +186,7 @@
 													<? $param = $item['BASKET']->getParam(Basket::PARAM_COLOR) ?>
 													<? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
 													<span class="product-param">
-														(<?= $color->getName() ?>)
+														(<?= $color->getName() ?>, <?= $color->getNumber() ?>)
 													</span>
 												<? } ?>
 												| <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
