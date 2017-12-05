@@ -4,6 +4,7 @@
 
 <? use Bitrix\Main\Localization\Loc; ?>
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
+<? use Wolk\OEM\Basket as Basket ?>
 <? use Wolk\OEM\Products\Section as Section ?>
 
 <div id="step">
@@ -49,8 +50,15 @@
 												</span>
 											</div>
 											<div class="ordercontainer__itemname">
-												<?= $item['ITEM']->getTitle() ?> | 
-												<?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?>
+												<?= $item['ITEM']->getTitle() ?> 
+												<? if ($item['BASKET']->hasParam(Basket::PARAM_COLOR)) { ?>
+													<? $param = $item['BASKET']->getParam(Basket::PARAM_COLOR) ?>
+													<? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
+													<span class="product-param">
+														(<?= $color->getName() ?>)
+													</span>
+												<? } ?>
+												| <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?>
 												&times;
 												<span class="js-product-quantity">
 													<?= $item['BASKET']->getQuantity() ?>
@@ -91,8 +99,15 @@
 												</span>
 											</div>
 											<div class="ordercontainer__itemname">
-												<?= $item['ITEM']->getTitle() ?> | 
-												<?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
+												<?= $item['ITEM']->getTitle() ?> 
+												<? if ($item['BASKET']->hasParam(Basket::PARAM_COLOR)) { ?>
+													<? $param = $item['BASKET']->getParam(Basket::PARAM_COLOR) ?>
+													<? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
+													<span class="product-param">
+														(<?= $color->getName() ?>)
+													</span>
+												<? } ?>
+												| <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
 												&times;
 												<span class="js-product-quantity" data-quantity="<?= $item['BASKET']->getQuantity() ?>">
 													<?= $item['BASKET']->getQuantity() ?>
@@ -166,8 +181,15 @@
 												</span>
 											</div>
 											<div class="ordercontainer__itemname">
-												<?= $item['ITEM']->getTitle() ?> | 
-												<?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
+												<?= $item['ITEM']->getTitle() ?> 
+												<? if ($item['BASKET']->hasParam(Basket::PARAM_COLOR)) { ?>
+													<? $param = $item['BASKET']->getParam(Basket::PARAM_COLOR) ?>
+													<? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
+													<span class="product-param">
+														(<?= $color->getName() ?>)
+													</span>
+												<? } ?>
+												| <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?> 
 												&times;
 												<span class="js-product-quantity" data-quantity="<?= $item['BASKET']->getQuantity() ?>">
 													<?= $item['BASKET']->getQuantity() ?>
