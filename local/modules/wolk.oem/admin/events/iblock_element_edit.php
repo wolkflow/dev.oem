@@ -325,7 +325,8 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
         <td>
             <script>
                 $(document).ready(function() {
-                    $('.js-prices-stands-use-standard').on('change', function() {
+					// Использование цен другого языка (сайта).
+                    $('.js-prices-stands-use-standard-site').on('change', function() {
                         var $that = $(this);
                         var $wrap = $that.closest('.js-prices-wrapper');
                         
@@ -335,7 +336,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        //var currency = $wrap.find('.js-prices-stands-currency-standard-' + from).val();
                         
                         $wrap.find('.js-prices-stands-standard-' + from).each(function() {
                             var value = $(this).val();
@@ -343,12 +343,28 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             
                             $wrap.find('.js-prices-stands-standard-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        //$wrap.find('.js-prices-stands-currency-standard-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                    });
+					
+					// Использование цен другого типа.
+					$('.js-prices-stands-use-standard-type').on('click', function() {
+                        var $self = $(this);
+                        
+						var type = $self.data('type');
+                        var site = $self.data('site');
+                        
+						$('#js-table-stands-prices-standard-id .js-prices-stands-standard-' + site).each(function() {
+							var $that = $(this);
+							var $item = $('#js-table-stands-prices-' + type +'-id').find('.js-prices-stands-' + type + '-' + site + '[name="' + $that.prop('name').replace('STANDARD', type.toUpperCase()) + '"]');
+							
+                            if ($item.length) {
+								$that.val($item.val());
+							}
+                        });
                     });
                 });
             </script>
 			
-            <table class="js-prices-wrapper">
+            <table id="js-table-stands-prices-standard-id" class="js-prices-wrapper">
                 <thead>
 					<tr>
 						<th>Название</th>
@@ -365,7 +381,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input 
-                                    class="js-prices-stands-standard-<?= LANG_RU ?>"
+                                    class="js-prices-stands-standard-<?= LANG_RU ?> js-prices-price"
                                     name="PRICES_STANDS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>][<?= $selected_stand ?>]" 
                                     type="text" 
                                     size="15" 
@@ -375,7 +391,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input
-                                    class="js-prices-stands-standard-<?= LANG_EN ?>"
+                                    class="js-prices-stands-standard-<?= LANG_EN ?> js-prices-price"
                                     name="PRICES_STANDS[<?= StandPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>][<?= $selected_stand ?>]" 
                                     type="text" 
                                     size="15" 
@@ -397,16 +413,27 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
-							<select class="js-prices-stands-use-standard" data-site="<?= LANG_RU ?>">
+							<select class="js-prices-stands-use-standard-site" data-site="<?= LANG_RU ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_EN ?>">Цены EN</option>
 							</select>
 						</td>
 						<td>
-							<select class="js-prices-stands-use-standard" data-site="<?= LANG_EN ?>">
+							<select class="js-prices-stands-use-standard-site" data-site="<?= LANG_EN ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_RU ?>">Цены RU</option>
 							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+                            <b>Использлвать цены индивидуальной застройки</b>
+                        </td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-stands-use-standard-type btn" data-type="individual" data-site="<?= LANG_RU ?>" />
+						</td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-stands-use-standard-type btn" data-type="individual" data-site="<?= LANG_EN ?>" />
 						</td>
 					</tr>
                 </tfoot>
@@ -422,7 +449,8 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
         <td>
             <script>
                 $(document).ready(function() {
-                    $('.js-prices-stands-use-individual').on('change', function() {
+					// Копирование цен из другого языка (сайта).
+                    $('.js-prices-stands-use-individual-site').on('change', function() {
                         var $that = $(this);
                         var $wrap = $that.closest('.js-prices-wrapper');
                         
@@ -432,7 +460,6 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        //var currency = $wrap.find('.js-prices-stands-currency-individual-' + from).val();
                         
                         $wrap.find('.js-prices-stands-individual-' + from).each(function() {
                             var value = $(this).val();
@@ -440,12 +467,29 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             
                             $wrap.find('.js-prices-stands-individual-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        //$wrap.find('.js-prices-stands-currency-individual-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                    });
+					
+					
+					// Использование цен другого типа.
+					$('.js-prices-stands-use-individual-type').on('click', function() {
+                        var $self = $(this);
+                        
+						var type = $self.data('type');
+                        var site = $self.data('site');
+                        
+						$('#js-table-stands-prices-individual-id .js-prices-stands-individual-' + site).each(function() {
+							var $that = $(this);
+							var $item = $('#js-table-stands-prices-' + type +'-id').find('.js-prices-stands-' + type + '-' + site + '[name="' + $that.prop('name').replace('INDIVIDUAL', type.toUpperCase()) + '"]');
+							
+                            if ($item.length) {
+								$that.val($item.val());
+							}
+                        });
                     });
                 });
             </script>
         
-            <table class="js-prices-wrapper">
+            <table id="js-table-stands-prices-individual-id" class="js-prices-wrapper">
                 <thead>
 					<tr>
 						<th>Название</th>
@@ -462,7 +506,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input 
-                                    class="js-prices-stands-individual-<?= LANG_RU ?>"
+                                    class="js-prices-stands-individual-<?= LANG_RU ?> js-prices-price"
                                     name="PRICES_STANDS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>][<?= $selected_stand ?>]" 
                                     type="text" 
                                     size="15" 
@@ -472,7 +516,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input
-                                    class="js-prices-stands-individual-<?= LANG_EN ?>"
+                                    class="js-prices-stands-individual-<?= LANG_EN ?> js-prices-price"
                                     name="PRICES_STANDS[<?= StandPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>][<?= $selected_stand ?>]" 
                                     type="text" 
                                     size="15" 
@@ -494,16 +538,27 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
-							<select class="js-prices-stands-use-individual" data-site="<?= LANG_RU ?>">
+							<select class="js-prices-stands-use-individual-site" data-site="<?= LANG_RU ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_EN ?>">Цены EN</option>
 							</select>
 						</td>
 						<td>
-							<select class="js-prices-stands-use-individual" data-site="<?= LANG_EN ?>">
+							<select class="js-prices-stands-use-individual-site" data-site="<?= LANG_EN ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_RU ?>">Цены RU</option>
 							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+                            <b>Использлвать цены стандартной застройки</b>
+                        </td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-stands-use-individual-type btn" data-type="standard" data-site="<?= LANG_RU ?>" />
+						</td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-stands-use-individual-type btn" data-type="standard" data-site="<?= LANG_EN ?>" />
 						</td>
 					</tr>
                 </tfoot>
@@ -519,7 +574,8 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
         <td>
             <script>
                 $(document).ready(function() {
-                    $('.js-prices-products-use-standard').on('change', function() {
+					// Копирование цен из другого языка (сайта).
+                    $('.js-prices-products-standard-use-site').on('change', function() {
                         var $that = $(this);
                         var $wrap = $that.closest('.js-prices-wrapper');
                         
@@ -529,20 +585,35 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        //var currency = $wrap.find('.js-prices-products-currency-standard-' + from).val();
-                        
                         $wrap.find('.js-prices-products-standard-' + from).each(function() {
                             var value = $(this).val();
                             var stand = $(this).data('stand');
                             
                             $wrap.find('.js-prices-products-standard-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        //$wrap.find('.js-prices-products-currency-standard-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                    });
+					
+					
+					// Использование цен другого типа.
+					$('.js-prices-products-use-standard-type').on('click', function() {
+                        var $self = $(this);
+                        
+						var type = $self.data('type');
+                        var site = $self.data('site');
+                        
+						$('#js-table-products-prices-standard-id .js-prices-products-standard-' + site).each(function() {
+							var $that = $(this);
+							var $item = $('#js-table-products-prices-' + type +'-id').find('.js-prices-products-' + type + '-' + site + '[name="' + $that.prop('name').replace('STANDARD', type.toUpperCase()) + '"]');
+							
+                            if ($item.length) {
+								$that.val($item.val());
+							}
+                        });
                     });
                 });
             </script>
         
-            <table class="js-prices-wrapper">
+            <table id="js-table-products-prices-standard-id" class="js-prices-wrapper">
                 <thead>
 					<tr>
 						<th>Название</th>
@@ -559,7 +630,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input 
-                                    class="js-prices-products-standard-<?= LANG_RU ?>"
+                                    class="js-prices-products-standard-<?= LANG_RU ?> js-prices-price"
                                     name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_RU_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
@@ -569,7 +640,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input
-                                    class="js-prices-products-standard-<?= LANG_EN ?>"
+                                    class="js-prices-products-standard-<?= LANG_EN ?> js-prices-price"
                                     name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_STANDARD ?>][<?= LANG_EN_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
@@ -591,16 +662,27 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
-							<select class="js-prices-products-use-standard" data-site="<?= LANG_RU ?>">
+							<select class="js-prices-products-standard-use-site" data-site="<?= LANG_RU ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_EN ?>">Цены EN</option>
 							</select>
 						</td>
 						<td>
-							<select class="js-prices-products-use-standard" data-site="<?= LANG_EN ?>">
+							<select class="js-prices-products-standard-use-site" data-site="<?= LANG_EN ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_RU ?>">Цены RU</option>
 							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+                            <b>Использлвать цены индивидуальной застройки</b>
+                        </td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-products-use-standard-type btn" data-type="individual" data-site="<?= LANG_RU ?>" />
+						</td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-products-use-standard-type btn" data-type="individual" data-site="<?= LANG_EN ?>" />
 						</td>
 					</tr>
                 </tfoot>
@@ -616,7 +698,8 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
         <td>
             <script>
                 $(document).ready(function() {
-                    $('.js-prices-products-use-individual').on('change', function() {
+					// Копирование цен из другого языка (сайта).
+                    $('.js-prices-products-individual-use-site').on('change', function() {
                         var $that = $(this);
                         var $wrap = $that.closest('.js-prices-wrapper');
                         
@@ -626,20 +709,36 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                         if (from == undefined) {
                             return;
                         }
-                        //var currency = $wrap.find('.js-prices-products-currency-individual-' + from).val();
-                        
+						
                         $wrap.find('.js-prices-products-individual-' + from).each(function() {
                             var value = $(this).val();
                             var stand = $(this).data('stand');
                             
                             $wrap.find('.js-prices-products-individual-' + site + '[data-stand="' + stand + '"]').val(value);
                         });
-                        //$wrap.find('.js-prices-products-currency-individual-' + site + ' option[value="' + currency + '"]').prop('selected', 'selected');
+                    });
+					
+					
+					// Использование цен другого типа.
+					$('.js-prices-products-use-individual-type').on('click', function() {
+                        var $self = $(this);
+                        
+						var type = $self.data('type');
+                        var site = $self.data('site');
+                        
+						$('#js-table-products-prices-individual-id .js-prices-products-individual-' + site).each(function() {
+							var $that = $(this);
+							var $item = $('#js-table-products-prices-' + type +'-id').find('.js-prices-products-' + type + '-' + site + '[name="' + $that.prop('name').replace('INDIVIDUAL', type.toUpperCase()) + '"]');
+							
+                            if ($item.length) {
+								$that.val($item.val());
+							}
+                        });
                     });
                 });
             </script>
         
-            <table class="js-prices-wrapper">
+            <table id="js-table-products-prices-individual-id" class="js-prices-wrapper">
                 <thead>
 					<tr>
 						<th>Название</th>
@@ -656,7 +755,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input 
-                                    class="js-prices-products-individual-<?= LANG_RU ?>"
+                                    class="js-prices-products-individual-<?= LANG_RU ?> js-prices-price"
                                     name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_RU_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
@@ -666,7 +765,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             </td>
                             <td>
                                 <input
-                                    class="js-prices-products-individual-<?= LANG_EN ?>"
+                                    class="js-prices-products-individual-<?= LANG_EN ?> js-prices-price"
                                     name="PRICES_PRODUCTS[<?= ProductPrices::TYPE_INDIVIDUAL ?>][<?= LANG_EN_UP ?>][<?= $selected_product ?>]" 
                                     type="text" 
                                     size="15" 
@@ -688,16 +787,27 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
                             <b>Использовать цены другого языка</b>
                         </td>
 						<td>
-							<select class="js-prices-products-use-individual" data-site="<?= LANG_RU ?>">
+							<select class="js-prices-products-individual-use-site" data-site="<?= LANG_RU ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_EN ?>">Цены EN</option>
 							</select>
 						</td>
 						<td>
-							<select class="js-prices-products-use-individual" data-site="<?= LANG_EN ?>">
+							<select class="js-prices-products-individual-use-site" data-site="<?= LANG_EN ?>">
 								<option value="">- не использовать -</option>
 								<option value="<?= LANG_RU ?>">Цены RU</option>
 							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+                            <b>Использлвать цены стандартной застройки</b>
+                        </td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-products-use-individual-type btn" data-type="standard" data-site="<?= LANG_RU ?>" />
+						</td>
+						<td>
+							<input type="button" value="Копировать" class="js-prices-products-use-individual-type btn" data-type="standard" data-site="<?= LANG_EN ?>" />
 						</td>
 					</tr>
                 </tfoot>

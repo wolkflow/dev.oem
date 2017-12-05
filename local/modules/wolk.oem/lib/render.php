@@ -2,6 +2,7 @@
 
 namespace Wolk\OEM;
 
+
 class Render
 {
     const PATH_ROOT    = '/usr/render';
@@ -11,8 +12,8 @@ class Render
     const PATH_MODELS = '/upload/models/xml';
     const PATH_IMAGES = '/upload/models/img';
     
-    const DEFAULT_WIDTH    = 1280;
-    const DEFAULT_HEIGHT   = 1024;
+    const DEFAULT_WIDTH    = 1200; // 1280;
+    const DEFAULT_HEIGHT   = 960;  // 1024;
     const DEFAULT_DISTANCE = 2;
 	
 	
