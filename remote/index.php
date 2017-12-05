@@ -171,7 +171,7 @@ switch ($action) {
 		$file = $print->getPath();
 		
 		
-        jsonresponse(true, '', ['path' => $path, 'file' => $file]);
+        jsonresponse(true, '', ['path' => '/i.php?src=' . $path . '&w=60&h=60', 'file' => $file]);
         break;
     
         

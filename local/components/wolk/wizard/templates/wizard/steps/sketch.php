@@ -294,7 +294,7 @@
                     async: true,
                     cache: false,
 					beforeSend: function() {
-						$('#js-render-image-id').addClass('pre-loader');
+						$('#js-render-image-id').html('').addClass('pre-loader');
 						$that.prop('disabled', 'disabled');
 					},
                     success: function(response) {
