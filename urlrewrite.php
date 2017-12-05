@@ -13,11 +13,24 @@ $arUrlRewrite = array(
 		"PATH" => "/bitrix/services/ymarket/index.php",
 	),
 	
+	
 	array(
 		"CONDITION" => "#^/print/order/form-handing/([\\d]+)/([^\\/]+)/#",
 		"RULE" => "ID=\$1&LANG=$2&",
 		"ID" => "",
 		"PATH" => "/print/order/form-handing/index.php",
+	),
+	array(
+		"CONDITION" => "#^/print/order/render/([\\d]+)/([^\\/]+)/#",
+		"RULE" => "ID=\$1&LANG=$2&",
+		"ID" => "",
+		"PATH" => "/print/order/render/index.php",
+	),
+	array(
+		"CONDITION" => "#^/print/basket/render/([^\\/]+)/([^\\/]+)/([^\\/]+)/#",
+		"RULE" => "SID=\$1&CODE=\$2&LANG=\$3&",
+		"ID" => "",
+		"PATH" => "/print/basket/render/index.php",
 	),
 	array(
 		"CONDITION" => "#^/print/order/personal/([\\d]+)/#",

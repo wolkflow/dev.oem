@@ -78,9 +78,9 @@ window['oem-func-hours-quantity-clear'] = function($block, full) {
 	$block.find('.js-hours-quantity-time-min option:selected').attr('selected', false);
     $block.find('.js-hours-quantity-time-max option:selected').attr('selected', false);
 	$block.find('.js-hours-quantity-time-min option:first-child').attr('selected', 'selected');
-    $block.find('.js-hours-quantity-time-max option:first-child').attr('selected', 'selected');
+    $block.find('.js-hours-quantity-time-max option:last-child').attr('selected', 'selected');
 	$block.find('.js-hours-quantity-time-min').val($block.find('.js-hours-quantity-time-min option:first-child').val()).trigger('refresh');
-	$block.find('.js-hours-quantity-time-max').val($block.find('.js-hours-quantity-time-min option:first-child').val()).trigger('refresh');
+	$block.find('.js-hours-quantity-time-max').val($block.find('.js-hours-quantity-time-max option:last-child').val()).trigger('refresh');
 	
 	$block.find('.js-hours-quantity-quantity').val('0').styler();
 	

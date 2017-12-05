@@ -29,7 +29,7 @@
 
         <? if (empty($product)) continue; ?>
         
-        <div class="basketcontainer__itemcontainer customizable_border">
+        <div class="basketcontainer__itemcontainer customizable_border js-product-block">
             <div class="basketcontainer__itemname">
                 <?= $product->getTitle() ?>
 

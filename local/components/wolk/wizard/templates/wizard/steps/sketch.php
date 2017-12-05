@@ -56,7 +56,7 @@
 
 <br/>
 
-<form class="js-form" method="post" action="<?= $arResult['LINKS']['NEXT'] ?>" enctype="multipart/form-data">
+<form id="js-form-sketch-id" class="js-form" method="post" action="<?= $arResult['LINKS']['NEXT'] ?>" enctype="multipart/form-data">
     <input id="js-sketch-scene-id" type="hidden" name="SKETCH_SCENE" />
     <input id="js-sketch-image-id" type="hidden" name="SKETCH_IMAGE" />
     
@@ -64,11 +64,7 @@
 	
     <div class="renders">
         <div id="js-renders-images-id" class="render-images">
-			<div id="js-render-image-1-id" class="render-image"></div>
-			<div id="js-render-image-2-id" class="render-image"></div>
-			<div id="js-render-image-3-id" class="render-image"></div>
-			<div id="js-render-image-4-id" class="render-image"></div>
-			
+			<div id="js-render-image-id" class="render-image"></div>
 			<button id="js-render-id" style="width: auto;" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler customizable">
 				<?= Loc::getMessage('RENDER') ?>
 			</button>
@@ -202,19 +198,73 @@
 <script>
     $(document).ready(function() {
 		
-		// Переход на страницу заказа.
-		$(document).on('click', '.js-step-order', function(e) {
-			e.preventDefault();
-			
+		function SaveSketchRemote()
+		{
 			var scene = ru.octasoft.oem.designer.Main.getScene();
             var image = ru.octasoft.oem.designer.Main.saveJPG();
-
-			if (scene.objects.length < <?= intval($count) ?>) {
-				ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
-			} else {
-				$('#js-sketch-save-id').trigger('click');
+			
+			$.ajax({
+				url: '/remote/',
+				type: 'post',
+				data: {
+					'action': 'update-basket-sketch',
+					'code': '<?= $arResult['EVENT']->getCode() ?>',
+					'SKETCH_SCENE': JSON.stringify(scene),
+					'SKETCH_IMAGE': image,
+					'COMMENTS': $('#js-order-comments-id').val(),
+				},
+				dataType: 'json',
+				async: true,
+				cache: false
+			});
+		}
+		
+		// Переход на страницу заказа.
+		$(document).on('click', '.js-step', function(e) {
+			e.preventDefault();
+			
+			var $that = $(this);
+			
+			if ($that.hasClass('js-step-order')) {
+				if (scene.objects.length < <?= intval($count) ?>) {
+					ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
+				} else {
+					$('#js-sketch-save-id').trigger('click');
+				}
 			}
-			return false;
+			
+			$that.prop('disabled', 'disabled');
+			
+			$.when(SaveSketchRemote()).done(function() {
+                $that.prop('disabled', false);
+			});
+			
+			/*
+			var scene = ru.octasoft.oem.designer.Main.getScene();
+            var image = ru.octasoft.oem.designer.Main.saveJPG();
+			
+			$.ajax({
+				url: '/remote/',
+				type: 'post',
+				data: {
+					'action': 'update-basket-sketch',
+					'code': '<?= $arResult['EVENT']->getCode() ?>',
+					'SKETCH_SCENE': JSON.stringify(scene),
+					'SKETCH_IMAGE': image,
+					'COMMENTS': $('#js-order-comments-id').val(),
+				},
+				dataType: 'json',
+				async: true,
+				cache: false,
+				beforeSend: function() {
+					$that.prop('disabled', 'disabled');
+				},
+				success: function(response) {
+					$that.prop('disabled', false);
+				},
+			});
+			*/
+			location = $that.prop('href');
 		});
 		
 		// Сохранение данных и переход на страницу заказа.
@@ -245,14 +295,11 @@
         // Запрос рендеров схемы стенда.
         $(document).on('click', '#js-render-id', function(e) {
             e.preventDefault();
-            
+			
 			var $that = $(this);
-
-            var objs = ru.octasoft.oem.designer.Main.getScene();
-            var code = $that.data('code');
-            
-            for (var i = 1; i <= 4; i++) {
-                var data = {'action': 'render', 'code': code, 'view': i, 'objs': JSON.stringify(objs)};
+			
+			$.when(SaveSketchRemote()).done(function() {
+				var data = {'action': 'render', 'code': '<?= $arResult['EVENT']->getCode() ?>'};
                 
                 $.ajax({
                     url: '/remote/',
@@ -262,19 +309,51 @@
                     async: true,
                     cache: false,
 					beforeSend: function() {
-						$('#js-renders-images-id div').addClass('pre-loader');
+						$('#js-render-image-id').addClass('pre-loader');
 						$that.prop('disabled', 'disabled');
 					},
                     success: function(response) {
                         if (response.status) {
-                            $('#js-render-image-' + response.data['view'] + '-id').removeClass('pre-loader').html('<a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="60" height="60" /></a>');
+                            $('#js-render-image-id').removeClass('pre-loader').html('<a href="' + response.data['file'] + '" target="_blank"><img src="' + response.data['path'] + '" width="60" height="60" /></a>');
                         } else {
                             // Ошибка загрузки файла.
                         }
 						$that.prop('disabled', false);
                     },
                 });
-            }
+			});
+            
+			/*
+			var $that = $(this);
+
+            var objs = ru.octasoft.oem.designer.Main.getScene();
+            var code = $that.data('code');
+            
+            //for (var i = 1; i <= 4; i++) {
+                var data = {'action': 'render', 'code': code, 'objs': JSON.stringify(objs)};
+                
+                $.ajax({
+                    url: '/remote/',
+                    type: 'post',
+                    data: data,
+                    dataType: 'json',
+                    async: true,
+                    cache: false,
+					beforeSend: function() {
+						$('#js-render-image-id').addClass('pre-loader');
+						$that.prop('disabled', 'disabled');
+					},
+                    success: function(response) {
+                        if (response.status) {
+                            $('#js-render-image-id').removeClass('pre-loader').html('<a href="' + response.data['path'] + '" target="_blank"><img src="' + response.data['path'] + '" width="60" height="60" /></a>');
+                        } else {
+                            // Ошибка загрузки файла.
+                        }
+						$that.prop('disabled', false);
+                    },
+                });
+            //}
+			*/
         });
     });
 

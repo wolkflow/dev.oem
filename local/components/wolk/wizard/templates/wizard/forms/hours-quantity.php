@@ -30,7 +30,7 @@
 				    <select name="timemax" class="styler js-field-value js-hours-quantity-times js-hours-quantity-time-max">
                         <? for ($time = 8; $time <= 20; $time++) { ?>
                             <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
-						    <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemax')) ? ('selected') : ('') ?>>
+						    <option value="<?= $hour ?>" <?= ((!empty($basketitem) && $hour == $basketitem->getField('timemax')) || $hour == '20:00') ? ('selected') : ('') ?>>
                                 <?= $hour ?>
 						    </option>
                         <? } ?>

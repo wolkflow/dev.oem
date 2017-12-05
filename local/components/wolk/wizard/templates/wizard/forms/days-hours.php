@@ -71,7 +71,7 @@
                     <select name="timemin" class="styler js-field-value js-days-hours-times js-days-hours-time-min">
                         <? for ($time = 8; $time <= 20; $time++) { ?>
                             <? $hour = str_pad($time, 2, '0', STR_PAD_LEFT).':00' ?>
-                            <option value="<?= $hour ?>" <?= (!empty($basketitem) && $hour == $basketitem->getField('timemin')) ? ('selected') : ('') ?>>
+                            <option value="<?= $hour ?>" <?= ((!empty($basketitem) && $hour == $basketitem->getField('timemin')) || $hour == '20:00') ? ('selected') : ('') ?>>
                                 <?= $hour ?>
                             </option>
                         <? } ?>

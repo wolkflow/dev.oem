@@ -523,7 +523,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
         // Выбор вариантов стендов с подходящей площадью.
 		$stands = StandOffer::getList([
-			'order'  => ['PROPERTY_AREA_MAX' => 'DESC'],
+			'order'  => ['SORT' => 'ASC', 'NAME' => 'ASC'],
 			'filter' => [
 				'ACTIVE'              => 'Y',
 				'PROPERTY_CML2_LINK'  => $this->getStandIDs(),
@@ -531,7 +531,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 				'>=PROPERTY_AREA_MAX' => $area,
 			]
 		]);
-        
+		
         // Список стендов с ценами.
         foreach ($stands as $stand) {
             $priceitem = $prices[$stand->getStandID()];
@@ -539,6 +539,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
                 $stand->setPrice($priceitem->getPrice());
             }
         }
+		
         return $stands;
     }
     

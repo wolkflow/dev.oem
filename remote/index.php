@@ -101,29 +101,28 @@ switch ($action) {
         break;
     
     
+	
     // Создание сцены изображения.
     case ('render'):
         $objs = (string) $request->get('objs');
-        $view = (string) $request->get('view');
         $code = (string) $request->get('code');
         
-        $oembasket = new \Wolk\OEM\Basket($code);
+        $basket = new \Wolk\OEM\Basket($code);
         
-        $baskets = $oembasket->getList(true);
+        $baskets = $basket->getList(true);
         $objects = json_decode($objs, true)['objects'];
 
         foreach ($objects as &$object) {
-            $basket  = $baskets[$object['id']];
-            $element = $basket->getElement();
+            $element = $baskets[$object['id']]->getElement();
             
             $object['path'] = $element->getModelPath();
         }
         unset($baskets, $element);
 		
 		// Надпись на фризовой панели для рендера.
-		$fascia = reset($oembasket->getFasciaBaskets());
+		$fascia = reset($basket->getFasciaBaskets());
         
-        $params = $oembasket->getParams();
+        $params = $basket->getParams();
         $scene = [
             'width'      => $params['WIDTH'],
             'length'     => $params['DEPTH'],
@@ -138,36 +137,35 @@ switch ($action) {
         }
         
         // Угол поворота.
-        $rotate = 0;
-        switch ($view) {
-            case (1):
-                $rotate = 360;
-                break;
-            case (2):
-                $rotate = 45;
-                break;
-            case (3):
-                $rotate = 90;
-                break;
-            case (4):
-                $rotate = 105;
-                break;
+        $rotates = [360, 45, 90, 105];
+		
+		// Рендеры сцены.
+		$renders = [];
+		foreach ($rotates as $rotate) {
+			$renders []= Wolk\OEM\Render::render($code . '-' . $view, json_encode($scene), 'out-'.uniqid(), 1024, 768, $distance, $rotate);
         }
+       
+	    if (empty($renders)) {
+			jsonresponse(false, '');
+		}
+		$path = reset($renders);
         
-        // Рендер сцены.
-        $path = Wolk\OEM\Render::render($code . '-' . $view, json_encode($scene), 'out-'.uniqid(), 1024, 768, $distance, $rotate);
-        
-        if ($path === false) {
-            jsonresponse(false, '');
-        }
-        $renders = $oembasket->getRenders();
-        $renders []= $path;
-        $oembasket->setRenders($renders);
-        
-        jsonresponse(true, '', ['path' => $path, 'view' => $view]);
+		
+		// Сохранение в корзину.
+        $basket->setRenders($renders);
+		
+		// Печать
+		$print = new Wolk\OEM\Prints\Prerender($basket);
+		
+		// Путь к файлу PDF.
+		$file = $print->make();
+		
+		
+        jsonresponse(true, '', ['path' => $path, 'file' => $file]);
         break;
     
         
+	
     // Созхранение продукции в корзину.
     case ('put-basket'):
         $index    = (int)    $request->get('index');
@@ -214,6 +212,7 @@ switch ($action) {
         break;
 
 	
+	
     // Изменение корзины.
     case ('update-basket'):
         $bid      = (string) $request->get('bid');
@@ -255,6 +254,7 @@ switch ($action) {
         jsonresponse(true, '', array('html' => $html, 'item' => $item));
         break;
 		
+	
 	
 	// Изменение количества товара в корзине.
     case ('update-basket-quantity'):
@@ -307,7 +307,8 @@ switch ($action) {
         jsonresponse(true, '', array('html' => $html, 'item' => $item, 'template' => $template));
 		break;
 		
-		
+	
+	
 	// Обновление параметров товара в корзине.
     case ('update-basket-property'):
         $bid      = (string) $request->get('bid');
@@ -343,7 +344,28 @@ switch ($action) {
         
         jsonresponse(true, '', array('html' => $html, 'item' => $item));
         break;
+    
+	
+	// Обновление скетча.
+	case ('update-basket-sketch'):
+		$code     = (string) $request->get('code');
+        $scene    = (string) $request->get('SKETCH_SCENE');
+        $image    = (string) $request->get('SKETCH_IMAGE');
+        $comments = (string) $request->get('COMMENTS');
         
+		// Корзина.
+        $basket = new \Wolk\OEM\Basket($code);
+		
+        $basket->setSketch([
+            'SKETCH_SCENE' => $scene,
+            'SKETCH_IMAGE' => $image
+        ]);
+        $basket->setParam('COMMENTS', $comments);
+		
+		jsonresponse(true);
+		break;
+	
+	
     
     // Удаление продукции их корзины.
     case ('remove-basket'):
@@ -368,6 +390,30 @@ switch ($action) {
         break;
     
     
+	
+	// Генерация скетча и рендеров в PDF.
+	case ('order-render-print'):
+		$oid = (int) $request->get('oid');
+		
+		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+			jsonresponse(false, 'Ошибка выполнения: модуль не установлен');
+		}
+		
+		$order = new Wolk\OEM\Order($oid);
+		$print = new Wolk\OEM\Prints\Render($order->getID(), $order->getLanguage());
+		
+		// Печать заказа.
+		$result = $print->make();
+		
+		if ($result !== 0) {
+			jsonresponse(false, 'Ошибка создания PDF');
+		}		
+		jsonresponse(true, '', ['link' => $print->getPathPDF()]);
+		
+		break;
+	
+	
+	
     // Создание заказа.
     case ('place-order'):
 		$oid      = (int)    $request->get('oid');
@@ -439,10 +485,10 @@ switch ($action) {
 		// Создание рендеров.
 		$order = new Wolk\OEM\Order($oid);
 		$order->makeRenders(true);
-		
         break;
 		
-		
+	
+	
 	// Восстановление пароля.
     case ('restore-password'):
         $email = (string) $request->get('EMAIL');
@@ -490,12 +536,14 @@ switch ($action) {
         break;
 	
 	
+	
 	// Просмотр заказа.
 	case ('show-order'):
 		jsonresponse(true, '', ['html' => gethtmlremote('order.show.php')]);
 		break;
     
     
+	
     default:
 		jsonresponse(false, Loc::getMessage('GL_ERROR_UNKNOWN'));
 		break;
