@@ -1808,6 +1808,10 @@ div.preview-image {
 	margin-top: 0px;
 }
 
+button.styler.button-form {
+	width: 100%;
+}
+
 .button-loader {
     background-repeat: no-repeat;
     background-image: url(/local/templates/.default/build/images/button-loader.gif);

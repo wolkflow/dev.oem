@@ -85,6 +85,7 @@ $MESS['CHOOSE_COLOR'] = 'Select color';
 $MESS['CHOOSING_COLOR'] = 'Choose a color';
 $MESS['COLOR_NOTE'] = 'Colors may not exactly match the actual material';
 
+$MESS['FORM_HANDING'] = 'Hanging structure details';
 $MESS['FORM_HANDING_DETAILS'] = 'Suspension to ceiling structures';
 $MESS['FORM_HANDING_COMPANY'] = 'Company name';
 $MESS['FORM_HANDING_PAVILION'] = 'Pavilion No.';

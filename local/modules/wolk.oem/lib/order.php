@@ -26,6 +26,11 @@ class Order
 	const PROP_RATE            = 'RATE';
 	const PROP_RATE_CURRENCY   = 'RATE_CURRENCY';
 	
+	const STATUS_NOT_APPROVAL = 'N';
+	const STATUS_APPROVAL     = 'A';
+	const STATUS_CANCELED     = 'C';
+	const STATUS_EDITED       = 'E';
+	
 	protected $id;
 	protected $data;
 	protected $baskets;
@@ -169,6 +174,12 @@ class Order
 		$this->load();
 		
 		return $this->data['STATUS_ID'];
+	}
+	
+	
+	public function canEdit()
+	{
+		return ($this->getStatus() == self::STATUS_NOT_APPROVAL);
 	}
 	
 	
@@ -442,8 +453,8 @@ class Order
 		}
 		
 		$link = str_replace(
-			['#EVENT#', '#STEP#', '#OID#'],
-			[$event, $step, $oid],
+			['#EVENT#', '#OID#'],
+			[$event, $oid],
 			$link
 		);
 		

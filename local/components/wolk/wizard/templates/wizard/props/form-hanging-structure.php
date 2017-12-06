@@ -11,9 +11,10 @@
 <? $required = (in_array(Basket::PARAM_FORM_HANGING_STRUCTURE, $arResult['SECTION_PARAMS'][$section->getID()]['PROPS']['REQUIRED'])) ?>
 
 <div class="js-param-block js-param-form_hanging_structure <?= ($required) ? ('js-param-required') : ('') ?>" data-code="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>">
-    <a href="javascript:void(0);" class="js-form-opener form-switcher">
-		<?= Loc::getMessage('FORM_SWITCHER') ?>
-	</a>
+    <br/>
+	<button class="js-form-opener styler button-form customizable" title="<?= Loc::getMessage('FORM_SWITCHER') ?>">
+		<?= Loc::getMessage('FORM_HANDING') ?>
+	</button>
 	<div class="js-form-wrapper form-wrapper">
 		<div class="serviceItem__row">
 			<div class="serviceItem__subtitle">

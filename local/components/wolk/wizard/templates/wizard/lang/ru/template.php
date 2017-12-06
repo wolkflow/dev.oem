@@ -85,6 +85,7 @@ $MESS['CHOOSE_COLOR'] = 'Выбрать цвет';
 $MESS['CHOOSING_COLOR'] = 'Выберите цвет';
 $MESS['COLOR_NOTE'] = 'Цвета могут не точно совпадать с фактическим материалом';
 
+$MESS['FORM_HANDING'] = 'Форма подвесной конструкции';
 $MESS['FORM_HANDING_DETAILS'] = 'Подвес к потолочным конструкциям';
 $MESS['FORM_HANDING_COMPANY'] = 'Название компании';
 $MESS['FORM_HANDING_PAVILION'] = 'Павильон №';

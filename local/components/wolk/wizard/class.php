@@ -47,28 +47,27 @@ class WizardComponent extends \CBitrixComponent
         // Язык.
         $arParams['LANG'] = (string) $arParams['LANG'];
         
-		
 		// ID мероприятия.
 		$arParams['EID'] = (int) \Wolk\Core\Helpers\IBlockElement::getIDByCode(IBLOCK_EVENTS_ID, $arParams['CODE']);
-		
 		
         // ID заказа.
         $arParams['OID'] = (int) $arParams['OID'];
 		
-        
         // Объект корзины.
         $this->basket = new Basket($arParams['CODE']);
 		
 		
 		
 		// Загрузка данных.
-		if (!empty($arParams['OID']) && $this->getBasket()->getOrderID() != $arParams['OID']) {
-			$order = new Wolk\OEM\Order($arParams['OID']);
-			if ($order->getUserID() != CUser::getID()) {
-				LocalRedirect($this->getEventLink());
+		if (!empty($arParams['OID'])) {
+			if ($this->getBasket()->getOrderID() != $arParams['OID']) {
+				$event = new Wolk\OEM\Event($arParams['EID']);
+				$order = new Wolk\OEM\Order($arParams['OID']);
+				if ($order->getUserID() != CUser::getID() || !$order->canEdit()) {
+					LocalRedirect($event->getLink());
+				}
+				$this->getBasket()->load($order);
 			}
-			$this->getBasket()->load($order);
-			
 			// Добавление параметра для корзины.
 			$_SESSION[self::SESSCODE][strtoupper($arParams['CODE'])]['BASKET']['EVENT'] = $arParams['CODE'];
 		} else {
@@ -109,6 +108,15 @@ class WizardComponent extends \CBitrixComponent
 			mb_strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage())
 		);
 		
+		
+		// Редирект на шаг при изменении заказа.
+		if (!empty($this->arParams['OID'])) {
+			if (in_array('types', $this->getSteps())) {
+				LocalRedirect($this->getStepLink(2));
+			} else {
+				LocalRedirect($this->getStepLink(1));
+			}
+		}
 		
 		// Переход на первый шаг, в случае отсутствие выбора типа стенда.
 		if (!in_array('types', $this->getSteps())) {
