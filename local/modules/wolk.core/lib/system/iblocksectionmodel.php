@@ -53,28 +53,54 @@ class IBlockSectionModel extends Model
     
     public function add($data)
     {
-        
+        $object = new \CIBlockSection();
+		
+		if ($this->id = $object->add((array) $data)) {
+			return true;
+		} else {
+			throw new \Exception($object->LAST_ERROR);
+		}
     }
 	
 	
 	public function update($data)
     {
-        
+        $object = new \CIBlockSection();
+		
+		if ($id = $object->update($this->getID(), (array) $data)) {
+			return true;
+		} else {
+			throw new \Exception($object->LAST_ERROR);
+		}
     }
 	
 		
 	public function delete()
     {
-        return \CIBlockSection::Delete($this->getID());
+        return \CIBlockSection::delete($this->getID());
     }
 	
 	
 	public function existDB()
     {
-        $result = \CIBlockSection::GetByID($this->getID())->Fetch();
+        $result = \CIBlockSection::getByID($this->getID())->Fetch();
 		
-		return ($result);
+		return $result;
     }
+	
+	
+	/**
+	 * Получени дочерних разделов.
+	 */
+	public function getChildren($params, $object = true, $key = 'ID')
+	{
+		$params['filter']['LEFT_MARGIN']  = $this->get('LEFT_MARGIN');
+		$params['filter']['RIGHT_MARGIN'] = $this->get('RIGHT_MARGIN');
+		
+		$result = self::getList($params, $object, $key);
+		
+		return $result;
+	}
 	
 	
     /**

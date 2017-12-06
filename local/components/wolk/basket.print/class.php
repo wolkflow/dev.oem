@@ -81,9 +81,50 @@ class OrderPrintComponent extends \CBitrixComponent
 		// Выставка.
 		$this->arResult['EVENT'] = (new Wolk\OEM\Event($eid))->getData();
 		
+		// Авториованный пользователь.
+		$this->arResult['USER'] = array();
+		if ($USER->isAuthorized()) {
+			$this->arResult['USER'] = CUser::getByID($USER->getID())->fetch();
+		}
+		
+		
+		// Надписи на фриз.
+		$this->arResult['FASCIA'] = [];
+		
+		
+		
+		$basket = new \Wolk\OEM\Basket($this->arResult['BASKET']['EVENT']);
+		$items  = $basket->getList(true);
+        
+        foreach ($items as $item) {
+            $element = $item->getElement();
+			
+			// Проверка типа "Надпись на фризовую панель".
+			if ($item->getType() == \Wolk\OEM\Products\Base::SPECIAL_TYPE_FASCIA) {
+				$this->arResult['FASCIA'] []= $item->getData();
+			}
+		}
+		
+		// Цвета.
+		$this->arResult['COLORS'] = $this->getColors();
+		
 		
 		// Подключение шаблона.
 		$this->includeComponentTemplate();
 	}
 	
+	
+	
+	/**
+     * Выбор цветов.
+     */
+    protected static function getColors()
+    {
+        $result = \Wolk\OEM\Dicts\Color::getList(['order' => ['UF_SORT' => 'ASC', 'UF_NUM' => 'ASC']], false);
+        $colors = [];
+        while ($color = $result->fetch()) {
+            $colors[$color['ID']] = $color;
+        }
+        return $colors;
+    }
 }

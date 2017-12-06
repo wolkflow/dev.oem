@@ -376,6 +376,7 @@ class Basket
         $quantity = (float)  $data['quantity'];
         $params   = (array)  $data['params'];
         $fields   = (array)  $data['fields'];
+		$partial  = (bool)   $data['partial'];
 		
 		$product = new Product($pid);
 		$section = $product->getSection();
@@ -416,10 +417,22 @@ class Basket
 			$this->data[self::SESSCODE_PRODUCTS][$bid]['quantity'] = $quantity;
 		}
 		if (isset($data['params'])) {
-			$this->data[self::SESSCODE_PRODUCTS][$bid]['params'] = $params;
+			if ($partial) {
+				foreach ($params as $key => $param) {
+					$this->data[self::SESSCODE_PRODUCTS][$bid]['params'][$key] = $param;
+				}
+			} else {
+				$this->data[self::SESSCODE_PRODUCTS][$bid]['params'] = $params;
+			}
 		}
 		if (isset($data['fields'])) {
-			$this->data[self::SESSCODE_PRODUCTS][$bid]['fields'] = $fields;
+			if ($partial) {
+				foreach ($fields as $key => $field) {
+					$this->data[self::SESSCODE_PRODUCTS][$bid]['fields'][$key] = $field;
+				}
+			} else {
+				$this->data[self::SESSCODE_PRODUCTS][$bid]['fields'] = $fields;
+			}
 		}
 		
         // Сохранение в сесиию.

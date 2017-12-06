@@ -1858,10 +1858,17 @@ div.preview-image {
 	text-decoration: none;
 	border: 1px solid #cfcfcf;
 	border-radius: 1px;
-	width: 20px;
 	height: 20px;
 	display: inline-block;
 	position: relative;
+}
+
+.basket-buttons a.icon {
+	width: 20px;
+}
+
+.basket-buttons a.text {
+	border: none;
 }
 
 .basket-buttons a.inc:after {

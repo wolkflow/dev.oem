@@ -232,6 +232,7 @@
 				var scene = ru.octasoft.oem.designer.Main.getScene();
 				if (scene.objects.length < <?= intval($count) ?>) {
 					ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
+					return false;
 				} else {
 					$('#js-sketch-save-id').trigger('click');
 				}

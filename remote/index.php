@@ -241,6 +241,7 @@ switch ($action) {
         $quantity = (float)  $request->get('quantity');
         $params   = (array)  $request->get('params');
         $fields   = (array)  $request->get('fields');
+        $partial  = (bool)   $request->get('partial');
         
         $parameters = [];
         foreach ($params as $key => $value) {
@@ -263,7 +264,7 @@ switch ($action) {
         // Изменение количества товара в корзине.
         $item = $basket->update(
 			$bid, 
-			['pid' => $pid, 'quantity' => $quantity, 'params' => $parameters, 'filed' => $fields]
+			['pid' => $pid, 'quantity' => $quantity, 'params' => $parameters, 'fields' => $fields, 'partial' => true]
 		);
         
         // Обновление данных в корзине.

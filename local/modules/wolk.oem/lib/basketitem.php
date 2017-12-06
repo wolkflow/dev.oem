@@ -33,6 +33,13 @@ class BasketItem
         }
     }
     
+	
+	// Получнеие данных.
+	public function getData()
+	{
+		return $this->data;
+	}
+	
     
     // Загрузка данных из сессии.
     public function load($data)
