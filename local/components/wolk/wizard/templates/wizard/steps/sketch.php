@@ -346,7 +346,13 @@
                 h: gridY,
                 type: '<?= $arResult['SFORM'] ?>',
                 items: sketchitems,
-                placedItems: <?= (!empty($arResult['PLACED'])) ? (json_encode($arResult['PLACED'])) : ('{}') ?>
+                placedItems: <?= (!empty($arResult['PLACED'])) ? (json_encode($arResult['PLACED'])) : ('{}') ?>,
+				language: {
+					rightColumnLabel: '<?= Loc::getMessage('SKETCH_LANG_HEADER') ?>',
+					ordered: '<?= Loc::getMessage('SKETCH_LANG_ORDERED') ?>',
+					placed: '<?= Loc::getMessage('SKETCH_LANG_PLACED') ?>',
+					shelfPopupLabel: '<?= Loc::getMessage('SKETCH_LANG_LABEL') ?>'
+				}
             });
         };
         lime.embed('designer', 0, 0, '', '/');

@@ -184,6 +184,13 @@ $MESS['SKETCH_HELP_LEGEND_BUTTON_4'] = 'Button that allows you to redo action.';
 $MESS['SKETCH_HELP_LEGEND_BUTTON_5'] = 'Zoom in button.';
 $MESS['SKETCH_HELP_LEGEND_BUTTON_6'] = 'Zoom out button.';
 
+$MESS['SKETCH_LANG_HEADER']  = 'Equipment';
+$MESS['SKETCH_LANG_ORDERED'] = 'Ordered';
+$MESS['SKETCH_LANG_PLACED']  = 'Placed';
+$MESS['SKETCH_LANG_LABEL']   = 'Please, set height (cm) for the shelf to be mounted.'; // Switch shelves by pressing arrow buttons on your keyboard.';
+
+
+
 $MESS['CHOOSE_STAND_TYPE_FORM'] = 'Select the wall configuration';
 
 $MESS['TYPE_ROW'] = 'Linear';
