@@ -15,8 +15,8 @@ $arUrlRewrite = array(
 	
 	
 	array(
-		"CONDITION" => "#^/print/order/form-handing/([\\d]+)/([^\\/]+)/#",
-		"RULE" => "ID=\$1&LANG=$2&",
+		"CONDITION" => "#^/print/order/form-handing/([\\d]+)/([\\d]+)/([^\\/]+)/#",
+		"RULE" => "OID=$1&BID=$2&LANG=$3&",
 		"ID" => "",
 		"PATH" => "/print/order/form-handing/index.php",
 	),
@@ -80,5 +80,3 @@ $arUrlRewrite = array(
 		"PATH" => "/i.php",
 	),
 );
-
-?>

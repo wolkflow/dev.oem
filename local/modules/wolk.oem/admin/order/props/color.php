@@ -1,4 +1,5 @@
 <? use Bitrix\Main\Localization\Loc; ?>
+<? use Wolk\Oem\Basket; ?>
 
 <div class="form-group js-param-block">
     <label class="control-label"><?= Loc::getMessage('HEADER_PROPERTY_COLOR') ?>:</label>
@@ -7,8 +8,8 @@
         $result = \Wolk\OEM\Dicts\Color::getList(['order' => ['UF_NUM' => 'ASC', 'UF_SORT' => 'ASC']], false);
         $colors = array();
     ?>
-    <input type="hidden" class="js-param-x-value" name="PRODUCTS[<?= $pbid ?>][PROPS][COLOR][ID]" value="<?= $pval['ID'] ?>" />
-    <input type="hidden" class="js-param-x-color" name="PRODUCTS[<?= $pbid ?>][PROPS][COLOR][COLOR]" value="<?= $pval['COLOR'] ?>" />
+    <input type="hidden" class="js-param-x-value" name="PRODUCTS[<?= $pbid ?>][PROPS][<?= Basket::PARAM_FILE ?>][ID]" value="<?= $pval['ID'] ?>" />
+    <input type="hidden" class="js-param-x-color" name="PRODUCTS[<?= $pbid ?>][PROPS][<?= Basket::PARAM_FILE ?>][COLOR]" value="<?= $pval['COLOR'] ?>" />
     
     <ul class="center js-colors-palette color-palette">
         <? while ($color = $result->fetch()) { ?>

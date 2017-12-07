@@ -129,6 +129,9 @@ class Base extends \Wolk\Core\System\IBlockModel implements \Wolk\OEM\Interfaces
     public function getModelPath()
     {
         return ($_SERVER['DOCUMENT_ROOT'] . \Wolk\OEM\Render::PATH_MODELS . '/' . $this->getID());
+		//$this->load();
+		
+		//return ($_SERVER['DOCUMENT_ROOT'] . \CFile::getPath($this->data['PROPS']['MODEL']['VALUE']));
     }
 
     

@@ -51,14 +51,17 @@ function ResetParams($block)
 {
     // Общий сброс значений свойств.
     $block.find('input.js-param-value').val('');
-    $block.find('textarea.js-param-value').html('');
+    $block.find('textarea.js-param-value').val('').html('');
 
     // Для своства "Цвет".
     var uniqid = (new Date()).getTime();
 	
 	$block.find('.js-param-x-remove').trigger('click'); // Удаление файла.
     $block.find('.js-button-param').css('background', '');
+	$block.find('.js-color-indicator').css('background', '');
     $block.find('.js-button-param').attr('data-modal', '#js-color-popup-' + uniqid + '-id');
+    $block.find('.js-color-indicator').attr('data-indicator', '#js-color-popup-' + uniqid + '-id');
+	
     $block.find('.modal .js-colors-palette li').removeClass('active');
     $block.find('.modal').attr('id', 'js-color-popup-' + uniqid + '-id');
 }
@@ -181,13 +184,13 @@ $(document).ready(function() {
 	
     // СВОЙСТВО: Выбор цвета.
     $(document).on('click', '.js-colors-palette .js-color-item', function() {
-        var $that    = $(this);
-        var $parent  = $that.parent('li');
-        var $modal  = $that.closest('.modal');
-        var $button  = $('[data-modal="#' + $modal.attr('id') + '"]');
+        var $that      = $(this);
+        var $parent    = $that.parent('li');
+        var $modal     = $that.closest('.modal');
+        var $button    = $('[data-modal="#' + $modal.attr('id') + '"]');
 		var $indicator = $('[data-indicator="#' + $modal.attr('id') + '"]');
-        var $wrapper = $button.closest('.js-param-block');
-
+        var $wrapper   = $button.closest('.js-param-block');
+		
         // Данные свойства для корзины.
         var $input_value = $wrapper.find('.js-param-x-value');
         var $input_color = $wrapper.find('.js-param-x-color');
@@ -203,7 +206,7 @@ $(document).ready(function() {
             $input_color.val($that.css('background'));
         }
         $indicator.css('background', $that.css('background'));
-
+		
         setTimeout(function() {
             $('#' + $modal.attr('id')).arcticmodal('close');
         }, 200);

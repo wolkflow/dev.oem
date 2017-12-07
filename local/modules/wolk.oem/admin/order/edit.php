@@ -142,7 +142,6 @@ if (!empty($_POST) && $_POST['action'] == 'order-make') {
 				$product['PROPS']['FILE'] = CFile::SaveFile($file, 'temp');
 			}
 		}
-		
 		$order = Wolk\OEM\Order::make($fields);
 		
 		LocalRedirect('/bitrix/admin/wolk_oem_order_edit.php?ID=' . $order->getID());
@@ -181,7 +180,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                     <? } ?>
                 </div>
                 <div class="panel-body">
-                    <form method="POST" id="js-order-make-form-id" enctype="multipart/form-data">
+					
+                    <form method="post" id="js-order-make-form-id" enctype="multipart/form-data">
+						<?= bitrix_sessid_post() ?>
                         <input type="hidden" name="action" value="order-make" />
                         <input type="hidden" name="ID" value="<?= $oid ?>" />
                         <div class="form-group">
@@ -516,11 +517,14 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)"><?= Loc::getMessage('SAVE') ?></a>
+                                    <a id="js-submit-id" class="btn btn-success" href="javascript:void(0)">
+										<?= Loc::getMessage('SAVE') ?>
+									</a>
                                 </div>
                             </div>
                         </div>
                     </form>
+					
                 </div>
             </div>
         </div>
@@ -725,7 +729,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 		
         // Отправка формы заказа.
 		$('#js-submit-id').on('click', function() {
-			$(this).closest('form').submit();
+			$(this).closest('#js-order-make-form-id').submit();
 		});
         
         

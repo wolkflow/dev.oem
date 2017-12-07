@@ -374,6 +374,9 @@ input[type="password"] {
   cursor: pointer;
   font-weight: bold;
 	margin-left: 20px;
+	margin-right: 20px;
+  position: relative;
+  bottom: -50px;
 }
 .pagetitle__button:hover {
   background: #999999;
@@ -474,7 +477,7 @@ input[type="password"] {
   font-size: 25px;
   line-height: 36px;
   padding-right: 80px;
-  margin-bottom: 50px;
+  margin-bottom: 75px;
 }
 .indexpage .pagetitle {
   font-size: 61px;

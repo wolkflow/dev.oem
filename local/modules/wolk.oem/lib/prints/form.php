@@ -9,12 +9,15 @@ class Form
 	const SDIR = '/print/order/form-handing/';
 	
 	protected $oid  = null;
+	protected $bid  = null;
 	protected $lang = null;
 	
 	
-	public function __construct($oid, $lang = null)
+	
+	public function __construct($oid, $bid, $lang = null)
 	{
 		$this->oid  = intval($oid);
+		$this->bid  = intval($bid);
 		$this->lang = strval($lang);
 	}
 	
@@ -25,6 +28,15 @@ class Form
 	public function getOrderID()
 	{
 		return $this->oid;
+	}
+	
+	
+	/**
+	 * Получение ID корзины.
+	 */
+	public function getBasketID()
+	{
+		return $this->bid;
 	}
 	
 	
@@ -51,7 +63,7 @@ class Form
 	 */
 	public function getPath()
 	{
-		return (self::PATH . 'order_'.$this->getOrderID() . '.pdf');
+		return (self::PATH . 'order_' . $this->getOrderID() . '-' . $this->getBasketID() . '.pdf');
 	}
 	
 	
@@ -73,7 +85,7 @@ class Form
 	public function getURL($absolute = false)
 	{
 		$site = \CSite::GetByID(SITE_DEFAULT)->fetch();
-		$link = self::SDIR . $this->getOrderID() . '/' . $this->getLanguage() . '/';
+		$link = self::SDIR . $this->getOrderID() . '/' . $this->getBasketID() . '/' . $this->getLanguage() . '/';
 		
 		if ($absolute) {
 			$link = 'http://' . $site['SERVER_NAME'] . $link;
@@ -90,7 +102,12 @@ class Form
 		$url = $this->getURL(true); 
 		
 		// Аргументы.
-		$args = array('-q' => '', '--no-stop-slow-scripts' => '');
+		$args = array(
+			'-q' => '', 
+			'--no-stop-slow-scripts' => '',
+			'--load-media-error-handling' => 'ignore',
+			'--encoding' => 'UTF-8',
+		);
 		
 		if ($delay > 0) {
 			$args['--javascript-delay'] = $delay;
@@ -106,7 +123,9 @@ class Form
 		
 		exec($cmd, $output, $result);
 		
-		return $result;
+		// return ($result === 0);
+		
+		return ($this->isExists());
 	}
 }
 

@@ -167,14 +167,14 @@ switch ($action) {
 		}
 		
 		$order = new Wolk\OEM\Order($oid);
-		$print = new Wolk\OEM\Prints\Form($order->getID(), $order->getLanguage());
+		$print = new Wolk\OEM\Prints\Form($order->getID(), $bid, $order->getLanguage());
 		
 		// Печать заказа.
 		$result = $print->make();
 		
-		if ($result !== 0) {
+		if (!$result) {
 			jsonresponse(false, 'Ошибка создания документа заказа');
-		}		
+		}
 		jsonresponse(true, '', ['link' => $print->getPathPDF()]);
 		break;
 		

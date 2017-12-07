@@ -125,6 +125,7 @@ switch ($action) {
         }
         unset($baskets, $element);
 		
+		
 		// Надпись на фризовой панели для рендера.
 		$fascia = reset($basket->getFasciaBaskets());
         

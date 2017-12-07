@@ -22,7 +22,8 @@ $APPLICATION->IncludeComponent(
 	"wolk:order.print",
 	$template,
 	array(
-		'OID'  => intval($request->get('ID')),
+		'OID'  => intval($request->get('OID')),
+		'BID'  => intval($request->get('BID')),
 		'LANG' => $lang,
 	)
 );

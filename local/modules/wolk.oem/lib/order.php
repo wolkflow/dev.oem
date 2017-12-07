@@ -810,9 +810,12 @@ class Order
             $price += ($fields['PRICE'] * $fields['QUANTITY']);
         }
         
-        
         // Сохранение продукции.
         foreach ($products as $product) {
+			
+			if (empty($product['ID'])) {
+                continue;
+            }
             
             // Продукиця.
             $element = new \Wolk\OEM\Products\Base($product['ID']);
@@ -861,7 +864,7 @@ class Order
                     'VALUE' => 'Y'
                 ];
             }
-            
+			
             // Добавление корзины.
             $result = \Bitrix\Sale\Internals\BasketTable::add($fields);
             

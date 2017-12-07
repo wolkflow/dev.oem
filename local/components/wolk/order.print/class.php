@@ -18,6 +18,9 @@ class OrderPrintComponent extends \CBitrixComponent
 		// ID заказа.
 		$arParams['OID'] = (int) $arParams['OID'];
 		
+		// ID корзины.
+		$arParams['BID'] = (int) $arParams['BID'];
+		
 		// Путь к файлу.
 		$arParams['PATH'] = (string) $arParams['PATH'];
 		

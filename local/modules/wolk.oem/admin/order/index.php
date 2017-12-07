@@ -487,14 +487,17 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 		
 		
 		// Генерация формы подвесной конструкции.
-		$('#js-order-form-print-id').on('click', function (event) {
+		$('.js-order-form-print').on('click', function (event) {
+			var $that = $(this);
+			var $wrap = $that.closest('.js-basket-form');
+			
 			$.ajax({
                 url: '/bitrix/admin/wolk_oem_remote.php',
-                data: {'action': 'order-form-print', 'oid': <?= $ID ?>},
+                data: {'action': 'order-form-print', 'oid': <?= $ID ?>, 'bid': $that.data('bid')},
                 dataType: 'json',
                 success: function (response) {
                     if (response.status) {
-						$('#js-order-form-link-id').attr('href', response.data['link']).show();
+						$wrap.find('.js-order-form-link').attr('href', response.data['link']).show();
                     }
                 }
             });
@@ -853,6 +856,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
         </div>
 		
 		
+		<? /*
 		<? $baskets = $oemorder->getFormHandingBaskets() ?>
 		<? if (!empty($baskets)) { ?>
 			<? $print = new \Wolk\OEM\Prints\Form($oemorder->getID()); ?>
@@ -888,6 +892,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 				</div>
 			</div>
 		<? } ?>
+		*/ ?>
 
 
         <div style="position: relative; vertical-align: top;">
@@ -1126,7 +1131,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 									<? $params = json_decode($basket['PROPS']['PARAMS']['VALUE'], true) ?>
 									
 									<? if (!empty($params[Basket::PARAM_FORM_HANGING_STRUCTURE])) { ?>
-										<div class="filled-form">
+										<div class="filled-form js-basket-form">
 											<table>
 												<? foreach ($params[Basket::PARAM_FORM_HANGING_STRUCTURE] as $code => $prop) { ?>
 													<tr>
@@ -1137,6 +1142,23 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 													</tr>
 												<? } ?>
 											</table>
+											
+											<? $print = new \Wolk\OEM\Prints\Form($oemorder->getID(), $basket['ID']); ?>
+											
+											<div class="adm-bus-table-container">
+												<button type="button" class="js-order-form-print btn btn-info" data-bid="<?= $basket['ID'] ?>">
+													<?= Loc::getMessage('PRINT_FORM') ?>
+												</button>
+												<? if ($print->isExists()) { ?>
+													<a href="<?= $print->getPathPDF() ?>" class="js-order-form-link btn btn-default" target="_blank">
+														<?= Loc::getMessage('DOWNLOAD_PDF') ?>
+													</a>
+												<? } else { ?>
+													<a href="#" style="display: none;" class="js-order-form-link btn btn-default" target="_blank">
+														<?= Loc::getMessage('DOWNLOAD_PDF') ?>
+													</a>
+												<? } ?>
+											</div>
 										</div>
 									<? } ?>
 								<? } ?>
