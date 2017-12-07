@@ -308,7 +308,17 @@ if (!empty($_POST)) {
                         'TYPE'    => 'ERROR'
                     ]);
 				} else {
-					LocalRedirect($APPLICATION->GetCurUri());
+					//LocalRedirect($APPLICATION->GetCurUri());
+					header("Location: " . $APPLICATION->GetCurUri());
+					
+					session_write_close();
+					fastcgi_finish_request();
+					
+					// Создание рендеров.
+					$oemorder = new Wolk\OEM\Order($ID);
+					$oemorder->makeRenders(true);
+					
+					exit();
 				}
             }
             break;
