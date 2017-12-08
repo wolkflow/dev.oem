@@ -25,6 +25,8 @@ class Order
 	const PROP_SURCHARGE_PRICE = 'SURCHARGE_PRICE';
 	const PROP_RATE            = 'RATE';
 	const PROP_RATE_CURRENCY   = 'RATE_CURRENCY';
+	const PROP_RENDERS         = 'RENDERS';
+	const PROP_FILEPDF         = 'FILEPDF';
 	
 	const STATUS_NOT_APPROVAL = 'N';
 	const STATUS_APPROVAL     = 'A';
@@ -595,27 +597,7 @@ class Order
 		
 		if ($save) {
 			if (!empty($renders)) {
-				$result = \CSaleOrderProps::getList([], ['CODE' => 'RENDERS'], false, false, []);
-				if ($prop = $result->fetch()) {
-					// Данные свойств.
-					$dataprop = [
-						'ORDER_ID'       => $this->getID(),
-						'ORDER_PROPS_ID' => $prop['ID'],
-						'NAME'           => 'Рендеры',
-						'CODE'           => $prop['CODE'],
-						'VALUE'          => $renders,
-					];
-					
-					$result = \CSaleOrderPropsValue::getList(
-						[], 
-						['ORDER_ID' => $dataprop['ORDER_ID'], 'ORDER_PROPS_ID' => $dataprop['ORDER_PROPS_ID'], 'CODE' => $dataprop['CODE']]
-					);
-					if ($propval = $result->Fetch()) {
-						\CSaleOrderPropsValue::update($propval['ID'], array('VALUE' => $renders));
-					} else {
-						\CSaleOrderPropsValue::add($dataprop);
-					}
-				}
+				\Wolk\Core\Helpers\SaleOrder::saveProperty($this->getID(), self::PROP_RENDERS, $renders);
 			}
 		}
 		return $renders;
@@ -635,6 +617,38 @@ class Order
 			$renders = $this->makeRenders(true);
 		}
 		return $renders;
+	}
+	
+	
+	/**
+	 * Создание файла PDF с рендерами.
+	 */
+	public function makeFilePDF($save = false)
+	{
+		// Печать
+		$print = new Wolk\OEM\Prints\Render($this->getID(), $this->getLanguage());
+		$print->make();
+		
+		// Путь к файлу PDF.
+		$file = $print->getPath();
+		
+		if ($save) {
+			if (is_readable($_SERVER['DOCUMENT_ROOT'] . $file)) {
+				\Wolk\Core\Helpers\SaleOrder::saveProperty($this->getID(), self::PROP_FILEPDF, $file);
+			}
+		}
+		return $file;
+	}
+	
+	
+	/**
+	 * Получение ссылки на PDF.
+	 */
+	public function getFilePDF()
+	{
+		$data = $this->getData();
+		
+		return strval($this->data['PROPS'][self::PROP_FILEPDF]['VALUE']);
 	}
     	
 	

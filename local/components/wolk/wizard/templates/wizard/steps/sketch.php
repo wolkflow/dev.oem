@@ -19,7 +19,7 @@
 <div
     id="designer"
     style="margin-top: 40px; width: 940px; height: 680px;"
-    onmouseout="javascript: ru.octasoft.oem.designer.Main.stopDragging();"
+    onmouseout="javascript: $sketch.stopDragging();"
 ></div>
 
 
@@ -196,12 +196,15 @@
 ?>
 
 <script>
+	// Объект скетча.
+	var $sketch = ru.octasoft.oem.designer.Main;
+
     $(document).ready(function() {
 		
 		function SaveSketchRemote()
 		{
-			var scene = ru.octasoft.oem.designer.Main.getScene();
-            var image = ru.octasoft.oem.designer.Main.saveJPG();
+			var scene = $sketch.getScene();
+            var image = $sketch.saveJPG();
 			
 			var result = $.ajax({
 				url: '/remote/',
@@ -229,8 +232,9 @@
 			var $that = $(this);
 			
 			if ($that.hasClass('js-step-order')) {
-				var scene = ru.octasoft.oem.designer.Main.getScene();
+				var scene = $sketch.getScene();
 				if (scene.objects.length < <?= intval($count) ?>) {
+					$sketch.validate();
 					ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 					return false;
 				} else {
@@ -255,10 +259,11 @@
             var $that = $(this);
             var $form = $that.closest('.js-form');
             
-            var scene = ru.octasoft.oem.designer.Main.getScene();
-            var image = ru.octasoft.oem.designer.Main.saveJPG();
+            var scene = $sketch.getScene();
+            var image = $sketch.saveJPG();
 			
             if (scene.objects.length < <?= $count ?>) {
+				$sketch.validate();
                 ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 				return false;
             }
@@ -281,7 +286,7 @@
 			var $that = $(this);
 			
 			$.when(SaveSketchRemote()).done(function() {
-				var objs = ru.octasoft.oem.designer.Main.getScene();
+				var objs = $sketch.getScene();
 				var data = {
 					'action': 'render', 
 					'code': '<?= $arResult['EVENT']->getCode() ?>',
@@ -338,10 +343,10 @@
 
         window.onEditorReady = function() {
             $(window).on("scroll", function(e) {
-                ru.octasoft.oem.designer.Main.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
+                $sketch.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
             });
 
-            ru.octasoft.oem.designer.Main.init({
+            $sketch.init({
                 w: gridX,
                 h: gridY,
                 type: '<?= $arResult['SFORM'] ?>',
@@ -352,6 +357,13 @@
 					ordered: '<?= Loc::getMessage('SKETCH_LANG_ORDERED') ?>',
 					placed: '<?= Loc::getMessage('SKETCH_LANG_PLACED') ?>',
 					shelfPopupLabel: '<?= Loc::getMessage('SKETCH_LANG_LABEL') ?>'
+				},
+				invalidColor: 0xAA1111,
+				onCartAdd: function (id) {
+					console.log(id);
+				},
+				onCartRemove: function (id) {
+					console.log(id);
 				}
             });
         };

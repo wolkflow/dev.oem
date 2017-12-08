@@ -40,26 +40,29 @@ class SaleOrder
 			return;
 		}
 		
-		if ($prop = \CSaleOrderProps::GetList(array(), array('CODE' => $code))->Fetch()) {
-			
-			if ($propval = \CSaleOrderPropsValue::GetList(array(), array('ORDER_ID' => $id, 'CODE' => $prop['CODE']))->Fetch()) {
-				return \CSaleOrderPropsValue::Update($propval['ID'], array(
+		$prop = \CSaleOrderProps::GetList([], ['CODE' => $code], false, false, [])->fetch();
+		if ($prop) {
+			$propval = \CSaleOrderPropsValue::GetList([], ['ORDER_ID' => $id, 'ORDER_PROPS_ID' => $prop['ID'], 'CODE' => $prop['CODE']])->fetch();
+			if ($propval) {
+				$result =  \CSaleOrderPropsValue::update($propval['ID'], [
 				   'NAME' 			=> $prop['NAME'],
 				   'CODE' 			=> $prop['CODE'],
 				   'ORDER_PROPS_ID' => $prop['ID'],
 				   'ORDER_ID' 		=> $id,
 				   'VALUE' 			=> $value,
-				));
+				]);
 			} else {
-				return \CSaleOrderPropsValue::Add(array(
+				$result =  \CSaleOrderPropsValue::add([
 				   'NAME' 			=> $prop['NAME'],
 				   'CODE' 			=> $prop['CODE'],
 				   'ORDER_PROPS_ID' => $prop['ID'],
 				   'ORDER_ID' 		=> $id,
 				   'VALUE' 			=> $value,
-				));
+				]);
 			}
+			return $result;
 		}
+		return false;
 	}
 	
 	
