@@ -356,6 +356,20 @@ input[type="password"] {
   font-weight: bold;
   margin-bottom: 51px;
 	line-height: normal;
+  position: relative;
+  z-index: 1;
+}
+.pagetitle-links::after {
+  display: block;
+  content: '';
+  clear: both;
+}
+.pagetitle-links a{
+  float: right;
+}
+.pagetitle-links div{
+  bottom: 0 !important;
+  float: none !important;
 }
 .pagetitle a {
 	color: #fff;text-decoration: none;

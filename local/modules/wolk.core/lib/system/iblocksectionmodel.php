@@ -106,7 +106,7 @@ class IBlockSectionModel extends Model
     /**
      * Получение списка разделов.
      */
-	public static function getList($params, $object = true, $key = 'ID')
+	public static function getList($params, $object = true, $key = 'ID', $fetch = false)
     {
         $result = self::queryByParams($params);
 
@@ -115,7 +115,11 @@ class IBlockSectionModel extends Model
         }
         $items = array();
         while ($item = $result->Fetch()) {
-            $items[$item[$key]] = new static($item['ID']);
+			if ($fetch) {
+				$items[$item[$key]] = new static($item['ID'], $item);
+			} else {
+				$items[$item[$key]] = new static($item['ID']);
+			}
         }
         return $items;
     }
@@ -131,9 +135,8 @@ class IBlockSectionModel extends Model
         
         return intval($count);
     }
-    
-    
-    
+	
+	
     /**
      * @param array $params
      * @return \CIBlockResult|int
@@ -149,7 +152,7 @@ class IBlockSectionModel extends Model
         $order  = $params['order'] ?: array();
         $filter = array_merge($params['filter'] ?: array(), array('IBLOCK_ID' => self::getIBlockID()));
         $select = array_merge($params['select'] ?: array(), array('ID'));
-		
+		print_r($select);
         return (\CIBlockSection::GetList($order, $filter, $select));
     }
     
@@ -206,8 +209,8 @@ class IBlockSectionModel extends Model
         }
         return $items;
     }
-    
-    
+	
+	
     /**
      * Получение ID всех подразделов.
      */

@@ -591,9 +591,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
     </a>
     <div class="adm-detail-toolbar-right" style="top: 0px;">
         <a href="/bitrix/admin/wolk_oem_order_edit.php?ID=<?= $ID ?>" class="adm-btn adm-btn-edit"><?= Loc::getMessage('ORDER_EDIT') ?></a>
-
 		<a href="<?= $orderprint->getURL() ?>" target="_blank" class="adm-btn adm-btn-edit"><?= Loc::getMessage('ORDER_PRINT') ?></a>
-		<a href="/bitrix/admin/wolk_oem_image.php?action=sketch-download&ID=<?= $ID ?>" target="_blank" id="js-sketch-image-download-id" class="adm-btn adm-btn-edit"><?= Loc::getMessage('SKETCH_PRINT') ?></a>
+		<a href="<?= $oemorder->getFilePDF() ?>" target="_blank" id="js-sketch-image-download-id" class="adm-btn adm-btn-edit"><?= Loc::getMessage('SKETCH_PRINT') ?></a>
     </div>
 </div>
 

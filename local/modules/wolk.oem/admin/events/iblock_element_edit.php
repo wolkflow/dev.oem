@@ -18,9 +18,11 @@ IncludeModuleLangFile(__FILE__);
 \Bitrix\Main\Loader::includeModule('wolk.core');
 \Bitrix\Main\Loader::includeModule('wolk.oem');
 
+// Язык.
+$lang = strtoupper(LANGUAGE_ID);
+
 // Свойства инфоблока мероприятий.
 $props = Wolk\Core\Helpers\IBlock::getProps(IBLOCK_EVENTS_ID);
-
 
 // Объект мероприятия.
 $event = new Wolk\OEM\Event($ID);
@@ -816,14 +818,69 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
     </tr>
 <? $tabControl->EndCustomField('PRODUCTS_PRICES_INDIVIDUAL', ''); ?>
 
+<?
+// Построение дерева разделов.
+$result = CIBlockSection::getList(
+	['DEPTH_LEVEL' => 'ASC', 'SORT' => 'ASC'], 
+	['IBLOCK_ID' => IBLOCK_PRODUCTS_ID],
+	false,
+	['ID', 'NAME', 'CODE', 'IBLOCK_SECTION_ID', 'UF_LANG_TITLE_RU', 'UF_LANG_TITLE_EN']
+);
+
+$links = [];
+$sects = [];
+$links[0] = &$sects;
+while ($section = $result->getNext()) {
+	foreach ($products as $product) {
+		if ($product->getSectionID() == $section['ID']) {
+			$section['ITEMS'][$product->getID()] = $product;
+		}
+	}	
+    $links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']] = $section;
+    $links[$section['ID']] = &$links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']];
+}
+unset($result, $links);
+
+//echo '<pre>'; print_r($sects); echo '</pre>';
+
+?>
 
 <? $tabControl->BeginCustomField('PRODUCTS_ITEMS_STANDARD', 'Список продукции (стандартная застройка)'); ?>
 	<? $propfields = $PROP['PRODUCTS_STANDARD'] ?>
-    <tr id="tr_PROPERTY_<?= $propfields['ID'] ?>">
-        <td class="adm-detail-valign-top">
+    <tr>
+        <td class="adm-detail-valign-top" colspan="2">
 			<div id="js-products-standard-block-id">
-				<? _ShowPropertyField('PROP['.$propfields['ID'].']', $propfields, $propfields['VALUE'], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy) ?>
+				<select name="PRODUCTS_STANDARD[]" multiple="multiple" size="20" style="margin-bottom: 10px;">
+					<? foreach ($sects['ITEMS'] as $group) { ?>
+						<optgroup label="<?= $group['UF_LANG_TITLE_' . $lang] ?>">
+							<? foreach ($group['ITEMS'] as $subgroup) { ?>
+								<optgroup label=" . <?= $subgroup['UF_LANG_TITLE_' . $lang] ?>">
+									<? if ($group['CODE'] == Wolk\OEM\Products\Section::TYPE_EQUIPMENTS) { ?>
+										<? foreach ($subgroup['ITEMS'] as $section) { ?>
+											<? foreach ($section['ITEMS'] as $product) { ?>
+												<option value="<?= $product->getID() ?>" <?= (in_array($product->getID(), $propfields['VALUE'])) ? ('selected') : ('') ?>>
+													<?= $product->getTitle($lang) ?>
+												</option>
+											<? } ?>
+										<? } ?>
+									<? } else { ?>
+										<? foreach ($subgroup['ITEMS'] as $section) { ?>
+											<optgroup label=" .  . <?= $section['UF_LANG_TITLE_' . $lang] ?>">
+												<? foreach ($section['ITEMS'] as $product) { ?>
+													<option value="<?= $product->getID() ?>">
+														<?= $product->getTitle($lang) ?>
+													</option>
+												<? } ?>
+											</optgroup>
+										<? } ?>
+									<? } ?>
+								</optgroup>
+							<? } ?>
+						</optgroup>
+					<? } ?>
+				</select>
 				<br/>
+				<? // _ShowPropertyField('PROP['.$propfields['ID'].']', $propfields, $propfields['VALUE'], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy) ?>
 				<input type="button" id="js-use-individual-products-id" class="btn" value="Использовать продукцию индивидуальной застройки" />
 			</div>
 		</td>
@@ -833,16 +890,46 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 
 <? $tabControl->BeginCustomField('PRODUCTS_ITEMS_INDIVIDUAL', 'Список продукции (индивидуальная застройка)'); ?>
 	<? $propfields = $PROP['PRODUCTS_INDIVIDUAL'] ?>
-    <tr id="tr_PROPERTY_<?= $propfields['ID'] ?>">
-        <td class="adm-detail-valign-top">
+    <tr>
+        <td class="adm-detail-valign-top" colspan="2">
 			<div id="js-products-individual-block-id">
-				<? _ShowPropertyField('PROP['.$propfields['ID'].']', $propfields, $propfields['VALUE'], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy) ?>
+				<select name="PRODUCTS_INDIVIDUAL[]" multiple="multiple" size="20" style="margin-bottom: 10px;">
+					<? foreach ($sects['ITEMS'] as $group) { ?>
+						<optgroup label="<?= $group['UF_LANG_TITLE_' . $lang] ?>">
+							<? foreach ($group['ITEMS'] as $subgroup) { ?>
+								<optgroup label=" . <?= $subgroup['UF_LANG_TITLE_' . $lang] ?>">
+									<? if ($group['CODE'] == Wolk\OEM\Products\Section::TYPE_EQUIPMENTS) { ?>
+										<? foreach ($subgroup['ITEMS'] as $section) { ?>
+											<? foreach ($section['ITEMS'] as $product) { ?>
+												<option value="<?= $product->getID() ?>" <?= (in_array($product->getID(), $propfields['VALUE'])) ? ('selected') : ('') ?>>
+													<?= $product->getTitle($lang) ?>
+												</option>
+											<? } ?>
+										<? } ?>
+									<? } else { ?>
+										<? foreach ($subgroup['ITEMS'] as $section) { ?>
+											<optgroup label=" .  . <?= $section['UF_LANG_TITLE_' . $lang] ?>">
+												<? foreach ($section['ITEMS'] as $product) { ?>
+													<option value="<?= $product->getID() ?>">
+														<?= $product->getTitle($lang) ?>
+													</option>
+												<? } ?>
+											</optgroup>
+										<? } ?>
+									<? } ?>
+								</optgroup>
+							<? } ?>
+						</optgroup>
+					<? } ?>
+				</select>
 				<br/>
+				<? // _ShowPropertyField('PROP['.$propfields['ID'].']', $propfields, $propfields['VALUE'], (($historyId <= 0) && (!$bVarsFromForm) && ($ID<=0) && (!$bPropertyAjax)), $bVarsFromForm||$bPropertyAjax, 50000, $tabControl->GetFormName(), $bCopy) ?>
 				<input type="button" id="js-use-standard-products-id" class="btn" value="Использовать продукцию стандартной застройки" />
 			</div>
 		</td>
     </tr>
 <? $tabControl->EndCustomField('PRODUCTS_ITEMS_INDIVIDUAL', ''); ?>
+
 
 <script>
 	function CheckLangFields(element) {

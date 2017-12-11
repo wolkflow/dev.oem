@@ -44,13 +44,14 @@ function BXIBlockAfterSave(&$arFields)
     
 	
 	// Продукция стандартной застройки.
-    $products_standard = (array) $request->get('PROP')[ELEMENT_EVENTS_PROPERTY_PRODUCTS_STANDARD_ID];
-	$products_standard = array_filter($products_standard, function($x) { return (!empty($x) && !is_array($x)); });
+    //$products_standard = (array) $request->get('PROP')[ELEMENT_EVENTS_PROPERTY_PRODUCTS_STANDARD_ID];
+	//$products_standard = array_filter($products_standard, function($x) { return (!empty($x) && !is_array($x)); });
+	$products_standard = array_filter((array) $request->get('PRODUCTS_STANDARD'));
 	
 	// Продукция индивидуальной застройки.
-    $products_individual = (array) $request->get('PROP')[ELEMENT_EVENTS_PROPERTY_PRODUCTS_INDIVIDUAL_ID];
-	$products_individual = array_filter($products_individual, function($x) { return (!empty($x) && !is_array($x)); });
-	
+    //$products_individual = (array) $request->get('PROP')[ELEMENT_EVENTS_PROPERTY_PRODUCTS_INDIVIDUAL_ID];
+	//$products_individual = array_filter($products_individual, function($x) { return (!empty($x) && !is_array($x)); });
+	$products_individual = array_filter((array) $request->get('PRODUCTS_INDIVIDUAL'));
 	
 	CIBlockElement::SetPropertyValueCode($event->getID(), 'PRODUCTS_STANDARD',   $products_standard);
 	CIBlockElement::SetPropertyValueCode($event->getID(), 'PRODUCTS_INDIVIDUAL', $products_individual);
