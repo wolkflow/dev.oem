@@ -18,7 +18,7 @@
 		</div>
 	</section>
 	
-	<section class="center more">
+	<section class="more">
 		<table class="info-table" width="100%">
 			<thead>
 				<tr>

@@ -1,29 +1,116 @@
-.personal-order-print h1 {
+.personal-renders-print h1 {
 	font-size: 26px;
 }
 
-.personal-order-print section {
+.personal-renders-print section {
 	margin: 20px 0 0 0;
 }
 
-.personal-order-print img.sketch {
+.personal-renders-print img.sketch {
 	max-height: 200px;
 	max-width: 300px;
 }
 
-.personal-order-print .summary {
+.personal-renders-print .summary {
 	font-size: 14px;
 }
 
-.personal-order-print h2 {
+.personal-renders-print h2 {
 	font-size: 16px;
 }
 
-.personal-order-print {
+.personal-renders-print {
 	font-size: 12px;
 	padding: 20px 0 20px 10px;
+}
+
+
+.personal-renders-print section {
+	display: block;
+	margin: 0 0 20px 0;
+	overflow: hidden;
+	width: 100%;
+}
+
+.personal-renders-print .info-table {
+	font-size: 16px;
+	margin-top: 20px;
+}
+
+.legend {
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+.personal-renders-print .info-table th {
+	background-color: #dfdfdf;
+}
+
+.personal-renders-print .info-table th,
+.personal-renders-print .info-table td {
+	border: 1px #7f7f7f solid;
+    border-collapse: collapse;
+    padding: 5px 15px 5px 15px;
+}
+
+
+.personal-renders-print .legend-items .legend-item {
+	height: 130px;
+    width: 120px;
+    float: left;
+    text-align: center;
+	margin-left: 10px;
+	overflow: hidden;
+}
+
+.personal-renders-print .legend-items .legend-item .legend-image {
+	height: 50px;
+	padding-top: 20%;
+}
+
+
+.personal-renders-print .legend-table {
+	width: 100%;
+}
+
+.personal-renders-print .legend-table tr {
+	height: 30px;
+}
+
+.personal-renders-print .legend-table th {
+	background-color: #f7f7f7;
+}
+
+.personal-renders-print .legend-table th,
+.personal-renders-print .legend-table td {
+	border: 1px #cccccc solid;
+    border-collapse: collapse;
+    padding: 2px 5px 2px 5px;
+	text-align: center;
+}
+
+.personal-renders-print .legend-table td:last-child {
+	text-align: left;
+}
+
+.logo {
+	float: left;
+}
+
+.stand-props h3 {
+	
+}
+
+.stand-props ul {
+	font-size: 16px;
 }
 
 .center {
 	text-align: center;
 }
+
+@media print {
+	.more {
+		page-break-after: always;
+    } 
+} 

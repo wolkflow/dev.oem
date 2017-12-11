@@ -507,6 +507,7 @@ switch ($action) {
 		// Создание рендеров.
 		$order = new Wolk\OEM\Order($oid);
 		$order->makeRenders(true);
+		$order->makeFilePDF(true);
         break;
 		
 	

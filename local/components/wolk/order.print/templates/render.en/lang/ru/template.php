@@ -1,6 +1,6 @@
 <?php
 
-$MESS['TYPE_ROW']    = 'Линейный';
-$MESS['TYPE_CORNER'] = 'Угловой';
-$MESS['TYPE_HEAD']   = 'Полуостров';
-$MESS['TYPE_ISLAND'] = 'Остров';
+$MESS['TYPE_ROW']    = 'Linear';
+$MESS['TYPE_CORNER'] = 'Corner';
+$MESS['TYPE_HEAD']   = 'Peninsula';
+$MESS['TYPE_ISLAND'] = 'Island';

@@ -4,6 +4,8 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 
+use Wolk\OEM\Products\Base as Product;
+
 /**
  * Class OrderPrintComponent
  */
@@ -104,15 +106,45 @@ class OrderPrintComponent extends \CBitrixComponent
 		// Стенд.
 		$this->arResult['STAND'] = null;
 		
-		foreach ($this->arResult['BASKETS'] as $basket) {
+		// Надпись на фриз.
+		$this->arResult['FASCIA'] = [];
+		
+		foreach ($this->arResult['BASKETS'] as &$basket) {
 			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
 				$this->arResult['STAND'] = $basket;
 			}
+			$basket['PROPS']['FIELDS']['VALUE'] = json_decode($basket['PROPS']['FIELDS']['VALUE'], true);
+			$basket['PROPS']['PARAMS']['VALUE'] = json_decode($basket['PROPS']['PARAMS']['VALUE'], true);
+			
+			$element = new Product($basket['PRODUCT_ID']);
+			
+			if ($element->isSpecialType(Product::SPECIAL_TYPE_FASCIA)) {
+				$this->arResult['FASCIA'] []= $basket;
+			}
 		}
+		
+		
+		// Цвета.
+		$this->arResult['COLORS'] = $this->getColors();
 		
 		
 		// Подключение шаблона.
 		$this->includeComponentTemplate();
 	}
+	
+	
+	
+	/**
+     * Выбор цветов.
+     */
+    protected static function getColors()
+    {
+        $result = \Wolk\OEM\Dicts\Color::getList(['order' => ['UF_SORT' => 'ASC', 'UF_NUM' => 'ASC']], false);
+        $colors = [];
+        while ($color = $result->fetch()) {
+            $colors[$color['ID']] = $color;
+        }
+        return $colors;
+    }
 	
 }
