@@ -595,6 +595,8 @@ class WizardComponent extends \CBitrixComponent
             ];
             $objects[$basket->getID()] = $object;
         }
+		
+		// echo '<pre>'; print_r($objects); echo '</pre>';
         
         
         // Стенд.

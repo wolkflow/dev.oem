@@ -246,6 +246,9 @@ class Basket
             if (!$included && $item['included']) {
                 continue;
             }
+			if ($item['quantity'] <= 0 && !$item['zero']) {
+				continue;
+			}
             $items[$item['id']] = new BasketItem($this->getEventCode(), $item['id'], $item);
         }
         return $items;
@@ -333,6 +336,11 @@ class Basket
             'params'   => $params,
             'fields'   => $fields,
             'included' => $included,
+			'type'	   => null,
+			'zero'	   => false,
+			
+			// TODO: удалить.
+			'name'     => $product->getTitle(),
         );
         
 		$props = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
@@ -342,7 +350,6 @@ class Basket
 				$item['type'] = $prop;
 			}
 		}
-		
 		
 		
         switch ($kind) {
@@ -360,8 +367,6 @@ class Basket
         // Сохранение в сесиию.
         $this->putSession();
 		
-		// var_dump($kind); print_r($item); die();
-        
         return $item;
     }
     
@@ -369,7 +374,7 @@ class Basket
     /**
      * Обновление количества товара.
      */
-    public function update($bid, $data) // $pid, $quantity, $params, $fields)
+    public function update($bid, $data, $zero = false) // $pid, $quantity, $params, $fields)
     {
         $bid      = (string) $bid;
         $pid      = (int)    $data['pid'];
@@ -382,8 +387,6 @@ class Basket
 		$section = $product->getSection();
 		$context = $this->getContext();
 		
-		// TODO: Переделать.
-		$usezero = false;
 		
 		// Контекст.
 		if (!empty($context)) {
@@ -396,7 +399,7 @@ class Basket
 				case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
 					$scparams = $event->getSectionParams($context, $section->getID());
 					$quantity = mb_strlen(preg_replace('#\s+#', '', $params[self::PARAM_TEXT])) - intval($scparams['PROPS']['FASCIA']);
-					$usezero  = true;
+					$zero = true;
 					break;
 			}
 		}
@@ -405,9 +408,12 @@ class Basket
 			$quantity = 0;
 		}
 		
-        if (!$usezero && $quantity == 0) {
-            return;
-        }
+		// Проверка возможности хранить в корзине нулевое количество.
+        //if (!$usezero && $quantity == 0) {
+		//	$this->remove($bid);
+        //    return;
+        //}
+		$this->data[self::SESSCODE_PRODUCTS][$bid]['zero'] = (bool) $zero;
 		
 		
 		if (isset($data['pid'])) {
@@ -442,6 +448,9 @@ class Basket
     }
     
 	
+	/**
+	 * Обновление параметров.
+	 */
 	public function updateParams($bid,  $params)
 	{
 		$bid    = (string) $bid;
@@ -456,6 +465,9 @@ class Basket
 	}
 	
 	
+	/**
+	 * Обновление полей.
+	 */
 	public function updateFields($bid, $feilds)
 	{
 		$bid    = (string) $bid;
@@ -626,6 +638,10 @@ class Basket
         
         // Сохранение продукции.
         foreach ($items as $item) {
+			
+			if ($item->getQuantity() == 0 && !$item->useZero()) {
+				continue;
+			}
             
             // Продукиця.
             $prod = $item->getElement();

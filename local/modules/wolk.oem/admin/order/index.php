@@ -317,6 +317,7 @@ if (!empty($_POST)) {
 					// Создание рендеров.
 					$oemorder = new Wolk\OEM\Order($ID);
 					$oemorder->makeRenders(true);
+					$oemorder->makeFilePDF(true);
 					
 					exit();
 				}

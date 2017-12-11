@@ -233,8 +233,7 @@
 			
 			if ($that.hasClass('js-step-order')) {
 				var scene = $sketch.getScene();
-				if (scene.objects.length < <?= intval($count) ?>) {
-					$sketch.validate();
+				if ($sketch.validate()) {
 					ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 					return false;
 				} else {
@@ -262,8 +261,7 @@
             var scene = $sketch.getScene();
             var image = $sketch.saveJPG();
 			
-            if (scene.objects.length < <?= $count ?>) {
-				$sketch.validate();
+            if ($sketch.validate()) {
                 ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 				return false;
             }
@@ -323,7 +321,8 @@
      * Обработчики скетча.
      */
     var sketchitems = <?= json_encode(array_values($arResult['OBJECTS'])) ?>;
-    
+    var sketchgoods = <?= json_encode($arResult['OBJECTS']) ?>;
+	
     var loadsketch = function() {
 		
         var gridX = parseFloat(<?= (float) ($arResult['WIDTH']) ?: 5 ?>);
@@ -345,7 +344,8 @@
             $(window).on("scroll", function(e) {
                 $sketch.scroll(window.editorScrollTop, window.editorScrollBottom, $(this).scrollTop());
             });
-
+			
+			// Инициализация скетча.
             $sketch.init({
                 w: gridX,
                 h: gridY,
@@ -359,11 +359,59 @@
 					shelfPopupLabel: '<?= Loc::getMessage('SKETCH_LANG_LABEL') ?>'
 				},
 				invalidColor: 0xAA1111,
-				onCartAdd: function (id) {
-					console.log(id);
+				onCartAdd: function (bid) {
+					var quantity = parseInt(sketchgoods[bid]['quantity']);
+					
+					$.ajax({
+						url: '/remote/',
+						type: 'post',
+						data: {
+							'action':   'update-basket-quantity',
+							'sessid':   BX.bitrix_sessid(),
+							'bid':      bid,
+							'eid':      <?= $arResult['EVENT']->getID() ?>,
+							'code':     '<?= $arResult['EVENT']->getCode() ?>',
+							'type':     '<?= $arResult['CONTEXT']->getType() ?>',
+							'quantity': (quantity + 1),
+							'template': null,
+						},
+						dataType: 'json',
+						beforeSend: function() {
+							blockremote = true;
+						},
+						success: function(response) {
+							if (response.status) {
+								sketchgoods[bid]['quantity'] = quantity + 1;
+							}
+						}
+					});
 				},
-				onCartRemove: function (id) {
-					console.log(id);
+				onCartRemove: function(bid) {
+					var quantity = parseInt(sketchgoods[bid]['quantity']);
+					
+					$.ajax({
+						url: '/remote/',
+						type: 'post',
+						data: {
+							'action':   'update-basket-quantity',
+							'sessid':   BX.bitrix_sessid(),
+							'bid':      bid,
+							'eid':      <?= $arResult['EVENT']->getID() ?>,
+							'code':     '<?= $arResult['EVENT']->getCode() ?>',
+							'type':     '<?= $arResult['CONTEXT']->getType() ?>',
+							'quantity': (quantity - 1),
+							'template': null,
+						},
+						dataType: 'json',
+						beforeSend: function() {
+							blockremote = true;
+						},
+						success: function(response) {
+							if (response.status) {
+								sketchgoods[bid]['quantity'] = quantity - 1;
+							}
+						}
+					});
 				}
             });
         };

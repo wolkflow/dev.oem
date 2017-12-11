@@ -283,6 +283,7 @@ switch ($action) {
         $eid      = (int)    $request->get('eid');
         $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');
+		$zero     = (bool)   $request->get('zero');
         $quantity = (float)  $request->get('quantity');
 		$template = (string) $request->get('template');
 		
@@ -294,7 +295,7 @@ switch ($action) {
 		$basket->setContext($context);
         
         // Изменение количества товара в корзине.
-        $data = $basket->update($bid, ['quantity' => $quantity]);
+        $data = $basket->update($bid, ['quantity' => $quantity], $zero);
 		
 		// Обновление данных в корзине.
 		switch ($template) {
@@ -315,6 +316,7 @@ switch ($action) {
 				$basitem->setPrice($element->getContextPrice($context));
 			}
 		}
+		
 		$item = [
 			'bid'	      => $basitem->getID(),
 			'pid'	      => $basitem->getProductID(),

@@ -626,7 +626,7 @@ class Order
 	public function makeFilePDF($save = false)
 	{
 		// Печать
-		$print = new Wolk\OEM\Prints\Render($this->getID(), $this->getLanguage());
+		$print = new \Wolk\OEM\Prints\Render($this->getID(), $this->getLanguage());
 		$print->make();
 		
 		// Путь к файлу PDF.

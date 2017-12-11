@@ -77,6 +77,12 @@ class BasketItem
         return $this->data['type'];
     }
 	
+	
+	public function useZero()
+    {
+        return $this->data['zero'];
+    }
+	
     
     /**
      * Получение элемента.
