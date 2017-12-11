@@ -7,11 +7,12 @@ class TempRenderStorage extends \Wolk\Core\System\HLBlockModel
     const HBLOCK_ID = HLBLOCK_PARAMS_TEMP_RENDER_STORAGE_ID;
     
     // Список полей.
-    const FIELD_ID     = 'ID';
-    const FIELD_SESSID = 'UF_SESSID';
-    const FIELD_DATA   = 'UF_DATA';
-    const FIELD_TIME   = 'UF_TIME';
-    const FIELD_LANG   = 'UF_LANG';
+    const FIELD_ID      = 'ID';
+    const FIELD_SESSID  = 'UF_SESSID';
+    const FIELD_DATA    = 'UF_DATA';
+	const FIELD_USER_ID = 'UF_USER_ID';
+    const FIELD_TIME    = 'UF_TIME';
+    const FIELD_LANG    = 'UF_LANG';
     
     
     public function getSessionID()
@@ -23,6 +24,12 @@ class TempRenderStorage extends \Wolk\Core\System\HLBlockModel
     public function getData()
     {
         return json_decode($this->get(self::FIELD_DATA), true);
+    }
+	
+	
+	public function getUserID()
+    {
+        return $this->get(self::FIELD_USER_ID);
     }
     
     
@@ -79,10 +86,11 @@ class TempRenderStorage extends \Wolk\Core\System\HLBlockModel
 		
 		$item = new self();
 		$item->add([
-			self::FIELD_SESSID => $sessid,
-			self::FIELD_DATA   => json_encode((array) $data),
-			self::FIELD_TIME   => date('d.m.Y H:i:s'),
-			self::FIELD_LANG   => $lang
+			self::FIELD_SESSID  => $sessid,
+			self::FIELD_DATA    => json_encode((array) $data),
+			self::FIELD_USER_ID => \CUser::getID(),
+			self::FIELD_TIME    => date('d.m.Y H:i:s'),
+			self::FIELD_LANG    => $lang
 		]);
 		
 		return $item;

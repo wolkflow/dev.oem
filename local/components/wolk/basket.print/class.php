@@ -15,6 +15,9 @@ class OrderPrintComponent extends \CBitrixComponent
 	 */
     public function onPrepareComponentParams($arParams)
     {
+		// ID пользователя.
+		$arParams['UID'] = (int) $arParams['UID'];
+		
 		// Код корзины.
 		$arParams['DATA'] = (array) $arParams['DATA'];
 		
@@ -83,8 +86,8 @@ class OrderPrintComponent extends \CBitrixComponent
 		
 		// Авториованный пользователь.
 		$this->arResult['USER'] = array();
-		if ($USER->isAuthorized()) {
-			$this->arResult['USER'] = CUser::getByID($USER->getID())->fetch();
+		if (!empty($this->arParams['UID'])) {
+			$this->arResult['USER'] = CUser::getByID($this->arParams['UID'])->fetch();
 		}
 		
 		

@@ -233,7 +233,7 @@
 			
 			if ($that.hasClass('js-step-order')) {
 				var scene = $sketch.getScene();
-				if ($sketch.validate()) {
+				if (!$sketch.validate()) {
 					ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 					return false;
 				} else {
@@ -261,7 +261,7 @@
             var scene = $sketch.getScene();
             var image = $sketch.saveJPG();
 			
-            if ($sketch.validate()) {
+            if (!$sketch.validate()) {
                 ShowError('<?= Loc::getMessage('ERROR') ?>', '<?= Loc::getMessage('ERROR_SKETCH_REQUIRED') ?>');
 				return false;
             }

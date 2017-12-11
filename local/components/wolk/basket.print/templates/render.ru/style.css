@@ -53,6 +53,22 @@
     padding: 5px 15px 5px 15px;
 }
 
+
+.personal-renders-print .legend-items .legend-item {
+	height: 130px;
+    width: 120px;
+    float: left;
+    text-align: center;
+	margin-left: 10px;
+	overflow: hidden;
+}
+
+.personal-renders-print .legend-items .legend-item .legend-image {
+	height: 50px;
+	padding-top: 20%;
+}
+
+
 .personal-renders-print .legend-table {
 	width: 100%;
 }

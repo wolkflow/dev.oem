@@ -72,10 +72,10 @@ $(document).ready(function() {
 		var quantity = parseInt($quantity.data('quantity'));
 		
 		// Удаляем позицию.
-		if (quantity == 1) {
-			$block.find('.js-basket-delete').trigger('click'); // (bid, sid, $block);
-            return;
-		}
+		// if (quantity == 1) {
+		//	$block.find('.js-basket-delete').trigger('click'); // (bid, sid, $block);
+        //    return;
+		// }
 		
 		$.ajax({
             url: '/remote/',

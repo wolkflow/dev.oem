@@ -29,6 +29,7 @@ $APPLICATION->IncludeComponent(
 	"wolk:basket.print",
 	$template,
 	array(
+		'UID'  => $storage->getUserID(),
 		'DATA' => $storage->getData(),
 		'LANG' => $storage->getLang(),
 	)

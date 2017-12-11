@@ -45,13 +45,14 @@
 				</tr>
 			</tbody>
 		</table>
-	</section>
-	
-	<section class="more">		
+		
+		<br/>
+		
 		<? $image = $arResult['BASKET']['SKETCH']['SKETCH_IMAGE'] ?>
 		<? if (!empty($image)) { ?>
 			<div class="center">
 				<img src="data:image/png;base64, <?= $image ?>" style="max-height: 500px; max-width: 72%;" />
+				<br/>
 				<span>Scale: 1 cell is equal to 1 m<sup>2</sup></span>
 			</div>
 			<hr/>
@@ -66,33 +67,20 @@
 					<? } ?>
 					<br/>
 				<? } ?>
-				<table class="legend-table">
-					<thead>
-						<tr>
-							<th>Item</th>
-							<th>Code</th>
-							<th>Title</th>
-						</tr>
-					</thead>
-					<tbody>
-						<? foreach ($arResult['BASKET']['PRODUCTS'] as $basket) { ?>
-							<? $product = new Wolk\OEM\Products\Base($basket['pid']) ?>
-							<? if ($product->isSketchShow()) { ?>
-								<tr>
-									<td>
-										<img src="http://<?= $arResult['SERVER_NAME'] ?>/i.php?src=<?= $product->getSketchImageSrc() ?>&h=40" style="max-width: 100px;" />
-									</td>
-									<td>
-										<?= $product->getID() ?>
-									</td>
-									<td>
-										<?= $product->getTitle($lang) ?>
-									</td>
-								</tr>
-							<? } ?>
+				
+				<div class="legend-items">
+					<? foreach ($arResult['BASKET']['PRODUCTS'] as $basket) { ?>
+						<? $product = new Wolk\OEM\Products\Base($basket['pid']) ?>
+						<? if ($product->isSketchShow()) { ?>
+							<div class="legend-item">
+								<div class="legend-image">
+									<img src="http://<?= $arResult['SERVER_NAME'] ?>/i.php?src=<?= $product->getSketchImageSrc() ?>&h=40" style="max-width: 100px;" />
+								</div>
+								<div class="title"><?= $product->getTitle($lang) ?></div>
+							</div>
 						<? } ?>
-					</tbody>
-				</table>
+					<? } ?>
+				</div>
 			</div>
 		<? } ?>
 	</section>
