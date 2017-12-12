@@ -358,9 +358,10 @@
 					placed: '<?= Loc::getMessage('SKETCH_LANG_PLACED') ?>',
 					shelfPopupLabel: '<?= Loc::getMessage('SKETCH_LANG_LABEL') ?>'
 				},
+				useQuantity: true,
 				invalidColor: 0xAA1111,
-				onCartAdd: function (bid) {
-					var quantity = parseInt(sketchgoods[bid]['quantity']);
+				onCartAdd: function (self) {
+					var quantity = parseInt(self.qty);
 					
 					$.ajax({
 						url: '/remote/',
@@ -368,12 +369,11 @@
 						data: {
 							'action':   'update-basket-quantity',
 							'sessid':   BX.bitrix_sessid(),
-							'bid':      bid,
+							'bid':      self.figure.id,
 							'eid':      <?= $arResult['EVENT']->getID() ?>,
 							'code':     '<?= $arResult['EVENT']->getCode() ?>',
 							'type':     '<?= $arResult['CONTEXT']->getType() ?>',
-							'quantity': (quantity + 1),
-							'template': null,
+							'quantity': (quantity + 1)
 						},
 						dataType: 'json',
 						beforeSend: function() {
@@ -381,13 +381,13 @@
 						},
 						success: function(response) {
 							if (response.status) {
-								sketchgoods[bid]['quantity'] = quantity + 1;
+								self.plus();
 							}
 						}
 					});
 				},
 				onCartRemove: function(bid) {
-					var quantity = parseInt(sketchgoods[bid]['quantity']);
+					var quantity = parseInt(self.qty);
 					
 					$.ajax({
 						url: '/remote/',
@@ -395,12 +395,11 @@
 						data: {
 							'action':   'update-basket-quantity',
 							'sessid':   BX.bitrix_sessid(),
-							'bid':      bid,
+							'bid':      self.figure.id,
 							'eid':      <?= $arResult['EVENT']->getID() ?>,
 							'code':     '<?= $arResult['EVENT']->getCode() ?>',
 							'type':     '<?= $arResult['CONTEXT']->getType() ?>',
-							'quantity': (quantity - 1),
-							'template': null,
+							'quantity': (quantity - 1)
 						},
 						dataType: 'json',
 						beforeSend: function() {
@@ -408,7 +407,7 @@
 						},
 						success: function(response) {
 							if (response.status) {
-								sketchgoods[bid]['quantity'] = quantity - 1;
+								self.minus();
 							}
 						}
 					});
