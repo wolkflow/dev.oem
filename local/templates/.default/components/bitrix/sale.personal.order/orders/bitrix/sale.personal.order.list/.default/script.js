@@ -17,6 +17,26 @@ $(document).ready(function() {
 					$('#js-order-title-id .js-order-number').html(oid);
 					$('#js-order-content-id').html(response.data['html']);
 					$('#js-order-modal-id').arcticmodal();
+					
+					var $render = $('#js-order-content-id').find('.js-render-image');
+					
+					if ($render.length) {
+						$.ajax({
+							url: '/remote/',
+							type: 'post',
+							data: {'action': 'get-filepdf', 'oid': oid},
+							dataType: 'json',
+							async: true,
+							cache: false,
+							success: function(response) {
+								if (response.status) {
+									$render.removeClass('pre-loader').html('<a href="' + response.data['file'] + '" target="_blank"><img src="' + response.data['path'] + '" width="60" height="60" /></a>');
+								} else {
+									// Ошибка загрузки файла.
+								}
+							}
+						});
+					}
 				}
 			}
 		});

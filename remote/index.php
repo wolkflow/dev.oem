@@ -183,6 +183,19 @@ switch ($action) {
         jsonresponse(true, '', ['path' => '/i.php?src=' . $path . '&w=60&h=60', 'file' => $file]);
         break;
     
+	
+	// Получение данных PDF.
+    case ('get-filepdf'):
+		$oid = (int) $request->get('oid');
+		
+		$order = new Wolk\OEM\Order($oid);
+		$path  = reset(array_filter((array) $order->getRenders()));
+		$file  = $order->getFilePDF(true);
+	
+		jsonresponse(true, '', ['path' => '/i.php?src=' . $path . '&w=60&h=60', 'file' => $file]);
+		break;
+	
+	
         
 	
     // Созхранение продукции в корзину.

@@ -69,7 +69,7 @@ class OrderDetailComponent extends \CBitrixComponent
 		$this->arResult['ORDER']['LINK'] = $order->getLinkEdit();
 		
 		// Рендеры.
-		$this->arResult['RENDERS'] = $order->getRenders();
+		// $this->arResult['RENDERS'] = $order->getRenders();
 		
 		
 		$this->arResult['STAND'] = array(

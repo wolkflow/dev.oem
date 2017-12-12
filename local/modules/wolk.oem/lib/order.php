@@ -644,11 +644,17 @@ class Order
 	/**
 	 * Получение ссылки на PDF.
 	 */
-	public function getFilePDF()
+	public function getFilePDF($make = false)
 	{
 		$data = $this->getData();
+		$file = strval($this->data['PROPS'][self::PROP_FILEPDF]['VALUE']);
 		
-		return strval($this->data['PROPS'][self::PROP_FILEPDF]['VALUE']);
+		if ($make) {
+			if (empty($file)) {
+				$file = $this->makeFilePDF(true);
+			}
+		}
+		return $file;
 	}
     	
 	
