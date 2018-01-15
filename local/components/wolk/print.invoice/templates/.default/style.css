@@ -869,3 +869,137 @@ b {
   bottom: -15px;
   left: 0;
 }
+
+
+
+
+.kds-wrapper {
+  padding: 25px 8px 15px;
+  font-family: Verdana, "Geneva CY", "DejaVu Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.kds-logo img {
+  max-width: 100%;
+}
+.kds-header-top::after {
+  display: block;
+  content: '';
+  clear: both;
+}
+.kds-header-top-left {
+  float: left;
+  width: 50%;
+  padding: 30px 0 0;
+}
+.kds-header-top-right {
+  margin-left: 65%;
+}
+.kds-header-mid {
+  font-weight: 700;
+  padding: 20px 0;
+}
+.kds-header-mid::after {
+  display: block;
+  content: '';
+  clear: both;
+}
+.kds-header-mid-left {
+  float: left;
+  width: 70%;
+}
+.kds-header-mid-right {
+  margin-left: 70%;
+}
+.kds-header-bot::after {
+  display: block;
+  content: '';
+  clear: both;
+}
+.kds-header-bot-left {
+  float: left;
+  width: 70%;
+}
+.kds-header-bot-left-title {
+  font-weight: 700;
+  color: #0070c0;
+  padding: 0 0 5px;
+}
+.kds-header-bot-right {
+  margin-left: 70%;
+}
+.kds-header-bot-right-title {
+  color: #0f0fb1;
+  font-weight: 700;
+  padding: 5px 0;
+}
+.kds-table {
+  padding: 50px 0 0;
+}
+.kds-table table {
+  width: 100%;
+  text-align: center;
+}
+.kds-table th {
+  font-weight: 700;
+  border: 1px solid #000;
+  padding: 4px 6px;
+}
+.kds-table th.kds-table-col-1 {
+  text-align: center;
+}
+.kds-table td {
+  padding: 4px 6px;
+  border: 1px solid #000;
+}
+.kds-table-col-1 {
+  text-align: left;
+}
+.kds-total-sum {
+  font-weight: 700;
+}
+.kds-total-vat {
+  color: #0fa6d0;
+}
+.kds-chief {
+  position: relative;
+  padding: 70px 0;
+}
+.kds-chief::after {
+  display: block;
+  content: '';
+  clear: both;
+}
+.kds-chief-title {
+  width: 50%;
+  float: left;
+}
+.kds-chief-name {
+  text-align: right;
+  margin-left: 50%;
+}
+.kds-stamp {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 220px;
+  height: 250px;
+  margin: -125px 0 0 -125px;
+}
+.kds-stamp img {
+  max-width: 100%;
+}
+.kds-payments-title {
+  color: #0fa6d0;
+  font-weight: 700;
+}
+.kds-note {
+  padding: 20px 0 0;
+}
+.kds-note_blue {
+  color: #0f0fb1;
+  font-weight: 700;
+}
+.kds-info {
+  padding: 20px 0;
+}

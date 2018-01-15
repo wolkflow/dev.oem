@@ -148,7 +148,7 @@ class EventDetailComponent extends BaseListComponent
             }
 
             $servicesSections = \Bitrix\Iblock\SectionTable::getList([
-				'order' => ['SORT' => 'ASC', 'ID' => 'ASC'],
+				'order' => ['SORT' => 'ASC', 'NAME' => 'ASC'],
                 'filter' =>
                     [
                         'ID' => array_keys($arServices)
@@ -208,9 +208,9 @@ class EventDetailComponent extends BaseListComponent
 				foreach ($section['SECTIONS'] as &$subsection) {
 					if (isset($subsection['SECTIONS'])) {
 						uasort($subsection['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
-						foreach ($subsection['SECTIONS'] as &$subsect) {
+						//foreach ($subsection['SECTIONS'] as &$subsect) {
 							//usort($subsect['ITEMS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );
-						}
+						//}
 					}
 				}
 				uasort($section['SECTIONS'], function ($x1, $x2) { return ($x1['SORT'] - $x2['SORT']); } );

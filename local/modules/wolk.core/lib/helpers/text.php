@@ -256,48 +256,74 @@ class Text
 	
 	
 	
-	public static function num2str($num, $decimals = false)
+	public static function num2str($num, $decimals = false, $lang = 'ru', $submsr = true, $points = array(), $subpoints = array())
 	{
-		$nul='ноль';
+		$langs = IncludeModuleLangFile(__FILE__, $lang, true);
+		
+		$nul = $langs['NUM_ZERO'];
 		$ten = array(
-			array('', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'),
-			array('', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'),
+			array('', $langs['NUM_ONE'], $langs['NUM_TWO'], $langs['NUM_THREE'], $langs['NUM_FOUR'], $langs['NUM_FIVE'], $langs['NUM_SIX'], $langs['NUM_SEVEN'], $langs['NUM_EIGHT'], $langs['NUM_NINE']),
+			array('', $langs['NUM_NONE'], $langs['NUM_NTWO'], $langs['NUM_THREE'], $langs['NUM_FOUR'], $langs['NUM_FIVE'], $langs['NUM_SIX'], $langs['NUM_SEVEN'], $langs['NUM_EIGHT'], $langs['NUM_NINE'])
 		);
-		$a20 = array('десять','одиннадцать','двенадцать','тринадцать','четырнадцать' ,'пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать');
-		$tens = array(2 => 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто');
-		$hundred = array('','сто','двести','триста','четыреста','пятьсот','шестьсот', 'семьсот','восемьсот','девятьсот');
+		
+		// $a20     = array('десять','одиннадцать','двенадцать','тринадцать','четырнадцать' ,'пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать');
+		// $tens    = array(2 => 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто');
+		// $hundred = array('','сто','двести','триста','четыреста','пятьсот','шестьсот', 'семьсот','восемьсот','девятьсот');
+		
+		if (empty($points)) {
+			$points = array('рубль', 'рубля', 'рублей', 0);
+		} else {
+			$points []= 0;
+		}
+		
+		if (empty($subpoints)) {
+			$subpoints = array('копейка', 'копейки', 'копеек', 1);
+		} else {
+			$subpoints []= 1;
+		}
+		
+		$a20    = array($langs['NUM_TEN'], $langs['NUM_ELEVEN'], $langs['NUM_TWELVE'], $langs['NUM_THIRTEEN'], $langs['NUM_FOURTEEN'], $langs['NUM_FIFTEEN'], $langs['NUM_SIXTEEN'], $langs['NUM_SEVENTEEN'], $langs['NUM_EIGHTEEN'], $langs['NUM_NINETEEN']);
+		$tens    = array(2 =>  $langs['NUM_TWENTY'], $langs['NUM_THIRTY'], $langs['NUM_FOURTY'], $langs['NUM_FIFTY'], $langs['NUM_SIXTY'], $langs['NUM_SEVENTY'], $langs['NUM_EIGHTY'], $langs['NUM_NINETY']);
+		$hundred = array('', $langs['NUM_ONE_HUNDRED'], $langs['NUM_TWO_HUNDRED'], $langs['NUM_THREE_HUNDRED'], $langs['NUM_FOUR_HUNDRED'], $langs['NUM_FIVE_HUNDRED'], $langs['NUM_SIX_HUNDRED'], $langs['NUM_SEVEN_HUNDRED'], $langs['NUM_EIGHT_HUNDRED'], $langs['NUM_NINE_HUNDRED']);
 		$unit = array(
-			array('копейка' , 'копейки' , 'копеек',	  1),
-			array('рубль'   , 'рубля'   , 'рублей'    , 0),
-			array('тысяча'  , 'тысячи'  , 'тысяч'     , 1),
-			array('миллион' , 'миллиона', 'миллионов' , 0),
-			array('миллиард', 'милиарда', 'миллиардов', 0),
+			$subpoints,
+			$points,
+			array($langs['NUM_THOUSAND_1'], $langs['NUM_THOUSAND_2'], $langs['NUM_THOUSAND_3'], 1),
+			array($langs['NUM_MILLION_1'], $langs['NUM_MILLION_2'], $langs['NUM_MILLION_3'], 0),
+			array($langs['NUM_BILLION_1'], $langs['NUM_BILLION_2'], $langs['NUM_BILLION_3'], 0),
 		);
 		//
-		list($rub,$kop) = explode('.',sprintf("%015.2f", floatval($num)));
+		list($rub, $kop) = explode('.', sprintf("%015.2f", floatval($num)));
 		$out = array();
 		if (intval($rub) > 0) {
-			foreach (str_split($rub,3) as $uk => $v) { // by 3 symbols
+			foreach (str_split($rub, 3) as $uk => $v) { // by 3 symbols
 				if (!intval($v)) {
 					continue;
 				}
-				$uk = sizeof($unit)-$uk-1; // unit key
+				$uk = sizeof($unit)  -$uk - 1; // unit key
 				$gender = $unit[$uk][3];
-				list($i1,$i2,$i3) = array_map('intval',str_split($v,1));
+				list($i1, $i2, $i3) = array_map('intval', str_split($v, 1));
 				// mega-logic
-				$out[] = $hundred[$i1]; # 1xx-9xx
-				if ($i2 > 1) $out[]= $tens[$i2].' '.$ten[$gender][$i3]; # 20-99
-				else $out[]= $i2 > 0 ? $a20[$i3] : $ten[$gender][$i3]; # 10-19 | 1-9
+				$out []= $hundred[$i1]; # 1xx-9xx
+				if ($i2 > 1) {
+					$out []= $tens[$i2] . ' ' . $ten[$gender][$i3]; # 20-99
+				} else {
+					$out []= $i2 > 0 ? $a20[$i3] : $ten[$gender][$i3]; # 10-19 | 1-9
+				}
 				// units without rub & kop
-				if ($uk > 1) $out[]= self::decofnum($v, array($unit[$uk][0], $unit[$uk][1], $unit[$uk][2]), false);
-			} //foreach
+				if ($uk > 1) {
+					$out []= self::decofnum($v, array($unit[$uk][0], $unit[$uk][1], $unit[$uk][2]), false);
+				}
+			}
 		} else {
 			$out []= $nul;
 		}
 		
 		if ($decimals) {
 			$out[] = self::decofnum(intval($rub), array($unit[1][0],$unit[1][1],$unit[1][2]), false); // rub
-			$out[] = $kop.' '.self::decofnum($kop, array($$unit[0][0],$unit[0][1],$unit[0][2]), false); // kop
+			if ($submsr) {
+				$out[] = $kop.' '.self::decofnum($kop, array($$unit[0][0],$unit[0][1],$unit[0][2]), false); // kop
+			}
 		}
 		
 		return trim(preg_replace('/ {2,}/', ' ', join(' ',$out)));

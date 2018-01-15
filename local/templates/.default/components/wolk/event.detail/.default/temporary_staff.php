@@ -209,7 +209,14 @@
 							{{ items[selectedItem.ID].PRICE | format_currency ' ' currency_format}}
 						</div>
 					</div>
-					<div class="serviceItem__desc">* <?=Loc::getMessage('cleaning_desc')?></div>
+					<div class="serviceItem__desc">
+						* 
+						<? if ($arResult['EVENT']['CODE'] == 'bauma-ctt-russia') { ?>
+							<?= Loc::getMessage('CLEAN_NOTE_BAUMA_CTT_RUSSIA') ?>
+						<? } else { ?>
+							<?= Loc::getMessage('cleaning_desc') ?>
+						<? } ?>
+					</div>
 				</div>
                 <a href="#" @click.prevent="addItem" class="itemAdd_field">
                     <i></i>

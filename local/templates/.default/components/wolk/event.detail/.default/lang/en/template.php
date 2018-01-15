@@ -170,3 +170,6 @@ $MESS['EXTERLAN_TEXT'] = 'For order the improved standard stands please use';
 
 $MESS['FASCIA_NOTE'] = 'The fee included fascia panel up to 9 characters. Each subsequent sign an additional cost.';
 $MESS['FASCIA_NOTE_BEVIALE'] = 'The participation fee includes fascia name. Number of fascia names depends on number of open sides on stand.';
+
+$MESS['WATER_NOTE_BAUMA_CTT_RUSSIA'] = 'Hot water can be ordered only indoor and only with the cold water connecton';
+$MESS['CLEAN_NOTE_BAUMA_CTT_RUSSIA'] = 'The service is provided for all the fair period and includes carpet vacuum cleaning and taking away the trash. According to the rules of IEC "CrocusExpo" any  third party involvement in cleaning of areas on the territory of the Exhibition Center and stands are strictly forbidden';

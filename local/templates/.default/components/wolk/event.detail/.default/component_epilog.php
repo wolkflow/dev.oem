@@ -261,7 +261,7 @@ $am->addString(<<<JS
             individual = $individual;
         
         curEvent.LOCATION = curEvent.LOCATION.replace(/&quot;/g, '"');
-        
+        		
         /*
         for (var i in services['SECTIONS']) {
             for (var j in services['SECTIONS'][i]['SECTIONS']) {
