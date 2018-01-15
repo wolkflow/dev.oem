@@ -2177,3 +2177,15 @@ button.styler.button-form {
   display: block;
   border: 1px solid #999;
 }
+#mapMarks {
+  min-height: 510px;
+}
+#mapMarks {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  /*filter: url(/local/templates/.default/build/images/grayscale.svg#greyscale);*/
+  filter: gray;
+}

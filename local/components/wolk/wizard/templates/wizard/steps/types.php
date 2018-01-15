@@ -7,6 +7,202 @@
 
 <? $lang = \Bitrix\Main\Context::getCurrent()->getLanguage() ?>
 
+<script type="text/javascript">
+    ymaps.ready(function () {
+        var myMap = new ymaps.Map('mapMarks', {
+                center: [55.753215, 37.622504],
+                zoom: 7
+            }, {
+                searchControlProvider: 'yandex#search'
+            }),
+
+            // Создаём макет содержимого.
+            MyIconContentLayout = ymaps.templateLayoutFactory.createClass(
+                '<div style="color: #FFFFFF; font-weight: bold;">$[properties.iconContent]</div>'
+            ),
+
+            myPlacemark = new ymaps.Placemark(myMap.getCenter(), {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-market.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark2 = new ymaps.Placemark([55.853215, 37.722504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-hotel.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark3 = new ymaps.Placemark([55.953215, 37.822504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-metro.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark4 = new ymaps.Placemark([55.553215, 37.622504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-ppaid.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark5 = new ymaps.Placemark([55.453215, 37.422504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-pfree.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark6 = new ymaps.Placemark([55.353215, 37.322504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-pvip.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark7 = new ymaps.Placemark([55.253215, 37.222504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-banks.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark8 = new ymaps.Placemark([55.153215, 37.122504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-atm.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark9 = new ymaps.Placemark([55.053215, 37.022504], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-restaurant.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark10 = new ymaps.Placemark([55.9, 37.9], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-service.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            }),
+            myPlacemark11 = new ymaps.Placemark([56, 38], {
+                hintContent: 'Собственный значок метки',
+                balloonContent: 'Это красивая метка'
+            }, {
+                // Опции.
+                // Необходимо указать данный тип макета.
+                iconLayout: 'default#image',
+                // Своё изображение иконки метки.
+                iconImageHref: '/local/templates/.default/build/images/ymap/mk-pharmacy.png',
+                // Размеры метки.
+                iconImageSize: [30, 45],
+                // Смещение левого верхнего угла иконки относительно
+                // её "ножки" (точки привязки).
+                iconImageOffset: [-15, -45]
+            })
+
+
+
+        myMap.geoObjects
+            .add(myPlacemark)
+            .add(myPlacemark2)
+            .add(myPlacemark3)
+            .add(myPlacemark4)
+            .add(myPlacemark5)
+            .add(myPlacemark6)
+            .add(myPlacemark7)
+            .add(myPlacemark8)
+            .add(myPlacemark9)
+            .add(myPlacemark10)
+            .add(myPlacemark11);
+    });
+</script>
 <div class="indexpage">
     <div class="pagetitle">
 		<?= $arResult['EVENT']->getHeader() ?>
@@ -162,7 +358,7 @@
 						    </ul>
 					    </div>
 					    <div class="intMapInner">
-						    <img src="/local/templates/.default/build/css/images/tmp_map.png" alt="">
+						    <div id="mapMarks"></div>
 					    </div>
 				    </div>
 				    <div class="intMapTitle">
@@ -292,5 +488,5 @@
 			<img src="<?= DEFAULT_TEMPLATE_PATH ?>/build/images/index/stand-individual.jpg" />
 		</div>
 	</div>
-    
+
 </div>

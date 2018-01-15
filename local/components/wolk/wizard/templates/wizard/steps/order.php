@@ -259,20 +259,26 @@
 								<?= FormatCurrency($arResult['PRICES']['SURCHARGE_PRICE'], $arResult['CURRENCY']) ?>
 							</span>
 						</div>
+						<div class="ordertaxcontainer__total">
+							<?= Loc::getMessage('VAT') ?>:
+							<span>
+								<?= FormatCurrency($arResult['PRICES']['VAT_PRICE'], $arResult['CURRENCY']) ?>
+							</span>
+						</div>
 						<div class="ordertotalcontainer__total">
 							<?= Loc::getMessage('PRICE_TOTAL_WITH_VAT') ?>: 
 							<span>
 								<?= FormatCurrency($arResult['PRICES']['SUMMARY'], $arResult['CURRENCY']) ?>
 							</span>
 						</div>
+					<? } else { ?>
+						<div class="ordertaxcontainer__total">
+							<?= Loc::getMessage('VAT') ?>:
+							<span>
+								<?= FormatCurrency($arResult['PRICES']['VAT_PRICE'], $arResult['CURRENCY']) ?>
+							</span>
+						</div>
 					<? } ?>
-					
-					<div class="ordertaxcontainer__total">
-						<?= Loc::getMessage('VAT') ?>:
-						<span>
-							<?= FormatCurrency($arResult['PRICES']['VAT_PRICE'], $arResult['CURRENCY']) ?>
-						</span>
-					</div>
 					
 					<div class="ordertotalcontainer__surchargetotal" v-show="totalPrice">
 						<? if ($arResult['PRICES']['SURCHARGE_PRICE'] > 0) { ?>

@@ -25,6 +25,8 @@ Loc::loadLanguageFile(__FILE__);
         $am->addCss('/local/templates/.default/build/css/jquery.formstyler.css');
         $am->addCss('/local/templates/.default/build/css/style.css');
 		
+		$am->addJs("http://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU");
+		
 		$am->addJs('/local/templates/.default/build/js/vendor.js');
         $am->addJs('/local/templates/.default/javascripts/application.js');
         $am->addJs('/local/templates/.default/build/js/jquery.formstyler.js');

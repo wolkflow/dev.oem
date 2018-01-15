@@ -867,7 +867,7 @@ unset($result, $links);
 										<? foreach ($subgroup['ITEMS'] as $section) { ?>
 											<optgroup label=" .  . <?= $section['UF_LANG_TITLE_' . $lang] ?>">
 												<? foreach ($section['ITEMS'] as $product) { ?>
-													<option value="<?= $product->getID() ?>">
+													<option value="<?= $product->getID() ?>" <?= (in_array($product->getID(), $propfields['VALUE'])) ? ('selected') : ('') ?>>
 														<?= $product->getTitle($lang) ?>
 													</option>
 												<? } ?>
@@ -910,7 +910,7 @@ unset($result, $links);
 										<? foreach ($subgroup['ITEMS'] as $section) { ?>
 											<optgroup label=" .  . <?= $section['UF_LANG_TITLE_' . $lang] ?>">
 												<? foreach ($section['ITEMS'] as $product) { ?>
-													<option value="<?= $product->getID() ?>">
+													<option value="<?= $product->getID() ?>" <?= (in_array($product->getID(), $propfields['VALUE'])) ? ('selected') : ('') ?>>
 														<?= $product->getTitle($lang) ?>
 													</option>
 												<? } ?>

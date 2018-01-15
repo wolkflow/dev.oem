@@ -69,6 +69,7 @@
 				<? } ?>
 				
 				<div class="legend-items">
+					<h2>Conventions:</h2>
 					<? foreach ($arResult['BASKET']['PRODUCTS'] as $basket) { ?>
 						<? $product = new Wolk\OEM\Products\Base($basket['pid']) ?>
 						<? if ($product->isSketchShow()) { ?>

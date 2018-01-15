@@ -74,9 +74,9 @@
     <div class="sketchAfter">
         <div class="sketchAfterLeft">
             <div class="commentsForm">
-                <div class="commentsForm__title">
-                    <?= Loc::getMessage('COMMENTS') ?>
-                </div>
+				<div class="pagetitle">
+					<?= Loc::getMessage('COMMENTS') ?>
+				</div>
                 <textarea id="js-order-comments-id" name="COMMENTS" placeholder="<?= Loc::getMessage('ADDITIONAL_INFO') ?>"><?= strip_tags($arResult['COMMENTS']) ?></textarea>
             </div>
         </div>
