@@ -36,7 +36,7 @@ class Main
         
         global $USER;
         
-        if (!$USER->IsAdmin()) {			
+        if (!$USER->IsAdmin()) {		
 			$exclude = [
 				'global_menu_settings'    => '*', 
 				'global_menu_store'	      => '*', 
@@ -46,11 +46,11 @@ class Main
 				'global_menu_marketplace' => '*',
 				'global_menu_wolk.core'   => '*',
 				'global_menu_content'     => [
-					'menu_iblock_/events' => [
-						'menu_iblock_/events/'.STANDS_IBLOCK_ID, 
-						'menu_iblock_/events/'.STANDS_OFFERS_IBLOCK_ID,
-					],
-					'menu_iblock_/equipment' => '*',
+					//'menu_iblock_/events' => [
+					//	'menu_iblock_/events/'.STANDS_IBLOCK_ID, 
+					//	'menu_iblock_/events/'.STANDS_OFFERS_IBLOCK_ID,
+					//],
+					//'menu_iblock_/equipment' => '*',
 					'menu_iblock' => '*',
 				]
 			];

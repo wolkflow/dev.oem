@@ -14,6 +14,8 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
+$ways = array('standard' => array(), 'individual' => array('bauma-ctt-russia'));
+
 $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 ?>
 <div class="indexpage">
@@ -123,7 +125,6 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     
     <? // Выбор стенда // ?>
     <div class="indexpage__choosestandcontainer">
-        
         <div class="indexpage__choosestand system">
             <div class="indexpage__choosestandtitlecontainer">
                 <div class="indexpage__choosestandtitle">
@@ -144,11 +145,27 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 							</div>
                             <input required name="DEPTH" type="text" value="" class="js-stand-depth" />
 						</div>
-                    </div>
 
-                    <div class="indexpage__choosestandtypecontainer">
-                        <div class="indexpage__choosestandtypetitle">
-							<?= Loc::getMessage('Stand type') ?>
+						<div class="indexpage__choosestandtypecontainer">
+							<div class="indexpage__choosestandtypetitle">
+								<?= Loc::getMessage('Stand type') ?>
+							</div>
+							<label for="row" class="indexpage__choosestandtype">
+								<input checked type="radio" value="row" name="standtype" id="row"><span><?= Loc::getMessage('Row') ?></span>
+								<span class="indexpage__choosestandtypeicon"></span>
+							</label>
+							<label for="corner" class="indexpage__choosestandtype">
+								<input type="radio" value="corner" name="standtype" id="corner"><span><?= Loc::getMessage('Corner') ?></span>
+								<span class="indexpage__choosestandtypeicon"></span>
+							</label>
+							<label for="peninsular" class="indexpage__choosestandtype">
+								<input type="radio" value="head" name="standtype" id="peninsular"><span><?= Loc::getMessage('Head') ?></span>
+								<span class="indexpage__choosestandtypeicon"></span>
+							</label>
+							<label for="island" class="indexpage__choosestandtype">
+								<input type="radio" value="island" name="standtype" id="island"><span><?= Loc::getMessage('Insel') ?></span>
+								<span class="indexpage__choosestandtypeicon"></span>
+							</label>
 						</div>
                         <label for="row" class="indexpage__choosestandtype">
                             <input checked type="radio" value="row" name="FORM" id="row" class="js-stand-sform" />
@@ -199,13 +216,12 @@ $lang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 							</div>
                             <input required name="DEPTH" type="text" value=""  class="js-stand-depth" />
 						</div>
-                    </div>
-                    <button type="submit" class="indexpage__choosestandnextbutton"><?= Loc::getMessage('next') ?></button>
-                </form>
-            </div>
-			<img src="<?= DEFAULT_TEMPLATE_PATH ?>/build/images/index/stand-individual.jpg" />
-		</div>
+						<button type="submit" class="indexpage__choosestandnextbutton"><?= Loc::getMessage('next') ?></button>
+					</form>
+				</div>
+				<img src="<?= DEFAULT_TEMPLATE_PATH ?>/build/images/index/stand-individual.jpg" />
+			</div>
+		<? } ?>
 	</div>
-    
+	
 </div>
-

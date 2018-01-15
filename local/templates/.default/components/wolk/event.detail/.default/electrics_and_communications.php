@@ -52,6 +52,13 @@
                         </div>
                     </div>
                 </div>
+				<div class="equipmentcontainer__itemsize">
+					<? if ($arResult['EVENT']['CODE'] == 'bauma-ctt-russia') { ?>
+						<div class="serviceItem__desc" v-if="section.CODE == 'water'">
+							* <?= Loc::getMessage('WATER_NOTE_BAUMA_CTT_RUSSIA') ?>
+						</div>
+					<? } ?>
+                </div>
             </div>
         </div>
 
