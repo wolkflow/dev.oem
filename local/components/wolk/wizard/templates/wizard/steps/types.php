@@ -11,9 +11,8 @@
     ymaps.ready(function () {
         var myMap = new ymaps.Map('mapMarks', {
                 center: [55.753215, 37.622504],
-                zoom: 7
-            }, {
-                searchControlProvider: 'yandex#search'
+                zoom: 7,
+				controls: ['zoomControl']
             }),
 
             // Создаём макет содержимого.
@@ -203,6 +202,10 @@
             .add(myPlacemark11);
     });
 </script>
+
+
+
+
 <div class="indexpage">
     <div class="pagetitle">
 		<?= $arResult['EVENT']->getHeader() ?>

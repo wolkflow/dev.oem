@@ -694,7 +694,7 @@ class WizardComponent extends \CBitrixComponent
             // Общая стоимость продукции.
             $price += $basket->getCost();
             
-            $this->arResult['PRODUCTS'][$elem->getSectionType()][$elem->getID()] = ['ITEM' => $elem, 'BASKET' => $basket];
+            $this->arResult['PRODUCTS'][$elem->getSectionType()][$basket->getID()] = ['ITEM' => $elem, 'BASKET' => $basket];
         }
         
         // Стенд.

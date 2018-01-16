@@ -43,6 +43,15 @@
 									</div>
 									<div class="itemText_custom">
 										<input class="js-param-required js-param-value js-param-x-value js-text styler" name="TEXT" type="text" value="<?= $basketitem->getParam('TEXT') ?>" />
+									
+										<? if ($basketitem->hasParam(\Wolk\OEM\Basket::PARAM_COLOR)) { ?>
+											<? $param = $basketitem->getParam(\Wolk\OEM\Basket::PARAM_COLOR) ?>
+											<? $color = new \Wolk\OEM\Dicts\Color($param['ID']) ?>
+											<div class="sketch-product-fascia-color">
+												<div class="sketch-product-fascia-color-block" style="background: <?= $color->getBG() ?>;"></div>
+												<?= $color->getName() ?>, <?= $color->getNumber() ?>
+											</div>
+										<? } ?>
 									</div>
 								</div>
 							</div>
@@ -386,7 +395,7 @@
 						}
 					});
 				},
-				onCartRemove: function(bid) {
+				onCartRemove: function(self) {
 					var quantity = parseInt(self.qty);
 					
 					$.ajax({

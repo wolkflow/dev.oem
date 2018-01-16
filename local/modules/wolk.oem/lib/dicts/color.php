@@ -36,4 +36,32 @@ class Color extends \Wolk\Core\System\HLBlockModel
 	{
 		return $this->get('UF_NUM');
 	}
+	
+	
+	public function getCode()
+	{
+		return $this->get('UF_CODE');
+	}
+	
+	
+	public function getBackGround()
+	{
+		return $this->get('UF_BACKGROUND');
+	}
+	
+	
+	/**
+     * Получение цвета.
+     */
+	public function getBG()
+	{
+		$back = $this->getBackGround();
+		$code = $this->getCode();
+		
+		$color = (!empty($back)) 
+			   ? ('url('.\CFile::getPath($back).')')
+			   : ('rgb('.$code.')');
+	   
+	    return $color;
+	}
 }
