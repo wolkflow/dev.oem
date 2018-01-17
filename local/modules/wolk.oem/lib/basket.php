@@ -988,20 +988,28 @@ class Basket
 			'ORDERID' => $order->getID(),
 		);
 		
+		// Специальные свойства.
+		$sprops = \Wolk\OEM\Products\Base::getSpecialTypeIDs();
 		
 		// Позиции в корзине.
 		foreach ($data['BASKETS'] as $basket) {
 			$bid = ($basket['PROPS']['BID']['VALUE']) ?: (uniqid(time()));
 			
+			$type = null;
+			$zero = false;
+			
 			$item = array(
-				'id'  => $bid,
-				'pid' => $basket['PRODUCT_ID'],
-				'sid' => 0,
+				'id'       => $bid,
+				'pid'      => $basket['PRODUCT_ID'],
+				'sid'      => 0,
 				'quantity' => $basket['QUANTITY'],
 				'kind'     => '',
 				'params'   => (array) json_decode($basket['PROPS']['PARAMS']['VALUE'], true),
 				'fields'   => (array) json_decode($basket['PROPS']['FIELDS']['VALUE'], true),
 				'included' => ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y'),
+				'name'     => $basket['NAME'],
+				'type'     => $type,
+				'zero'     => $zero
 			);
 			
 			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
@@ -1011,8 +1019,26 @@ class Basket
 			} else {
 				$product = new Product($item['pid']);
 				
+				foreach ($sprops as $sprop => $ids) {
+					if (in_array($item['pid'], $ids)) {
+						$type = $sprop;
+					}
+				}
+			
+				// Обработка особенного типа продукции.
+				$section = $product->getSection();
+				switch ($section->getPriceType()) {
+					
+					// Обработка количества символов.
+					case (\Wolk\OEM\Products\Section::PRICETYPE_SYMBOLS):
+						$zero = true;
+						break;
+				}
+				
 				$item['sid']  = $product->getSectionID();
 				$item['kind'] = self::KIND_PRODUCT;
+				$item['type'] = $type;
+				$item['zero'] = $zero;
 				
 				$fields['PRODUCTS'][$item['id']] = $item;
 			}

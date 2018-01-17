@@ -28,6 +28,11 @@ class PrintSketchComponent extends \CBitrixComponent
 			ShowError('Модуль wolk.core не устанволен.');
 			return;
 		}
+		
+		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+			ShowError('Модуль wolk.oem не устанволен.');
+			return;
+		}
 
 		if (!\Bitrix\Main\Loader::includeModule('iblock')) {
 			ShowError('Модуль iblock не устанволен.');
@@ -56,7 +61,12 @@ class PrintSketchComponent extends \CBitrixComponent
 		unset($item, $basket);
 		
 		// Данные для скетча.
-		$this->arResult['SKETCH'] = json_decode($this->arResult['PROPS']['sketch']['VALUE'], true);
+		$order  = new Wolk\OEM\Order($this->arParams['ORDER_ID']);
+		$sketch = $order->getSketch();
+		
+		if (is_object($sketch)) {
+			$this->arResult['SKETCH'] = json_decode($sketch->getScene(), true);
+		}
 
 		$this->arResult['SKETCH']['items'] = [];
 		foreach ($this->arResult['BASKETS'] as $basket) {
