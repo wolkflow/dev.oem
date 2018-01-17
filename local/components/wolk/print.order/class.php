@@ -44,6 +44,11 @@ class PrintOrderComponent extends \CBitrixComponent
 			ShowError('Модуль wolk.core не устанволен.');
 			return;
 		}
+		
+		if (!\Bitrix\Main\Loader::includeModule('wolk.oem')) {
+			ShowError('Модуль wolk.core не устанволен.');
+			return;
+		}
 
 		if (!\Bitrix\Main\Loader::includeModule('iblock')) {
 			ShowError('Модуль iblock не устанволен.');
@@ -66,6 +71,16 @@ class PrintOrderComponent extends \CBitrixComponent
 		$this->arResult['PROPS']   = Wolk\Core\Helpers\SaleOrder::getProperties($this->arParams['ORDER_ID']);
 		$this->arResult['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($this->arParams['ORDER_ID']);
 		$this->arResult['USER']    = CUser::getByID($this->arResult['ORDER']['USER_ID'])->Fetch();
+		
+		
+		// Скетч.
+		$order  = new Wolk\OEM\Order($this->arParams['ORDER_ID']);
+		$sketch = $order->getSketch();
+		
+		$this->arResult['SKETCH_IMAGE'] = '';
+		if (is_object($sketch)) {
+			$this->arResult['SKETCH_IMAGE'] = $sketch->getFilePath();
+		}
 		
 		
 		// Курс пересчета заказа.

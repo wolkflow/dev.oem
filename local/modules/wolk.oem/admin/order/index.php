@@ -7,6 +7,7 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 
 use Wolk\OEM\Basket;
 use Wolk\OEM\Products\Base as Product;
+use Wolk\OEM\OrderSketch as OrderSketch;
 
 
 // подключим все необходимые файлы:
@@ -286,21 +287,19 @@ if (!empty($_POST)) {
 			$image   = (string) $_POST['IMAGE'];
 			
 			if (!empty($objects)) {
-				$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SKETCH_SCENE', $objects);
-				if ($result) {
-					$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SKETCH_IMAGE', $image);
-				}
-				if ($result) {
-					$order['PROPS'] = Wolk\Core\Helpers\SaleOrder::getProperties($ID);
-					
-					$file = array(
-						'name'    	  => 'sketch-'.$ID.'.jpg',
-						'description' => 'Изображение скетча для заказа №'.$ID,
-						'content'     => base64_decode($image),
-						'old_file'	  => $order['PROPS']['SKETCH_FILE']['VALUE_ORIG']
-					);
-					$result = \Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SKETCH_FILE', CFile::SaveFile($file, 'sketchs'));
-				}
+				
+				// Удаление данных о скетче.
+				OrderSketch::clear($ID);
+				
+				// Сохранение скетча.
+				$sketch = new OrderSketch();
+				$result = $sketch->add([
+					OrderSketch::FIELD_ORDER_ID => $ID,
+					OrderSketch::FIELD_SCENE    => $objects,
+					OrderSketch::FIELD_IMAGE    => $image
+				]);
+				$sketch->saveFile();
+				
 				
                 if (!$result) {
                     $message = new CAdminMessage([
@@ -367,9 +366,14 @@ unset($result, $irate);
 
 
 // Данные для скетча.
-$sketch = json_decode($bundle['ORDER']['PROPS']['SKETCH_SCENE']['VALUE_ORIG'], true);
-
+$sketch = $oemorder->getSketch();
+if (is_object($sketch)) {
+	$sketch = json_decode($sketch->getScene(), true);
+} else {
+	$sketch = ['objects' => []];
+}
 $sketch['items'] = [];
+
 
 foreach ($bundle['BASKETS'] as &$basket) {
 	
@@ -383,7 +387,12 @@ foreach ($bundle['BASKETS'] as &$basket) {
 	if (empty($element)) { 
 		continue;
 	}
+	
 	if (!$element->isSketchShow()) {
+		continue;
+	}
+	
+	if (!is_file($_SERVER['DOCUMENT_ROOT'] . $element->getSketchImagePrepared())) {
 		continue;
 	}
 	
@@ -565,7 +574,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 				ru.octasoft.oem.designer.Main.init({
 					w: gridX,
 					h: gridY,
-					type: '<?= (!empty($order['PROPS']['SFORM']['VALUE'])) ? ($order['PROPS']['SFORM']['VALUE']) : ('row') ?>',
+					type: '<?= (!empty($bundle['ORDER']['PROPS']['SFORM']['VALUE'])) ? ($bundle['ORDER']['PROPS']['SFORM']['VALUE']) : ('row') ?>',
 					items: sketchitems,
 					placedItems: <?= (!empty($sketch['objects'])) ? (json_encode($sketch['objects'])) : ('{}') ?>
 				});

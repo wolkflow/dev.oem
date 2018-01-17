@@ -27,12 +27,18 @@ class Render
 		$data = $order->getData();
 		
 		// Данные скетча.
-		$sketch = $data['PROPS']['SKETCH_SCENE']['VALUE'];
-		
-		if (empty($sketch)) {
+		$sketch = $order->getSketch();
+		if (!is_object($sketch)) {
 			return false;
 		}
-		$sketch = json_decode($sketch, true);
+		
+		// Данные сцены.
+		$jscene = $sketch->getScene();
+		if (empty($jscene)) {
+			return false;
+		}
+		
+		$jscene = json_decode($jscene, true);
 		
 		// Стенд.
 		$stand = null;
@@ -61,7 +67,7 @@ class Render
 		$code = $data['PROPS']['EVENT_CODE']['VALUE'];
 		
 		// Объекты на сцене.
-		$objects = $sketch['objects'];
+		$objects = $jscene['objects'];
 		
 		foreach ($objects as &$object) {
 			$pid = $baskets[$object['id']]['PRODUCT_ID'];

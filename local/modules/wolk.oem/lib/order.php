@@ -7,15 +7,16 @@ use \Bitrix\Main\Localization\Loc;
 use \Bitrix\Main\Application;
 
 use Wolk\OEM\Products\Base as Product;
-
+use Wolk\OEM\OrderSketch as OrderSketch;
 
 \Bitrix\Main\Loader::includeModule('sale');
 
 class Order
 {
 	const PROP_SKETCH          = 'SKETCH';
-    const PROP_SKETCH_SCENE    = 'SKETCH_SCENE';
-	const PROP_SKETCH_IMAGE    = 'SKETCH_IMAGE';
+    const PROP_SKETCH_SCENE    = 'SKETCH_SCENE'; // Deprecated
+	const PROP_SKETCH_IMAGE    = 'SKETCH_IMAGE'; // Deprecated
+	const PROP_SKETCH_FILE     = 'SKETCH_FILE';  // Deprecated
 	const PROP_PAVILLION       = 'PAVILION';
 	const PROP_STANDNUM		   = 'STANDNUM';
 	const PROP_LANGUAGE        = 'LANGUAGE';
@@ -314,8 +315,11 @@ class Order
      */
     public function getSketch()
     {
-        $sketch = new OrderSketch();
-        
+        $sketch = reset(OrderSketch::getList([
+			'filter' => [OrderSketch::FIELD_ORDER_ID => $this->getID()],
+			'limit'  => 1
+		]));
+		
         return $sketch;
     }
 	
@@ -1006,11 +1010,12 @@ class Order
             'VALUE'          => $context->getLang(),
         ];
         
+		/*8
         $dataprops []= [
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH']['ID'],
             'NAME'           => 'Скетч',
-            'CODE'           => 'SKETCH',
+            'CODE'           => 'SKETCH_SCENE',
             'VALUE'          => $data['SKETCH_SCENE'],
         ];
         
@@ -1021,7 +1026,8 @@ class Order
             'CODE'           => 'SKETCH_IMAGE',
             'VALUE'          => $data['SKETCH_IMAGE'],
         ];
-        
+        */
+		
         $dataprops []= [
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['STANDNUM']['ID'],
@@ -1063,6 +1069,20 @@ class Order
         ];
         
         // INCLUDE_VAT
+		
+		// Удаление данных о скетче.
+		OrderSketch::clear($oid);
+		
+		// Сохранение скетча.
+		$sketch = new OrderSketch();
+		$sketch->add([
+			OrderSketch::FIELD_ORDER_ID => $oid,
+			OrderSketch::FIELD_SCENE    => $data['SKETCH_SCENE'],
+			OrderSketch::FIELD_IMAGE    => $data['SKETCH_IMAGE']
+		]);
+		$sketch->saveFile();
+		
+		
         
         foreach ($dataprops as $dataprop) {
             \CSaleOrderPropsValue::add($dataprop);

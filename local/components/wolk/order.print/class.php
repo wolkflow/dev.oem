@@ -124,6 +124,14 @@ class OrderPrintComponent extends \CBitrixComponent
 		}
 		
 		
+		// Скетч.
+		$sketch = $this->arResult['OEMORDER']->getSketch();
+		
+		if (is_object($sketch)) {
+			$this->arResult['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'] = $sketch->getImage();
+		}
+		
+		
 		// Цвета.
 		$this->arResult['COLORS'] = $this->getColors();
 		

@@ -581,7 +581,11 @@ class WizardComponent extends \CBitrixComponent
             if (!$element->isSketchShow()) {
                 continue;
             }
-
+			
+			if (!is_file($_SERVER['DOCUMENT_ROOT'] . $element->getSketchImagePrepared())) {
+                continue;
+            }
+			
             $object = [
                 'id'        => $basket->getID(),
                 'quantity'  => $basket->getQuantity(),
@@ -660,9 +664,18 @@ class WizardComponent extends \CBitrixComponent
 			foreach ($baskets as $basket) {
 				$element = $basket->getElement();
 
-				if (empty($element) || !$element->isSketchShow()) {
+				if (empty($element)) {
 					continue;
 				}
+
+				if (!$element->isSketchShow()) {
+					continue;
+				}
+				
+				if (!is_file($_SERVER['DOCUMENT_ROOT'] . $element->getSketchImagePrepared())) {
+					continue;
+				}
+				
 				$objects += (int) $basket->getQuantity();
 			}
 			

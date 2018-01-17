@@ -107,7 +107,7 @@
 		</div>
 	</div>
 	
-	<? if (!empty($arResult['ORDER']['PROPS']['SKETCH_SCENE']['VALUE'])) { ?>
+	<? if (!empty($arResult['SKETCH']) && !empty($arResult['SKETCH']->getScene())) { ?>
 		<div class="ordercontainer__columns">
 			<div class="pagesubtitle">
 				<?= Loc::getMessage('SKETCH_RENDERS') ?>
@@ -117,17 +117,7 @@
 					<?= Loc::getMessage('SKETCH_RENDERS_NOTE') ?>
 				</div>
 				<div class="last ordercontainer__item render-images">
-					<? /*
-					<a href="<?= $arResult['ORDER']['PROPS']['FILEPDF']['VALUE'] ?>" target="_blank">
-						<img src="/i.php?src=<?= reset($renders) ?>&w=70&h=70" width="70" height="70" />
-					</a>
-					*/ ?>
 					<div class="js-render-image render-image pre-loader" data-oid="<?= $arResult['ORDER']['ID'] ?>"></div>
-					<? /*
-					<? foreach ($renders as $render) { ?>
-						<a href="<?= $render ?>" target="_blank"><img src="<?= $render ?>" width="70" height="70" /></a>
-					<? } ?>
-					*/ ?>
 					<div class="ordercontainer__itemname">
 						<? // Loc::getMessage('SKETCH_RENDERS_NOTE') ?>
 					</div>

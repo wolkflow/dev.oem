@@ -94,11 +94,11 @@
 		</table>
 	</section>
 	
-	<? if (!empty($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE'])) { ?>
+	<? $image = $arResult['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'] ?>
+	<? if (!empty($image)) { ?>
 		<section>
 			<h2>Схема стенда</h2>
-		
-			<img class="sketch" src="<?= CFile::getPath($arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']) ?>" />
+			<img class="sketch"  src="data:image/png;base64, <?= $image ?>" />
 		</section>
 	<? } ?>
 </div>

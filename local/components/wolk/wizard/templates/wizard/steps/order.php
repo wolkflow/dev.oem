@@ -43,7 +43,7 @@
 										<div class="pagesubsubtitle">
 											<?= $item['ITEM']->getTitle() ?>
 										</div>
-										<div class="ordercontainer__item" v-for="item in items">
+										<div class="ordercontainer__item">
 											<div class="ordercontainer__itemtotalprice">
 												<span class="js-product-cost">
 													<?= FormatCurrency($item['BASKET']->getCost(), $arResult['CURRENCY']) ?>

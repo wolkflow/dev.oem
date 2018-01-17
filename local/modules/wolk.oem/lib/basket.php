@@ -5,6 +5,7 @@ namespace Wolk\OEM;
 use Wolk\OEM\BasketItem as BasketItem;
 use Wolk\OEM\Stand as Stand;
 use Wolk\OEM\Products\Base as Product;
+use Wolk\OEM\OrderSketch as OrderSketch;
 
 class Basket
 {
@@ -768,6 +769,10 @@ class Basket
             throw new \Exception("Can't create order.");
         }
         
+		
+		// Данные скетча.
+		$sketchdata = $this->getSketch();
+		
         
         // Сохранение свойств заказа.
         $result = \CSaleOrderProps::GetList();
@@ -842,24 +847,26 @@ class Basket
             'VALUE'          => $context->getLang(),
         ];
         
+		/*
         $dataprops []= [
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH_SCENE']['ID'],
             'NAME'           => 'Скетч',
             'CODE'           => $props['SKETCH_SCENE']['CODE'],
-            'VALUE'          => $this->getSketch()['SKETCH_SCENE'],
+            'VALUE'          => $sketchdata['SKETCH_SCENE'],
         ];
         
+		
         $dataprops []= [
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH_IMAGE']['ID'],
             'NAME'           => 'Изображение скетча',
             'CODE'           => $props['SKETCH_IMAGE']['CODE'],
-            'VALUE'          => $this->getSketch()['SKETCH_IMAGE'],
+            'VALUE'          => $sketchdata['SKETCH_IMAGE'],
         ];
 		
 		$file  = null;
-		$image = base64_decode($this->getSketch()['SKETCH_IMAGE']);
+		$image = base64_decode($sketchdata['SKETCH_IMAGE']);
 		if (!empty($image)) {
 			$file = \CFile::SaveFile([
 				'name'    	  => 'sketch-'.$oid.'.jpg',
@@ -867,6 +874,7 @@ class Basket
 				'content'     => $image
 			], 'sketches');
 		}
+		*/
 		
 		$dataprops []= [
             'ORDER_ID'       => $oid,
@@ -916,6 +924,17 @@ class Basket
             'VALUE'          => [],
         ];
         
+		
+		// Сохранение скетча.
+		$sketch = new OrderSketch();
+		$sketch->add([
+			OrderSketch::FIELD_ORDER_ID => $oid,
+			OrderSketch::FIELD_SCENE    => $sketchdata['SKETCH_SCENE'],
+			OrderSketch::FIELD_IMAGE    => $sketchdata['SKETCH_IMAGE']
+		]);
+		$sketch->saveFile();
+		
+		
         
         foreach ($dataprops as $dataprop) {
             \CSaleOrderPropsValue::add($dataprop);
@@ -949,6 +968,9 @@ class Basket
 	{
 		$data = $order->getFullData();
 		
+		// Скетч.
+		$sketch = $order->getSketch();
+		
 		// Данные для импорта заказа в текущую корзину.
 		$fields = array(
 			'PARAMS' => array(
@@ -960,8 +982,8 @@ class Basket
 				'COMMENTS' => $data['ORDER']['USER_DESCRIPTION'],
 			),
 			'SKETCH' => array(
-				'SKETCH_SCENE' => $data['ORDER']['PROPS']['SKETCH_SCENE']['VALUE'],
-				'SKETCH_IMAGE' => $data['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'],
+				'SKETCH_SCENE' => $sketch->getScene(),
+				'SKETCH_IMAGE' => $sketch->getImage(),
 			),
 			'ORDERID' => $order->getID(),
 		);

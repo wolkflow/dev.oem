@@ -72,12 +72,12 @@ class HLBlockModel extends Model
 	{
         $class   = self::getEntityClassName();
 		$element = new $class($this->getID());
-		$result  = $element->update($data);
+		$result  = $element->update($this->getID(), $data);
 		
 		if ($result->isSuccess()) {
 			return $result;
 		} else {
-			throw new \Exception($result->getErrorMessages());
+			throw new \Exception(implode(PHP_EOL, $result->getErrorMessages()));
 		}
 	}
 	

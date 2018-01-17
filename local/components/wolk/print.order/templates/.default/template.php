@@ -128,10 +128,12 @@
 		<? } ?>
 	</div>
 	
-	<div class="sketch">
-		<h2>Расположение элементов на стенде</h2>
-		<img src="<?= CFile::GetPath($arResult['PROPS']['SKETCH_FILE']['VALUE_ORIG']) ?>" />
-	</div>
+	<? if (!empty($arResult['SKETCH_IMAGE'])) { ?>
+		<div class="sketch">
+			<h2>Расположение элементов на стенде</h2>
+			<img src="<?= $arResult['SKETCH_IMAGE'] ?>" />
+		</div>
+	<? } ?>
 </div>
 
 <script type="text/javascript">
