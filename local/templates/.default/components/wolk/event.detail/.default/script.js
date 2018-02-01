@@ -2615,7 +2615,7 @@ Vue.component('stand-security', {
                         dates: [],
                         datesType: 'multiple'
                     },
-                    timeStart: '12:00',
+                    timeStart: '08:00',
                     timeEnd: '20:00'
                 }
             ]
@@ -2651,7 +2651,7 @@ Vue.component('stand-security', {
                     dates: [],
                     datesType: 'multiple'
                 },
-                timeStart: '12:00',
+                timeStart: '08:00',
                 timeEnd: '20:00'
             });
         },

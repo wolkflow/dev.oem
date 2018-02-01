@@ -84,7 +84,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
     <? // Выбор индивидуального стенда // ?>
     <div class="standspagetop" id="preselect" v-if="individual && !selected">
         <div class="pagedescription">
-            <?= Loc::getMessage('selected_individual_stand') ?>
+			<? if ($arResult['EVENT']['CODE'] == 'bauma-ctt-russia') { ?>
+				<?= Loc::getMessage('selected_individual_stand_bauma-ctt-russia') ?>
+			<? } else { ?>
+				<?= Loc::getMessage('selected_individual_stand') ?>
+			<? } ?>
         </div>
         <a href="javascript:void(0)" @click="nextStep" class="standspagetop__continuebutton customizable">
             <?= Loc::getMessage('continue') ?>
@@ -97,7 +101,11 @@ $curLang = strtoupper(\Bitrix\Main\Context::getCurrent()->getLanguage());
 			<div class="pagetitle">
 				<?= Loc::getMessage('Another system stand types') ?>
 				<div class="pagetitle-note">
-					<?= Loc::getMessage('another_standart_note') ?>
+					<? if ($arResult['EVENT']['CODE'] == 'bauma-ctt-russia') { ?>
+						<?= Loc::getMessage('another_standart_note_bauma-ctt-russia') ?>
+					<? } else { ?>
+						<?= Loc::getMessage('another_standart_note') ?>
+					<? } ?>
 				</div>
 			</div>
 			<div class="standstypescontainer__standscontainer standsTypesRow">
