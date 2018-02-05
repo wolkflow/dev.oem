@@ -174,4 +174,57 @@ class Render
         return false;
     }
 	
+	
+	
+	/**
+     * Конвертирование изображения.
+     *
+     * Пример:
+     * java -jar /usr/render/xml-tool.jar -i ./<code>.obj -o <code>
+     */
+    public static function convert($pid, $code)
+    {
+		$pid  = (int) $pid;
+		$code = (string) $code;
+		
+		// unzip
+		
+		// go to dir
+		
+		// convert
+		
+        /*
+        $dirpath = self::PATH_IMAGES . '/' . strval($sid);
+        $infile  = tempnam($_SERVER['DOCUMENT_ROOT'] . self::PATH_SCENES, 'scene-');
+        $outfile = $dirpath . '/' . $outfile;
+                 
+        if (!is_writable($_SERVER['DOCUMENT_ROOT'] . $dirpath)) {
+            mkdir($_SERVER['DOCUMENT_ROOT'] . $dirpath);
+        }
+        file_put_contents($infile, $scene);
+        
+        $command = sprintf(
+            'cd %s && java -jar /usr/render/xml-tool.jar -i ./%s.obj -o $s',
+            self::PATH_ROOT,
+            $code,
+            $infile,
+            $_SERVER['DOCUMENT_ROOT'] . $outfile,
+            intval($width),
+            intval($height),
+            intval($distance)
+        );
+        
+        if (!empty($rotate)) {
+            $command .= ' -cr ' . intval($rotate);
+        }
+        exec($command, $output, $outcode);
+        
+        unlink($infile);
+        
+        if ($outcode == 0) {
+            return ($outfile.'.png');
+        }
+        return false;
+		*/
+    }
 }

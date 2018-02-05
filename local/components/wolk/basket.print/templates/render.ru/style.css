@@ -109,8 +109,6 @@
 	text-align: center;
 }
 
-@media print {
-	.more {
-		page-break-after: always;
-    } 
+.more {
+	page-break-after: always;
 } 

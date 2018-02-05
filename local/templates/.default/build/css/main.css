@@ -1961,9 +1961,9 @@ button.styler.button-form {
     margin-right: 10px;
 }
 
-.profilepage .profilecontainer__column:nth-child(odd){
-  float: left;
-}
+/*.profilepage .profilecontainer__column:nth-child(odd){*/
+  /*float: left;*/
+/*}*/
 .profilepage .profilecontainer__column:nth-child(even){
   float: right;
 }
