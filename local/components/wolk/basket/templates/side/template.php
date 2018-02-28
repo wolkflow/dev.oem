@@ -77,13 +77,13 @@
     </div>
     <small>			
         <? if (!$arResult['EVENT']->hasVAT()) { ?>
-			<? if (in_array($arResult['EVENT']->getCode(), array('bvm-2018'))) { ?>
+			<? if (in_array($arResult['EVENT']->getCode(), ['bvm-2018'])) { ?>
 				<?= Loc::getMessage('TAX_EXCLUDED-bvm-2018') ?>
 			<? } else { ?>
 				<?= Loc::getMessage('TAX_EXCLUDED') ?>
 			<? } ?>
         <? } else { ?>
-            <? if (in_array($arResult['EVENT']['CODE'], array('bvm-2018'))) { ?>
+            <? if (in_array($arResult['EVENT']->getCode(), ['bvm-2018'])) { ?>
 				<?= Loc::getMessage('TAX_INCLUDED-bvm-2018') ?>
 			<? } else { ?>
 				<?= Loc::getMessage('TAX_INCLUDED') ?>

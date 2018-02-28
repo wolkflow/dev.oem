@@ -7,6 +7,7 @@
 
 <? $lang = \Bitrix\Main\Context::getCurrent()->getLanguage() ?>
 
+<? /*
 <script type="text/javascript">
     ymaps.ready(function () {
         var myMap = new ymaps.Map('mapMarks', {
@@ -203,7 +204,7 @@
     });
 </script>
 
-
+*/ ?>
 
 
 <div class="indexpage">
@@ -268,9 +269,11 @@
 
 
 	    <? //+++++ИК ?>
-
+		<? /*
 	    <a href="javascript:void(0)" class="btn-view js-btn-view">view interactive venue map</a>
+		
 
+		
 	    <div class="hide">
 		    <div class="modal modalContact" id="intMap">
 			    <div class="modalClose arcticmodal-close"></div>
@@ -401,6 +404,8 @@
 	    </script>
 
 	    <? //=====ИК ?>
+		*/ ?>
+
     </div>
     
     <? // Выбор стенда // ?>
