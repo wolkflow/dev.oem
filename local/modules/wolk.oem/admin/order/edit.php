@@ -15,6 +15,10 @@ define('NO_ORDER_RECALC', 'Y');
 IncludeModuleLangFile(__FILE__);
 
 
+// Текущий язык.
+$lang = Bitrix\Main\Application::getInstance()->getContext()->getLanguage();
+
+
 // Уровни доступа.
 $permission = $APPLICATION->GetGroupRight('wolk.oem');
 
@@ -111,6 +115,7 @@ if (!empty($_POST) && $_POST['action'] == 'order-make') {
         'PAVILION'   => (string) $_POST['PAVILION'],
         'SURCHARGE'  => $_POST['SURCHARGE'],
         'COMMENTS'   => $_POST['COMMENTS'],
+		'VAT'        => (bool) $_POST['VAT'],
     );
 	
 	if (empty($fields['EID'])) {
@@ -479,7 +484,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" id="form-vat-id" name="VAT" value="1" <?= ($odata['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') ? ('checked="checked"') : ('') ?> />
+											<? $incvat = ($odata['ORDER']['PROPS']['INCLUDE_VAT']['VALUE']) ?: ($odata['EVENT']['PROPS']['INCLUDE_VAT']['VALUE'] == 'Y') ?>
+                                            <input type="checkbox" id="form-vat-id" name="VAT" value="1" <?= ($incvat) ? ('checked="checked"') : ('') ?> />
                                             <?= Loc::getMessage('FIELD_INCLUDE_VAT') ?>
                                         </label>
                                     </div>
@@ -498,7 +504,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                     </tr>
 									<tr>
                                         <td class="bold"><?= Loc::getMessage('ORDER_TOTAL') ?>:</td>
-                                        <td id="js-order-price-summ-id"><?= number_format($odata['PRICES']['TOTAL_WITH_SUR'], 2, '.', '') ?></td>
+                                        <td id="js-order-price-cost-id"><?= number_format($odata['PRICES']['TOTAL_WITH_SUR'], 2, '.', '') ?></td>
                                     </tr>
                                     <tr>
                                         <td class="bold"><?= Loc::getMessage('ORDER_VAT') ?>:</td>
@@ -624,7 +630,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             var currency  = $('#form-currency-id').val();
             var typestand = $('.js-form-type-stand:checked').val();
             
-            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=ru&IBLOCK_ID=<?= STANDS_IBLOCK_ID ?>&func=SetStandElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand, 900, 600);
+            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=<?= $lang ?>&IBLOCK_ID=<?= STANDS_IBLOCK_ID ?>&func=SetStandElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand, 900, 600);
         });
         
         
@@ -663,7 +669,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             var typestand = $('.js-form-type-stand:checked').val();
             var basketid  = 'n' + (new Date()).getTime();
             
-            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_product_search.php?lang=ru&IBLOCK_ID=<?= IBLOCK_PRODUCTS_ID ?>&func=SetElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand + '&bid=' + basketid, 900, 600);
+            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_product_search.php?lang=<?= $lang ?>&IBLOCK_ID=<?= IBLOCK_PRODUCTS_ID ?>&func=SetElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand + '&bid=' + basketid, 900, 600);
         });
         
         
@@ -777,9 +783,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     function CalcPrices()
     {
 		var price = 0;
-		var sur   = 0;
+		var cost  = 0;
         var vat   = 0;
-        var summ  = 0;
         var total = 0;
         var surcharge  = parseFloat($('#form-surcharge-id').val());
         var includevat = $('#form-vat-id').is(':checked');
@@ -791,27 +796,28 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             price += parseFloat($(this).text());
         });
 		
-		// Стоимость без наценок.
-		summ = price;
-        
         // Наценка.
         if (surcharge > 0) {
-			sur  = summ * surcharge / 100;
-            summ = summ * (1 + surcharge / 100);
-        }
+			surcharge = price * surcharge / 100;
+        } else {
+			surcharge = 0; 
+		}
+
+		// Стоимость с наценкой.
+		cost = price + surcharge;
         
         // Включение НДС в стоимость.
         if (includevat) {
-            vat   = summ * <?= UNVAT_DEFAULT ?>;
-            total = summ;
+            vat   = cost * <?= UNVAT_DEFAULT ?>;
+            total = cost;
         } else {
-            vat   = summ * <?= VAT_DEFAULT ?> / 100;
-            total = summ + vat;
+            vat   = cost * <?= VAT_DEFAULT ?> / 100;
+            total = cost + vat;
         }
         
 		$('#js-order-price-baskets-id').html(price.toFixed(2));
-		$('#js-order-price-surcharge-id').html(sur.toFixed(2));
-        $('#js-order-price-summ-id').html(summ.toFixed(2));
+		$('#js-order-price-surcharge-id').html(surcharge.toFixed(2));
+        $('#js-order-price-cost-id').html(cost.toFixed(2));
         $('#js-order-price-vat-id').html(vat.toFixed(2));
         $('#js-order-price-total-id').html(total.toFixed(2));
     }

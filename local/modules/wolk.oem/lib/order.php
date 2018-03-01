@@ -906,10 +906,9 @@ class Order
             $price += ($fields['PRICE'] * $fields['QUANTITY']);  
         }
         
-        
         // Цены.
-        $infoprices = Order::getFullPriceInfo($price, $data['SURCHARGE'], $data['VAT']);
-        
+        $infoprices = self::getFullPriceInfo($price, $data['SURCHARGE'], $data['VAT']);
+		
         $fields = [
             'LID'              => SITE_DEFAULT,
             'USER_ID'          => $uid,
@@ -924,24 +923,25 @@ class Order
             'CURRENCY'         => $currency,
             'USER_DESCRIPTION' => $data['COMMENTS'],
         ];
-        
+
         
         // Созданеи заказа.
         if (empty($data['OID'])) {
             $oid = \CSaleOrder::add($fields);
         } else {
-            $oid = \CSaleOrder::update($data['OID'], $fields);
-            
-            if ($oid) {
+			$result = \Bitrix\Sale\Internals\OrderTable::update($data['OID'], $fields);
+			
+            if (is_object($result) && $result->getID() > 0) {
+				$oid = $result->getID();
                 \CSaleOrderPropsValue::deleteByOrder($oid);
             }
         }
         
         
         // Сохранение свойств заказа.
-        $result = \CSaleOrderProps::GetList();
+        $result = \CSaleOrderProps::getList();
         $props = [];
-        while ($prop = $result->Fetch()) {
+        while ($prop = $result->fetch()) {
             $props[$prop['CODE']] = $prop;
         }
         $dataprops = [];
@@ -1068,7 +1068,14 @@ class Order
             'VALUE'          => [],
         ];
         
-        // INCLUDE_VAT
+		$dataprops []= [
+            'ORDER_ID'       => $oid,
+            'ORDER_PROPS_ID' => $props['INCLUDE_VAT']['ID'],
+            'NAME'           => 'Вклчен НДС',
+            'CODE'           => $props['INCLUDE_VAT']['CODE'],
+            'VALUE'          => $data['VAT'],
+        ];
+		
 		
 		// Удаление данных о скетче.
 		OrderSketch::clear($oid);

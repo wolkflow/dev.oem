@@ -15,11 +15,10 @@ class Sale
 		$user = \CUser::GetByID($userId)->Fetch();
 		
 		$eventIdPropValue = \Bitrix\Sale\Internals\OrderPropsValueTable::getRow([
-			'filter' =>
-				[
-					'ORDER_ID' => $ID,
-					'PROPERTY.CODE' => 'eventId'
-				]
+			'filter' => [
+				'ORDER_ID' => $ID,
+				'PROPERTY.CODE' => 'EVENT_ID'
+			]
 		]);
 
 		$eventId = $eventIdPropValue['VALUE'];
@@ -27,7 +26,7 @@ class Sale
         $obEvent = $obElement->GetNextElement();
 		$arEvent = $obEvent->GetFields();
 		$arEvent['PROPS'] = $obEvent->GetProperties();
-		$manager = \CUser::GetByID($arEvent['PROPS']['MANAGER']['VALUE'] ?: 1)->Fetch();
+		$manager = \CUser::GetByID($arEvent['PROPS']['MANAGER']['VALUE'] ?: 1)->fetch();
 		$managerEmail = $manager['EMAIL'];
 
 		$statuses = \Bitrix\Sale\Helpers\Admin\Blocks\OrderStatus::getStatusesList($GLOBALS['USER']->GetID());
@@ -37,9 +36,9 @@ class Sale
         	'SALE_NEW_ORDER_STATUS',
         	SITE_ID,
         	[
-        		"ID" => $arFields['ORDER_ID'],
-        		"STATUS" => $status,
-        		"EMAIL" => $user['EMAIL'],
+        		"ID"            => $arFields['ORDER_ID'],
+        		"STATUS"        => $status,
+        		"EMAIL"         => $user['EMAIL'],
         		"MANAGER_EMAIL" => $managerEmail,
         	],
         	"N"
