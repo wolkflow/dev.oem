@@ -857,7 +857,7 @@ class Order
                 'CUSTOM_PRICE'   => 'Y',
                 'CURRENCY'       => $currency,
                 'LID'            => SITE_DEFAULT,
-                'NAME'           => $element->getTitle($context->getLang()),
+                'NAME'           => ($element->getTitle($context->getLang())) ?: ($product['NAME']),
                 'SET_PARENT_ID'  => 0,
                 'TYPE'           => 0,
                 'FUSER_ID'       => $uid,
