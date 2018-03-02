@@ -89,7 +89,7 @@ class TempRenderStorage extends \Wolk\Core\System\HLBlockModel
 			self::FIELD_SESSID  => $sessid,
 			self::FIELD_DATA    => json_encode((array) $data),
 			self::FIELD_USER_ID => \CUser::getID(),
-			self::FIELD_TIME    => date('d.m.Y H:i:s'),
+			self::FIELD_TIME    => new \Bitrix\Main\Type\DateTime(),
 			self::FIELD_LANG    => $lang
 		]);
 		
