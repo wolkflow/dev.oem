@@ -55,7 +55,7 @@ class Main
 				]
 			];
 			
-			if (in_array(GROUP_PARTNERS_ID, $USER->getUserGroup())) {
+			if (in_array(GROUP_PARTNERS_ID, $USER->getUserGroup($USER->getID()))) {
 				// ...
 			}
 			
