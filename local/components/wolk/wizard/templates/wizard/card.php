@@ -83,10 +83,12 @@
                     </select>
 					
 					<? // Продукция, включенная в стенд. // ?>
-					<div class="equipmentcontainer__standartnote js-product-include" style="display: none;">
-						<?= Loc::getMessage('STANDARD_INCLUDES') ?>
-						<b></b>
-					</div>
+					<? if (array_key_exists($product->getID(), $arResult['BASE'])) { ?>
+						<div class="equipmentcontainer__standartnote js-product-include">
+							<?= Loc::getMessage('INCLUDES') ?>
+							<b><?= $arResult['BASE'][$product->getID()] ?></b>
+						</div>
+					<? } ?>
                 </div>
             </div>
             

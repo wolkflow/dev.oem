@@ -42,7 +42,7 @@ class Stand extends \Wolk\Core\System\IBlockEntity implements \Wolk\OEM\Interfac
         }
         $lang = mb_strtoupper($lang);
         
-		return $this->data['PROPS']['LANG_DESCRIPTION_' . $lang]['VALUE']['TEXT'];
+		return $this->data['PROPS']['LANG_DESCRIPTION_' . $lang]['~VALUE']['TEXT'];
 	}
     
     

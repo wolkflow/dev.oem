@@ -835,13 +835,11 @@ while ($section = $result->getNext()) {
 		if ($product->getSectionID() == $section['ID']) {
 			$section['ITEMS'][$product->getID()] = $product;
 		}
-	}	
+	}
     $links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']] = $section;
     $links[$section['ID']] = &$links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']];
 }
 unset($result, $links);
-
-//echo '<pre>'; print_r($sects); echo '</pre>';
 
 ?>
 

@@ -446,6 +446,7 @@ class WizardComponent extends \CBitrixComponent
 							true
 						);
 					}
+					$this->putSessionParam('BASE', $data['BASE']);
 				}
 			}
         }
