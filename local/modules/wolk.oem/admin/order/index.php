@@ -92,6 +92,11 @@ $oemorder = new Wolk\OEM\Order($ID);
 $bxorder  = Bitrix\Sale\Order::load($ID);
 
 
+if (empty($bxorder)) {
+    LocalRedirect('/bitrix/admin/wolk_oem_order_list.php?lang=' . LANG);
+}
+
+
 /*
  * Сохранение данных заказа.
  */

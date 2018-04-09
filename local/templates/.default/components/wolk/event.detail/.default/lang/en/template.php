@@ -7,7 +7,7 @@ $MESS['basket'] = 'basket';
 $MESS['Your current stand type'] = 'Your current stand type';
 $MESS['Another system stand types'] = 'Another system stand types';
 $MESS['another_standart_note'] = 'To get detailed information regarding types, configuration of Standard + construction please contact technical department.';
-$MESS['another_standart_note_bauma-ctt-russia'] = 'To get detailed information regarding types, configuration of Shell scheme packages, please,  contact Ms. Teresa Badem, Email: <a href="mailto:badem@meplan.de">mailto:badem@meplan.de</a>, Tel.: +49 (0)89 949 28-153.';
+$MESS['another_standart_note_bauma-ctt-russia'] = 'To get detailed information regarding types, configuration of Shell scheme packages, please,  contact Ms. Teresa Badem, Email: <a href="mailto:badem@meplan.de">badem@meplan.de</a>, Tel.: +49 (0)89 949 28-153.';
 $MESS['continue'] = 'continue';
 $MESS['next'] = 'next';
 $MESS['back'] = 'back';
