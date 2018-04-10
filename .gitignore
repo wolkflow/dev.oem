@@ -5,5 +5,7 @@
 /transfer/
 test*
 *.log
+*.zip
+*.sql
 yandex*.html
 changes.txt
