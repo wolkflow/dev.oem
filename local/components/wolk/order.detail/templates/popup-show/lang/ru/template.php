@@ -20,4 +20,4 @@ $MESS['VAT'] = 'НДС';
 $MESS['TOTAL_WITH_VAT'] = 'Итого с НДС';
 
 $MESS['SKETCH_RENDERS'] = 'Изображения';
-$MESS['SKETCH_RENDERS_NOTE'] = 'Скетч и 3D-изображения';
+$MESS['SKETCH_RENDERS_NOTE'] = 'Скетч'; // и 3D-изображения';

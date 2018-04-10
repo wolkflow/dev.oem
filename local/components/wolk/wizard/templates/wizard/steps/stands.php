@@ -90,7 +90,8 @@
 											</ul>
 										<? } ?>
 									</div>
-									<img src="/i/?src=<?= $arResult['PRESTAND']->getPreviewImageSrc() ?>&w=420&h=270" class="standspagetop__photo js-stand-image" />
+									<? /* <img src="/i/?src=<?= $arResult['PRESTAND']->getPreviewImageSrc() ?>&w=420&h=270" class="standspagetop__photo js-stand-image" /> */ ?>
+									<img src="/i/?src=<?= $arResult['PRESTAND']->getPreviewImageSrc() ?>&w=420&h=270&zc=2" class="standspagetop__photo js-stand-image" />
 									<a href="javascript:void(0)" class="standspagetop__continuebutton customizable js-wizard-next-step js-submit">
 										<?= Loc::getMessage('CONTINUE') ?>
 									</a>

@@ -411,6 +411,9 @@ foreach ($bundle['BASKETS'] as &$basket) {
 unset($basket);
 
 
+// echo '<pre>'; print_r($sketch); echo '</pre>';
+
+
 // Печать заказа.
 $orderprint = new \Wolk\OEM\OrderPrint($ID);
 

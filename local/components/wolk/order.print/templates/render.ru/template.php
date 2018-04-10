@@ -53,10 +53,11 @@
 			
 			<br/>
 			
-			<? $image = $arResult['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'] ?>
+			<? $image = $arResult['ORDER']['PROPS']['SKETCH_FILEP']['VALUE'] ?>
 			<? if (!empty($image)) { ?>
 				<div class="center">
-					<img src="data:image/png;base64, <?= $image ?>" style="max-height: 500px; max-width: 72%;" />
+					<!--img src="data:image/png;base64, <?= $image ?>" style="max-height: 500px; max-width: 72%;" /-->
+					<img src="<?= $image ?>" style="max-height: 500px; max-width: 72%;" />
 					<br/>
 					<span>Масштаб: 1 клетка равна 1 м<sup>2</sup></span>
 				</div>
@@ -92,6 +93,7 @@
 		</section>
 	</div>
 	
+	<? /*
 	<? $renders = array_filter((array) unserialize($arResult['ORDER']['PROPS']['RENDERS']['VALUE'])) ?>
 	<? if (!empty($renders)) { ?>
 		<? $chunks = array_chunk($renders, 2) ?>
@@ -119,4 +121,5 @@
 			</section>
 		<? } ?>
 	<? } ?>
+	*/ ?>
 </div>

@@ -205,3 +205,5 @@ $MESS['ERROR_SKETCH_REQUIRED_IN_ORDER'] = 'Не все объекты разме
 $MESS['GENERAL_INFORMATION']   = 'Основная информация';
 $MESS['TYPE_STANDARD_STAND']   = 'Стандартный стенд';
 $MESS['TYPE_INDIVIDUAL_STAND'] = 'Индивидуальный стенд';
+
+$MESS['EVENT_TIMETABLE'] = 'Расписание работы выставки';

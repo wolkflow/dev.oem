@@ -208,3 +208,6 @@ $MESS['ERROR_SKETCH_REQUIRED_IN_ORDER'] = 'Not all objects are placed on the ske
 $MESS['GENERAL_INFORMATION']   = 'General information';
 $MESS['TYPE_STANDARD_STAND']   = 'Standard stand';
 $MESS['TYPE_INDIVIDUAL_STAND'] = 'Individual stand';
+
+
+$MESS['EVENT_TIMETABLE'] = 'Event timetable;

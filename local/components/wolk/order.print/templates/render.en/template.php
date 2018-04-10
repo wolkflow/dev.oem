@@ -56,7 +56,8 @@
 			<? $image = $arResult['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'] ?>
 			<? if (!empty($image)) { ?>
 				<div class="center">
-					<img src="data:image/png;base64, <?= $image ?>" style="max-height: 500px; max-width: 72%;" />
+					<!--img src="data:image/png;base64, <?= $image ?>" style="max-height: 500px; max-width: 72%;" /-->
+					<img src="<?= $image ?>" style="max-height: 500px; max-width: 72%;" />
 					<br/>
 					<span>Scale: 1 cell is equal to 1 m<sup>2</sup></span>
 				</div>
@@ -93,6 +94,7 @@
 	</div>
 	<div style="clear:both;"></div>
 	
+	<? /*
 	<? $renders = array_filter((array) unserialize($arResult['ORDER']['PROPS']['RENDERS']['VALUE'])) ?>
 	<? if (!empty($renders)) { ?>
 		<? $chunks = array_chunk($renders, 2) ?>
@@ -120,4 +122,5 @@
 			</section>
 		<? } ?>
 	<? } ?>
+	*/ ?>
 </div>
