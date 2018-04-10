@@ -1,6 +1,5 @@
 <?php
 
-/*
 @set_time_limit(0);
 @ignore_user_abort(true);
 
@@ -18,4 +17,3 @@ define('BX_CRONTAB_SUPPORT', true);
 define('BX_CRONTAB', true);
 
 CEvent::CheckEvents();
-*/

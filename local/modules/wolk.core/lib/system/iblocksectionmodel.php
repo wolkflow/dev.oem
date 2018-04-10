@@ -152,7 +152,7 @@ class IBlockSectionModel extends Model
         $order  = $params['order'] ?: array();
         $filter = array_merge($params['filter'] ?: array(), array('IBLOCK_ID' => self::getIBlockID()));
         $select = array_merge($params['select'] ?: array(), array('ID'));
-		print_r($select);
+		
         return (\CIBlockSection::GetList($order, $filter, $select));
     }
     

@@ -66,16 +66,33 @@ while ($currency = $result->fetch()) {
 	$currencies[$currency['CURRENCY']] = $currency;
 }
 
-// Стенды.
-$stands = $event->getStands();
+
+$cache = new CPHPCache();
+if ($cache->initCache(864000, 'event-detail-stats-entities', '/events/')) {
+	$vars = $cache->getVars();
+	
+	$stands   = $vars['stands'];
+	$products = $vars['products'];
+	$sections = $vars['sections'];
+} else {
+	// Стенды.
+	$stands = Wolk\OEM\Stand::getList([]); //$event->getStands();
+
+	// Продукция.
+	$products = Wolk\OEM\Products\Base::getList([]); //$event->getProducts();
+
+	// Разделы.
+	$sections = Wolk\OEM\Products\Section::getList(['filter' => ['DEPTH_LEVEL' => 1]]);
+	
+	
+	$cache->EndDataCache([
+		'stands'   => $stands,
+		'products' => $products,
+		'sections' => $sections,
+	]);
+}
 
 
-// Продукция.
-$products = $event->getProducts();
-
-
-// Разделы.
-$sections = Wolk\OEM\Products\Section::getList(['filter' => ['DEPTH_LEVEL' => 1]]);
 
 
 
