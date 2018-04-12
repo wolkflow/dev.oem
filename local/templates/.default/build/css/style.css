@@ -60,9 +60,9 @@ input.itemCount__input			{width: 60px;height: 60px;margin: 0 70px;text-align: ce
 .itemAdd_field.itemAdd__filed-left	{float: left}
 .itemAdd_field.itemAdd__filed-left.clear-left	{margin-top: 27px}
 
-button.itemColor__custom		{width: 200px}
+button.itemColor__custom		{width: 200px; float: left;}
 .saveButton						{width: 200px !important}
-.itemColor__custom-name			{font-size: 13px;color: #999;text-align: center;padding-top: 6px;width: 200px}
+.itemColor__custom-name			{font-size: 20px;color: #999;text-align: left; padding-top: 6px;width: 200px; float:left; line-height: 46px; height:54px; padding-left: 20px;}
 
 .serviceItem__row				{margin-bottom: 26px}
 .serviceItem__row:after			{display: block;position: relative;content: '';clear: both}
@@ -449,7 +449,8 @@ p.ruleTitle			{font-size: 21px;font-weight: 700;line-height: 21px;margin-bottom:
 
 
 
-div.lamColor								{width: 280px}
+/*div.lamColor								{width: 280px}*/
+div.lamColor								{width: 100%}
 .lamCount									{width: 160px}
 .lamCount input.styler						{margin: 0;width: 100%}
 

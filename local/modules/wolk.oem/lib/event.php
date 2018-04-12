@@ -41,6 +41,15 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		parent::__construct($id, $data);
     }
 	
+	
+	/**
+     * Получение названия мероприятия.
+     */
+    public function getName()
+	{
+		return $this->get('NAME');
+	}
+	
     
     /**
      * Получение кода мероприятия.

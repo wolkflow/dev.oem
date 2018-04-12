@@ -57,10 +57,14 @@ function ResetParams($block)
     var uniqid = (new Date()).getTime();
 	
 	$block.find('.js-param-x-remove').trigger('click'); // Удаление файла.
+	
     $block.find('.js-button-param').css('background', '');
 	$block.find('.js-color-indicator').css('background', '');
+	$block.find('.js-color-title').html('');
+	
     $block.find('.js-button-param').attr('data-modal', '#js-color-popup-' + uniqid + '-id');
     $block.find('.js-color-indicator').attr('data-indicator', '#js-color-popup-' + uniqid + '-id');
+    $block.find('.js-color-title').attr('data-title', '#js-color-popup-' + uniqid + '-id');
 	
     $block.find('.modal .js-colors-palette li').removeClass('active');
     $block.find('.modal').attr('id', 'js-color-popup-' + uniqid + '-id');
@@ -188,13 +192,14 @@ $(document).ready(function() {
         var $parent    = $that.parent('li');
         var $modal     = $that.closest('.modal');
         var $button    = $('[data-modal="#' + $modal.attr('id') + '"]');
+		var $title     = $('[data-title="#' + $modal.attr('id') + '"]');
 		var $indicator = $('[data-indicator="#' + $modal.attr('id') + '"]');
-        var $wrapper   = $button.closest('.js-param-block');
+		var $wrapper   = $button.closest('.js-param-block');
 		
         // Данные свойства для корзины.
         var $input_value = $wrapper.find('.js-param-x-value');
         var $input_color = $wrapper.find('.js-param-x-color');
-
+		
         if ($parent.hasClass('active')) {
             $parent.removeClass('active');
             $input_value.val('');
@@ -206,7 +211,8 @@ $(document).ready(function() {
             $input_color.val($that.css('background'));
         }
         $indicator.css('background', $that.css('background'));
-		
+        $title.html($that.data('title'));
+		console.log($that.data('title'), '[data-title="#' + $modal.attr('id') + '"]');
         setTimeout(function() {
             $('#' + $modal.attr('id')).arcticmodal('close');
         }, 200);

@@ -51,7 +51,9 @@ $event = null;
 
 if (!empty($eid)) {
     $event = new Wolk\OEM\Event($eid);
+	$event->load();
 }
+
 
 if (empty($event)) {
 	LocalRedirect('/bitrix/admin/wolk_oem_event_list.php');
@@ -68,6 +70,7 @@ while ($currency = $result->fetch()) {
 
 
 $cache = new CPHPCache();
+
 if ($cache->initCache(864000, 'event-detail-stats-entities', '/events/')) {
 	$vars = $cache->getVars();
 	
@@ -100,9 +103,24 @@ if ($cache->initCache(864000, 'event-detail-stats-entities', '/events/')) {
 $stat = array();
 
 // Учитываем заказы по выставке только со статусам "Подтвержден".
+/*
+$oids = array();
+$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'EVENT_ID', 'VALUE' => $event->getID()], false, false, ['ORDER_ID']);
+while ($item = $result->Fetch()) {
+	$oids []= (int) $item['ORDER_ID'];
+}
+unset($result, $item);
+
+$oids = array_unique(array_filter($oids));
+
+// Фильтр по заказам.
+$filter = ['STATUS_ID' => Wolk\OEM\Order::STATUS_APPROVAL, 'ID' => $oids];
+*/
+
+
 $result = CSaleOrder::getList(
 	array(),
-	array('!STATUS_ID' => Wolk\OEM\Order::STATUS_APPROVAL, 'PROPERTY_VAL_BY_CODE_EVENT_ID' => $event->getID()),
+	array('STATUS_ID' => Wolk\OEM\Order::STATUS_APPROVAL, 'PROPERTY_VAL_BY_CODE_EVENT_ID' => $event->getID()),
 	false,
 	false,
 	array('ID')
@@ -146,6 +164,7 @@ while ($item = $result->fetch()) {
 		} else {
 			$key = 'PRODUCTS';
 		}
+		
 		
 		// Курс и валютя для статистики.
 		$convrate = $order->getRate();
@@ -307,7 +326,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                 <div class="panel-heading event-heading">
                     <h2>
 						<?= Loc::getMessage('EVENT') ?> 
-						<b><?= $event->getTitle() ?></b>
+						<b><?= $event->getName() ?></b>
 					</h2>
 					<a class="glyphicon glyphicon-edit"  target="_blank" href="/bitrix/admin/iblock_element_edit.php?type=events&IBLOCK_ID=<?= EVENTS_IBLOCK_ID ?>&ID=<?= $event->getID() ?>"></a>
 					<a class="glyphicon glyphicon-share" target="_blank" href="/events/<?= $event->getCode() ?>/"></a>
