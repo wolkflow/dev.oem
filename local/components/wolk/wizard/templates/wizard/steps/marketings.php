@@ -26,7 +26,7 @@
                             <? $pricetype  = str_replace('.', '-', $section->getPriceType()) ?>
                             <? $properties = $section->getProperties() ?>
                             <? $products   = $section->getInsides() ?>
-                            <? $multiple   = (!empty($properties) || count($products) > 1) ?>
+                            <? $multiple   = (!empty($properties) || count($products) > 1 || $pricetype != 'quantity') ?>
                             <? $priceform  = strtolower($pricetype) ?>
                             
                             <?  // Наличие продукции в корзине.

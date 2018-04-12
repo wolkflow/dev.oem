@@ -206,7 +206,7 @@ switch ($action) {
         $code     = (string) $request->get('code');
         $type     = (string) $request->get('type');
         $kind     = (string) $request->get('kind');
-        $quantity = (float)  $request->get('quantity');
+        $quantity = (float)  str_replace(',', '.', $request->get('quantity'));
         $params   = (array)  $request->get('params');
         $fields   = (array)  $request->get('fields');
         

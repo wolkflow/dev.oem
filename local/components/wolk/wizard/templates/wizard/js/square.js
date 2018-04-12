@@ -6,7 +6,7 @@
 window['oem-func-square-cart'] = function($block) {
 
     var $input   = $block.find('input.js-square');
-    var quantity = parseInt($input.val());
+    var quantity = parseFloat($input.val().replace(',', '.'));
     
     if (quantity < 0) {
         quantity = 0;

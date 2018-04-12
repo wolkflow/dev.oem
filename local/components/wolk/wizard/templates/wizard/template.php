@@ -41,8 +41,8 @@
 						<?= TextHelper::i18nmonth(date('n', $date), false, \Bitrix\Main\Context::getCurrent()->getLanguage()) ?>,
 						<?= date('Y', $date) ?>
 					<? } else { ?>
-						<? $date = strtotime(reset($dates)) ?>
-						<?= TextHelper::i18nmonth(date('n', $date)) ?>
+						<? $date = strtotime(reset(array_keys($dates))) ?>
+						<?= TextHelper::i18nmonth(date('n', $date), false, \Bitrix\Main\Context::getCurrent()->getLanguage()) ?>
 						<?= date('j', $date) ?><sup><?= Loc::getMessage('WEEKDAY') ?></sup>,
 						<?= date('Y', $date) ?>
 					<? } ?>

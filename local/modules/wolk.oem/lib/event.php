@@ -21,6 +21,10 @@ class Event extends \Wolk\Core\System\IBlockEntity
     const STEP_EQUIPMENTS = 'EQUIPMENTS';
     const STEP_SERVICES   = 'SERVICES';
     const STEP_MARKETINGS = 'MARKETINGS';
+	
+	const USETYPE_STANDARD   = 'STANDARD';
+	const USETYPE_INDIVIDUAL = 'INDIVIDUAL';
+	
 
 	protected $id      = null;
 	protected $data    = [];
@@ -449,6 +453,23 @@ class Event extends \Wolk\Core\System\IBlockEntity
     {
         return $this->getCurrencyIndividual($lang);
     }
+	
+	
+	
+	public function isUseTypeStandard()
+	{
+		$this->load();
+		
+		return (in_array(self::USETYPE_STANDARD, $this->data['PROPS']['USETYPES']['VALUE_XML_ID']));
+	}
+	
+	
+	public function isUseTypeIndividual()
+	{
+		$this->load();
+		
+		return (in_array(self::USETYPE_INDIVIDUAL, $this->data['PROPS']['USETYPES']['VALUE_XML_ID']));
+	}
 	
     
     

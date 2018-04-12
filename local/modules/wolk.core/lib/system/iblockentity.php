@@ -62,7 +62,21 @@ class IBlockEntity extends Model
 	 */
 	public function update($data)
 	{
+		$props = $data['PROPS'];
+			
+		unset($data['PROPS']);
 		
+		if (!empty($data)) {
+			$element = new \CIBlockElement();
+			$element->update($this->getID(), $data);
+		}
+		
+		if (!empty($props)) {
+			foreach ($props as $code => $prop) {
+				\CIBlockElement::SetPropertyValueCode($this->getID(), $code, $prop);
+			}
+		}
+		// \CIBlockElement::setElementSection($id, $sections);
 	}
 	
 	

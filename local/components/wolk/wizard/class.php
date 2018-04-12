@@ -189,7 +189,7 @@ class WizardComponent extends \CBitrixComponent
 		
 		// Список шагов.
 		$this->arResult['STEPS'] = $this->getSteps();
-        
+		        
         
         // Выбираем шаг.
         switch ($this->arResult['STEP']) {

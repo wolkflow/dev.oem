@@ -180,6 +180,14 @@ class Order
 	}
 	
 	
+	public function isCanceled()
+	{
+		$this->load();
+		
+		return ($this->getStatus() == self::STATUS_CANCELED);
+	}
+	
+	
 	public function canEdit()
 	{
 		return ($this->getStatus() == self::STATUS_NOT_APPROVAL);

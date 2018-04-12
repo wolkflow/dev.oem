@@ -26,7 +26,7 @@ $MESS['SELECTED_INDIVIDUAL_STAND_NOTE'] = 'On request for participation, you hav
 $MESS['DEADLINE'] = 'The deadline for the submission of the order';
 $MESS['SURCHARGE'] = 'Extra charge of #PERCENT# will be applied to all orders later #DATE#';
 $MESS['SCHEDULE'] = 'Schedule';
-$MESS['WEEKDAY'] = 'e';
+$MESS['WEEKDAY'] = 'th';
 
 $MESS['PRESELECT_STAND_NOTE'] = 'You have already ordered the "Standard Stand" for the application form. You can continue with the chosen type of stand or choose one of the options below. ';
 $MESS['CURRENT_STAND'] = 'Your current stand';
@@ -210,4 +210,4 @@ $MESS['TYPE_STANDARD_STAND']   = 'Standard stand';
 $MESS['TYPE_INDIVIDUAL_STAND'] = 'Individual stand';
 
 
-$MESS['EVENT_TIMETABLE'] = 'Event timetable;
+$MESS['EVENT_TIMETABLE'] = 'Event timetable';
