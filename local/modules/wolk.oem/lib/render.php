@@ -182,49 +182,57 @@ class Render
      * Пример:
      * java -jar /usr/render/xml-tool.jar -i ./<code>.obj -o <code>
      */
-    public static function convert($pid, $code)
+    public static function convert($pid, $file)
     {
-		$pid  = (int) $pid;
-		$code = (string) $code;
+		$pid  = (int)    $pid;
+		$file = (array) $file;
+		$code = str_replace('.zip', '', $file['name']);
 		
 		// unzip
-		
+		// exec($command, $output, $outcode);
 		// go to dir
 		
-		// convert
+		$piddir = $_SERVER['DOCUMENT_ROOT'] . self::PATH_MODELS . '/' . $pid;
+		if (!is_dir($piddir)) {
+			if (!mkdir($piddir, 0755, true)) {
+				// throw exception;
+			}
+		}
 		
-        /*
-        $dirpath = self::PATH_IMAGES . '/' . strval($sid);
-        $infile  = tempnam($_SERVER['DOCUMENT_ROOT'] . self::PATH_SCENES, 'scene-');
-        $outfile = $dirpath . '/' . $outfile;
-                 
-        if (!is_writable($_SERVER['DOCUMENT_ROOT'] . $dirpath)) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . $dirpath);
-        }
-        file_put_contents($infile, $scene);
-        
-        $command = sprintf(
-            'cd %s && java -jar /usr/render/xml-tool.jar -i ./%s.obj -o $s',
-            self::PATH_ROOT,
-            $code,
-            $infile,
-            $_SERVER['DOCUMENT_ROOT'] . $outfile,
-            intval($width),
-            intval($height),
-            intval($distance)
-        );
-        
-        if (!empty($rotate)) {
-            $command .= ' -cr ' . intval($rotate);
-        }
-        exec($command, $output, $outcode);
-        
-        unlink($infile);
-        
-        if ($outcode == 0) {
-            return ($outfile.'.png');
-        }
-        return false;
-		*/
+		// application/x-zip-compressed
+		
+		// Очистка фалов в директоии.
+		if (!empty($piddir)) {
+			$files = glob($piddir . '/*');
+			foreach ($files as $file) {
+				if (is_file($file)) {
+					unlink($file);
+				}
+			}
+		}
+		
+		// Пути к файл.
+		$zippath = $piddir . '/' . $file['name'];
+		$objpath = $piddir . '/' . $code . '.obj';
+		
+		
+		// Перенос файла в директорию.
+		rename($file['tmp_name'], $zippath);
+		
+		// Распаковка архива.
+		exec('unzip -qq -o ' . $zippath . ' -d ' . $piddir, $output, $outcode);
+		
+		if ($outcode === 0) {
+			unlink($zippath);
+			
+			// Конвертация.
+			$command = sprintf(
+				'cd %s && java -jar /usr/render/xml-tool.jar -i %s -o %s',
+				self::PATH_ROOT,
+				$objpath,
+				$piddir
+			);
+			exec($command);
+		}
     }
 }

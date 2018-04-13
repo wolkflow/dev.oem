@@ -31,6 +31,12 @@ class Stand extends \Wolk\Core\System\HLBlockModel
     {
         return $this->get(self::FIELD_TYPE);
     }
+	
+	
+	public function getCurrency()
+    {
+        return $this->get(self::FIELD_CURRENCY);
+    }
     
     
     public function getLang()

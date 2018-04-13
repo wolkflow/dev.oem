@@ -1,5 +1,8 @@
-<?php namespace Wolk\OEM\Events;
+<?php 
 
+namespace Wolk\OEM\Events;
+
+use Wolk\OEM\Render;
 use Wolk\OEM\Properties\ColorpickerPropertyType;
 use Wolk\OEM\Properties\StandsWithEquipmentPropertyType;
 use Wolk\OEM\Properties\UsingEquipmentPropertyType;
@@ -20,7 +23,25 @@ class Iblock
     {
         return UsingEquipmentPropertyType::GetUserTypeDescription();
     }
-
+	
+	
+	
+	public function setModelRender($fields)
+	{
+		if ($fields['IBLOCK_ID'] == IBLOCK_PRODUCTS_ID && $fields['RESULT'] == 'ID') {
+			$file = reset($fields['PROPERTY_VALUES'][SECTION_PRODUCTS_PROPERTY_MODEL_ID]);
+			$file = $file['VALUE'];
+			
+			if (empty($file['tmp_name'])) {
+				return;
+			}
+			
+			// Конвертирование.
+			$render = Render::convert($fields['ID'], $file);
+		}
+	}
+	
+	
     public function saveProductsSet($arFields)
     {
         if ($arFields['IBLOCK_ID'] == STANDS_OFFERS_IBLOCK_ID) {
