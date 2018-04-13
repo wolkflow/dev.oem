@@ -208,6 +208,19 @@ while ($item = $result->fetch()) {
 		// Общее количество заказов.
 		$stat[$key]['STATS'][$basket['PRODUCT_ID']]['ORDERS'][$order->getID()] = $order->getID();
 	}
+	
+	
+	// Цена.
+	$stat['PRICES']['PRICE'][$currency] += (float) $order->getPrice() * $convrate;
+	
+	// НДС.
+	$stat['PRICES']['VAT'][$currency] += (float) $order->getTAX() * $convrate;
+	
+	// Цена без НДС.
+	$stat['PRICES']['NOVAT'][$currency] = $stat['PRICES']['PRICE'][$currency] - $stat['PRICES']['VAT'][$currency];
+	
+	// Наценки.
+	$stat['PRICES']['SURCHARGE'][$currency] += (float) $order->getSurcharge() * $convrate;
 }
 
 $stat['USERS'] = array_unique($stat['USERS']);
@@ -593,7 +606,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 								<? foreach ($currencies as $currency) { ?>
 									<? $code = $currency['CURRENCY'] ?>
 									<? $curdata = $stat['PRODUCTS']['CURRENCIES'][$code] ?>
-									<? $total = 0 ?>
 									<tbody class="js-currency-tab js-currency-tab-<?= strtolower($code) ?>" <?= (!$first) ? ('style="display: none;"') : ('') ?>>
 										<? foreach ($curdata['ITEMS'] as $pid => $item) { ?>
 											<? foreach ($item as $surcharge => $subitem) { ?>
@@ -638,7 +650,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 														<? } ?>
 													</td>
 												</tr>
-												<? $total += $subitem['TOTAL']; ?>
 											<? } ?>
 										<? } ?>
 										<tr>
@@ -646,7 +657,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
 												<b><?= Loc::getMessage('STAT_SUMM') ?></b>
 											</td>
 											<td colspan="2" align="left">
-												<b><?= CurrencyFormat($total, $code) ?></b>
+												<b><?= CurrencyFormat($curdata['TOTAL'], $code) ?></b>
 											</td>
 										</tr>
 									</tbody>

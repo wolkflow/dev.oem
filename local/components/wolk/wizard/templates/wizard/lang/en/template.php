@@ -35,7 +35,7 @@ $MESS['CURRENT_STAND_NO_EXIST'] = 'Select one of the stands to continue.';
 $MESS['CONTINUE'] = 'continue';
 $MESS['INCLUDES'] = 'Includes';
 
-$MESS['BETTER_STANDART'] = 'Improved Standard';
+$MESS['BETTER_STANDART'] = 'Another stand system types';
 $MESS['BETTER_STANDART_NOTE'] = 'For advice on choosing an improved standard, please contact the technical service.';
 
 $MESS['M2'] = 'm <sup>2</sup>';

@@ -46,7 +46,12 @@
 				
 				<div id="js-noselect-wrapper-id">
 					<div class="pagedescription">
-						<?= Loc::getMessage('SELECTED_INDIVIDUAL_STAND_NOTE') ?>
+						<? $standtext = $arResult['EVENT']->getStandsText() ?>
+						<? if (!empty($standtext)) { ?>
+							<?= $standtext ?>
+						<? } else { ?>
+							<?= Loc::getMessage('SELECTED_INDIVIDUAL_STAND_NOTE') ?>
+						<? } ?>
 					</div>
 					<a href="javascript:void(0)" class="standspagetop__continuebutton customizable js-submit">
 						<?= Loc::getMessage('CONTINUE') ?>

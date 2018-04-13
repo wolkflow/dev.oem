@@ -167,6 +167,23 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		return ($this->data['PROPS']['LANG_CONTACTS_' . $lang]['VALUE']);
     }
 	
+	
+	/**
+	 * Локализованный текст под стенды.
+	 */
+	public function getStandsText($lang = null)
+	{
+		$this->load();
+        
+        if (empty($lang)) {
+            $lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
+        }
+        $lang = mb_strtoupper($lang);
+		
+		return ($this->data['PROPS']['LANG_STANDTEXT_' . $lang]['~VALUE']['TEXT']);
+	}
+	
+	
     
     /**
      * Полуение электронных почт для отправки копий счета.
