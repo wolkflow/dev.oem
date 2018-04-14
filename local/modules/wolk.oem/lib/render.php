@@ -160,13 +160,16 @@ class Render
             intval($height),
             intval($distance)
         );
+		
+		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', 'SCENE:' . $scene . PHP_EOL, FILE_APPEND);
+		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', 'RENDER:' . $command . PHP_EOL, FILE_APPEND);
         
         if (!empty($rotate)) {
             $command .= ' -cr ' . intval($rotate);
         }
         exec($command, $output, $outcode);
         
-        unlink($infile);
+        //unlink($infile);
         
         if ($outcode == 0) {
             return ($outfile.'.png');
@@ -187,11 +190,7 @@ class Render
 		$pid  = (int)    $pid;
 		$file = (array) $file;
 		$code = str_replace('.zip', '', $file['name']);
-		
-		// unzip
-		// exec($command, $output, $outcode);
-		// go to dir
-		
+				
 		$piddir = $_SERVER['DOCUMENT_ROOT'] . self::PATH_MODELS . '/' . $pid;
 		if (!is_dir($piddir)) {
 			if (!mkdir($piddir, 0755, true)) {
@@ -227,12 +226,17 @@ class Render
 			
 			// Конвертация.
 			$command = sprintf(
-				'cd %s && java -jar /usr/render/xml-tool.jar -i %s -o %s',
-				self::PATH_ROOT,
+				'java -jar /usr/render/xml-tool.jar -i %s -o %s',
 				$objpath,
 				$piddir
 			);
+			
+			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', $command . PHP_EOL, FILE_APPEND);
+			
 			exec($command);
+		} else {
+			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', 'ZIP: ' . $outcode . ' ' . print_r($output, true) . PHP_EOL, FILE_APPEND);
+			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', print_r($file, true) . PHP_EOL, FILE_APPEND);
 		}
     }
 }
