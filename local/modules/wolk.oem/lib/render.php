@@ -185,11 +185,11 @@ class Render
      * Пример:
      * java -jar /usr/render/xml-tool.jar -i ./<code>.obj -o <code>
      */
-    public static function convert($pid, $file)
+    public static function convert($pid, $data)
     {
-		$pid  = (int)    $pid;
-		$file = (array) $file;
-		$code = str_replace('.zip', '', $file['name']);
+		$pid  = (int) $pid;
+		$data = (array) $data;
+		$code = str_replace('.zip', '', $data['name']);
 				
 		$piddir = $_SERVER['DOCUMENT_ROOT'] . self::PATH_MODELS . '/' . $pid;
 		if (!is_dir($piddir)) {
@@ -211,12 +211,12 @@ class Render
 		}
 		
 		// Пути к файл.
-		$zippath = $piddir . '/' . $file['name'];
+		$zippath = $piddir . '/' . $data['name'];
 		$objpath = $piddir . '/' . $code . '.obj';
 		
 		
 		// Перенос файла в директорию.
-		rename($file['tmp_name'], $zippath);
+		rename($data['tmp_name'], $zippath);
 		
 		// Распаковка архива.
 		exec('unzip -qq -o ' . $zippath . ' -d ' . $piddir, $output, $outcode);
@@ -236,7 +236,7 @@ class Render
 			exec($command);
 		} else {
 			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', 'ZIP: ' . $outcode . ' ' . print_r($output, true) . PHP_EOL, FILE_APPEND);
-			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', print_r($file, true) . PHP_EOL, FILE_APPEND);
+			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', print_r($data, true) . PHP_EOL, FILE_APPEND);
 		}
     }
 }
