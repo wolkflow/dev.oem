@@ -28,16 +28,16 @@ class Iblock
 	
 	public function setModelRender($fields)
 	{
+		// Конвертирование.
 		if ($fields['IBLOCK_ID'] == IBLOCK_PRODUCTS_ID && $fields['RESULT'] == 'ID') {
 			$file = reset($fields['PROPERTY_VALUES'][SECTION_PRODUCTS_PROPERTY_MODEL_ID]);
 			$file = $file['VALUE'];
 			
 			if (empty($file['tmp_name'])) {
-				return;
+				$render = Render::remove($fields['ID']);
+			} else {
+				$render = Render::convert($fields['ID'], $file);
 			}
-			
-			// Конвертирование.
-			$render = Render::convert($fields['ID'], $file);
 		}
 	}
 	

@@ -239,4 +239,30 @@ class Render
 			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/models/xml/check.log', print_r($data, true) . PHP_EOL, FILE_APPEND);
 		}
     }
+	
+	
+	
+	/**
+     * Удаление изображения.
+     *
+     * Пример:
+     * java -jar /usr/render/xml-tool.jar -i ./<code>.obj -o <code>
+     */
+    public static function remove($pid)
+    {
+		$piddir = $_SERVER['DOCUMENT_ROOT'] . self::PATH_MODELS . '/' . intval($pid);
+		if (!is_dir($piddir)) {
+			return;
+		}
+		
+		// Очистка фалов в директоии.
+		if (!empty($piddir)) {
+			$files = glob($piddir . '/*');
+			foreach ($files as $file) {
+				if (is_file($file)) {
+					unlink($file);
+				}
+			}
+		}
+	}
 }
