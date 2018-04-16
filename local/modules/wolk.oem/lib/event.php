@@ -356,7 +356,26 @@ class Event extends \Wolk\Core\System\IBlockEntity
 	{
 		$this->load();
 		
-		return $this->data['PROPS']['MANAGERS']['VALUE'];
+		return $this->data['PROPS']['MANAGER']['VALUE'];
+	}
+	
+	
+	/**
+	 * Получение списка менеджеров мероприятия.
+	 */
+	public function getManagers()
+	{
+		$ids = $this->getManagerIDs();
+		$ids = array_unique(array_filter($ids));
+		
+		$managers = [];
+		if (!empty($ids)) {
+			$result = \CUser::getList(($b="ID"), ($o="ASC"), ['ID' => implode(' | ', $ids)]);
+			while ($manager = $result->fetch()) {
+				$managers []= $manager;
+			}
+		}
+		return $managers;
 	}
 	
 	

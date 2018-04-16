@@ -2,6 +2,8 @@
 
 namespace Wolk\OEM;
 
+use Bitrix\Main\Localization\Loc;
+
 use Wolk\OEM\BasketItem as BasketItem;
 use Wolk\OEM\Stand as Stand;
 use Wolk\OEM\Products\Base as Product;
@@ -538,6 +540,8 @@ class Basket
      */
     public function order(Context $context, $data = [])
     {   
+		global $APPLICATION;
+	
         // Замены данных корзины текущими данными для заказа.
         $dump = $this->getData();
 		
@@ -626,9 +630,11 @@ class Basket
                     );
                     
                     $basket_item = $basket->getItemByID($result->getID());
-                    $basket_prop = $basket_item->getPropertyCollection();
-                    $basket_prop->setProperty($props);
-                    $basket_prop->save();
+					if (is_object($basket_item)) {
+						$basket_prop = $basket_item->getPropertyCollection();
+						$basket_prop->setProperty($props);
+						$basket_prop->save();
+					}
                 }
                 
                 // Общая стоимость продукции.
@@ -724,9 +730,11 @@ class Basket
                 );
                 
                 $basket_item = $basket->getItemByID($result->getID());
-                $basket_prop = $basket_item->getPropertyCollection();
-                $basket_prop->setProperty($props);
-                $basket_prop->save();
+				if (is_object($basket_item)) {
+					$basket_prop = $basket_item->getPropertyCollection();
+					$basket_prop->setProperty($props);
+					$basket_prop->save();
+				}
             }
             
             // Суммирование цены.
@@ -754,19 +762,21 @@ class Basket
             'USER_DESCRIPTION' => $this->getParam('COMMENTS'),
         ];
         
+		$send = false;
+		
         // Созданеи заказа.
         if (empty($oid)) {
-            $oid = \CSaleOrder::add($fields);
+            $oid  = \CSaleOrder::add($fields);
+			$send = true;
         } else {
             $oid = \CSaleOrder::update($oid, $fields);
-            
             if ($oid) {
                 \CSaleOrderPropsValue::deleteByOrder($oid);
             }
         }
 		
 		if (!$oid) {
-            throw new \Exception("Can't create order.");
+            throw new \Exception("Can't create order: " . $APPLICATION->GetException()->getString());
         }
         
 		
@@ -955,6 +965,40 @@ class Basket
         } else {
             $this->data = $dump;
         }
+		
+		
+		if ($send) {
+			// Отправка письма о новом заказе клиенту.
+			$html  = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info', array('ID' => $oid));
+			$theme = (in_array($arEvent['CODE'], array('beviale', 'bvm-2018')))
+				   ? (Loc::getMessage('THEME_NEW_ORDER_BEVIALE', array('#OID#' => $oid))) 
+				   : (Loc::getMessage('THEME_NEW_ORDER'));
+			$cevent = new \CEvent();
+			$cevent->send('SALE_NEW_ORDER_CLIENT', SITE_DEFAULT, [
+				'EMAIL' => \CUser::getEmail(),
+				'HTML'  => $html,
+				'THEME' => $theme
+			]);
+			
+			// Отправка письма о новом закази менеджеру.
+			$managers = $event->getManagers();
+			if (!empty($managers)) {
+				$emails = [];
+				foreach ($managers as $manager) {
+					$emails []= $manager['EMAIL'];
+				}
+				if (!empty($emails)) {
+					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'order-info-manager', array('ID' => $oid));
+					$cevent = new \CEvent();
+					$cevent->send('SALE_NEW_ORDER_MANAGER', SITE_DEFAULT, [
+						'EMAIL' => implode(', ', $emails),
+						'HTML'  => $html,
+						'THEME' => Loc::getMessage('THEME_NEW_ORDER_MANAGER')
+					]);
+				}
+			}
+		}
+		
 		
 		return $oid;
     }
