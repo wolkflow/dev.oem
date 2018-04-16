@@ -35,6 +35,9 @@ if (Loader::includeModule('wolk.oem')) {
     //$em->addEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Wolk\OEM\Events\Iblock', 'saveProductsSet']);
     //$em->addEventHandler('iblock', 'OnAfterIBlockElementUpdate', ['\Wolk\OEM\Events\Iblock', 'saveProductsSet']);
     
+	$em->addEventHandler('iblock', 'OnBeforeIBlockElementAdd', ['\Wolk\OEM\Events\Iblock', 'checkSectionDepth']);
+    $em->addEventHandler('iblock', 'OnBeforeIBlockElementUpdate', ['\Wolk\OEM\Events\Iblock', 'checkSectionDepth']);
+	
 	$em->addEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Wolk\OEM\Events\Iblock', 'setModelRender']);
     $em->addEventHandler('iblock', 'OnAfterIBlockElementUpdate', ['\Wolk\OEM\Events\Iblock', 'setModelRender']);
 	
