@@ -155,7 +155,12 @@
                 <div class="pagetitle">
                     <?= Loc::getMessage('BETTER_STANDART') ?>
                     <div class="pagetitle-note">
-                        <?= Loc::getMessage('BETTER_STANDART_NOTE') ?>
+						<? $subheadtypestext = $arResult['EVENT']->getSubHeadStandTypesText() ?>
+						<? if (!empty($subheadtypestext)) { ?>
+							<?= $subheadtypestext ?>
+						<? } else { ?>
+							<?= Loc::getMessage('BETTER_STANDART_NOTE') ?>
+						<? } ?>
                     </div>
                 </div>
                 <div id="js-stands-wrapper-id" class="standstypescontainer__standscontainer standsTypesRow">

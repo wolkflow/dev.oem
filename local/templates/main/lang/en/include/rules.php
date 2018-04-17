@@ -1,3 +1,8 @@
-<p>After the deadline some services might not be available any more.</p>
-<p>Any change in the order issued earlier, implies its cancellation and making a new order at prices valid at the time when you made a changes.</p>
-<p>100% of the invoice must be paid by the exhibitor within 5 working days from the date of invoicing but anyway before the trade fair starts.</p>
+<p>Orders for technical service has to be placed not later than the exhibition deadline,</p>
+<p>In case of order placement after the exhibition deadline, Technical department cannot guarantee the full service delivery.</p>
+<p>In cases when Client does not provide requested technical documentation needed for order confirmation, Organizer reserves the right of order cancellation.</p>
+<p>Approved order has to be fully paid in 5 days after the date of invoicing, but not later than the first assembling date.</p>
+<p>In case of late payment, Organizer reserves the right to cancel the order. The new order will be placed according to the current prices and surcharge rates.</p>
+<p>In case of order cancellation less than 30 days in prior to the first assembling day of the Exhibition,  Participant has to pay 50% of order. In case of order cancellation less than 15 days in prior before the firs assembling date, Participant has to pay 100% of the order.</p>
+<p>Any changes of confirmed order entails its cancellation and registration of a new order according to the current prices and surcharge rates.</p>
+<p>Orders from Contractor organizations of the Exhibitor (advertising agencies, builders and others) are accepted only after the written confirmation of the status of these organizations from the Exhibitor's side.</p>
