@@ -4,6 +4,8 @@
 <? use Wolk\Core\Helpers\Text as TextHelper ?>
 <? use Wolk\Oem\Basket; ?>
 
+<? $onechild = ($section->getElementsCount() == 1) ?>
+
 <div class="js-product-block js-product-block-<?= $section->getID() ?> product-block" data-bid="<?= (!empty($basketitem)) ? ($basketitem->getID()) : ('') ?>" data-price-type="<?= $priceform ?>">
     
     <? // Вывод продукции карточкой или списком. // ?>
@@ -12,6 +14,11 @@
         <? $product = reset($products) ?>
         
         <div class="equipmentcontainer__itemcontainer">
+			<? if (!$onechild) { ?>
+				<div class="serviceItem__subtitle">
+					<?= $product->getTitle() ?>
+				</div>
+			<? } ?>
             <div class="equipmentcontainer__itemrightside">
                 <div class="equipmentcontainer__itemprice">
                     <?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>

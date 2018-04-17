@@ -12,7 +12,7 @@
 
 <div class="js-param-block js-param-form_hanging_structure <?= ($required) ? ('js-param-required') : ('') ?>" data-code="<?= Basket::PARAM_FORM_HANGING_STRUCTURE ?>">
     <br/>
-	<button class="js-form-opener styler button-form customizable" title="<?= Loc::getMessage('FORM_SWITCHER') ?>">
+	<button class="js-form-opener styler button-form customizable form_hanging_structure_button" title="<?= Loc::getMessage('FORM_SWITCHER') ?>">
 		<?= Loc::getMessage('FORM_HANDING') ?>
 	</button>
 	<div class="js-form-wrapper form-wrapper">

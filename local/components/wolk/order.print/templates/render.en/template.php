@@ -95,7 +95,7 @@
 	<div style="clear:both;"></div>
 	
 	
-	<? /* 
+	<? if ($arResult['EVENT']['CODE'] == 'showroom') { ?>
 	<? $renders = array_filter((array) unserialize($arResult['ORDER']['PROPS']['RENDERS']['VALUE'])) ?>
 	<? if (!empty($renders)) { ?>
 		<? $chunks = array_chunk($renders, 2) ?>
@@ -123,6 +123,6 @@
 			</section>
 		<? } ?>
 	<? } ?>
-	*/ ?>
+	<? } ?>
 	
 </div>

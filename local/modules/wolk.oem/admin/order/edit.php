@@ -630,7 +630,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
             var currency  = $('#form-currency-id').val();
             var typestand = $('.js-form-type-stand:checked').val();
             
-            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=<?= $lang ?>&IBLOCK_ID=<?= STANDS_IBLOCK_ID ?>&func=SetStandElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand, 900, 600);
+            jsUtils.OpenWindow('/bitrix/admin/wolk_oem_order_element_search.php?lang=<?= $lang ?>&IBLOCK_ID=<?= IBLOCK_STANDS_ID ?>&func=SetStandElement&event=' + event + '&language=' + language + '&currency=' + currency + '&typestand=' + typestand, 900, 600);
         });
         
         

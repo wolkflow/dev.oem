@@ -71,16 +71,16 @@
     
 	<hr/>
 	
-	<? /* 
-    <div class="renders">
-        <div id="js-renders-images-id" class="render-images">
-			<div id="js-render-image-id" class="render-image"></div>
-			<button id="js-render-id" style="width: auto;" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler customizable">
-				<?= Loc::getMessage('RENDER') ?>
-			</button>
+	<? if ($arResult['EVENT']->getCode() == 'showroom') { ?>
+		<div class="renders">
+			<div id="js-renders-images-id" class="render-images">
+				<div id="js-render-image-id" class="render-image"></div>
+				<button id="js-render-id" style="width: auto;" data-code="<?= $arResult['EVENT']->getCode() ?>" class="button styler customizable">
+					<?= Loc::getMessage('RENDER') ?>
+				</button>
+			</div>
 		</div>
-    </div>
-	*/ ?>
+	<? } ?>
     
     <div class="sketchAfter">
         <div class="sketchAfterLeft">

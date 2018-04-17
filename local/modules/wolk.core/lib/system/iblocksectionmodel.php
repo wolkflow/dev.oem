@@ -181,6 +181,28 @@ class IBlockSectionModel extends Model
         return (int) $this->get('IBLOCK_SECTION_ID');
     }
     
+	
+	/**
+     * Получение количества элементов.
+     */
+	public function getElementsCount($sub = false)
+	{
+		$sub = (bool) $sub;
+		
+		if (!\Bitrix\Main\Loader::includeModule('iblock')) {
+            throw new \Exception('Module IBLOCK is not installed.');
+        }
+		$result = \CIBlockElement::getList(
+			[], 
+			['IBLOCK_ID' => self::getIBlockID(), 'SECTION_ID' => $this->getID(), 'INCLUDE_SUBSECTIONS' => (($sub) ? ('Y') : ('N'))],
+			false, 
+			false,
+			['ID']
+		);
+		
+		return intval($result->SelectedRowsCount());
+	}
+	
     
     /**
      * Получение родительского раздела.
