@@ -93,7 +93,7 @@
 		</section>
 	</div>
 	
-	
+	<? /*
 	<? $renders = array_filter((array) unserialize($arResult['ORDER']['PROPS']['RENDERS']['VALUE'])) ?>
 	<? if (!empty($renders)) { ?>
 		<? $chunks = array_chunk($renders, 2) ?>
@@ -121,5 +121,6 @@
 			</section>
 		<? } ?>
 	<? } ?>
+	*/ ?>
 	
 </div>

@@ -71,7 +71,7 @@
     
 	<hr/>
 	
-	<? /* */ ?>
+	<? /* 
     <div class="renders">
         <div id="js-renders-images-id" class="render-images">
 			<div id="js-render-image-id" class="render-image"></div>
@@ -80,7 +80,7 @@
 			</button>
 		</div>
     </div>
-	
+	*/ ?>
     
     <div class="sketchAfter">
         <div class="sketchAfterLeft">

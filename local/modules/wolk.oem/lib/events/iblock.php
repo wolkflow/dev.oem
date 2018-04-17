@@ -31,12 +31,15 @@ class Iblock
 		global $APPLICATION;
 		
 		if ($fields['IBLOCK_ID'] == IBLOCK_PRODUCTS_ID) {
-			$sections = reset(\Wolk\Core\Helpers\IBlockSection::GetSectionPathByElement($fields['ID']));
-			
-			if (count($sections) != 3) {
-				$APPLICATION->throwException(Loc::getMessage('ERROR_PRODUCT_SECTIONS_DEPTH'));
-				return false;
-			}
+			// Каждый привязанный раздел должен находится на 3-м уровне.
+			foreach ($fields['IBLOCK_SECTION'] as $sid) {
+				$sections = \Wolk\Core\Helpers\IBlockSection::GetSectionPathByParentID($sid);
+				
+				if (count($sections) != 3) {
+					$APPLICATION->throwException(Loc::getMessage('ERROR_PRODUCT_SECTIONS_DEPTH'));
+					return false;
+				}
+			}			
 		}
 	}
 	
