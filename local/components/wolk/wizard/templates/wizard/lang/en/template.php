@@ -211,3 +211,9 @@ $MESS['TYPE_INDIVIDUAL_STAND'] = 'Individual stand';
 
 
 $MESS['EVENT_TIMETABLE'] = 'Event timetable';
+
+
+$MESS['VIEW_INTERACTIVE_MAP'] = 'view interactive venue map';
+$MESS['VIEW_3D_MAP'] = 'View 3D map';
+$MESS['INTERACTIVE_MAP'] = 'Interactive venue map';
+$MESS['INTERACTIVE_MAP_CATEGOREIS'] = 'categories';

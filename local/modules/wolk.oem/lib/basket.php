@@ -561,7 +561,7 @@ class Basket
             $bresult = \Bitrix\Sale\Internals\BasketTable::getList(['filter' => ['ORDER_ID' => $order->getID()]]);
             
             while ($basket = $bresult->fetch()) {
-                $obasket->getItemById($basket['ID'])->delete();
+                $obasket->getItemByID($basket['ID'])->delete();
             }
             $obasket->save();
 			
@@ -674,7 +674,7 @@ class Basket
             $fields = [
                 'PRODUCT_ID'     => $item->getProductID(),
                 'QUANTITY'       => $item->getQuantity(),
-                'PRICE'          => $item->getPrice(),
+                'PRICE'          => (!$item->isIncluded()) ? ($item->getPrice()) : (0),
                 'CUSTOM_PRICE'   => 'Y',
                 'CURRENCY'       => $currency,
                 'LID'            => SITE_DEFAULT,

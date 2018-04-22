@@ -13,10 +13,13 @@ use Wolk\Core\Helpers\ArrayHelper;
 use Wolk\OEM\Event;
 use Wolk\OEM\Stand;
 use Wolk\OEM\Context;
+use Wolk\OEM\Place;
+use Wolk\OEM\MapObject;
 use Wolk\OEM\Order;
 use Wolk\OEM\Basket;
 use Wolk\OEM\BasketItem;
 use Wolk\OEM\Products\Param as SectionParam;
+
 
 /**
  * Class WizardComponent
@@ -293,6 +296,7 @@ class WizardComponent extends \CBitrixComponent
 		$this->arResult['DOCUMENTS'] = [];
 
 		$lid = $this->getEvent()->getLocationID();
+		
 		if ($lid > 0) {
 			$code = 'DOCS_' . strtoupper($this->getContext()->getLang());
 			$prop = CIBlockElement::getByID($lid)->getNextElement()->getProperty($code);
@@ -304,7 +308,18 @@ class WizardComponent extends \CBitrixComponent
 					'HTML'  => $doc['TEXT']
 				];
 			}
-		}	
+		}
+		
+		// Объекты интерактивной карты.
+		$pid = $this->getEvent()->getPlaceID();
+
+		if ($pid > 0) {
+			$this->arResult['PLACE'] = $this->getEvent()->getPlace();
+			
+			$this->arResult['MAPOBJECTS'] = MapObject::getList([
+				'filter' => [MapObject::FIELD_PLACE => $pid]
+			]);
+		}
     }
 	
 	

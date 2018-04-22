@@ -260,6 +260,28 @@ class Event extends \Wolk\Core\System\IBlockEntity
         
         return (new Location($this->getLocationID()));
     }
+	
+	
+	/**
+     * Получение ID метста проведения.
+     */
+    public function getPlaceID()
+    {
+        $this->load();
+        
+        return ((int) $this->data['PROPS']['PLACE']['VALUE']);
+    }
+    
+    
+    /**
+     * Получение местоположения.
+     */
+    public function getPlace()
+    {
+        $this->load();
+        
+        return (new Place($this->getPlaceID()));
+    }
 
 
     public function getPlaceTitle($lang = null)

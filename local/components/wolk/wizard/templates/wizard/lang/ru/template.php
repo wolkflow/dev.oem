@@ -10,7 +10,7 @@ $MESS['STEP_ORDER']      = 'Заказ';
 $MESS['TYPE_STANDARD']   = 'Стандартный';
 $MESS['TYPE_INDIVIDUAL'] = 'Индивидуальный';
 
-$MESS['TITLE_EQUIPMENT'] = 'Доп. оборудование';
+$MESS['TITLE_EQUIPMENT'] = 'Дополнительное оборудование';
 $MESS['TITLE_SERVICES']  = 'Услуги';
 $MESS['TITLE_MARKETING'] = 'Маркетинг';
 $MESS['TITLE_SKETCH']    = 'Схема стенда';

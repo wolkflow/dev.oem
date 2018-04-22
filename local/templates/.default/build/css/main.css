@@ -1737,6 +1737,7 @@ div.jq-selectbox__select {
 }
 .serviceItem__bottom {
   min-height: 37px;
+  margin-bottom: 30px;
 }
 .setDate {
   float: left;
