@@ -90,83 +90,105 @@
 								<a id="js-map-filters-id" href="javascript:void(0)" class="intMapFilterTrigger js-intMapFilterTrigger">
 									<?= Loc::getMessage('INTERACTIVE_MAP_CATEGOREIS') ?>
 								</a>
-								<ul class="intMapFilterList">
+								<ul id="id-map-checkboxes-id" class="intMapFilterList">
 									<li>
-										<input type="checkbox" id="shops" data-type="SHOP" checked="" />
+										<input type="checkbox" id="shops" data-type="shop" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="shops">Магазины</label>
+										<label for="shops">
+											<?= Loc::getMessage('MAP_OBJECT_SHOPS') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="hotel" data-type="HOTEL" checked="" />
+										<input type="checkbox" id="hotel" data-type="hotel" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="hotel">Гостиница</label>
+										<label for="hotel">
+											<?= Loc::getMessage('MAP_OBJECT_HOLTES') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="metro" data-type="METRO" checked="" />
+										<input type="checkbox" id="metro" data-type="metro" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="metro">Метро</label>
+										<label for="metro">
+											<?= Loc::getMessage('MAP_OBJECT_METRO') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="ppaid" data-type="PPAID" checked="" />
+										<input type="checkbox" id="ppaid" data-type="ppaid" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="ppaid">Парковка платная</label>
+										<label for="ppaid">
+											<?= Loc::getMessage('MAP_OBJECT_PPAID') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="pfree" data-type="PFREE" checked="" />
+										<input type="checkbox" id="pfree" data-type="pfree" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="pfree">Парковка бесплатная</label>
+										<label for="pfree">
+											<?= Loc::getMessage('MAP_OBJECT_PFREE') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="pvip" data-type="PVIP" checked="" />
+										<input type="checkbox" id="pvip" data-type="pvip" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="pvip">Парковка VIP</label>
+										<label for="pvip">
+											<?= Loc::getMessage('MAP_OBJECT_PVIP') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="banks" data-type="BANKS" checked="" />
+										<input type="checkbox" id="banks" data-type="bank" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="banks">Банки</label>
+										<label for="banks">
+											<?= Loc::getMessage('MAP_OBJECT_BANKS') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="atm" data-type="ATM" checked="" />
+										<input type="checkbox" id="atm" data-type="atm" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="atm">Банкомат</label>
+										<label for="atm">
+											<?= Loc::getMessage('MAP_OBJECT_ATM') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="restaurant" data-type="RESTAURANT" checked="" />
+										<input type="checkbox" id="restaurant" data-type="restaurant" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="restaurant">Ресторан</label>
+										<label for="restaurant">
+											<?= Loc::getMessage('MAP_OBJECT_RESTAURANTS') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="service" data-type="SERVICE" checked="" />
+										<input type="checkbox" id="service" data-type="service" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="service">Сервисный центр</label>
+										<label for="service">
+											<?= Loc::getMessage('MAP_OBJECT_SERVICES') ?>
+										</label>
 									</li>
 									<li>
-										<input type="checkbox" id="pharmacy" data-type="PHARMACY" checked="" />
+										<input type="checkbox" id="pharmacy" data-type="pharmacy" checked="" />
 										<div class="switch">
 											<div class="switchLabel"><i></i></div>
 										</div>
-										<label for="pharmacy">Аптека</label>
+										<label for="pharmacy">
+											<?= Loc::getMessage('MAP_OBJECT_PHARMACIES') ?>
+										</label>
 									</li>
 								</ul>
 							</div>
@@ -191,7 +213,7 @@
 						<?= Loc::getMessage('VIEW_3D_MAP') ?>
 					</div>
 					<div class="modalContent">
-						<img src="/local/templates/.default/build/images/tmp_ddd.png" class="mod3d_image" />
+						<img src="<?= $arResult['PLACE']->getMap3Dpath() ?>" class="mod3d_image" />
 					</div>
 				</div>
 			</div>
@@ -297,20 +319,27 @@
 
 
 <? if ($arResult['EVENT']->getCode() == 'showroom') { ?>
-
+	
 	<script type="text/javascript">
+		// Карта.
+		var map;
+		
+		// Список объектов.
+		var objects = [];
+		
 		ymaps.ready(function () {
-			var myMap = new ymaps.Map('mapMarks', {
-				center: [55.753215, 37.622504],
-				zoom: 9,
+			map = new ymaps.Map('mapMarks', {
+				center: [<?= $arResult['PLACE']->getCoordLng() ?>, <?= $arResult['PLACE']->getCoordLat() ?>],
+				zoom: 12,
 				controls: ['zoomControl']
 			});
-
+			
 			// Создаём макет содержимого.
 			MyIconContentLayout = ymaps.templateLayoutFactory.createClass(
 				'<div style="color: #FFFFFF; font-weight: bold;">$[properties.iconContent]</div>'
 			);
 			
+			// Точка.
 			var placemark;
 			
 		   <? foreach ($arResult['MAPOBJECTS'] as $mapobject) { ?>
@@ -328,18 +357,28 @@
 					iconImageOffset: [-15, -45]
 				});
 				
-				myMap.geoObjects.add(placemark);
+				// Добавление метки в список.
+				if (objects['<?= $mapobject->getTypeCode() ?>'] == undefined) {
+					objects['<?= $mapobject->getTypeCode() ?>'] = new ymaps.GeoObjectCollection();
+				}
+				objects['<?= $mapobject->getTypeCode() ?>'].add(placemark);
 		   <? } ?>
+		   
+		    // Добавление коллекций объектов на карту.
+			for (let code in objects) {
+				map.geoObjects.add(objects[code]);
+			}
 		});
 		
 		
+		// Обработка событий карты.
 		$(document).ready(function() {
+			
 			$(document).on('click', '.js-btn-view', function() {
 				$('#intMap').arcticmodal();
 			});
 			
-			$(document).on('click', '.js-map-filter', function() {
-				console.log('js');
+			$(document).on('click', '#js-map-filters-id', function() {
 				var $list = $(this).next('.intMapFilterList');
 				if ($list.hasClass('active')) {
 					$list.removeClass('active');
@@ -352,6 +391,17 @@
 			$(document).on('click', '.js-open-3d', function() {
 				$('#map3d').arcticmodal();
 			});
+			
+			$(document).on('change', '#id-map-checkboxes-id input[type="checkbox"]', function() {
+				var $that = $(this);
+				
+				if ($that.is(':checked')) {
+					map.geoObjects.add(objects[$that.data('type')]);
+				} else {
+					map.geoObjects.remove(objects[$that.data('type')]);
+				}
+			});
 		});
 	</script>
 <? } ?>
+

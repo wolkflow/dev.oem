@@ -217,3 +217,14 @@ $MESS['VIEW_INTERACTIVE_MAP'] = 'view interactive venue map';
 $MESS['VIEW_3D_MAP'] = 'View 3D map';
 $MESS['INTERACTIVE_MAP'] = 'Interactive venue map';
 $MESS['INTERACTIVE_MAP_CATEGOREIS'] = 'categories';
+
+$MESS['MAP_OBJECT_SHOPS']        = 'Shops';
+$MESS['MAP_OBJECT_HOLTES']       = 'Hotels';
+$MESS['MAP_OBJECT_METRO']        = 'Metro';
+$MESS['MAP_OBJECT_PPAID']        = 'Paid parking';
+$MESS['MAP_OBJECT_PFREE']        = 'Free parking';
+$MESS['MAP_OBJECT_PVIP']         = 'VIP parking';
+$MESS['MAP_OBJECT_ATM']          = 'Atm';
+$MESS['MAP_OBJECT_RESTAURANTS']  = 'Restaurants';
+$MESS['MAP_OBJECT_SERVICES']     = 'Service';
+$MESS['MAP_OBJECT_PHARMACIES']   = 'Pharmacies';
