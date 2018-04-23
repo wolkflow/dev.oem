@@ -208,7 +208,7 @@ $MESS['TYPE_INDIVIDUAL_STAND'] = 'Индивидуальный стенд';
 
 $MESS['EVENT_TIMETABLE'] = 'Расписание работы выставки';
 
-$MESS['VIEW_INTERACTIVE_MAP'] = 'просмотреть интерактивную карту места';
+$MESS['VIEW_INTERACTIVE_MAP'] = 'смотреть интерактивную карту места';
 $MESS['VIEW_3D_MAP'] = 'Просмотр 3D-карты';
 $MESS['INTERACTIVE_MAP'] = 'Интерактивная карта места';
 $MESS['INTERACTIVE_MAP_CATEGOREIS'] = 'Категории';
@@ -219,6 +219,7 @@ $MESS['MAP_OBJECT_METRO']        = 'Метро';
 $MESS['MAP_OBJECT_PPAID']        = 'Парковка платная';
 $MESS['MAP_OBJECT_PFREE']        = 'Парковка бесплатная';
 $MESS['MAP_OBJECT_PVIP']         = 'Парковка VIP';
+$MESS['MAP_OBJECT_BANKS']        = 'Банки';
 $MESS['MAP_OBJECT_ATM']          = 'Банкоматы';
 $MESS['MAP_OBJECT_RESTAURANTS']  = 'Ресторан';
 $MESS['MAP_OBJECT_SERVICES']     = 'Сервисный центр';

@@ -967,7 +967,7 @@ class Order
             'ORDER_PROPS_ID' => $props['EVENT_NAME']['ID'],
             'NAME'           => 'Название мероприятия',
             'CODE'           => 'EVENT_NAME',
-            'VALUE'          => $event->getTitle(),
+            'VALUE'          => $event->getTitle($context->getLang()),
         ];
         
         $dataprops []= [

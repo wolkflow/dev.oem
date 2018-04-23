@@ -68,8 +68,7 @@
             <? } ?>
         <? } ?>
 
-
-	    <? //+++++ИК ?>
+		
 		<? if ($arResult['EVENT']->getCode() == 'showroom') { ?>
 			<a href="javascript:void(0)" class="btn-view js-btn-view">
 				<?= Loc::getMessage('VIEW_INTERACTIVE_MAP') ?>

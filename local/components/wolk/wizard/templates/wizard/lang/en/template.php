@@ -224,6 +224,7 @@ $MESS['MAP_OBJECT_METRO']        = 'Metro';
 $MESS['MAP_OBJECT_PPAID']        = 'Paid parking';
 $MESS['MAP_OBJECT_PFREE']        = 'Free parking';
 $MESS['MAP_OBJECT_PVIP']         = 'VIP parking';
+$MESS['MAP_OBJECT_BANKS']        = 'Banks';
 $MESS['MAP_OBJECT_ATM']          = 'Atm';
 $MESS['MAP_OBJECT_RESTAURANTS']  = 'Restaurants';
 $MESS['MAP_OBJECT_SERVICES']     = 'Service';

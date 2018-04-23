@@ -71,6 +71,12 @@ $(document).ready(function() {
 		
 		var quantity = parseInt($quantity.data('quantity'));
 		
+		// Если позиция последняя - удаляем ее везде.
+		if (quantity == 1) {
+            RemoveBasket(bid, sid);
+			return;
+        }
+		
 		// Удаляем позицию.
 		// if (quantity == 1) {
 		//	$block.find('.js-basket-delete').trigger('click'); // (bid, sid, $block);
