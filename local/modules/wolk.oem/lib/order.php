@@ -759,7 +759,7 @@ class Order
      * Создание и изменение заказа.
      */
     public static function make($data)
-    {
+    {		
         // Пользователь.
         $uid = (int) $data['UID'];
         
@@ -842,6 +842,7 @@ class Order
             $price += ($fields['PRICE'] * $fields['QUANTITY']);
         }
         
+		
         // Сохранение продукции.
         foreach ($products as $product) {
 			
@@ -870,9 +871,17 @@ class Order
                 'TYPE'           => 0,
                 'FUSER_ID'       => $uid,
                 'RECOMMENDATION' => $note,
+				'NOTES'          => $product['NOTES']
             ];
             
             $props = [];
+			
+			// ID корзины.
+            $props []= [
+                'NAME'  => 'ID корзины',
+                'CODE'  => 'BID',
+                'VALUE' => (!empty($product['BID'])) ? ($product['BID']) : (md5(time()))
+            ];
             
             // Поля заказа продукции.
             $props []= [
@@ -1018,7 +1027,7 @@ class Order
             'VALUE'          => $context->getLang(),
         ];
         
-		/*8
+		/*
         $dataprops []= [
             'ORDER_ID'       => $oid,
             'ORDER_PROPS_ID' => $props['SKETCH']['ID'],
@@ -1085,17 +1094,19 @@ class Order
         ];
 		
 		
-		// Удаление данных о скетче.
-		OrderSketch::clear($oid);
-		
-		// Сохранение скетча.
-		$sketch = new OrderSketch();
-		$sketch->add([
-			OrderSketch::FIELD_ORDER_ID => $oid,
-			OrderSketch::FIELD_SCENE    => $data['SKETCH_SCENE'],
-			OrderSketch::FIELD_IMAGE    => $data['SKETCH_IMAGE']
-		]);
-		$sketch->saveFile();
+		if (!empty($oid) && !empty($data['SKETCH_SCENE'])) {
+			// Удаление данных о скетче.
+			OrderSketch::clear($oid);
+			
+			// Сохранение скетча.
+			$sketch = new OrderSketch();
+			$sketch->add([
+				OrderSketch::FIELD_ORDER_ID => $oid,
+				OrderSketch::FIELD_SCENE    => $data['SKETCH_SCENE'],
+				OrderSketch::FIELD_IMAGE    => $data['SKETCH_IMAGE']
+			]);
+			$sketch->saveFile();
+		}
 		
 		
         

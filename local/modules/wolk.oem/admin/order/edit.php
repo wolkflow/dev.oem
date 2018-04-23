@@ -390,6 +390,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                                 </td>
                                                 <td class="td-name">
                                                     <?= $product->getTitle() ?> 
+													<input type="hidden" name="PRODUCTS[<?= $bitem['ID'] ?>][BID]" value="<?=  $bitem['PROPS']['BID']['VALUE'] ?>" />
                                                     <input type="hidden" name="PRODUCTS[<?= $bitem['ID'] ?>][ID]" value="<?= $product->getID() ?>" />
                                                 </td>
                                                 <td class="td-quantity">

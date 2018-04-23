@@ -642,7 +642,7 @@ class Basket
             }
         }
         
-        
+		        
         // Сохранение продукции.
         foreach ($items as $item) {
 			
@@ -691,7 +691,7 @@ class Basket
             $props []= [
                 'NAME'  => 'ID корзины',
                 'CODE'  => 'BID',
-                'VALUE' => $item->getID()
+                'VALUE' => $item->getID(),
             ];
             
             // Поля заказа продукции.
