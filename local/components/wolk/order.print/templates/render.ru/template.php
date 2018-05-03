@@ -53,7 +53,7 @@
 			
 			<br/>
 			
-			<? $image = $arResult['ORDER']['PROPS']['SKETCH_FILEP']['VALUE'] ?>
+			<? $image = $arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE'] ?>
 			<? if (!empty($image)) { ?>
 				<div class="center">
 					<!--img src="data:image/png;base64, <?= $image ?>" style="max-height: 500px; max-width: 72%;" /-->

@@ -785,7 +785,7 @@ class Order
             $bresult = \Bitrix\Sale\Internals\BasketTable::getList(['filter' => ['ORDER_ID' => $data['OID']]]);
             
             while ($basket = $bresult->fetch()) {
-                $obasket->getItemById($basket['ID'])->delete();
+                $obasket->getItemByID($basket['ID'])->delete();
             }
             $obasket->save();
         } else {
@@ -841,10 +841,10 @@ class Order
             // Общая стоимость продукции.
             $price += ($fields['PRICE'] * $fields['QUANTITY']);
         }
-        
+		
 		
         // Сохранение продукции.
-        foreach ($products as $product) {
+        foreach ($products as $pkey => $product) {
 			
 			if (empty($product['ID'])) {
                 continue;
@@ -905,6 +905,12 @@ class Order
                     'VALUE' => 'Y'
                 ];
             }
+			
+			file_put_contents(
+				$_SERVER['DOCUMENT_ROOT'].'/order.log',
+				$pkey . PHP_EOL . print_r($fields, true) . PHP_EOL,
+				FILE_APPEND
+			);
 			
             // Добавление корзины.
             $result = \Bitrix\Sale\Internals\BasketTable::add($fields);

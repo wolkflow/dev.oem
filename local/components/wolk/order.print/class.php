@@ -130,7 +130,7 @@ class OrderPrintComponent extends \CBitrixComponent
 		if (is_object($sketch)) {
 			$this->arResult['ORDER']['PROPS']['SKETCH_SCENE']['VALUE'] = $sketch->getScene();
 			$this->arResult['ORDER']['PROPS']['SKETCH_IMAGE']['VALUE'] = $sketch->getImage();
-			$this->arResult['ORDER']['PROPS']['SKETCH_FILEP']['VALUE'] = $sketch->getFilePath();
+			$this->arResult['ORDER']['PROPS']['SKETCH_FILE']['VALUE']  = $sketch->getFilePath();
 		}
 		
 		

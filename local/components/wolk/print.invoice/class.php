@@ -131,6 +131,14 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		$this->arResult['DATE'] = (!empty($this->arResult['PROPS']['INVOICE_DATE']['VALUE'])) 
 								? (strtotime($this->arResult['PROPS']['INVOICE_DATE']['VALUE'])) 
 								: (time());
+								
+								
+		// ѕропуск товаров, вклченных в стенд.
+		foreach ($this->arResult['BASKETS'] as $i => $basket) {
+			if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
+				unset($this->arResult['BASKETS'][$i]);
+			}
+		}
 		
 		//  оличество позиций с ненулевой стоимостью.
 		$count   = 0;
@@ -138,6 +146,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		foreach ($this->arResult['BASKETS'] as &$basket) {
             $element = CIBlockElement::getByID($basket['PRODUCT_ID'])->getNextElement();
             
+			
             if ($element) {
                 $fields = $element->getFields();
                 

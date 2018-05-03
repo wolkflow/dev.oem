@@ -51,14 +51,6 @@ $products = Product::getList([
 ]);
 
 
-// Список разделов.
-$sections = [];
-foreach ($products as $product) { 
-	if (!array_key_exists($product->getSectionID(), $sections)) {
-		$sections[$product->getSectionID()] = $product->getSection();
-	}
-}
-
 
 // Выбранные стенды.
 $result = CIBlockElement::GetPropertyValues(
@@ -85,8 +77,21 @@ $selected_products_individual = $result[IBLOCK_PROPERTY_SELECTED_PRODUCTS_INDIVI
 
 $selected_products = array_unique(array_merge($selected_products_standard, $selected_products_individual));
 
+
 // /local/modules/wolk.oem/admin/events/before_save.php
 // /local/modules/wolk.oem/admin/events/iblock_element_edit.php
+
+
+// Список разделов.
+$sections = [];
+foreach ($selected_products as $selected_product_id) { 
+	$product = $products[$selected_product_id];
+	if (is_object($product)) {
+		if (!array_key_exists($product->getSectionID(), $sections)) {
+			$sections[$product->getSectionID()] = $product->getSection();
+		}
+	}
+}
 
 
 // Валюты.
@@ -310,7 +315,7 @@ include (dirname(__FILE__) . '/iblock_element_edit_base.before.php');
 								<? } ?>
 							</td>
 							<td>
-								<textarea name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"></textarea>
+								<textarea name="PARAMS_SECTIONS[EN][<?= $section->getID() ?>][NOTE]" cols="30" rows="4" style="resize: none;"><?= $params_sections['EN'][$section->getID()]['UF_NOTE'] ?></textarea>
 							</td>
 						</tr>
 					<? } ?>

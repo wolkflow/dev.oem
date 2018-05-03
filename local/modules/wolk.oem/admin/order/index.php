@@ -255,7 +255,7 @@ if (!empty($_POST)) {
                     $event = new Wolk\OEM\Event($order['PROPS']['EVENT_ID']['VALUE']);
                     
                     // E-mail'ы для отправки.
-                    $emails = array_unique(array_merge([$email], (array) $event->getEmails()));
+                    $emails = array_filter(array_unique(array_merge([$email], (array) $event->getEmails())));
                     
 					// Отправка письма.
 					$event = new \CEvent();

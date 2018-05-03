@@ -79,7 +79,7 @@
                             <option 
 								value="<?= $product->getID() ?>" 
 								data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>" 
-								data-descr="<?= $product->getDescription() ?>"
+								data-descr="<?= htmlspecialchars($product->getDescription(), ENT_HTML5) ?>"
 								data-include="<?= (array_key_exists($product->getID(), $arResult['BASE'])) ? ('1') : ('0') ?>"
 								<?= (!empty($basketitem) && $basketitem->getProductID() == $product->getID()) ? ('selected') : ('') ?>
 							>

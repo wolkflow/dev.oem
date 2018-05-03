@@ -283,7 +283,7 @@
 			}
 			
 			$.when(savesketch()).done(function() {
-                $form.submit();
+				$form.submit();
 			});
         });
         

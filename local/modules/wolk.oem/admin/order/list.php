@@ -355,7 +355,7 @@ while ($item = $result->NavNext(true, "f_")) {
     $row->AddViewField('CURRENCY', $currency);
     $row->AddViewField('ORIGINAL_PRICE', CurrencyFormat($item['PRICE'], $item['CURRENCY']));
     $row->AddViewField('SENDMAIL', (!empty($props['SENDTIME']['VALUE'])) ? (Loc::getMessage('YES')) : (Loc::getMessage('NO')));
-    $row->AddViewField('STANDNUMBER', ((!empty($props['standNum']['VALUE'])) ? ($props['standNum']['VALUE']) : ('&mdash;')));
+    $row->AddViewField('STANDNUMBER', ((!empty($props['STANDNUM']['VALUE'])) ? ($props['STANDNUM']['VALUE']) : ('&mdash;')));
   
 	// Сформируем контекстное меню.
     

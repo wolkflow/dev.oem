@@ -206,6 +206,8 @@ class Event extends \Wolk\Core\System\IBlockEntity
      */
     public function getEmails()
     {
+		$this->load();
+		
 		return ($this->data['PROPS']['EMAILS']['VALUE']);
     }
     

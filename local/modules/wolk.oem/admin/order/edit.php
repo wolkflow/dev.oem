@@ -118,6 +118,7 @@ if (!empty($_POST) && $_POST['action'] == 'order-make') {
 		'VAT'        => (bool) $_POST['VAT'],
     );
 	
+	
 	if (empty($fields['EID'])) {
 		$errors['EVENT'] = Loc::getMessage('ERROR_NOT_SPECIFIED_EVENT');// 'Не укаазна выставка';
 	}
@@ -149,7 +150,7 @@ if (!empty($_POST) && $_POST['action'] == 'order-make') {
 		}
 		$order = Wolk\OEM\Order::make($fields);
 		
-		LocalRedirect('/bitrix/admin/wolk_oem_order_edit.php?ID=' . $order->getID());
+		LocalRedirect('/bitrix/admin/wolk_oem_order_index.php?ID=' . $order->getID());
 	}
 }
 
