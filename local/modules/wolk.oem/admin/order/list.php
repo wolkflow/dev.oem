@@ -21,7 +21,7 @@ $groups = $USER->GetUserGroupArray();
 
 $ismanager = false;
 if (in_array(GROUP_MANAGERS_ID, $groups) || in_array(GROUP_PARTNERS_ID, $groups)) {
-	$ismanager = true;
+	// $ismanager = true;
 }
 
 

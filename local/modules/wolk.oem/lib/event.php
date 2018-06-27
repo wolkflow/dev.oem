@@ -722,6 +722,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
         
         // Установка ценовой политики мероприятия.
         $products = Product::getList([
+			'order'  => ['SORT' => 'ASC', 'NAME' => 'ASC'],
             'filter' => $filter
         ]);
         

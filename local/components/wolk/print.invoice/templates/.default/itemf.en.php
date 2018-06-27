@@ -25,7 +25,7 @@
 		<tbody>
 			<tr>
 				<td>
-					<p><b>Joint Stock Company “ITEMF EXPO”</b></p>
+					<p><b>Limited Liability Company “ITEMF EXPO”</b></p>
 					<p>
 						3, bldg.2, Floor 2A, ap. I, Room 1, Verkhnyaya Krasnoselskay, 107140, Moscow Russia <br>
 						Raiffeisenbank AO, Moscow<br>

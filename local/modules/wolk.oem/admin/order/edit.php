@@ -97,7 +97,8 @@ $errors = [];
 
 // Создание или изменение заказа.
 if (!empty($_POST) && $_POST['action'] == 'order-make') {
-    
+	
+	
     $fields = array(
         'OID'        => (int) $oid,
         'UID'        => (int) $_POST['USER'],
@@ -119,23 +120,27 @@ if (!empty($_POST) && $_POST['action'] == 'order-make') {
     );
 	
 	
+	file_put_contents($_SERVER['DOCUMENT_ROOT'].'/make-order.log', print_r($fields, true) . PHP_EOL, FILE_APPEND);
+	
+	
 	if (empty($fields['EID'])) {
-		$errors['EVENT'] = Loc::getMessage('ERROR_NOT_SPECIFIED_EVENT');// 'Не укаазна выставка';
+		$errors['EVENT'] = Loc::getMessage('ERROR_NOT_SPECIFIED_EVENT'); // 'Не указана выставка';
 	}
 	if (empty($fields['UID'])) {
-		$errors['USER'] = Loc::getMessage('ERROR_NOT_SPECIFIED_USER');//'Не укаазн участник';
+		$errors['USER'] = Loc::getMessage('ERROR_NOT_SPECIFIED_USER'); // 'Не указан участник';
 	}
 	if (empty($fields['CURRENCY'])) {
-		$errors['CURRENCY'] = Loc::getMessage('ERROR_NOT_SPECIFIED_CURRENCY');//'Не укаазна валюта';
+		$errors['CURRENCY'] = Loc::getMessage('ERROR_NOT_SPECIFIED_CURRENCY'); // 'Не указан валюта';
 	}
 	if (empty($fields['LANGUAGE'])) {
-		$errors['LANGUAGE'] = Loc::getMessage('ERROR_NOT_SPECIFIED_LANGUAGE');//'Не укаазн язык';
+		$errors['LANGUAGE'] = Loc::getMessage('ERROR_NOT_SPECIFIED_LANGUAGE'); // 'Не указан язык';
 	}
 	if ($fields['TYPE'] != 'QUICK' && $fields['TYPESTAND'] != 'INDIVIDUAL') {
 		if (empty($fields['SID'])) {
-			$errors['STAND'] = Loc::getMessage('ERROR_NOT_SPECIFIED_STAND');//'Не выбран стенд';
+			$errors['STAND'] = Loc::getMessage('ERROR_NOT_SPECIFIED_STAND'); // 'Не выбран стенд';
 		}
 	}
+	
 	
 	if (empty($errors)) {
 		
@@ -380,7 +385,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
                                             
                                             <? $product = new Wolk\OEM\Products\Base($bitem['PRODUCT_ID']) ?>
                                             
-                                            <tr id="position-<?= $product->getID() ?>" class="js-position row-position">
+                                            <tr class="js-position row-position">
                                                 <td class="td-image">
                                                     <? $isrc = $product->getImageSrc() ?>
                                                     <? if (!empty($isrc)) { ?>
@@ -830,7 +835,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_admi
     {
         element = JSON.parse(element);
         
-        var html = '<tr id="position-' + element.ID + '" class="js-position row-position">';
+        var html = '<tr class="js-position row-position">';
         var code = element.BASKET_ID;
         var name = '[' + code + ']';
         

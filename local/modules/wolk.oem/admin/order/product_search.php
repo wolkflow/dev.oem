@@ -45,6 +45,8 @@ if (isset($_GET['typestand'])) {
 $basketID = '';
 if (isset($_GET['bid'])) {
 	$basketID = preg_replace("/[^a-zA-Z0-9_:\\[\\]]/", "", $_GET['bid']);
+} else {
+	$basketID = 'n' . md5(uniqid(time()));
 }
 
 // Контекст.

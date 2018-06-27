@@ -783,6 +783,13 @@ class Basket
 		// Данные скетча.
 		$sketchdata = $this->getSketch();
 		
+		
+		// Название выставки.
+		$event_title = $event->getTitle($context->getLang());
+		if (empty($event_title)) {
+			$event_title = $event->getName();
+		}
+		
         
         // Сохранение свойств заказа.
         $result = \CSaleOrderProps::GetList();
@@ -806,7 +813,7 @@ class Basket
             'ORDER_PROPS_ID' => $props['EVENT_NAME']['ID'],
             'NAME'           => 'Название мероприятия',
             'CODE'           => $props['EVENT_NAME']['CODE'],
-            'VALUE'          => $event->getTitle(),
+            'VALUE'          => $event_title,
         ];
         
         $dataprops []= [

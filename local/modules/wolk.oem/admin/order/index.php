@@ -23,7 +23,7 @@ $groups = $USER->GetUserGroupArray();
 
 $ismanager = false;
 if (in_array(GROUP_MANAGERS_ID, $groups) || in_array(GROUP_PARTNERS_ID, $groups)) {
-	$ismanager = true;
+	// $ismanager = true;
 }
 
 
@@ -381,7 +381,7 @@ foreach ($bundle['BASKETS'] as &$basket) {
 	$basket['PRODUCT'] = $element = new Wolk\OEM\Products\Base($basket['PRODUCT_ID']);
 	
 	// Добавление наценки на товары.
-    $basket['SURCHARGE_PRICE'] = $basket['PRICE'] * (1 + $oemorder->getSurchargePrice() / 100);
+    $basket['SURCHARGE_PRICE'] = $basket['PRICE'] * (1 + $oemorder->getSurchargePercent() / 100);
  
 	
 	if (empty($element)) { 

@@ -88,6 +88,12 @@ class Section extends \Wolk\Core\System\IBlockSectionModel
         
         return $this->data['UF_' . self::LANG_PREFIX . 'NOTE_' . $lang];
     }
+	
+	
+	public function getImageSrc()
+    {
+        return (\CFile::getPath($this->data['PICTURE']));
+    }
     
     
     /**

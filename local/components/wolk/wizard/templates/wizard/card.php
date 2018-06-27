@@ -66,9 +66,21 @@
         <div class="serviceItem__block">
             <div class="serviceItem__row">
                 <div class="serviceItem__left">
-                    <div class="serviceItem__subtitle">
-                        <?= $section->getListTitle() ?>
-                    </div>
+					<? $title = $section->getListTitle() ?>
+					<? if (!empty($title)) { ?>
+						<div class="serviceItem__subtitle">
+							<?= $title ?>
+						</div>
+					<? } ?>
+					
+					<? $src = $section->getImageSrc() ?>
+					<? if (!empty($src)) { ?>
+						<div class="equipmentcontainer__itemphotocontainer section-image">
+							<a class="photoZoom" href="<?= $src ?>"></a>
+							<img src="/i.php?src=<?= $src ?>&h=210" class="equipmentcontainer__itemphoto" />
+						</div>
+					<? } ?>
+					
                     <select class="js-product-select styler">
                         <? if (count($products) > 1) { ?>
                             <option class="js-option-noselect" value="" <?= (empty($basketitem)) ? ('selected') : ('') ?>>

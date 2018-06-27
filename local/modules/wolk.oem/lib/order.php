@@ -960,6 +960,12 @@ class Order
             }
         }
         
+		// Название выставки.
+		$event_title = $event->getTitle($context->getLang());
+		if (empty($event_title)) {
+			$event_title = $event->getName();
+		}
+		
         
         // Сохранение свойств заказа.
         $result = \CSaleOrderProps::getList();
@@ -982,7 +988,7 @@ class Order
             'ORDER_PROPS_ID' => $props['EVENT_NAME']['ID'],
             'NAME'           => 'Название мероприятия',
             'CODE'           => 'EVENT_NAME',
-            'VALUE'          => $event->getTitle($context->getLang()),
+            'VALUE'          => $event_title,
         ];
         
         $dataprops []= [

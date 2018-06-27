@@ -35,7 +35,9 @@
                             ?>
 
                             <div id="js-s-<?= $section->getID() ?>-id" class="js-product-wrapper js-block-<?= strtolower($pricetype) ?>">
-                                <? if (!empty($basketgroup)) { ?>
+                                
+																
+								<? if (!empty($basketgroup)) { ?>
                                     <? if ($multiple) { ?>
                                         <div class="js-product-section js-pricetype-<?= strtolower($pricetype) ?>" data-sid="<?= $section->getID() ?>" data-pricetype="<?= $pricetype ?>">
                                             <div class="serviceItem__title">

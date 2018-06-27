@@ -832,19 +832,47 @@ $result = CIBlockSection::getList(
 	['ID', 'NAME', 'CODE', 'IBLOCK_SECTION_ID', 'UF_LANG_TITLE_RU', 'UF_LANG_TITLE_EN']
 );
 
+
+
+
+/*
+if (CUser::getID() == 1) {
+	$links = [];
+	$sects = [];
+	$links[0] = &$sects;
+	while ($section = $result->getNext()) {
+		$section = ['ID' => $section['ID'], 'IBLOCK_SECTION_ID' => $section['IBLOCK_SECTION_ID'], 'NAME' => $section['NAME'], 'ITEMS' => []];
+		foreach ($products as $product) {
+			if ($product->getSectionID() == $section['ID']) {
+				$section['ITEMS'][$product->getID()] = $product->getTitle();
+			}
+		}
+		$links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']] = $section;
+		$links[$section['ID']] = &$links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']];
+	}
+	unset($result, $links);
+
+	echo '<pre>'; print_r($sects); echo '</pre>'; die();
+}
+*/
+
+
 $links = [];
 $sects = [];
 $links[0] = &$sects;
 while ($section = $result->getNext()) {
+	$section['ITEMS'] = [];
 	foreach ($products as $product) {
 		if ($product->getSectionID() == $section['ID']) {
 			$section['ITEMS'][$product->getID()] = $product;
 		}
 	}
-    $links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']] = $section;
-    $links[$section['ID']] = &$links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']];
+	$links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']] = $section;
+	$links[$section['ID']] = &$links[intval($section['IBLOCK_SECTION_ID'])]['ITEMS'][$section['ID']];
 }
 unset($result, $links);
+
+
 
 ?>
 

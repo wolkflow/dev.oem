@@ -128,7 +128,11 @@ class HLBlockModel extends Model
         }
         $items = array();
         while ($item = $result->fetch()) {
-            $items[$item[$key]] = new static($item['ID']);
+			if (empty($params['select'])) {
+				$items[$item[$key]] = new static($item['ID'], $item);
+			} else {
+				$items[$item[$key]] = new static($item['ID']);
+			}
         }
         return $items;
 	}

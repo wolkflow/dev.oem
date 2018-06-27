@@ -28,7 +28,24 @@ class Iblock
 	
 	public function checkSectionDepth($fields)
 	{
-		global $APPLICATION;
+		global $APPLICATION, $USER;
+		
+		// Логирование изменения продукции.
+		if ($fields['IBLOCK_ID'] == IBLOCK_EVENTS_ID) {
+			$alarm = '';
+			if (empty($fields['PROPERTY_VALUES'][ELEMENT_EVENTS_PROPERTY_PRODUCTS_STANDARD_ID])) {
+				$alarm .= ' ALARM (standard)';
+			}
+			if (empty($fields['PROPERTY_VALUES'][ELEMENT_EVENTS_PROPERTY_PRODUCTS_INDIVIDUAL_ID])) {
+				$alarm .= ' ALARM (individual)';
+			}
+			
+			file_put_contents(
+				$_SERVER['DOCUMENT_ROOT'].'/../events.log', 
+				date('d.m.Y H:i:s') . ' | User ' . $USER->getID() . ': ' . $alarm . PHP_EOL . print_r($fields, true) . PHP_EOL, 
+				FILE_APPEND
+			);
+		}
 		
 		if ($fields['IBLOCK_ID'] == IBLOCK_PRODUCTS_ID) {
 			// Каждый привязанный раздел должен находится на 3-м уровне.

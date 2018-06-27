@@ -34,7 +34,10 @@
 				<?= Loc::getMessage('DEADLINE') ?>
 				<span class="catalogdeadline__deadlinedate">
 					<? $dates = $arResult['EVENT']->getMarginDates() ?>
+					<? $date = strtotime(reset(array_keys($dates))) ?>
+					<?= date('d.m.Y', $date) ?>
 					
+					<? /*
 					<? if (\Bitrix\Main\Context::getCurrent()->getLanguage() == LANG_RU) { ?>
 						<? $date = strtotime(reset(array_keys($dates))) ?>
 						<?= date('j', $date) ?>
@@ -46,10 +49,12 @@
 						<?= date('j', $date) ?><sup><?= Loc::getMessage('WEEKDAY') ?></sup>,
 						<?= date('Y', $date) ?>
 					<? } ?>
+					*/ ?>
 				</span>
 			</div>
 			<div class="catalogdeadline__deadlinedescription">
 				<? foreach ($dates as $date => $percent) { ?>
+					<? $date = date('d.m.Y', strtotime($date)) ?>
 					<span>
 						<?= Loc::getMessage('SURCHARGE', ['#PERCENT#' => $percent.'%', '#DATE#' => $date]) ?><br>
 					</span>
