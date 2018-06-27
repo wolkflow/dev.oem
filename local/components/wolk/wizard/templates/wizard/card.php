@@ -90,8 +90,7 @@
                         <? foreach ($products as $product) { ?>
                             <option 
 								value="<?= $product->getID() ?>" 
-								data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>" 
-								data-descr="<?= htmlspecialchars($product->getDescription(), ENT_HTML5) ?>"
+								data-price="<?= FormatCurrency($product->getPrice(), $arResult['CURRENCY']) ?>"
 								data-include="<?= (array_key_exists($product->getID(), $arResult['BASE'])) ? ('1') : ('0') ?>"
 								<?= (!empty($basketitem) && $basketitem->getProductID() == $product->getID()) ? ('selected') : ('') ?>
 							>
@@ -124,7 +123,13 @@
             <? // Вывод комметария при выбооре конкретной продукции. // ?>
             <div class="js-product-select-descr" style="margin-top: 10px; display: none;">
                 <div class="serviceItem__cost">
-                    <div class="js-product-descr serviceItem__cost-value"></div>
+                    <div id="js-options-descr-id" class="js-product-descriptions serviceItem__cost-value">
+						<? foreach ($products as $product) { ?>
+							<span class="js-option-descr-<?= $product->getID() ?>-id js-option-descr" style="display: none;">
+								<?= $product->getDescription() ?>
+							</span>
+						<? } ?>
+					</div>
                 </div>
             </div>
             

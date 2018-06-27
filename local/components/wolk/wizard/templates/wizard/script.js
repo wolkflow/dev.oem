@@ -305,9 +305,12 @@ $(document).ready(function() {
 		
         if (!empty($option.val())) {
             $block.find('.js-product-price').html($option.data('price'));
-            $block.find('.js-product-descr').html($option.data('descr'));
+            //$block.find('.js-product-descr').html($option.data('descr'));
             $block.find('.js-product-select-price').show();
             $block.find('.js-product-select-descr').show();
+			
+			$block.find('#js-options-descr-id .js-option-descr').hide();
+			$block.find('#js-options-descr-id .js-option-descr-' + $option.val() + '-id').show();
 			
 			// Включенное оборедование.
 			var include = parseInt($option.data('include'));
@@ -316,8 +319,9 @@ $(document).ready(function() {
 				$block.find('.js-product-include').show();
 			}
         } else {
-            $block.find('.js-product-select-price').hide();
+			$block.find('#js-options-descr-id .js-option-descr').hide();
             $block.find('.js-product-select-descr').hide();
+			$block.find('.js-product-select-price').hide();
         }
         
         // Обновление данных в корзине.
