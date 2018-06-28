@@ -1003,3 +1003,169 @@ b {
 .kds-info {
   padding: 20px 0;
 }
+
+
+
+
+
+
+.krr-wrapper {
+  font: normal 400 9pt / normal Arial, Helvetica, sans-serif;
+  width: 680px;
+  margin: 16px auto; 
+  padding: 40px 0;
+}
+.krr-wrapper p {
+  margin-bottom: 16px;
+}
+.krr-wrapper table {
+  width: 100%;
+}
+.krr-wrapper table td,
+.krr-wrapper table th {
+  padding: 1px;
+  text-align: left;
+  vertical-align: top;
+  border: .5pt solid black;
+}
+.krr-wrapper .no-border td {
+  border: 0 !important;
+}
+.krr-wrapper .pr5 {
+  padding-right: 5pt;
+}
+.krr-wrapper .bb0 {
+  border-bottom: 0;
+}
+.krr-wrapper .bt0 {
+  border-top: 0;
+}
+.krr-wrapper .w370 {
+  width: 370px;
+}
+.krr-wrapper .w224 {
+  width: 224px;
+}
+.krr-wrapper .w63 {
+  width: 63px;
+}
+.krr-wrapper .w33 {
+  width: 33px;
+}
+.krr-wrapper .w339 {
+  width: 339px;
+}
+.krr-wrapper .w54 {
+  width: 54px;
+}
+.krr-wrapper .w42 {
+  width: 42px;
+}
+.krr-wrapper .w86 {
+  width: 86px;
+}
+.krr-wrapper .w100 {
+  width: 100px;
+}
+.krr-wrapper .small {
+  font-size: 8pt;
+}
+.krr-wrapper .va-b {
+  vertical-align: bottom;
+}
+.krr-wrapper .mr10 {
+  display: inline-block;
+  margin-right: 10pt;
+}
+.krr-wrapper .krr-title {
+  font-size: 14.0pt;
+  font-weight: 700;
+  text-align: left;
+  vertical-align: middle;
+  margin: 20px 0;
+}
+.krr-wrapper .ta-l {
+  text-align: left !important;
+}
+.krr-wrapper .ta-r {
+  text-align: right !important;
+}
+.krr-wrapper .ta-c {
+  text-align: center !important;
+}
+.krr-wrapper .krr-table {
+  border: 1pt solid #000;
+  margin-bottom: 16px;
+  font-size: 8pt;
+}
+.krr-wrapper .krr-table th {
+  font-weight: 700;
+  text-align: center;
+}
+.krr-wrapper .krr-table td {
+  text-align: left;
+}
+.krr-wrapper .sign {
+  border-top: 1px solid #000;
+  position: relative;
+  padding-top: 20px;
+}
+.krr-wrapper .sign::after {
+  display: block;
+  content: '';
+  position: relative;
+  clear: both;
+  height: 1px;
+  width: 100%;
+}
+.krr-wrapper .sign-left {
+  float: left;
+  width: 54%;
+  border-bottom: 1px solid #000;
+}
+.krr-wrapper .sign-left::after {
+  display: block;
+  content: '';
+  position: relative;
+  clear: both;
+  height: 1px;
+  width: 100%;
+}
+.krr-wrapper .sign-right {
+  position: relative;
+  top: -2px;
+  border-bottom: 1px solid #000;
+  margin-left: 58%;
+}
+.krr-wrapper .sign-right::after {
+  display: block;
+  content: '';
+  position: relative;
+  clear: both;
+  height: 1px;
+  width: 100%;
+}
+.krr-wrapper .sign-name {
+  float: right;
+  font-size: 8pt;
+  position: relative;
+  bottom: -6px;
+}
+.krr-wrapper .sign-title {
+  float: left;
+  padding-right: 20px;
+  background: #fff;
+  position: relative;
+  bottom: -3px;
+  padding-bottom: 3px;
+}
+.krr-wrapper .sign .sign-stamp {
+  position: absolute;
+  right: 11%;
+  top: -1%;
+  width: 20%;
+}
+.krr-wrapper .sign .sign-stamp img {
+  width: 100%;
+}
+/*# sourceMappingURL=invoice_krr.css.map */

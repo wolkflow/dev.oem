@@ -14,21 +14,21 @@ class PrintInvoiceComponent extends \CBitrixComponent
 {
 	
 	/** 
-	 * Óñòàíîâêà íàñòðîåê.
+	 * Ð£ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº.
 	 */
     public function onPrepareComponentParams($arParams)
     {
-		// Òèï ñ÷åòà.
+		// Ð¢Ð¸Ð¿ ÑÑ‡ÐµÑ‚Ð°.
 		$arParams['TEMPLATE'] = (string) $arParams['TEMPLATE'];
 		
-		// ID çàêàçà.
+		// ID Ð·Ð°ÐºÐ°Ð·Ð°.
 		$arParams['ORDER_ID'] = (int) $arParams['ORDER_ID'];
 		
-		// Ïóòü ê ôàéëó.
+		// ÐŸÑƒÑ‚ÑŒ Ðº Ñ„Ð°Ð¹Ð»Ñƒ.
 		$arParams['PATH'] = (string) $arParams['PATH'];
 		
         
-        // ßçûê.
+        // Ð¯Ð·Ñ‹Ðº.
 		$arParams['LANG'] = (string) $arParams['LANG'];
 		
 		if (empty($arParams['LANG'])) {
@@ -41,26 +41,26 @@ class PrintInvoiceComponent extends \CBitrixComponent
 	
 	
 	/**
-	 * Âûïîëíåíèå êîìïîíåíòà.
+	 * Ð’Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð°.
 	 */
 	public function executeComponent()
     {
 		if (!\Bitrix\Main\Loader::includeModule('wolk.core')) {
-			ShowError('Ìîäóëü wolk.core íå óñòàíâîëåí.');
+			ShowError('ÐœÐ¾Ð´ÑƒÐ»ÑŒ wolk.core Ð½Ðµ ÑƒÑÑ‚Ð°Ð½Ð²Ð¾Ð»ÐµÐ½.');
 			return;
 		}
 
 		if (!\Bitrix\Main\Loader::includeModule('iblock')) {
-			ShowError('Ìîäóëü iblock íå óñòàíâîëåí.');
+			ShowError('ÐœÐ¾Ð´ÑƒÐ»ÑŒ iblock Ð½Ðµ ÑƒÑÑ‚Ð°Ð½Ð²Ð¾Ð»ÐµÐ½.');
 			return;
 		}
 
 		if (!\Bitrix\Main\Loader::includeModule('sale')) {
-			ShowError('Ìîäóëü sale íå óñòàíâîëåí.');
+			ShowError('ÐœÐ¾Ð´ÑƒÐ»ÑŒ sale Ð½Ðµ ÑƒÑÑ‚Ð°Ð½Ð²Ð¾Ð»ÐµÐ½.');
 			return;
 		}
 		
-		// Ñïèñîê äîñòóïíûõ ñ÷åòîâ.
+		// Ð¡Ð¿Ð¸ÑÐ¾Ðº Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ñ… ÑÑ‡ÐµÑ‚Ð¾Ð².
 		$invoices = [
 			'uaz' 	   => 'Uaz',
 			'mf.ru'    => 'MF (ru)',
@@ -75,6 +75,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
             'kz.en'    => 'KZ (en)',
 			'kz'       => 'KZ',
 			'kds'      => 'KDS',
+			'krr'      => 'ÐšÑ€Ð°ÑÐ½Ð¾Ð´Ð°Ñ€',
 		];
         
         
@@ -85,7 +86,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
         $this->arResult['SERVER_NAME'] = $site['SERVER_NAME'];
 		$this->arResult['LANGUAGE']    = strtoupper($this->arParams['LANG']);
 		
-		// Çàêàç.
+		// Ð—Ð°ÐºÐ°Ð·.
 		$this->arResult['ORDER']   = CSaleOrder::getByID($this->arParams['ORDER_ID']);
 		$this->arResult['PROPS']   = Wolk\Core\Helpers\SaleOrder::getProperties($this->arParams['ORDER_ID']);
 		$this->arResult['BASKETS'] = Wolk\Core\Helpers\SaleOrder::getBaskets($this->arParams['ORDER_ID']);
@@ -105,7 +106,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
         }
         
 		
-		// Êóðñ ïåðåñ÷åòà çàêàçà.
+		// ÐšÑƒÑ€Ñ Ð¿ÐµÑ€ÐµÑÑ‡ÐµÑ‚Ð° Ð·Ð°ÐºÐ°Ð·Ð°.
 		$rate     = (!empty($this->arResult['PROPS']['RATE']['VALUE'])) 
 					? (floatval($this->arResult['PROPS']['RATE']['VALUE'])) 
 					: (1);
@@ -113,7 +114,7 @@ class PrintInvoiceComponent extends \CBitrixComponent
 					? (strval($this->arResult['PROPS']['RATE_CURRENCY']['VALUE'])) 
 					: ($this->arResult['ORDER']['CURRENCY']);
 		
-		// Íàöåíêà.
+		// ÐÐ°Ñ†ÐµÐ½ÐºÐ°.
         $surcharge       = (float) $this->arResult['PROPS']['SURCHARGE']['VALUE_ORIG'];
         $surcharge_price = (float) $this->arResult['PROPS']['SURCHARGE_PRICE']['VALUE_ORIG'];
         
@@ -133,14 +134,14 @@ class PrintInvoiceComponent extends \CBitrixComponent
 								: (time());
 								
 								
-		// Ïðîïóñê òîâàðîâ, âêë÷åííûõ â ñòåíä.
+		// ÐŸÑ€Ð¾Ð¿ÑƒÑÐº Ñ‚Ð¾Ð²Ð°Ñ€Ð¾Ð², Ð²ÐºÐ»Ñ‡ÐµÐ½Ð½Ñ‹Ñ… Ð² ÑÑ‚ÐµÐ½Ð´.
 		foreach ($this->arResult['BASKETS'] as $i => $basket) {
 			if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
 				unset($this->arResult['BASKETS'][$i]);
 			}
 		}
 		
-		// Êîëè÷åñòâî ïîçèöèé ñ íåíóëåâîé ñòîèìîñòüþ.
+		// ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ð¹ Ñ Ð½ÐµÐ½ÑƒÐ»ÐµÐ²Ð¾Ð¹ ÑÑ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒÑŽ.
 		$count   = 0;
 		$summary = 0;
 		foreach ($this->arResult['BASKETS'] as &$basket) {
@@ -166,18 +167,18 @@ class PrintInvoiceComponent extends \CBitrixComponent
 		}
 		
 		
-		// Ñòîèìîñòü òîâàðîâ â êîðçèíå (áåç íàöåíîê).
+		// Ð¡Ñ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ Ñ‚Ð¾Ð²Ð°Ñ€Ð¾Ð² Ð² ÐºÐ¾Ñ€Ð·Ð¸Ð½Ðµ (Ð±ÐµÐ· Ð½Ð°Ñ†ÐµÐ½Ð¾Ðº).
 		$this->arResult['ORDER']['BASKET_PRICE']  = $summary;
 		$this->arResult['ORDER']['BASKET_PRICE'] *= $rate;
 		
-		// Ñòîèìîñòü çàêàçà áåç íàëîãîâ è ñ íàöåíêàìè.
+		// Ð¡Ñ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ Ð·Ð°ÐºÐ°Ð·Ð° Ð±ÐµÐ· Ð½Ð°Ð»Ð¾Ð³Ð¾Ð² Ð¸ Ñ Ð½Ð°Ñ†ÐµÐ½ÐºÐ°Ð¼Ð¸.
 		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] = $this->arResult['ORDER']['PRICE'] - $this->arResult['ORDER']['TAX_VALUE'];
 		
-		// ÍÄÑ âêëþ÷åííûé â öåíó.
+		// ÐÐ”Ð¡ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ‹Ð¹ Ð² Ñ†ÐµÐ½Ñƒ.
 		$this->arResult['ORDER']['UNTAX_VALUE'] = $this->arResult['ORDER']['BASKET_TOTAL_PRICE'] * UNVAT_DEFAULT;
 		
 		
-        // Êîíâåðòèðîâàíèå öåíû.
+        // ÐšÐ¾Ð½Ð²ÐµÑ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ñ†ÐµÐ½Ñ‹.
 		$this->arResult['ORDER']['BASKET_TOTAL_PRICE'] *= $rate;
 		$this->arResult['ORDER']['PRICE']              *= $rate;
 		$this->arResult['ORDER']['TAX_VALUE']          *= $rate;
@@ -197,10 +198,10 @@ class PrintInvoiceComponent extends \CBitrixComponent
 			}
 		}
 		
-		// Êîíâåðòèðîâàíèå âàëþòû.
+		// ÐšÐ¾Ð½Ð²ÐµÑ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð²Ð°Ð»ÑŽÑ‚Ñ‹.
 		$this->arResult['ORDER']['CURRENCY'] = $currency;
 		
-		// Ïîäêëþ÷åíèå øàáëîíà.
+		// ÐŸÐ¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð°.
 		$this->includeComponentTemplate($this->arParams['TEMPLATE']);
 	}
 	

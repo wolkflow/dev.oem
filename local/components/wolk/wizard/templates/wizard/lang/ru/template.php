@@ -75,7 +75,7 @@ $MESS['SQUARE'] = 'Площадь';
 $MESS['FILE'] = 'Файл';
 
 $MESS['COMMENT'] = 'Комментарий';
-$MESS['COMMENT_PLACEHOLDER'] = 'Здвсь вы можете описать все более подробно';
+$MESS['COMMENT_PLACEHOLDER'] = 'Здесь вы можете описать все более подробно';
 
 $MESS['LINK'] = 'Ссылка';
 
