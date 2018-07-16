@@ -263,7 +263,18 @@ class WizardComponent extends \CBitrixComponent
             $this->arResult['STEPLINKS'][$step] = $this->getStepLink($n);
         }
 		
-
+		
+		// Проверка языка мероприяитя (если доступен только один язык - редирект на него).
+		if (count($this->arResult['EVENT']->getLangs()) == 1) {
+			$elang = reset($this->arResult['EVENT']->getLangs());
+			
+			if ($elang != \Bitrix\Main\Context::getCurrent()->getLanguage()) {
+				LocalRedirect($APPLICATION->getCurPageParam('set_lang='.$elang, ['set_lang', '?set_lang', '&set_lang', 'CODE'], false));
+			}
+		}
+		
+		
+		
         // Подключение шаблона компонента.
 		$this->IncludeComponentTemplate();
 		

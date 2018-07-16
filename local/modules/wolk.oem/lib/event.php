@@ -591,8 +591,7 @@ class Event extends \Wolk\Core\System\IBlockEntity
 		
 		return $ids;
 	}
-	
-	
+		
 	
 	/**
 	 * Получение списка активных языков.
