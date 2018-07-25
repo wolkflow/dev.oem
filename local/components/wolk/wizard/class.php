@@ -280,8 +280,8 @@ class WizardComponent extends \CBitrixComponent
 		
 		
 		// Контент мероприятия.
-		$APPLICATION->AddViewContent('EVENT_LINK', $this->getEvent()->getLink());
-		$APPLICATION->AddViewContent('EVENT_LOGO', $this->getEvent()->getLogo());
+		$APPLICATION->addViewContent('EVENT_LINK', $this->getEvent()->getLink());
+		$APPLICATION->addViewContent('EVENT_LOGO', $this->getEvent()->getLogo());
 		
 		$color = $this->getEvent()->getColor();
 		if (!empty($color)) {

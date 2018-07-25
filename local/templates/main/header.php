@@ -89,23 +89,14 @@ Loc::loadLanguageFile(__FILE__);
             <div class="headersection__languagedropdown">
                 
                 
-                <? if (strpos($APPLICATION->GetCurPage(false), '/events/') !== false) { ?>
+                <? if (strpos($APPLICATION->getCurPage(false), '/events/') !== false) { ?>
                     <?  // Получение кода элемента.
-                        $engine = new CComponentEngine();
-                    
-                        $arVariables = array();
-                        $arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates(array(), array('element' => '#ELEMENT_CODE#/'));
-
-                        $componentPage = $engine->guessComponentPath(
-                            '/events/',
-                            $arUrlTemplates,
-                            $arVariables
-                        );
-                        
+						$request = \Bitrix\Main\Context::getCurrent()->getRequest();
+											
                         $langs = [];
                         
                         CModule::IncludeModule('iblock');
-                        $event = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'CODE' => strval($arVariables['ELEMENT_CODE'])])->GetNextElement();
+                        $event = CIBlockElement::GetList([], ['IBLOCK_ID' => EVENTS_IBLOCK_ID, 'CODE' => $request->get('CODE')])->GetNextElement();
 						if ($event) {
 							$props = $event->getProperties();
 							foreach ($props as $code => $prop) { 

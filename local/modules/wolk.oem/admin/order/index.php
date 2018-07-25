@@ -555,8 +555,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
         
 		var loadsketch = function() {
 			
-			var gridX = parseInt(<?= (int) ($oemorder->getSketchWidth()) ?: 5 ?>);
-			var gridY = parseInt(<?= (int) ($oemorder->getSketchDepth()) ?: 5 ?>);
+			var gridX = parseFloat(<?= (float) ($oemorder->getSketchWidth()) ?: 5 ?>);
+			var gridY = parseFloat(<?= (float) ($oemorder->getSketchDepth()) ?: 5 ?>);
 			
 			(window.resizeEditor = function(items) {
 				var height =  Math.max(120 + (items.length * 135), $(window).height());
@@ -619,7 +619,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                     <li>
                         <span class="adm-bus-orderinfoblock-content-customer-info-param"><?= Loc::getMessage('EVENT') ?>:</span>
 						<span class="adm-bus-orderinfoblock-content-customer-info-value">
-							<?= $event->getTitle() ?>
+							<?= $event->getName() ?>
 						</span>
                     </li>
                     <li>
