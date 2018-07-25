@@ -97,6 +97,7 @@ $oemorder = new Wolk\OEM\Order($ID);
 $bxorder  = Bitrix\Sale\Order::load($ID);
 
 
+
 // Список валют.
 $result = CCurrencyRates::GetList(($b = 'ID'), ($o = 'ASC'), []);
 $rates  = array();
@@ -129,7 +130,6 @@ unset($result, $language);
 
 // Список статусов.
 $statuses = Wolk\Core\Helpers\SaleOrder::getStatuses();
-
 
 
 

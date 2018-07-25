@@ -963,7 +963,7 @@ b {
 }
 .kds-chief {
   position: relative;
-  padding: 70px 0;
+  padding: 40px 0;
 }
 .kds-chief::after {
   display: block;
@@ -988,6 +988,9 @@ b {
 }
 .kds-stamp img {
   max-width: 100%;
+}
+.kds-payments, .kds-note, .kds-info, .kds-ps {
+	font-size: 12px !important;
 }
 .kds-payments-title {
   color: #0fa6d0;

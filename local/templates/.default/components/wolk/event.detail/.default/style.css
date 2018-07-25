@@ -24,3 +24,7 @@
     line-height: 24px;
     text-transform: none;
 }
+
+.pagetitle .pagetitle-note a {
+	color: #333333;
+}
