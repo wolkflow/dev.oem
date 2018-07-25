@@ -51,7 +51,7 @@
             <div class="basketcontainer__itemprice">
                 <?= FormatCurrency($item->getPrice(), $arResult['CURRENCY']) ?> 
 				&times; 
-				<?= $item->getQuantity() ?>
+				<?= $item->getClearQuantity() ?>
             </div>
 			<div class="block-basket-buttons">
 				<div class="basket-buttons js-product-quantity" data-quantity="<?= $item->getQuantity() ?>">

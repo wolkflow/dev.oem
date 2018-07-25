@@ -109,7 +109,21 @@ class OrderPrintComponent extends \CBitrixComponent
 		// Надпись на фриз.
 		$this->arResult['FASCIA'] = [];
 		
-		foreach ($this->arResult['BASKETS'] as &$basket) {
+		foreach ($this->arResult['BASKETS'] as $i => &$basket) {
+			
+			// Исключение продукции входящей в стоимость.
+			if (!isset($basket['PROPS']['INCLUDED']['VALUE'])) {
+				if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
+					unset($this->arResult['BASKETS'][$i]);
+				}
+			} else {
+				if (intval($basket['QUANTITY']) <= intval($basket['PROPS']['INCLUDED']['VALUE'])) {
+					unset($this->arResult['BASKETS'][$i]);
+				}
+				$basket['QUANTITY'] = intval($basket['QUANTITY']) - intval($basket['PROPS']['INCLUDED']['VALUE']);
+			}
+			
+			
 			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
 				$this->arResult['STAND'] = $basket;
 			}

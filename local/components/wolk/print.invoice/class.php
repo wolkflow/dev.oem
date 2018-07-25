@@ -136,8 +136,16 @@ class PrintInvoiceComponent extends \CBitrixComponent
 								
 		// Пропуск товаров, вклченных в стенд.
 		foreach ($this->arResult['BASKETS'] as $i => $basket) {
-			if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
-				unset($this->arResult['BASKETS'][$i]);
+			
+			if (!isset($basket['PROPS']['INCLUDED']['VALUE'])) {
+				if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
+					unset($this->arResult['BASKETS'][$i]);
+				} 
+			} else {
+				if (intval($basket['QUANTITY']) <= intval($basket['PROPS']['INCLUDED']['VALUE'])) {
+					unset($this->arResult['BASKETS'][$i]);
+				}
+				$this->arResult['BASKETS'][$i]['QUANTITY'] = intval($basket['QUANTITY']) - intval($basket['PROPS']['INCLUDED']['VALUE']);
 			}
 		}
 		

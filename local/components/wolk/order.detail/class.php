@@ -84,7 +84,9 @@ class OrderDetailComponent extends \CBitrixComponent
 			Wolk\OEM\Products\Section::TYPE_MARKETINGS => array(),
 		);
 		
-		foreach ($this->arResult['BASKETS'] as $basket) {
+		
+		// Список корзин.
+		foreach ($this->arResult['BASKETS'] as $i => &$basket) {
 			if ($basket['PROPS']['STAND']['VALUE'] == 'Y') {
 				$stand = new Wolk\OEM\Stand($basket['PRODUCT_ID']);
 				
@@ -95,9 +97,20 @@ class OrderDetailComponent extends \CBitrixComponent
 				continue;
 			}
 			
-			if ($basket['PROPS']['INCLUDED']['VALUE'] == 'Y') {
-				continue;
+			
+			// Исключение продукции входящей в стоимость.
+			if (!isset($basket['PROPS']['INCLUDED']['VALUE'])) {
+				if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
+					continue;
+				}
+			} else {
+				if (intval($basket['QUANTITY']) <= intval($basket['PROPS']['INCLUDED']['VALUE'])) {
+					continue;
+				}
+				$basket['QUANTITY'] = intval($basket['QUANTITY']) - intval($basket['PROPS']['INCLUDED']['VALUE']);
 			}
+			
+			
 			
 			// Продукция.
 			$product = new Wolk\OEM\Products\Base($basket['PRODUCT_ID']);

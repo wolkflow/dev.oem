@@ -246,7 +246,13 @@ class Basket
         $items = [];
         $data  = $this->getData()[self::SESSCODE_PRODUCTS];
         foreach ($data as $item) {
-            if (!$included && $item['included']) {
+			$quantity = (intval($item['quantity']) - intval($item['included']));
+			
+			if ($quantity < 0) {
+				$quantity = 0;
+			}
+			
+            if (!$included && $quantity == 0) {
                 continue;
             }
 			if ($item['quantity'] <= 0 && !$item['zero']) {
@@ -266,7 +272,7 @@ class Basket
         $items = $this->getList();
         $pids  = [];
         foreach ($items as $item) {
-            $pids = (int) $item->getProductID();
+            $pids = intval($item->getProductID());
         }
         $pids = array_unique($pids);
         
@@ -294,11 +300,11 @@ class Basket
      */
     public function put($pid, $quantity, $kind, $params = [], $fields = [], $included = false)
     {
-        $quantity = (float) $quantity;
+        $quantity = (float)  $quantity;
         $kind     = (string) $kind;
-        $params   = (array) $params;
-        $fields   = (array) $fields;
-        $included = (bool) $included;
+        $params   = (array)  $params;
+        $fields   = (array)  $fields;
+        $included = (int)    $included;
         
 		$product = new Product($pid);
 		$section = $product->getSection();
@@ -707,9 +713,16 @@ class Basket
                 'CODE'  => 'PARAMS',
                 'VALUE' => json_encode((array) $item->getParams())
             ];
+			
+			// Количество в стандартной комплектации.
+			$props []= [
+				'NAME'  => 'Количество в стандартной комплектации',
+				'CODE'  => 'INCLUDED',
+				'VALUE' => intval($item->getIncluded())
+			];
             
-            // Продукция включена в стенд.
-            if ($item->isIncluded()) {
+            // Продукция включено в стенд.
+            if ($item->wasIncluded()) {
                 $props []= [
                     'NAME'  => 'Стандартная комплектация',
                     'CODE'  => 'INCLUDING',
