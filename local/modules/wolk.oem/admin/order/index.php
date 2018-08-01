@@ -243,9 +243,17 @@ if (!empty($_POST)) {
 				// Файл для отправки.
 				$fid = $oemorder->getInvoice();
 
+
 				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
-					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'invoice', array('ID' => $ID, 'LANG' => $oemorder->getLanguage()));
-					
+					$html = $APPLICATION->IncludeComponent(
+                        'wolk:mail.order',
+                        'invoice',
+                        array(
+                            'ID'   => $ID,
+                            'LANG' => $oemorder->getLanguage()
+                        )
+                    );
+
                     
                     // Заказ.
                     $order = CSaleOrder::getByID($ID);
@@ -262,7 +270,7 @@ if (!empty($_POST)) {
 					$event->Send('SEND_INVOICE', SITE_DEFAULT, [
 						'EMAIL' => implode(',', $emails),
 						'HTML'  => $html,
-						'THEME' => Loc::getMessage('MESSAGE_THEME_INVOICE', Loc::loadLanguageFile(__FILE__, $oemorder->getLanguage()), $oemorder->getLanguage())
+						'THEME' => Loc::getMessage('MESSAGE_THEME_INVOICE', Loc::loadLanguageFile(__FILE__, strtolower($oemorder->getLanguage())), strtolower($oemorder->getLanguage()))
 					], 'N', '', [$fid]);
 				}
 			}

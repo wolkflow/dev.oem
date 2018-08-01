@@ -36,11 +36,11 @@
 					<tr valign="top">
 						<td style="padding-top: 52px;padding-bottom: 50px;background-image: url('http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/mid.png');background-repeat: repeat-y;padding-right: 61px;padding-left: 61px;">
 							<p style="margin: 0 0 34px 0;padding: 0;font-size: 15px;font-weight: 700;text-transform: uppercase;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
-								<?= Loc::getMessage('dear') ?><?= $arResult['USER']['NAME'] ?><?= Loc::getMessage('goodday') ?>!
+								<?= Loc::getMessage('dear', [], $arParams['LANG']) ?><?= $arResult['USER']['NAME'] ?><?= Loc::getMessage('goodday', [], $arParams['LANG']) ?>!
 							</p>
 							<p style="margin: 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;line-height: 24px;color: #333333;">
-								<?= Loc::getMessage('status_order') ?> <?= $arResult['EVENT']['NAME'] ?> <?= Loc::getMessage('changed') ?>.
-								<?= Loc::getMessage('follow') ?>
+								<?= Loc::getMessage('status_order', [], $arParams['LANG']) ?> <?= $arResult['EVENT']['NAME'] ?> <?= Loc::getMessage('changed', [], $arParams['LANG']) ?>.
+								<?= Loc::getMessage('follow', [], $arParams['LANG']) ?>
 							</p>
 
 							<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%">
@@ -48,7 +48,7 @@
 									<td style="padding-top: 53px;padding-bottom: 1px;">
 										<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" /></div>
 										<p style="margin: 0;padding: 23px 0 23px 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #333333;line-height: 1px">
-											<?= Loc::getMessage('status') ?>: <b><?= \Wolk\OEM\Order::getStatusLangTitleStatic($status, $order->getLanguage());// $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
+											<?= Loc::getMessage('status', [], $arParams['LANG']) ?>: <b><?= \Wolk\OEM\Order::getStatusLangTitleStatic($status, $order->getLanguage());// $arResult['STATUSES'][$arResult['ORDER']['STATUS_ID']]['NAME'] ?></b>
 										</p>
 										<div>
 											<img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" />
@@ -58,7 +58,7 @@
 								<tr>
 									<td style="padding-top: 58px;padding-bottom: 7px;">
 										<a href="http://<?= $arResult['SERVER_NAME'] ?>/personal/profile/" style="display: block;height: 60px;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #ffffff;font-weight: 700;text-align: center;line-height: 60px;text-decoration: none;width: 100%;background-color: #7f7f7f;">
-											<?= Loc::getMessage('cabinet') ?>
+											<?= Loc::getMessage('cabinet', [], $arParams['LANG']) ?>
 										</a>
 									</td>
 								</tr>
@@ -68,7 +68,7 @@
 								<tr>
 									<td style="padding-top: 111px">
 										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											<?= Loc::getMessage('team') ?>
+											<?= Loc::getMessage('team', [], $arParams['LANG']) ?>
 										</p>
 									</td>
 								</tr>

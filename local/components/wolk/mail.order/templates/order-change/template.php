@@ -35,11 +35,11 @@
 								<tr>
 									<td>
 										<p style="margin: 0 0 34px 0;padding: 0;font-size: 15px;font-weight: 700;text-transform: uppercase;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
-											<?= Loc::getMessage('dear') ?><?= $arResult['USER']['NAME'] ?><?= Loc::getMessage('goodday') ?>!
+											<?= Loc::getMessage('dear', [], $arParams['LANG']) ?><?= $arResult['USER']['NAME'] ?><?= Loc::getMessage('goodday', [], $arParams['LANG']) ?>!
 										</p>
 										<p style="margin: 0 0 51px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;line-height: 24px;color: #333333;">
-											<?= Loc::getMessage('your_changes') ?> "<?= $arResult['EVENT']['NAME'] ?>"<?= Loc::getMessage('exhibition') ?>.
-											<?= Loc::getMessage('saving') ?>
+											<?= Loc::getMessage('your_changes', [], $arParams['LANG']) ?> "<?= $arResult['EVENT']['NAME'] ?>"<?= Loc::getMessage('exhibition', [], $arParams['LANG']) ?>.
+											<?= Loc::getMessage('saving', [], $arParams['LANG']) ?>
 										</p>
 
 										<? // Данные о компании // ?>
@@ -47,14 +47,14 @@
 											<tr>
 												<td>
 													<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-														<?= Loc::getMessage('company') ?>
+														<?= Loc::getMessage('company', [], $arParams['LANG']) ?>
 													</p>
 												</td>
 											</tr>
 											<tr>
 												<td style="padding-bottom: 43px;">
 													<p style="margin: 0 0 15px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-														<?= Loc::getMessage('title') ?>
+														<?= Loc::getMessage('title', [], $arParams['LANG']) ?>
 													</p>
 													<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" alt="___________________________________" /></div>
 													<p style="margin: 15px 0 0 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;text-transform: uppercase">
@@ -65,7 +65,7 @@
 											<tr>
 												<td style="padding-bottom: 43px;">
 													<p style="margin: 0 0 15px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-														<?= Loc::getMessage('standnum') ?>
+														<?= Loc::getMessage('standnum', [], $arParams['LANG']) ?>
 													</p>
 													<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" alt="___________________________________" /></div>
 													<p style="margin: 15px 0 0 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;text-transform: uppercase">
@@ -76,7 +76,7 @@
 											<tr>
 												<td style="padding-bottom: 43px;">
 													<p style="margin: 0 0 15px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-														<?= Loc::getMessage('pavillion') ?>
+														<?= Loc::getMessage('pavillion', [], $arParams['LANG']) ?>
 													</p>
 													<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" alt="___________________________________" /></div>
 													<p style="margin: 15px 0 0 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;text-transform: uppercase">
@@ -87,7 +87,7 @@
 											<tr>
 												<td>
 													<p style="margin: 0 0 15px 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-														<?= Loc::getMessage('orderdate') ?>
+														<?= Loc::getMessage('orderdate', [], $arParams['LANG']) ?>
 													</p>
 													<div><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/line.png" alt="___________________________________" /></div>
 													<p style="margin: 15px 0 0 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;text-transform: uppercase">
@@ -104,7 +104,7 @@
 											<tr>
 												<td>
 													<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 24px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-														<?= Loc::getMessage('details') ?>
+														<?= Loc::getMessage('details', [], $arParams['LANG']) ?>
 													</p>
 												</td>
 											</tr>
@@ -144,14 +144,14 @@
 									<td valign="middle" style="padding-top: 5px;">
 										<p style="margin: 0 0 11px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
 											<span style="display: inline-block;width: 165px;">
-												<?= Loc::getMessage('price_total') ?>:
+												<?= Loc::getMessage('price_total', [], $arParams['LANG']) ?>:
 											</span>
 											<?= CurrencyFormat($arResult['PRICES']['BASKET'], $arResult['ORDER']['CURRENCY']) ?>
 										</p>
 										<? if ($arResult['PRICES']['SURCHARGE'] > 0) { ?>
 											<p style="margin: 0 0 11px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #ff3f25;text-transform: uppercase">
 												<span style="display: inline-block;width: 165px;">
-													<?= Loc::getMessage('price_surcharge') ?>:
+													<?= Loc::getMessage('price_surcharge', [], $arParams['LANG']) ?>:
 												</span>
 												<?= $arResult['PRICES']['SURCHARGE'] ?>%
 												(<?= CurrencyFormat($arResult['PRICES']['SURCHARGE_PRICE'], $arResult['ORDER']['CURRENCY']) ?>)
@@ -159,20 +159,20 @@
 										<? } ?>
 										<p style="margin: 0 0 11px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
 											<span style="display: inline-block;width: 165px;">
-												<?= Loc::getMessage('price_vat') ?>:
+												<?= Loc::getMessage('price_vat', [], $arParams['LANG']) ?>:
 											</span>
 											<?= CurrencyFormat($arResult['PRICES']['VAT'], $arResult['ORDER']['CURRENCY']) ?>
 										</p>
 										<? if ($arResult['PRICES']['SURCHARGE'] > 0) { ?>
 											<p style="margin: 0 0 5px 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
 												<span style="display: inline-block;width: 165px;">
-													<?= Loc::getMessage('price_total_vat') ?>:
+													<?= Loc::getMessage('price_total_vat', [], $arParams['LANG']) ?>:
 												</span>
 												<?= CurrencyFormat($arResult['PRICES']['TOTAL_WITH_VAT'], $arResult['ORDER']['CURRENCY']) ?>
 											</p>
 											<p style="margin: 22px 0 0 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;">
 												<span style="display: block;float: left;text-transform: uppercase;width: 165px;line-height: 38px;">
-													<?= Loc::getMessage('price_total_surcharge') ?>:
+													<?= Loc::getMessage('price_total_surcharge', [], $arParams['LANG']) ?>:
 												</span>
 												<span style="display: block;margin-left: 165px;font-size: 49px;line-height: 38px;font-weight: 400;">
 													 <?= CurrencyFormat($arResult['PRICES']['TOTAL_WITH_SURCHARGE'], $arResult['ORDER']['CURRENCY']) ?>
@@ -181,7 +181,7 @@
 										<? } else { ?>
 											<p style="margin: 22px 0 0 0;padding: 0;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;">
 												<span style="display: block;float: left;text-transform: uppercase;width: 165px;line-height: 38px;">
-													<?= Loc::getMessage('price_total_vat') ?>:
+													<?= Loc::getMessage('price_total_vat', [], $arParams['LANG']) ?>:
 												</span>
 												<span style="display: block;margin-left: 165px;font-size: 49px;line-height: 38px;font-weight: 400;">
 													 <?= CurrencyFormat($arResult['PRICES']['TOTAL_WITH_SURCHARGE'], $arResult['ORDER']['CURRENCY']) ?>
@@ -194,7 +194,7 @@
 								<tr>
 									<td>
 										<p style="border-bottom: 3px solid #7f7f7f;margin: 115px 0 30px 0;padding: 50px 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											<?= Loc::getMessage('sketch') ?>
+											<?= Loc::getMessage('sketch', [], $arParams['LANG']) ?>
 										</p>
 										<img src="http://<?= $arResult['SERVER_NAME'] ?><?= CFile::GetPath($arResult['PROPS']['SKETCH_FILE']['VALUE_ORIG']) ?>" style="display: block;margin-bottom: 4px;max-width: 100%;" />
 									</td>
@@ -203,7 +203,7 @@
 								<tr>
 									<td>
 										<a href="http://<?= $arResult['SERVER_NAME'] ?>/personal/orders-history.php" style="display: block;font-size: 17px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;text-transform: uppercase;color: #ffffff;font-weight: 700;text-align: center;text-decoration: none;width: 100%;background-color: #7f7f7f;margin-top: 56px;margin-bottom: 60px;padding-top: 29px;padding-bottom: 30px;line-height: 1px;">
-											<?= Loc::getMessage('changeorder') ?>
+											<?= Loc::getMessage('changeorder', [], $arParams['LANG']) ?>
 										</a>
 									</td>
 								</tr>
@@ -211,7 +211,7 @@
 								<tr>
 									<td style="padding-top: 57px">
 										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											<?= Loc::getMessage('team') ?>
+											<?= Loc::getMessage('team', [], $arParams['LANG']) ?>
 										</p>
 									</td>
 								</tr>
@@ -237,7 +237,9 @@
 								<? } ?>
 								<tr>
 									<td style="border-top: 1px solid #7f7f7f;">
-										<a href="http://<?= $arResult['SERVER_NAME'] ?>/" style="text-decoration: none;display: block;padding-top: 60px;padding-bottom: 8px;"><img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/logo.png" alt="Universal exhibition configuration" /></a>
+										<a href="http://<?= $arResult['SERVER_NAME'] ?>/" style="text-decoration: none;display: block;padding-top: 60px;padding-bottom: 8px;">
+                                            <img style="display: block;" src="http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/logo.png" alt="Universal exhibition configuration" />
+                                        </a>
 									</td>
 								</tr>
 							</table>
