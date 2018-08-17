@@ -143,6 +143,42 @@ if (CheckFilter()) {
 	
 	// Фильтр по названию выставки.
 	if (!empty($find_event)) {
+		
+		$result = CIBlockElement::getList(
+			[], 
+			[
+				'IBLOCK_ID' => IBLOCK_EVENTS_ID,
+				[
+					'LOGIC' => 'OR',
+					'NAME'  => '%'.$find_event.'%',
+					'PROPERTY_LANG_NAME_RU' => '%'.$find_event.'%',
+					'PROPERTY_LANG_NAME_EN' => '%'.$find_event.'%',
+				]
+			],
+			false,
+			false,
+			['ID']
+		);
+		while ($item = $result->Fetch()) {
+			$eids []= (int) $item['ID'];
+		}
+		
+		$rids = array();
+		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'EVENT_ID', '%VALUE' => $eids], false, false, ['ORDER_ID']);
+		while ($item = $result->Fetch()) {
+			$rids []= (int) $item['ORDER_ID'];
+		}
+		unset($result, $item);
+		
+		$rids = array_unique(array_filter($rids));
+		
+		if (empty($rids)) {
+			$filter['ID'] = '0';
+		} else {
+			$filter['ID'] = (!empty($filter['ID'])) ? (array_intersect((array) $filter['ID'], $rids)) : ($rids);
+		}
+		
+		/*
 		$rids = array();
 		$result = CSaleOrderPropsValue::GetList([], ['CODE' => 'EVENT_NAME', '%VALUE' => $find_event], false, false, ['ORDER_ID']);
 		while ($item = $result->Fetch()) {
@@ -157,6 +193,7 @@ if (CheckFilter()) {
 		} else {
 			$filter['ID'] = (!empty($filter['ID'])) ? (array_intersect((array) $filter['ID'], $rids)) : ($rids);
 		}
+		*/
 	}
 	
 	// Фильтр по дате создания заказа (от).
