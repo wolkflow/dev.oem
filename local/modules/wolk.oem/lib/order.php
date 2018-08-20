@@ -501,9 +501,16 @@ class Order
 		$summary = 0;
 		foreach ($this->getBaskets() as $basket) {
 			// Исключение продукции входящей в стоимость.
-			if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
-				continue;
+			if (!isset($basket['PROPS']['INCLUDED']['VALUE'])) {
+				if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
+					continue;
+				}
+			} else {
+				if (intval($basket['QUANTITY']) <= intval($basket['PROPS']['INCLUDED']['VALUE'])) {
+					continue;
+				}
 			}
+			
 			$summary += (float) $basket['SUMMARY_PRICE'];
 		}
 		
@@ -896,6 +903,12 @@ class Order
                 'CODE'  => 'PARAMS',
                 'VALUE' => json_encode((array) $product['PROPS'])
             ];
+			
+			$props []= [
+				'NAME'  => 'Количество в стандартной комлектации',
+				'CODE'  => 'INCLUDED',
+				'VALUE' => intval($product['INCLUDED'])
+			];
             
             // Продукция включена в стенд.
             if ($product['INCLUDED']) {

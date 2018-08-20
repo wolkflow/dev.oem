@@ -37,7 +37,6 @@ if ($language = (string) $_COOKIE['public_lang']) {
 }
 
 
-
 /*
 // Текущий выбранный язык.
 $curlang = \Bitrix\Main\Context::getCurrent()->getLanguage();

@@ -32,24 +32,24 @@
 					<tr valign="top">
 						<td style="padding-top: 52px;padding-bottom: 50px;background-image: url('http://<?= $arResult['SERVER_NAME'] ?>/upload/mail/images/mid.png');background-repeat: repeat-y;padding-right: 61px;padding-left: 61px;">
 							<p style="margin: 0 0 34px 0;padding: 0;font-size: 15px;font-weight: 700;text-transform: uppercase;font-family: 'GothamPro', Arial, Helvetica, sans-serif;color: #333333;">
-								<?= Loc::getMessage('dear') ?><?= $arResult['USER']['NAME'] ?><?= Loc::getMessage('goodday') ?>!
+								<?= Loc::getMessage('dear', [], $arParams['LANG']) ?><?= $arResult['USER']['NAME'] ?><?= Loc::getMessage('goodday', [], $arParams['LANG']) ?>!
 							</p>
 							<p style="margin: 0;padding: 0;font-size: 15px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;line-height: 24px;color: #333333;">
-								<?= Loc::getMessage('bill') ?> 
+								<?= Loc::getMessage('bill', [], $arParams['LANG']) ?>
 									№<?= $arResult['PROPS']['NUMBER']['VALUE'] ?> 
-									<?= Loc::getMessage('from') ?>
+									<?= Loc::getMessage('from', [], $arParams['LANG']) ?>
 										<?= date('d', strtotime($arResult['ORDER']['DATE_INSERT'])) ?>
 										<?= TextHelper::i18nmonth(date('n', strtotime($arResult['ORDER']['DATE_INSERT'])), false, $arParams['LANG']) ?>
 										<?= date('Y', strtotime($arResult['ORDER']['DATE_INSERT'])) ?>
-									<?= Loc::getMessage('additional') ?>
+									<?= Loc::getMessage('additional', [], $arParams['LANG']) ?>
 									<?= $arResult['EVENT']['NAME'] ?>. 
-								<?= Loc::getMessage('conditions') ?>
+								<?= Loc::getMessage('conditions', [], $arParams['LANG']) ?>
 							</p>
 							<table cellpadding="0" cellspacing="0" border="0" style="margin: 0;padding: 0;width: 100%">
 								<tr>
 									<td style="padding-top: 111px">
 										<p style="border-bottom: 3px solid #7f7f7f;margin: 0 0 26px 0;padding: 0 0 25px 0;font-size: 21px;font-family: 'GothamPro', Arial, Helvetica, sans-serif;font-weight: 700;color: #333333;text-transform: uppercase">
-											<?= Loc::getMessage('team') ?>
+											<?= Loc::getMessage('team', [], $arParams['LANG']) ?>
 										</p>
 									</td>
 								</tr>

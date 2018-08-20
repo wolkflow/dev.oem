@@ -243,9 +243,17 @@ if (!empty($_POST)) {
 				// Файл для отправки.
 				$fid = $oemorder->getInvoice();
 
+
 				if (\Wolk\Core\Helpers\SaleOrder::saveProperty($ID, 'SENDTIME', date('d.m.Y H:i:s'))) {
-					$html = $APPLICATION->IncludeComponent('wolk:mail.order', 'invoice', array('ID' => $ID, 'LANG' => $oemorder->getLanguage()));
-					
+					$html = $APPLICATION->IncludeComponent(
+                        'wolk:mail.order',
+                        'invoice',
+                        array(
+                            'ID'   => $ID,
+                            'LANG' => $oemorder->getLanguage()
+                        )
+                    );
+
                     
                     // Заказ.
                     $order = CSaleOrder::getByID($ID);
@@ -262,7 +270,7 @@ if (!empty($_POST)) {
 					$event->Send('SEND_INVOICE', SITE_DEFAULT, [
 						'EMAIL' => implode(',', $emails),
 						'HTML'  => $html,
-						'THEME' => Loc::getMessage('MESSAGE_THEME_INVOICE', Loc::loadLanguageFile(__FILE__, $oemorder->getLanguage()), $oemorder->getLanguage())
+						'THEME' => Loc::getMessage('MESSAGE_THEME_INVOICE', Loc::loadLanguageFile(__FILE__, strtolower($oemorder->getLanguage())), strtolower($oemorder->getLanguage()))
 					], 'N', '', [$fid]);
 				}
 			}
@@ -1019,7 +1027,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                     <tbody style="text-align: left; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(221, 221, 221);">
                                         <? $cnt = 0; ?>
                                         <? foreach ($bundle['BASKETS'] as $basket) { ?>
-                                            <? if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') { continue; } ?>
+                                            <?	// Входит в стандартную комплектацию.
+												$quantity = intval($basket['QUANTITY']);
+											
+												if (!isset($basket['PROPS']['INCLUDED']['VALUE'])) {
+													if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
+														continue;
+													} 
+												} else {
+													if (intval($basket['QUANTITY']) <= intval($basket['PROPS']['INCLUDED']['VALUE'])) {
+														continue;
+													}
+													$quantity = intval($basket['QUANTITY']) - intval($basket['PROPS']['INCLUDED']['VALUE']);
+												}
+											?>
                                             <tr>
                                                 <td class="adm-s-order-table-ddi-table-img">
 													<? $isrc = $basket['PRODUCT']->getImageSrc() ?>
@@ -1036,7 +1057,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 														<?= $basket['PRODUCT']->getTitle() ?>
 													<? } ?>
 												</td>
-                                                <td align="center"><?= $basket['QUANTITY'] ?></td>
+                                                <td align="center">
+													<?= $quantity ?>
+												</td>
                                                 <td align="left">
                                                     <?= CurrencyFormat($basket['PRICE'] * $rate, $rate_currency) ?>
                                                 </td>

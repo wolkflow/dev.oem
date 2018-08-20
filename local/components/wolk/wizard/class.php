@@ -469,7 +469,7 @@ class WizardComponent extends \CBitrixComponent
 							\Wolk\OEM\Basket::KIND_PRODUCT,
 							[],
 							[],
-							true
+							intval($quantity)
 						);
 					}
 					$this->putSessionParam('BASE', $data['BASE']);
@@ -732,6 +732,7 @@ class WizardComponent extends \CBitrixComponent
             // Общая стоимость продукции.
             $price += $basket->getCost();
             
+			
             $this->arResult['PRODUCTS'][$elem->getSectionType()][$basket->getID()] = ['ITEM' => $elem, 'BASKET' => $basket];
         }
         

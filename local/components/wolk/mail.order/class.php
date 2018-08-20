@@ -19,7 +19,7 @@ class MailOrderComponent extends \CBitrixComponent
 		$arParams['ID'] = (int) $arParams['ID'];
 		
 		// Язык.
-		$arParams['LANG'] = (string) $arParams['LANG'];
+		$arParams['LANG'] = strtolower((string) $arParams['LANG']);
 		
 		if (empty($arParams['LANG'])) {
 			$arParams['LANG'] = \Bitrix\Main\Application::getInstance()->getContext()->getLanguage();
@@ -48,14 +48,17 @@ class MailOrderComponent extends \CBitrixComponent
 			ShowError('Модуль sale не устанволен.');
 			return;
 		}
-		
+
+
+		$lang = \Bitrix\Main\Context::getCurrent()->getLanguage();
 		
 		// Установка текущего языка.
-		Loc::setCurrentLang($this->arParams['LANG']);
-		
-		// TODO: Не менять язык.
+		// Loc::setCurrentLang($this->arParams['LANG']);
+        // \Bitrix\Main\Context::getCurrent()->setLanguage(strtolower($this->arParams['LANG']));
+
 		// Loc::loadLanguageFile(__FILE__, $this->arParams['LANG']);
-		
+
+
 		$site = \CSite::GetByID(SITE_DEFAULT)->Fetch();
 		
 		$this->arResult['SERVER_NAME'] = $site['SERVER_NAME'];
@@ -136,7 +139,11 @@ class MailOrderComponent extends \CBitrixComponent
 		
 		$this->includeComponentTemplate();
 		
-		return ob_get_clean();
+		$html = ob_get_clean();
+
+        // \Bitrix\Main\Context::getCurrent()->setLanguage($lang);
+
+		return $html;
 	}
 	
 }

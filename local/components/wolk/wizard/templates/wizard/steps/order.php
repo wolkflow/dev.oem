@@ -61,7 +61,7 @@
 												| <?= FormatCurrency($item['BASKET']->getPrice(), $arResult['CURRENCY']) ?>
 												&times;
 												<span class="js-product-quantity">
-													<?= $item['BASKET']->getQuantity() ?>
+													<?= $item['BASKET']->getClearQuantity() ?>
 												</span>
 											</div>
 											<div class="ordercontainer__changebutton">

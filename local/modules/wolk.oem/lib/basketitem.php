@@ -65,8 +65,20 @@ class BasketItem
         return $this->data['sid'];
     }
     
+	
+	public function wasIncluded()
+    {
+        return (intval($this->getIncluded()) > 0);
+    }
+	
     
     public function isIncluded()
+    {
+        return (intval($this->getClearQuantity()) <= 0);
+    }
+	
+	
+	public function getIncluded()
     {
         return $this->data['included'];
     }
@@ -111,6 +123,19 @@ class BasketItem
         return $this->data['quantity'];
     }
     
+	
+	/**
+     * Получение оценочного количества.
+     */
+    public function getClearQuantity()
+    {
+		$quantity = (intval($this->data['quantity']) - intval($this->data['included']));
+		if ($quantity < 0) {
+			$quantity = 0;
+		}
+        return $quantity;
+    }
+	
     
     /**
      * Получение дополнительных параметров.
@@ -220,7 +245,6 @@ class BasketItem
      */
     public function getCost()
     {
-        return ((float) $this->getPrice() * $this->getQuantity());
-    }
-    
+        return ((float) $this->getPrice() * $this->getClearQuantity());
+    }    
 }
