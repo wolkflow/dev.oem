@@ -1172,3 +1172,298 @@ b {
   width: 100%;
 }
 /*# sourceMappingURL=invoice_krr.css.map */
+
+
+
+
+
+
+.bvk-wrapper {
+  font: normal 400 9pt / normal Arial, Helvetica, sans-serif;
+  width: 680px;
+  margin: 16px auto; 
+}
+.bvk-wrapper p {
+  margin-bottom: 16px;
+}
+.bvk-wrapper table {
+  width: 100%;
+}
+.bvk-wrapper table td,
+.bvk-wrapper table th {
+  padding: 1px;
+  text-align: left;
+  vertical-align: top;
+  border: .5pt solid black;
+}
+.bvk-wrapper .no-border td {
+  border: 0 !important;
+}
+.bvk-wrapper .pr5 {
+  padding-right: 5pt;
+}
+.bvk-wrapper .bb0 {
+  border-bottom: 0;
+}
+.bvk-wrapper .bt0 {
+  border-top: 0;
+}
+.bvk-wrapper .w370 {
+  width: 370px;
+}
+.bvk-wrapper .w224 {
+  width: 224px;
+}
+.bvk-wrapper .w63 {
+  width: 63px;
+}
+.bvk-wrapper .w33 {
+  width: 33px;
+}
+.bvk-wrapper .w339 {
+  width: 339px;
+}
+.bvk-wrapper .w54 {
+  width: 54px;
+}
+.bvk-wrapper .w42 {
+  width: 42px;
+}
+.bvk-wrapper .w86 {
+  width: 86px;
+}
+.bvk-wrapper .w100 {
+  width: 100px;
+}
+.bvk-wrapper .small {
+  font-size: 8pt;
+}
+.bvk-wrapper .va-b {
+  vertical-align: bottom;
+}
+.bvk-wrapper .mr10 {
+  display: inline-block;
+  margin-right: 10pt;
+}
+.bvk-wrapper .bvk-title {
+  font-size: 14.0pt;
+  font-weight: 700;
+  text-align: left;
+  vertical-align: middle;
+  margin: 20px 0;
+}
+.bvk-wrapper .ta-l {
+  text-align: left !important;
+}
+.bvk-wrapper .ta-r {
+  text-align: right !important;
+}
+.bvk-wrapper .ta-c {
+  text-align: center !important;
+}
+.bvk-wrapper .bvk-table {
+  border: 1pt solid #000;
+  margin-bottom: 16px;
+  font-size: 9pt;
+}
+.bvk-wrapper .bvk-table th {
+  font-weight: 700;
+  text-align: center;
+  font-size: 9pt;
+}
+.bvk-wrapper .bvk-table td {
+  text-align: left;
+}
+.bvk-wrapper .sign {
+  border-top: 1px solid #000;
+  position: relative;
+  padding-top: 20px;
+}
+.bvk-wrapper .sign::after {
+  display: block;
+  content: '';
+  position: relative;
+  clear: both;
+  height: 1px;
+  width: 100%;
+}
+.bvk-wrapper .sign-left {
+  float: left;
+  width: 54%;
+  border-bottom: 1px solid #000;
+}
+.bvk-wrapper .sign-left::after {
+  display: block;
+  content: '';
+  position: relative;
+  clear: both;
+  height: 1px;
+  width: 100%;
+}
+.bvk-wrapper .sign-right {
+  position: relative;
+  top: -2px;
+  border-bottom: 1px solid #000;
+  margin-left: 58%;
+}
+.bvk-wrapper .sign-right::after {
+  display: block;
+  content: '';
+  position: relative;
+  clear: both;
+  height: 1px;
+  width: 100%;
+}
+.bvk-wrapper .sign-name {
+  float: right;
+  font-size: 8pt;
+  position: relative;
+  bottom: -6px;
+}
+.bvk-wrapper .sign-title {
+  float: left;
+  padding-right: 20px;
+  background: #fff;
+  position: relative;
+  bottom: -3px;
+  padding-bottom: 3px;
+}
+.bvk-wrapper .sign .sign-stamp {
+  position: absolute;
+  right: 11%;
+  top: -1%;
+  width: 20%;
+}
+.bvk-wrapper .sign .sign-stamp img {
+  width: 100%;
+}
+.bvk-buyer {
+  margin: 25px 0 50px;
+  width: 65%;
+}
+.bvk-buyer p {
+  margin: 0 0 2px;
+  padding: 0;
+  border-bottom: 1px solid #000;
+}
+.bvk-buyer p span {
+  display: inline-block;
+  background: #fff;
+  padding: 0 0 3px;
+  position: relative;
+  bottom: -1px;
+}
+.bvk-buyer p span + span {
+  background: transparent;
+  padding-left: 5px;
+}
+.bvk-buyer__twice p {
+  width: 50%;
+  float: left;
+}
+.bvk-buyer__twice::after {
+  clear: both;
+  content: '';
+  display: block;
+}
+.bvk-head {
+  font-weight: 700;
+  font-size: 10pt;
+  margin: 0 0 10px;
+}
+.inline-title {
+  display: inline-block;
+  background: #fff;
+  padding: 0 0 3px;
+}
+.inline-line {
+  display: inline-block;
+  padding: 0 0 3px;
+  background: transparent;
+  border-bottom: 1px solid #000;
+  position: relative;
+  bottom: -2px;
+}
+.mw35 {
+  min-width: 35px;
+}
+.mw60 {
+  min-width: 60px;
+}
+.mw70 {
+  min-width: 70px;
+}
+.mw120 {
+  min-width: 120px;
+}
+.mb10 {
+  margin-bottom: 10px;
+}
+.mb20 {
+  margin-bottom: 20px;
+}
+.bvk-data {
+  margin: 10px 0 5px;
+}
+.bvk-data p {
+  padding: 0;
+  margin: 0;
+}
+.bvk-message {
+  font-weight: 700;
+  font-size: 20pt;
+}
+.bvk-header p {
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.fw-700 {
+  font-weight: 700;
+}
+.bvk-signs {
+  margin: 0 auto;
+  padding: 40px 0 0;
+  position: relative;
+}
+.bvk-signs .fw-700 {
+  margin: 0 0 10px;
+}
+.bvk-signs::after {
+  display: block;
+  content: '';
+  clear: both;
+}
+.bvk-signs__block {
+  float: left;
+  width: 40%;
+  margin: 0 5%;
+}
+.bvk-whoout {
+  margin: 0 0 0 10%;
+}
+.bvk-who__info {
+  font-size: 7pt;
+}
+.bvk-note {
+  margin: 10px 0 0;
+}
+.bvk-note p {
+  margin: 0 !important;
+}
+.bvk-stamp {
+  position: absolute;
+  z-index: -1;
+  left: 37%;
+  top: -10%;
+}
+.bvk-sign {
+  position: absolute;
+  z-index: -1;
+  left: 67%;
+  top: 18%;
+}
+.w185 {
+  width: 185px;
+}
+/*# sourceMappingURL=invoice_bvk.css.map */
