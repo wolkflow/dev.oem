@@ -1042,7 +1042,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 												}
 											?>
                                             <tr>
-                                                <td class="adm-s-order-table-ddi-table-img">
+                                                <td class="adm-s-order-table-ddi-table-img product-image">
 													<? $isrc = $basket['PRODUCT']->getImageSrc() ?>
                                                     <? if (!empty($isrc)) { ?>
                                                         <img src="<?= $isrc ?>" width="78" height="78" />
@@ -1352,6 +1352,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 	
 	.adm-s-order-table-ddi-table tbody tr:first-child td { 
 		padding: 0;
+	}
+	
+	.adm-s-order-table-ddi-table tbody td.product-image {
+		padding: 5px !important;
 	}
 </style>
 

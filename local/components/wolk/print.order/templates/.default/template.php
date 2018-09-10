@@ -55,7 +55,7 @@
 					<td><?= $arResult['PROPS']['DEPTH']['VALUE'] ?></td>
 				</tr>
 				<tr>
-					<td>Полщадь стенда (м<sup>2</sup>)</td>
+					<td>Площадь стенда (м<sup>2</sup>)</td>
 					<td><?= ($arResult['PROPS']['WIDTH']['VALUE'] * $arResult['PROPS']['DEPTH']['VALUE']) ?></td>
 				</tr>
 			</tbody>

@@ -3,6 +3,7 @@
 
 <div class="bvk-wrapper">
 	<div class="bvk-head">
+		<? /*
 		<div class="mb10">
 			<span class="inline-title">СЧЕТ №</span>
 			<span class="inline-line mw35">
@@ -21,7 +22,21 @@
 			</span>
 			<span class="inline-title">/ЭУ-18 от </span>
 		</div>
+		*/ ?>
 		<div class="ta-c">
+			<span class="inline-title">СЧЕТ №</span>
+			<span class="inline-line mw35">
+				<?= $arResult['PROPS']['BILL']['VALUE'] ?> 
+			</span>
+			<span class="inline-title">-ЭУ-18 от</span>
+			<span class="inline-line mw60">
+				<? $ordertime = strtotime($arResult['ORDER']['DATE_INSERT']) ?>
+				
+				<?= date('d', $ordertime) ?>
+				<?= TextHelper::i18nmonth(date('n', $ordertime), false, 'ru') ?> 
+			</span>
+			<span class="inline-title"><?= date('Y', $ordertime) ?> г.</span>
+			<? /*
 			<span class="inline-line mw70">
 				<? $ordertime = strtotime($arResult['ORDER']['DATE_INSERT']) ?>
 				
@@ -29,6 +44,7 @@
 				<?= TextHelper::i18nmonth(date('n', $ordertime), false, 'ru') ?> 
 			</span>
 			<span class="inline-title"><?= date('Y', $ordertime) ?> г.</span>
+			*/ ?>
 		</div>
 	</div>
 
@@ -119,17 +135,14 @@
 			<span><?= $arResult['USER']['WORK_STREET'] ?></span>
 		</p>
 
-		<div class="bvk-buyer__twice">
-			<p>
-				<span>ИНН покупателя</span>
-				<span><!-- текст --></span>
-			</p>
-			<p>
-				<span>КПП</span>
-				<span><!-- текст --></span>
-			</p>
-			<!-- <?= $arResult['USER']['UF_REQUISITES'] ?> -->
-		</div>
+		<? if (!empty($arResult['USER']['UF_REQUISITES'])) { ?>
+			<div class="NO-bvk-buyer__twice">
+				<p>
+					<span></span>
+					<span><?= $arResult['USER']['UF_REQUISITES'] ?></span>
+				</p>
+			</div>
+		<? } ?>
 	</div>
 
 
@@ -148,6 +161,7 @@
 		<tbody>
 			<? $i = 1 ?>
 			<? foreach ($arResult['BASKETS'] as $basket) { ?>
+				<? if ($basket['PROPS']['STAND']['VALUE'] == 'Y' && $basket['PRICE'] <= 0) { continue; } ?>
 				<tr>
 					<td class="ta-r">
 						<?= $i++ ?>
@@ -168,7 +182,9 @@
 				</tr>
 			<? } ?>
 			<tr>
-				<td class="ta-r bb0" colspan="5"><b>Итого:</b></td>
+				<td class="ta-r bb0" colspan="5">
+					<b>Итого:</b>
+				</td>
 				<td class="ta-r">
 					<b><?= number_format($arResult['ORDER']['PRICE'], 2, ',', ' ') ?></b>
 				</td>

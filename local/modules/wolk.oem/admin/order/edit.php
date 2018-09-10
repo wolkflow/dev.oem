@@ -98,6 +98,13 @@ $errors = [];
 // Создание или изменение заказа.
 if (!empty($_POST) && $_POST['action'] == 'order-make') {
 	
+	// Log.
+	file_put_contents(
+		$_SERVER['DOCUMENT_ROOT'].'/../orders.log', 
+		date('d.m.Y H:i:s') . ' > ' . print_r($_POST, true) . PHP_EOL,
+		FILE_APPEND
+	);
+	
 	
     $fields = array(
         'OID'        => (int) $oid,

@@ -6,7 +6,7 @@
 		<div class="invoiceHeader__left">
 			<div class="invoiceHeaderTitle">Invoice</div>
 			<div class="invoiceHeaderDetail">
-				<p>OOO Messe Frankfurt RUS,</p>
+				<p>Ltd Messe Frankfurt RUS,</p>
 				<p>Address for correspondence</p>
 				<p>Leningradsky prt 39 build 80, 125167 Mosсow</p>
 				<p>Tel. +7 495 6498775, fax +7 495 6498785</p>
@@ -122,7 +122,7 @@
 
 	<div class="invoiceAfter">
 		<div class="invoiceAfterLeft">
-			OOO Messe Frankfurt RUS<br>
+			Ltd Messe Frankfurt RUS<br>
 			INN 7705365187<br>
 			Account number 40702-978-7-0000-0-401484<br>
 			Raiffeisenbank AO, Moscow 17/1 Troitskaya, Moscow, 129090, Russia<br>
@@ -137,7 +137,7 @@
 			<div class="invoiceAfterSignature">
 				<div class="invoiceStamp"></div>
 			</div>
-			OOO Messe Frankfurt RUS<br>
+			Ltd Messe Frankfurt RUS<br>
 			Responsible manager signature
 		</div>
 		<div class="clear"></div>
