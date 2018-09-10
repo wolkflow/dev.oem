@@ -143,10 +143,10 @@ class PrintInvoiceComponent extends \CBitrixComponent
 					unset($this->arResult['BASKETS'][$i]);
 				} 
 			} else {
-				if (intval($basket['QUANTITY']) <= intval($basket['PROPS']['INCLUDED']['VALUE'])) {
+				if (floatval($basket['QUANTITY']) <= floatval($basket['PROPS']['INCLUDED']['VALUE'])) {
 					unset($this->arResult['BASKETS'][$i]);
 				}
-				$this->arResult['BASKETS'][$i]['QUANTITY'] = intval($basket['QUANTITY']) - intval($basket['PROPS']['INCLUDED']['VALUE']);
+				$this->arResult['BASKETS'][$i]['QUANTITY'] = floatval($basket['QUANTITY']) - floatval($basket['PROPS']['INCLUDED']['VALUE']);
 			}
 		}
 		

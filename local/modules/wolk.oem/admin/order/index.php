@@ -1028,17 +1028,17 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
                                         <? $cnt = 0; ?>
                                         <? foreach ($bundle['BASKETS'] as $basket) { ?>
                                             <?	// Входит в стандартную комплектацию.
-												$quantity = intval($basket['QUANTITY']);
+												$quantity = floatval($basket['QUANTITY']);
 											
 												if (!isset($basket['PROPS']['INCLUDED']['VALUE'])) {
 													if ($basket['PROPS']['INCLUDING']['VALUE'] == 'Y') {
 														continue;
 													} 
 												} else {
-													if (intval($basket['QUANTITY']) <= intval($basket['PROPS']['INCLUDED']['VALUE'])) {
+													if (floatval($basket['QUANTITY']) <= floatval($basket['PROPS']['INCLUDED']['VALUE'])) {
 														continue;
 													}
-													$quantity = intval($basket['QUANTITY']) - intval($basket['PROPS']['INCLUDED']['VALUE']);
+													$quantity = floatval($basket['QUANTITY']) - floatval($basket['PROPS']['INCLUDED']['VALUE']);
 												}
 											?>
                                             <tr>
